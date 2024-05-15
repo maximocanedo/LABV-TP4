@@ -14,19 +14,36 @@ import logicImpl.UserLogicImpl;
 public class App {
 	
 	public static void generateUsers(int q) {
-		for(int i = 0; i < q; i++) {
+		for(int i = 0; i < q; i++)
 			Generator.generateAndSaveRandomUser();
-		}
 	}
 	
     public static void main( String[] args ) {
-    	IUserLogic users_repo = new UserLogicImpl();
-    	System.out.println("Se generarán y guardarán diez registros. ");
-    	generateUsers(10);
-    	System.out.println("Se generaron diez registros. ");
-    	List<User> users = users_repo.list(1, 30);
+    	UserLogicImpl users_repo = new UserLogicImpl();
+    	//System.out.println("Se generarán y guardarán diez registros. ");
+    	//generateUsers(10);
+    	//System.out.println("Se generaron diez registros. ");
+    	/*List<User> users = users_repo.list(1, 30);
     	for(User user : users) {
     		System.out.println(user);
+    	}*/
+    	User user = users_repo.findByUsername("abby.hessel");
+    	if(user == null) {
+    		System.out.println("@abby.hessel not found.");
+    		return;
     	}
+    	System.out.println(user);
+    	user.setName("Alessandra Caspio");
+    	users_repo.update(user);
+
+    	users_repo.disable(user);
+    	User user2 = users_repo.findByUsername("abby.hessel");
+    	if(user2 == null) {
+    		System.out.println("@abby.hessel not found.");
+    		return;
+    	}
+    	System.out.println(user2);
+    	
+    	
     }
 }

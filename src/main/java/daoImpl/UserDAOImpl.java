@@ -30,7 +30,7 @@ public class UserDAOImpl implements IUserDAO {
 	public User getByUsername(String username) {
 		final ContainerFor<User> cfUser = new ContainerFor<User>(null);
 		DataManager.run(session -> {
-			String hql = "SELECT * FROM User WHERE username = :username";
+			String hql = "FROM User WHERE username = :username";
 	        Query query = session.createQuery(hql);
 	        query.setParameter("username", username);
 	        cfUser.object = (User) query.uniqueResult();
@@ -56,7 +56,8 @@ public class UserDAOImpl implements IUserDAO {
 	public List<User> list(int page, int size) {
 		final ContainerFor<List<User>> cfList = new ContainerFor<List<User>>(null);
 		DataManager.run(session -> {
-			Query q = session.createQuery("FROM User");
+			String sqlQuery = "SELECT username, null as password, name, active FROM users";
+	        Query q = session.createSQLQuery(sqlQuery).addEntity(User.class);
 			q.setFirstResult((page - 1) * size);
             q.setMaxResults(size);
 			cfList.object = q.list();

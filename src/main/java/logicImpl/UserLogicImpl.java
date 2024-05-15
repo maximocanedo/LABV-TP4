@@ -57,6 +57,10 @@ public class UserLogicImpl implements IUserLogic {
 		return hideSensitiveData(repository.getByUsername(username));
 	}
 	
+	public void update(User user) {
+		repository.update(user);
+	}
+	
 	/* (non-Javadoc)
 	 * @see logicImpl.UserLogic#disable(entity.User)
 	 */

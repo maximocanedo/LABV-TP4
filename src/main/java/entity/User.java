@@ -65,13 +65,14 @@ public class User {
 	
 	@Override
 	public String toString() {		
-		IFormattedLine header = new FormattedLine("@" + username);
+		IFormattedLine header = new FormattedLine("[User]");
 		header.setLineSize(48);
 		header.setTopHeader(true);
+		header.setAlignment(Alignment.RIGHT);
 		String cont = "";
 		String[] lines = new String[] {
 			name,
-			password
+			"(@" + username + ")"
 		};
 		for(String line: lines) {
 			cont += line + "\n";
@@ -92,7 +93,7 @@ public class User {
 		
 		String tot = header.toString() + content.toString() + contact.toString();
 		
-		return tot + end.toString() + "\n";
+		return tot + end.toString();
 	}
 	
 }
