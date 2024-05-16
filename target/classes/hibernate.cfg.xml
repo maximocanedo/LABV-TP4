@@ -12,5 +12,9 @@
         <property name="hbm2ddl.auto">update</property>
         
         <mapping class="entity.User" />
+        <mapping class="entity.Paciente" />
+        <mapping class="entity.Medico" />
+        <mapping class="entity.Especialidad" />
+        
     </session-factory>
 </hibernate-configuration>
