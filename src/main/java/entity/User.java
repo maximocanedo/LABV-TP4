@@ -28,9 +28,21 @@ public class User {
 	public User() {
 		
 	}
-
+	
 	
 
+	@OneToOne
+    @JoinColumn(name = "medico_id")
+    private Medico medico;
+
+	
+	public Medico getMedico() {
+		return medico;
+	}
+
+	public void setMedico(Medico medico) {
+		this.medico = medico;
+	}
 	public String getName() {
 		return name;
 	}

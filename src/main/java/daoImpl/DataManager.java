@@ -9,9 +9,7 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
 
-import dao.IDataManager;
-
-public class DataManager implements IDataManager {
+public class DataManager {
 	private SessionFactory sessionFactory;
 	private Session session;
 	
