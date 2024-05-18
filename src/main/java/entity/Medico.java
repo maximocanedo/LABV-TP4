@@ -1,6 +1,11 @@
 package entity;
 
 import javax.persistence.*;
+
+import utils.FormattedLine;
+import utils.IFormattedLine;
+import utils.FormattedLine.Alignment;
+
 import java.util.Date;
 
 @Entity
@@ -171,18 +176,41 @@ public class Medico {
 
 	@Override
     public String toString() {
-        return "Medico{" +
-                "id=" + id +
-                ", legajo=" + legajo +
-                ", nombre='" + nombre + '\'' +
-                ", apellido='" + apellido + '\'' +
-                ", sexo='" + sexo + '\'' +
-                ", fechaNacimiento=" + fechaNacimiento +
-                ", direccion='" + direccion + '\'' +
-                ", localidad='" + localidad + '\'' +
-                ", correo='" + correo + '\'' +
-                ", telefono='" + telefono + '\'' +
-                ", especialidad=" + especialidad +
-                '}';
+		
+		IFormattedLine header = new FormattedLine("[Médico]");
+		header.setLineSize(48);
+		header.setTopHeader(true);
+		header.setAlignment(Alignment.RIGHT);
+		String cont = "";
+		String[] lines = new String[] {
+			apellido + ", " + nombre,
+			"Especialidad: " + especialidad.getDescripcion(),
+			"Legajo: " + legajo,
+			"Sexo: " + sexo,
+			"Fecha de nacimiento: " + fechaNacimiento,
+		};
+		for(String line: lines) {
+			cont += line + "\n";
+		}
+		IFormattedLine content = new FormattedLine(cont);
+		content.setLineSize(48);
+		IFormattedLine contact = new FormattedLine(
+			direccion + "\n" +
+			localidad + "\n" +
+			correo + "\n" +
+			telefono  + "\n"
+		);
+		contact.setAlignment(Alignment.RIGHT);
+		contact.setLineSize(48);
+		
+		IFormattedLine end = new FormattedLine("···");
+		end.setAlignment(FormattedLine.Alignment.CENTER);
+		end.setTopHeader(true);
+		end.setHeaderMiddleDelimiters('—');
+		end.setLineSize(48);
+		
+		String tot = header.toString() + content.toString() + contact.toString();
+		
+		return tot + end.toString();
     }
 }

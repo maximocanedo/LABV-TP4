@@ -15,17 +15,24 @@ import logicImpl.UserLogicImpl;
  */
 public class App {
 	
-	public static void generateUsers(int q) {
-		for(int i = 0; i < q; i++)
-			Generator.generateAndSaveRandomUser();
-			Generator.generateAndSaveRandomPaciente();
+	public static void generateFakeRecords(int q) {
+		System.out.println("Se guardarán los objetos Especialidad. ");
+		Generator.generateRecords();
+		System.out.println("Se generarán y guardarán " + q + " registros. ");
+		for(int i = 0; i < q; i++) {
+			User u = Generator.generateAndSaveRandomUser();
+			System.out.println(" - " + i + " usuario/s de " + q + ": " + u.getName() + "(@" + u.getUsername() + ")\n");
+			Paciente p = Generator.generateAndSaveRandomPaciente();
+			System.out.println(" - " + i + " paciente/s de " + q + ": " + p.getNombre() + "; DNI N.º: " + p.getDni());
+		}
+		System.out.println("Se generaron " + q + " registros. ");
 	}
 	
     public static void main( String[] args ) {
     	//UserLogicImpl users_repo = new UserLogicImpl();
-    	//System.out.println("Se generarán y guardarán diez registros. ");
-    	generateUsers(10);
-    	//System.out.println("Se generaron diez registros. ");
+    	//
+    	generateFakeRecords(10);
+    	
     	/*List<User> users = users_repo.list(1, 30);
     	for(User user : users) {
     		System.out.println(user);
