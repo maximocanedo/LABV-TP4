@@ -78,6 +78,11 @@ public class Generator {
         medicos.signupMedico(medico);
         return medico;
     }
+    public static User generateAndSaveRandomUser() {
+        User user = generateRandomUser();
+        users.signup(user);
+        return user;
+    }
     
     public static Especialidad[] generateAndSaveRecords() {
         IEspecialidadLogic repo = new EspecialidadLogicImpl();
@@ -146,9 +151,5 @@ public class Generator {
         };
     }
 
-    public static User generateAndSaveRandomUser() {
-        User user = generateRandomUser();
-        users.signup(user);
-        return user;
-    }
+   
 }
