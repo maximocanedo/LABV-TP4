@@ -74,6 +74,12 @@ public class Generator {
 		pacientes.signupPaciente(random);
 		return random;
 	}
+	
+	public static Medico generateAndSaveRandomDoctor(User user) {
+		return null;
+		//IMedicoLogic 
+	}
+	
 	public static Especialidad[] generateAndSaveRecords() {
 		IEspecialidadLogic repo = new EspecialidadLogicImpl();
 		Especialidad[] especialidades = Generator.generateRecords();
