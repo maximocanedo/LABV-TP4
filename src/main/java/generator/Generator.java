@@ -63,7 +63,7 @@ public class Generator {
 		
 	}
 	
-	public static User generateAndSaveRecord() {
+	public static User generateAndSaveRandomUser() {
 		User random = generateRandomUser();
 		users.signup(random);
 		return random;
