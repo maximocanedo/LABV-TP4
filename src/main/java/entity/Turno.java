@@ -1,11 +1,12 @@
 package entity;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.util.Date;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,31 +14,49 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import utils.FormattedLine;
+import utils.IFormattedLine;
+import utils.FormattedLine.Alignment;
+
 @Entity
-//@Table(name = "Turno")
+@Table(name = "turnos")
 public class Turno {
+	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="id")
     private int id;
-	private LocalDate fecha;
-	private LocalTime hora;
+	
+	@Column(name="fecha")
+	private Date fecha;
+	
+	@Column(name="observacion")
 	private String observacion;
-	private String estado;
+	
+	@Column(name="estado")
+	@Enumerated(EnumType.STRING)
+	private TurnoEstado estado;
 	
 	
 
 	
-	public Turno(int id, LocalDate fecha, LocalTime hora, String observacion, String estado, Medico medico,
+	public Turno(int id, Date fecha, String observacion, TurnoEstado estado, Medico medico,
 			Paciente paciente) {
 		this.id = id;
 		this.fecha = fecha;
-		this.hora = hora;
 		this.observacion = observacion;
 		this.estado = estado;
 		this.medico = medico;
 		this.paciente = paciente;
 	}
-	/************************************/
+
+	public Turno() {
+		
+	}
+	
+	
+	
+	
 	@ManyToOne(cascade= {CascadeType.ALL})
 	@JoinColumn(name="id_medico")
 	private Medico medico;
@@ -68,17 +87,11 @@ public class Turno {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public LocalDate getFecha() {
+	public Date getFecha() {
 		return fecha;
 	}
-	public void setFecha(LocalDate fecha) {
+	public void setFecha(Date fecha) {
 		this.fecha = fecha;
-	}
-	public LocalTime getHora() {
-		return hora;
-	}
-	public void setHora(LocalTime hora) {
-		this.hora = hora;
 	}
 	public String getObservacion() {
 		return observacion;
@@ -86,16 +99,48 @@ public class Turno {
 	public void setObservacion(String observacion) {
 		this.observacion = observacion;
 	}
-	public String getEstado() {
+	public TurnoEstado getEstado() {
 		return estado;
 	}
-	public void setEstado(String estado) {
+	public void setEstado(TurnoEstado estado) {
 		this.estado = estado;
 	}
 	@Override
 	public String toString() {
-		return "id:" + id + ", fecha:" + fecha + ", hora:" + hora + ", observacion:" + observacion + ", estado:"
-				+ estado + ", medico:" + medico + ", paciente:" + paciente;
+		final int lineSize = 64;
+		IFormattedLine header = new FormattedLine("[Turno]");
+		header.setLineSize(lineSize);
+		header.setTopHeader(true);
+		header.setAlignment(Alignment.RIGHT);
+		String cont = "";
+		String[] lines = new String[] {
+			"Médico: ",
+			medico.toString(),
+			"Paciente: ",
+			paciente.toString(),
+			fecha.toString(),
+			"Observaciones: " + observacion,
+		};
+		for(String line: lines) {
+			cont += line + "\n";
+		}
+		IFormattedLine content = new FormattedLine(cont);
+		content.setLineSize(lineSize);
+		IFormattedLine contact = new FormattedLine(
+			this.getEstado().toString()
+		);
+		contact.setAlignment(Alignment.RIGHT);
+		contact.setLineSize(lineSize);
+		
+		IFormattedLine end = new FormattedLine("···");
+		end.setAlignment(FormattedLine.Alignment.CENTER);
+		end.setTopHeader(true);
+		end.setHeaderMiddleDelimiters('—');
+		end.setLineSize(lineSize);
+		
+		String tot = header.toString() + content.toString() + contact.toString();
+		
+		return tot + end.toString();
 	}
 	
 	

@@ -47,16 +47,17 @@ public class Medico {
     @JoinColumn(name = "especialidad_id")
     private Especialidad especialidad;
 
-    @OneToOne(mappedBy = "medico")
-    private User user;
+    @OneToOne(cascade= {CascadeType.ALL})
+    @JoinColumn(name="usuario")
+    private User usuario;
     
     public User getUser() {
-		return user;
+		return usuario;
 	}
 
 
 	public void setUser(User user) {
-		this.user = user;
+		this.usuario = user;
 	}
 
 
@@ -184,7 +185,7 @@ public class Medico {
 		String cont = "";
 		String[] lines = new String[] {
 			apellido + ", " + nombre,
-			"Especialidad: " + especialidad.getDescripcion(),
+			"Especialidad: " + especialidad.getNombre(),
 			"Legajo: " + legajo,
 			"Sexo: " + sexo,
 			"Fecha de nacimiento: " + fechaNacimiento,
@@ -203,7 +204,7 @@ public class Medico {
 		contact.setAlignment(Alignment.RIGHT);
 		contact.setLineSize(48);
 		
-		IFormattedLine end = new FormattedLine("···");
+		IFormattedLine end = new FormattedLine("@" + usuario.getUsername());
 		end.setAlignment(FormattedLine.Alignment.CENTER);
 		end.setTopHeader(true);
 		end.setHeaderMiddleDelimiters('—');

@@ -22,7 +22,7 @@ public class UserLogicImpl implements IUserLogic {
 	}
 	
 	/* (non-Javadoc)
-	 * @see logicImpl.UserLogic#signup(entity.User)
+	 * @see logic.IUserLogic#signup(entity.User)
 	 */
 	@Override
 	public void signup(User user) {
@@ -37,7 +37,7 @@ public class UserLogicImpl implements IUserLogic {
 	}
 	
 	/* (non-Javadoc)
-	 * @see logicImpl.UserLogic#check(java.lang.String, java.lang.String)
+	 * @see logic.IUserLogic#check(java.lang.String, java.lang.String)
 	 */
 	@Override
 	public User check(String username, String password) {
@@ -50,19 +50,16 @@ public class UserLogicImpl implements IUserLogic {
 	}
 	
 	/* (non-Javadoc)
-	 * @see logicImpl.UserLogic#findByUsername(java.lang.String)
+	 * @see logic.IUserLogic#findByUsername(java.lang.String)
 	 */
 	@Override
 	public User findByUsername(String username) {
 		return hideSensitiveData(repository.getByUsername(username));
 	}
 	
-	public void update(User user) {
-		repository.update(user);
-	}
 	
 	/* (non-Javadoc)
-	 * @see logicImpl.UserLogic#disable(entity.User)
+	 * @see logic.IUserLogic#disable(entity.User)
 	 */
 	@Override
 	public void disable(User user) {
@@ -71,7 +68,7 @@ public class UserLogicImpl implements IUserLogic {
 	}
 	
 	/* (non-Javadoc)
-	 * @see logicImpl.UserLogic#enable(entity.User)
+	 * @see logic.IUserLogic#enable(entity.User)
 	 */
 	@Override
 	public void enable(User user) {
@@ -80,7 +77,7 @@ public class UserLogicImpl implements IUserLogic {
 	}
 	
 	/* (non-Javadoc)
-	 * @see logicImpl.UserLogic#list(int, int)
+	 * @see logic.IUserLogic#list(int, int)
 	 */
 	@Override
 	public List<User> list(int page, int size) {
@@ -88,7 +85,7 @@ public class UserLogicImpl implements IUserLogic {
 	}
 	
 	/* (non-Javadoc)
-	 * @see logicImpl.UserLogic#list()
+	 * @see logic.IUserLogic#list()
 	 */
 	@Override
 	public List<User> list() {
@@ -97,7 +94,7 @@ public class UserLogicImpl implements IUserLogic {
 	
 	
 	/* (non-Javadoc)
-	 * @see logicImpl.UserLogic#changePassword(java.lang.String, java.lang.String, java.lang.String)
+	 * @see logic.IUserLogic#changePassword(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
 	public boolean changePassword(String username, String currentPassword, String newPassword) {
@@ -109,6 +106,16 @@ public class UserLogicImpl implements IUserLogic {
 		return true;
 	}
 	
+	/** (non-Javadoc)
+	 * @see logic.IUserLogic#update(User)
+	 */
+	public boolean update(User user) {
+		User original = repository.getByUsername(user.getUsername());
+		if(original == null) return false;
+		user.setPassword(original.getPassword());
+		repository.update(user);
+		return true;
+	}
 	
 	
 		

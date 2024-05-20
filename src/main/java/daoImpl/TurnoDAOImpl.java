@@ -8,7 +8,7 @@ import dao.ITurnoDAO;
 import daoImpl.DataManager.ContainerFor;
 import entity.Turno;
 
-public class TurnoDAoImpl implements ITurnoDAO{
+public class TurnoDAOImpl implements ITurnoDAO{
 	
 public void add(Turno turno) {
 	DataManager.transact(session -> {

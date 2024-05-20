@@ -1,6 +1,8 @@
 package generator;
 
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
+
 import com.github.javafaker.Address;
 import com.github.javafaker.Faker;
 import com.github.javafaker.Name;
@@ -83,6 +85,21 @@ public class Generator {
         users.signup(user);
         return user;
     }
+    
+    public static Turno generateTurno(Paciente p, Medico m) {
+    	Faker f = new Faker();
+    	Turno t = new Turno();
+    	t.setMedico(m);
+    	t.setPaciente(p);
+    	t.setObservacion("");
+    	t.setEstado(TurnoEstado.PENDIENTE);
+    	t.setFecha(f.date().future(1280, TimeUnit.DAYS));
+    	ITurnoLogic turnos = new TurnoLogicImpl();
+    	turnos.register(t);
+    	return t;
+    	
+    }
+    
     
     public static Especialidad[] generateAndSaveRecords() {
         IEspecialidadLogic repo = new EspecialidadLogicImpl();

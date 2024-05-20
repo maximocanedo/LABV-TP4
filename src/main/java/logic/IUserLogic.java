@@ -21,5 +21,7 @@ public interface IUserLogic {
 	List<User> list();
 
 	boolean changePassword(String username, String currentPassword, String newPassword);
+	
+	boolean update(User user);
 
 }

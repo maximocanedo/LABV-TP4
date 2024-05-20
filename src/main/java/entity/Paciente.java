@@ -130,12 +130,12 @@ public class Paciente {
 		
 		String cont = "";
 		String[] lines = new String[] {
-			String.valueOf(id),
-			nombre, 
-			apellido, 
-			String.valueOf(dni),
-			direccion + "," + localidad + "," + provincia,
-			String.valueOf(fechaNacimiento),
+			"ID: " + String.valueOf(id),
+			"Nombre: " + nombre + " " + apellido, 
+			"DNI N.º: " + String.valueOf(dni),
+			"Fecha de nacimiento: " + String.valueOf(fechaNacimiento),
+			direccion, 
+			localidad + "," + provincia,
 			correo
 		};
 		for(String line: lines) {

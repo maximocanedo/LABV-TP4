@@ -25,15 +25,15 @@ public class User {
 	@Column(name="active")
 	private boolean active = true;
 	
+	@OneToOne(mappedBy="usuario")
+	private Medico medico;
+	
 	public User() {
 		
 	}
 	
 	
 
-	@OneToOne
-    @JoinColumn(name = "medico_id")
-    private Medico medico;
 
 	
 	public Medico getMedico() {
@@ -76,9 +76,10 @@ public class User {
 	}
 	
 	@Override
-	public String toString() {		
+	public String toString() {
+		final int lineSize = 32;
 		IFormattedLine header = new FormattedLine("[User]");
-		header.setLineSize(48);
+		header.setLineSize(lineSize);
 		header.setTopHeader(true);
 		header.setAlignment(Alignment.RIGHT);
 		String cont = "";
@@ -90,18 +91,18 @@ public class User {
 			cont += line + "\n";
 		}
 		IFormattedLine content = new FormattedLine(cont);
-		content.setLineSize(48);
+		content.setLineSize(lineSize);
 		IFormattedLine contact = new FormattedLine(
 			this.isActive() ? "" : "Usuario deshabilitado. "
 		);
 		contact.setAlignment(Alignment.RIGHT);
-		contact.setLineSize(48);
+		contact.setLineSize(lineSize);
 		
 		IFormattedLine end = new FormattedLine("···");
 		end.setAlignment(FormattedLine.Alignment.CENTER);
 		end.setTopHeader(true);
 		end.setHeaderMiddleDelimiters('—');
-		end.setLineSize(48);
+		end.setLineSize(lineSize);
 		
 		String tot = header.toString() + content.toString() + contact.toString();
 		

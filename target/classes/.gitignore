@@ -1,10 +1,7 @@
-/generator/
-/entity/
-/snippet/
-/utils/
-/utn/
-/daoImpl/
-/dao/
-/logicImpl/
-/logic/
 /META-INF/
+/logicImpl/
+/daoImpl/
+/logic/
+/utn/
+/entity/
+/generator/
