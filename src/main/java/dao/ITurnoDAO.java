@@ -1,5 +1,6 @@
 package dao;
 
+import java.util.Date;
 import java.util.List;
 import entity.Turno;
 
@@ -15,5 +16,9 @@ public interface ITurnoDAO {
 
 		void update(Turno turno);
 		
-		void erase(Turno turno) ;
+		void erase(Turno turno);
+		
+		int countPresencesBetween(Date date1, Date date2);
+		
+		int countAbsencesBetween(Date date1, Date date2);
 }

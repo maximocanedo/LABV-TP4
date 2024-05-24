@@ -1,5 +1,6 @@
 package logic;
 
+import java.util.Date;
 import java.util.List;
 
 import entity.Turno;
@@ -17,5 +18,9 @@ public interface ITurnoLogic {
 	List<Turno> list();
 
 	void update(Turno turno);
+	
+	int countPresencesBetween(Date d1, Date d2);
+	
+	int countAbsencesBetween(Date d1, Date d2);
 
 }

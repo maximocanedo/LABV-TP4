@@ -1,5 +1,6 @@
 package logicImpl;
 
+import java.util.Date;
 import java.util.List;
 
 import dao.ITurnoDAO;
@@ -55,6 +56,16 @@ public class TurnoLogicImpl implements ITurnoLogic {
 	@Override
 	public void update(Turno turno) {
 		this.repository.update(turno);
+	}
+
+	@Override
+	public int countPresencesBetween(Date d1, Date d2) {
+		return this.repository.countPresencesBetween(d1, d2);
+	}
+
+	@Override
+	public int countAbsencesBetween(Date d1, Date d2) {
+		return this.repository.countAbsencesBetween(d1, d2);
 	}
 	
 }

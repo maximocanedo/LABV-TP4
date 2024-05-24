@@ -1,5 +1,6 @@
 package generator;
 
+import java.util.Date;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -94,6 +95,30 @@ public class Generator {
     	t.setObservacion("");
     	t.setEstado(TurnoEstado.PENDIENTE);
     	t.setFecha(f.date().future(1280, TimeUnit.DAYS));
+    	ITurnoLogic turnos = new TurnoLogicImpl();
+    	turnos.register(t);
+    	return t;
+    	
+    }
+    
+    @SuppressWarnings("deprecation")
+	public static Turno generateTurnoPunto6(Paciente p, Medico m) {
+    	Faker f = new Faker();
+    	Turno t = new Turno();
+    	t.setMedico(m);
+    	t.setPaciente(p);
+    	t.setObservacion("");
+    	boolean presente = f.bool().bool();
+    	t.setEstado(presente ? TurnoEstado.PRESENTE : TurnoEstado.AUSENTE);
+    	Date d = new Date();
+    	d.setDate(1);
+    	d.setMonth(0);
+    	d.setYear(124);
+    	Date d2 = new Date();
+    	d2.setDate(1);
+    	d2.setMonth(2);
+    	d2.setYear(124);
+    	t.setFecha(f.date().between(d, d2));
     	ITurnoLogic turnos = new TurnoLogicImpl();
     	turnos.register(t);
     	return t;
