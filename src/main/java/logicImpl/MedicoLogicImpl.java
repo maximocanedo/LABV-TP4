@@ -33,4 +33,9 @@ public class MedicoLogicImpl implements IMedicoLogic {
     public List<Medico> list() {
         return list(1, 15);
     }
+
+	@Override
+	public List<Object[]> listMedicosLegajoAscP2() {
+		return repository.listMedicosLegajoAscP2();
+	}
 }

@@ -24,6 +24,12 @@ public interface IMedicoDAO {
      * @return Lista con los medicos.
      */
     List<Medico> list();
+    
+    /**
+     * Lista todos los medicos de la base de datos.
+     * @return Lista con los medicos.
+     */
+    List<Object[]> listMedicosLegajoAscP2();
 
     /**
      * Lista todos los medicos de la base de datos, paginable.

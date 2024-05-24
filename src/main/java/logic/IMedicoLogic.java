@@ -12,5 +12,7 @@ public interface IMedicoLogic {
     List<Medico> list(int page, int size);
 
     List<Medico> list();
+    
+    List<Object[]> listMedicosLegajoAscP2();
 
 }
