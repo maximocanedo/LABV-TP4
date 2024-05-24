@@ -40,11 +40,11 @@ public class App {
 	
     public static void main( String[] args ) {
     	// Carga datos
-    	generateFakeRecords(10);
+    	/*generateFakeRecords(10);*/
 
     	
     	// Modificar algún registro
-    	User user = usersRepo.list(1, 1).get(0);
+    	/*User user = usersRepo.list(1, 1).get(0);
     	System.out.println(user);
     	user.setName("Roberto Castañeda");
     	boolean s = usersRepo.update(user);
@@ -53,13 +53,13 @@ public class App {
     		System.out.println(user);
     	} else {
     		System.out.println("Error al intentar cambiar el nombre. ");
-    	}
+    	}*/
     	// Borrar un registro
-    	usersRepo.disable(user);
-    	System.out.println("Se deshabilitó correctamente el usuario. ");
+    	/*usersRepo.disable(user);
+    	System.out.println("Se deshabilitó correctamente el usuario. ");*/
     	
     	// Listar médicos
-    	IMedicoLogic medicos_repo = new MedicoLogicImpl();
+    	/*IMedicoLogic medicos_repo = new MedicoLogicImpl();
     	List<Medico> medicos = medicos_repo.list(1, 10);
     	for(Medico medico : medicos) {
     		System.out.println(medico);
@@ -69,7 +69,11 @@ public class App {
     	List<Paciente> pacientes = paciente_repo.list(1, 10);
     	for(Paciente paciente : pacientes) {
     		System.out.println(paciente);
+    	}*/
+    	IMedicoLogic medicos_repo = new MedicoLogicImpl();
+    	List<Object[]> lista_medicos_P2 = medicos_repo.listMedicosLegajoAscP2();
+    	for(Object[] medico : lista_medicos_P2) {
+    		System.out.println("Legajo: " + medico[0] + " Nombre: "+ medico[1] + " Apellido: "+ medico[2]);
     	}
-    	
     }
 }

@@ -61,4 +61,16 @@ public class MedicoDAOImpl implements IMedicoDAO {
             session.delete(medico);
         });
     }
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object[]> listMedicosLegajoAscP2() {
+		final ContainerFor<List<Object[]>> cfList = new ContainerFor<>(null);
+        DataManager.run(session -> {
+            String hql = "SELECT m.legajo, m.nombre, m.apellido FROM Medico m ORDER BY m.legajo ASC";
+            Query query = session.createQuery(hql);
+            cfList.object = query.list();
+        });
+        return cfList.object;
+	}
 }
