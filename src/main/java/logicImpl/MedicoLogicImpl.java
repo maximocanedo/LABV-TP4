@@ -48,4 +48,9 @@ public class MedicoLogicImpl implements IMedicoLogic {
     public List<Object[]> getTurnosMedicoEnFecha(int legajo, LocalDate fecha) {
         return repository.getTurnosMedicoEnFecha(legajo, fecha);
     }
+    
+    @Override
+    public List<Object[]> getTurnosMedicoEnRangoDeFechas(int legajo, LocalDate fechaInicio, LocalDate fechaFin) {
+        return repository.getTurnosMedicoEnRangoDeFechas(legajo, fechaInicio, fechaFin);
+    }
 }

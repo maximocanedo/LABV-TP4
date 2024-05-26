@@ -17,4 +17,6 @@ public interface IMedicoLogic {
     List<Object[]> listMedicosLegajoAscP2();
 
     List<Object[]> getTurnosMedicoEnFecha(int legajo, LocalDate fecha);
+    
+    List<Object[]> getTurnosMedicoEnRangoDeFechas(int legajo, LocalDate fechaInicio, LocalDate fechaFin);
 }

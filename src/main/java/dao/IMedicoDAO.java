@@ -58,4 +58,12 @@ public interface IMedicoDAO {
      * @param fecha filtro.
      */
     List<Object[]> getTurnosMedicoEnFecha(int legajo, LocalDate fecha);
+    
+    /**
+     * Lista medico en rango de fechas por parametro.
+     * @param legajo del medico.
+     * @param fechaInicio filtro.
+     * @param fechaFin filtro.
+     */
+    List<Object[]> getTurnosMedicoEnRangoDeFechas(int legajo, LocalDate fechaInicio, LocalDate fechaFin);
 }

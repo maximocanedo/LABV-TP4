@@ -1,5 +1,6 @@
 package utn.frgp.tp4;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -29,12 +30,31 @@ public class App {
     	generateFakeRecords(10);
     	//App.punto1();
     	App.punto2();
-    	//App.punto3();
+    	App.punto3();
     	//App.punto4();
     	//App.punto5();
     	App.punto6();
     }
 	
+	private static void punto3() {
+
+		LocalDate fecha = LocalDate.of(2025, 1, 1);
+		IMedicoLogic medicos_repo = new MedicoLogicImpl();
+		List<Object[]> turnos = medicos_repo.getTurnosMedicoEnFecha(1234, fecha);
+
+        for (Object[] turno : turnos) {
+            System.out.println("Legajo: " + turno[0] + ", Fecha de Alta: " + turno[1] + ", Estado: " + turno[2]);
+        }
+		
+		LocalDate fechaInicio = LocalDate.of(2025, 1, 1);
+        LocalDate fechaFin = LocalDate.of(2025, 12, 31);
+		
+		List<Object[]> turnosEnRango = medicos_repo.getTurnosMedicoEnRangoDeFechas(1234, fechaInicio, fechaFin);
+        for (Object[] turno : turnosEnRango) {
+            System.out.println("Legajo: " + turno[0] + ", Fecha de Alta: " + turno[1] + ", Estado: " + turno[2]);
+        }
+	}
+
 	private static void punto2() {
 		IMedicoLogic medicos_repo = new MedicoLogicImpl();
     	List<Object[]> lista_medicos_P2 = medicos_repo.listMedicosLegajoAscP2();
