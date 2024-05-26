@@ -1,5 +1,6 @@
 package logic;
 
+import java.time.LocalDate;
 import java.util.List;
 import entity.Medico;
 
@@ -15,4 +16,5 @@ public interface IMedicoLogic {
     
     List<Object[]> listMedicosLegajoAscP2();
 
+    List<Object[]> getTurnosMedicoEnFecha(int legajo, LocalDate fecha);
 }

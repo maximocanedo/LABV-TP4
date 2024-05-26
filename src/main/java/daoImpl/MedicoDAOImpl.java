@@ -1,5 +1,6 @@
 package daoImpl;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -73,4 +74,20 @@ public class MedicoDAOImpl implements IMedicoDAO {
         });
         return cfList.object;
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object[]> getTurnosMedicoEnFecha(int legajo, LocalDate fecha) {
+        final ContainerFor<List<Object[]>> cfList = new ContainerFor<>(null);
+        DataManager.run(session -> {
+            String hql = "SELECT m.legajo, t.fechaAlta, t.estado " +
+                         "FROM Medico m INNER JOIN m.turnos t " +
+                         "WHERE m.legajo = :legajo AND t.fechaAlta = :fecha";
+            Query query = session.createQuery(hql);
+            query.setParameter("legajo", legajo);
+            query.setParameter("fecha", java.sql.Date.valueOf(fecha));
+            cfList.object = query.list();
+        });
+        return cfList.object;
+    }
 }

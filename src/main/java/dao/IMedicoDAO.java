@@ -1,5 +1,6 @@
 package dao;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import entity.Medico;
@@ -50,4 +51,11 @@ public interface IMedicoDAO {
      * @param medico Medico a eliminar.
      */
     void erase(Medico medico);
+    
+    /**
+     * Lista medico en fecha por parametro.
+     * @param legajo del medico.
+     * @param fecha filtro.
+     */
+    List<Object[]> getTurnosMedicoEnFecha(int legajo, LocalDate fecha);
 }

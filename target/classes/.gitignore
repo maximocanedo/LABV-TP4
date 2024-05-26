@@ -1,7 +1,4 @@
-/dao/
-/daoImpl/
 /logic/
 /logicImpl/
-/META-INF/
-/generator/
-/utn/
+/dao/
+/daoImpl/
