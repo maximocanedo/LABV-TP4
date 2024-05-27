@@ -73,4 +73,15 @@ public class MedicoDAOImpl implements IMedicoDAO {
         });
         return cfList.object;
 	}
+
+	@Override
+	public Medico medicoMayorLegajoP5() {
+		final ContainerFor<Medico> cfMedico = new ContainerFor<>(null);
+        DataManager.run(session -> {
+            String hql = "FROM Medico m ORDER BY m.legajo DESC";
+            Query query = session.createQuery(hql);
+            cfMedico.object = (Medico) query.uniqueResult();
+        });
+        return cfMedico.object;
+	}
 }

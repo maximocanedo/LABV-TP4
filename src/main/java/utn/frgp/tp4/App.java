@@ -34,6 +34,12 @@ public class App {
     	//App.punto5();
     	App.punto6();
     }
+    
+    private static void punto5() {
+		IMedicoLogic medicos_repo = new MedicoLogicImpl();
+    	//Medico medico_P5 = medicos_repo.medicoMayorLegajoP5();
+    	//System.out.println("Legajo: " + medico_P5[0] + " Nombre: "+ medico_P5[1] + " Apellido: "+ medico_P5[2]);
+	}
 	
 	private static void punto2() {
 		IMedicoLogic medicos_repo = new MedicoLogicImpl();
