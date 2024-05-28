@@ -26,10 +26,16 @@ public interface IMedicoDAO {
     List<Medico> list();
     
     /**
-     * Lista todos los medicos de la base de datos.
+     * Lista los legajos de los medicos de la base de datos.
      * @return Lista con los medicos.
      */
     List<Object[]> listMedicosLegajoAscP2();
+    
+    /**
+     * Obtiene el medico con el legajo de mayor valor de la base de datos.
+     * @return Lista con los medicos.
+     */
+    Medico medicoMayorLegajoP5();
 
     /**
      * Lista todos los medicos de la base de datos, paginable.
