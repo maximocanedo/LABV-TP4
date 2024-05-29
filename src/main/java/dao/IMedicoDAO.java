@@ -76,5 +76,5 @@ public interface IMedicoDAO {
      * Obtiene todos los legajos de los medicos 
      * @return legajo de los medicos. 
      */
-    public List<String> TodosMedicosXLegajoP4();
+    public List<Integer> TodosMedicosXLegajoP4();
 }

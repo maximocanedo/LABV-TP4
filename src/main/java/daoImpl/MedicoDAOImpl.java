@@ -87,8 +87,8 @@ public class MedicoDAOImpl implements IMedicoDAO {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<String> TodosMedicosXLegajoP4() {
-		final Optional<List<String>> optionalMedicos = new Optional<>(null);
+	public List<Integer> TodosMedicosXLegajoP4(){
+		final Optional<List<Integer>> optionalMedicos = new Optional<>();
         DataManager.run(session -> {
             String hql = "SELECT m.legajo FROM Medico m";
             Query query = session.createQuery(hql);
