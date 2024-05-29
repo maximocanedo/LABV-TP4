@@ -1,6 +1,7 @@
 package logicImpl;
 
 import java.util.List;
+import entity.Optional;
 
 import dao.IPacienteDAO;
 import daoImpl.PacienteDAOImpl;
@@ -21,7 +22,7 @@ public class PacienteLogicImpl implements IPacienteLogic {
 	}
 	
 	@Override
-	public Paciente findById(int id) {
+	public Optional<Paciente> findById(int id) {
 		return repository.getById(id);
 	}
 	

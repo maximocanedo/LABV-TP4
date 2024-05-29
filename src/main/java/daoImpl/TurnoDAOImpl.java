@@ -6,7 +6,7 @@ import java.util.List;
 import org.hibernate.Query;
 
 import dao.ITurnoDAO;
-import daoImpl.DataManager.ContainerFor;
+import entity.Optional;
 import entity.Turno;
 import entity.TurnoEstado;
 
@@ -18,15 +18,15 @@ public class TurnoDAOImpl implements ITurnoDAO {
 		});
 	}
 
-	public Turno getByid(int id) {
-		final ContainerFor<Turno> turno = new ContainerFor<>(null);
+	public Optional<Turno> getByid(int id) {
+		final Optional<Turno> turno = new Optional<>();
 		DataManager.run(session -> {
 			String hql = "FROM Turno WHERE id = :id";
 			Query query = session.createQuery(hql);
 			query.setParameter("id", id);
-			turno.object = (Turno) query.uniqueResult();
+			turno.set((Turno) query.uniqueResult());
 		});
-		return turno.object;
+		return turno;
 	}
 
 	public List<Turno> list() {
@@ -35,15 +35,15 @@ public class TurnoDAOImpl implements ITurnoDAO {
 
 	@SuppressWarnings("unchecked")
 	public List<Turno> list(int page, int size) {
-		final ContainerFor<List<Turno>> turno = new ContainerFor<>(null);
+		final Optional<List<Turno>> optional = new Optional<>();
 		DataManager.run(session -> {
 			String hql = "SELECT * FROM Turno";
 			Query query = session.createQuery(hql);
 			query.setFirstResult((page - 1) * size);
 			query.setMaxResults(size);
-			turno.object = query.list();
+			optional.set(query.list());
 		});
-		return turno.object;
+		return optional.get();
 	}
 
 	public void update(Turno turno) {
@@ -60,7 +60,7 @@ public class TurnoDAOImpl implements ITurnoDAO {
 
 	@Override
 	public int countPresencesBetween(Date date1, Date date2) {
-		final ContainerFor<Integer> r = new ContainerFor<Integer>(0);
+		final Optional<Integer> r = new Optional<Integer>(0);
 		DataManager.run(session -> {
 			String queryString = "SELECT COUNT(*) FROM Turno t WHERE t.estado = :e AND t.fecha BETWEEN :d1 AND :d2";
 			Query query = session.createQuery(queryString);
@@ -68,14 +68,14 @@ public class TurnoDAOImpl implements ITurnoDAO {
 			query.setParameter("d1", date1);
 			query.setParameter("d2", date2);
 			Long l = (Long) query.uniqueResult();
-			r.object = l.intValue();
+			r.set(l.intValue());
 		});
-		return r.object;
+		return r.get();
 	}
 
 	@Override
 	public int countAbsencesBetween(Date date1, Date date2) {
-		final ContainerFor<Integer> r = new ContainerFor<Integer>(0);
+		final Optional<Integer> r = new Optional<Integer>(0);
 		DataManager.run(session -> {
 			String queryString = "SELECT COUNT(*) FROM Turno t WHERE t.estado = :e AND t.fecha BETWEEN :d1 AND :d2";
 			Query query = session.createQuery(queryString);
@@ -83,8 +83,8 @@ public class TurnoDAOImpl implements ITurnoDAO {
 			query.setParameter("d1", date1);
 			query.setParameter("d2", date2);
 			Long l = (Long) query.uniqueResult();
-			r.object = l.intValue();
+			r.set(l.intValue());
 		});
-		return r.object;
+		return r.get();
 	}
 }

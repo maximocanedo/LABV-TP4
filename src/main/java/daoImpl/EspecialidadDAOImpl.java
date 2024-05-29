@@ -5,7 +5,7 @@ import java.util.List;
 import org.hibernate.Query;
 
 import dao.IEspecialidadDAO;
-import daoImpl.DataManager.ContainerFor;
+import entity.Optional;
 import entity.Especialidad;
 
 public class EspecialidadDAOImpl implements IEspecialidadDAO {
@@ -18,15 +18,15 @@ public class EspecialidadDAOImpl implements IEspecialidadDAO {
     }
 
     @Override
-    public Especialidad getById(int id) {
-        final ContainerFor<Especialidad> cfEspecialidad = new ContainerFor<>(null);
+    public Optional<Especialidad> getById(int id) {
+        final Optional<Especialidad> optional = new Optional<>();
         DataManager.run(session -> {
             String hql = "FROM Especialidad WHERE id = :id";
             Query query = session.createQuery(hql);
             query.setParameter("id", id);
-            cfEspecialidad.object = (Especialidad) query.uniqueResult();
+            optional.set((Especialidad) query.uniqueResult());
         });
-        return cfEspecialidad.object;
+        return optional;
     }
 
     @Override
@@ -37,15 +37,15 @@ public class EspecialidadDAOImpl implements IEspecialidadDAO {
     @Override
     @SuppressWarnings("unchecked")
     public List<Especialidad> list(int page, int size) {
-        final ContainerFor<List<Especialidad>> cfList = new ContainerFor<>(null);
+        final Optional<List<Especialidad>> optional = new Optional<>();
         DataManager.run(session -> {
             String hql = "FROM Especialidad";
             Query query = session.createQuery(hql);
             query.setFirstResult((page - 1) * size);
             query.setMaxResults(size);
-            cfList.object = query.list();
+            optional.set(query.list());
         });
-        return cfList.object;
+        return optional.get();
     }
 
     @Override

@@ -2,6 +2,7 @@ package dao;
 
 import java.util.List;
 
+import entity.Optional;
 import entity.User;
 
 public interface IUserDAO {
@@ -19,7 +20,7 @@ public interface IUserDAO {
 	 * @throws Exception 
 	 * @throws NotFoundException 
 	 */
-	User getByUsername(String username);
+	Optional<User> getByUsername(String username);
 
 	/**
 	 * Lista todos los usuarios de la base de datos.

@@ -3,6 +3,7 @@ package dao;
 import java.time.LocalDate;
 import java.util.List;
 
+import entity.Optional;
 import entity.Medico;
 
 public interface IMedicoDAO {
@@ -18,7 +19,14 @@ public interface IMedicoDAO {
      * @param id Id del medico.
      * @return Objeto Medico con los datos.
      */
-    Medico getById(int id);
+    Optional<Medico> getById(int id);
+    
+    /**
+     * Buscar por legajo
+     * @param file Legajo
+     * @return Médico.
+     */
+    Optional<Medico> findByFile(int file);
 
     /**
      * Lista todos los medicos de la base de datos.
@@ -27,10 +35,16 @@ public interface IMedicoDAO {
     List<Medico> list();
     
     /**
-     * Lista todos los medicos de la base de datos.
+     * Lista los legajos de los medicos de la base de datos.
      * @return Lista con los medicos.
      */
     List<Object[]> listMedicosLegajoAscP2();
+    
+    /**
+     * Obtiene el medico con el legajo de mayor valor de la base de datos.
+     * @return Lista con los medicos.
+     */
+    Medico medicoMayorLegajoP5();
 
     /**
      * Lista todos los medicos de la base de datos, paginable.
@@ -39,6 +53,20 @@ public interface IMedicoDAO {
      * @return Lista con los medicos.
      */
     List<Medico> list(int page, int size);
+    
+    /**
+     * Lista todos los médicos de la base de datos, paginable.
+     * @param page Número de página (De 1 en adelante)
+     * @param size Cantidad de elementos por página.
+     * @return Lista de médicos.
+     */
+    List<Medico> listOrderByFileDescending(int page, int size);
+    
+    /**
+     * Lista todos los médicos de la base de datos.
+     * @return Primeros diez registros.
+     */
+    List<Medico> listOrderByFileDescending();
 
     /**
      * Actualiza un medico en la base de datos.
@@ -51,6 +79,13 @@ public interface IMedicoDAO {
      * @param medico Medico a eliminar.
      */
     void erase(Medico medico);
+    
+    /**
+
+     * Obtiene todos los legajos de los medicos 
+     * @return legajo de los medicos. 
+     */
+    public List<Integer> TodosMedicosXLegajoP4();
     
     /**
      * Lista medico en fecha por parametro.

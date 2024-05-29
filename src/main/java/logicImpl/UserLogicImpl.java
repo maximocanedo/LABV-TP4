@@ -1,6 +1,7 @@
 package logicImpl;
 
 import java.util.List;
+import entity.Optional;
 
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -36,24 +37,32 @@ public class UserLogicImpl implements IUserLogic {
 		return user;
 	}
 	
+	private Optional<User> hideSensitiveData(Optional<User> u) {
+		if(u.isPresent()) {
+			u.set(this.hideSensitiveData(u.get()));
+		}
+		return u;
+	}
+	
 	/* (non-Javadoc)
 	 * @see logic.IUserLogic#check(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public User check(String username, String password) {
-		User user = repository.getByUsername(username);
-		if(user == null) return null;
-		if(BCrypt.checkpw(password, user.getPassword())) {
-			return hideSensitiveData(user);
+	public Optional<User> check(String username, String password) {
+		Optional<User> user = repository.getByUsername(username);
+		if(user.isEmpty()) return user;
+		User u = user.get();
+		if(BCrypt.checkpw(password, u.getPassword())) {
+			user.set(hideSensitiveData(u));
 		}
-		return null;
+		return user;
 	}
 	
 	/* (non-Javadoc)
 	 * @see logic.IUserLogic#findByUsername(java.lang.String)
 	 */
 	@Override
-	public User findByUsername(String username) {
+	public Optional<User> findByUsername(String username) {
 		return hideSensitiveData(repository.getByUsername(username));
 	}
 	
@@ -99,8 +108,9 @@ public class UserLogicImpl implements IUserLogic {
 	@Override
 	public boolean changePassword(String username, String currentPassword, String newPassword) {
 		// TODO: Implementar excepciones.
-		User user = check(username, currentPassword);
-		if(user == null) return false;
+		Optional<User> optional = check(username, currentPassword);
+		if(optional.isEmpty()) return false;
+		User user = optional.get();
 		user.setPassword(hash(newPassword));
 		repository.update(user);
 		return true;
@@ -110,9 +120,9 @@ public class UserLogicImpl implements IUserLogic {
 	 * @see logic.IUserLogic#update(User)
 	 */
 	public boolean update(User user) {
-		User original = repository.getByUsername(user.getUsername());
-		if(original == null) return false;
-		user.setPassword(original.getPassword());
+		Optional<User> original = repository.getByUsername(user.getUsername());
+		if(original.isEmpty()) return false;
+		user.setPassword(original.get().getPassword());
 		repository.update(user);
 		return true;
 	}

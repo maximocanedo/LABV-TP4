@@ -2,15 +2,17 @@ package dao;
 
 import java.util.Date;
 import java.util.List;
+import entity.Optional;
+
 import entity.Turno;
 
 public interface ITurnoDAO {
 		
 		void add(Turno turno);
 
-		Turno getByid(int id);
+		Optional<Turno> getByid(int id);
 
-		 List<Turno> list();
+		List<Turno> list();
 
 		List<Turno> list(int page, int size);
 

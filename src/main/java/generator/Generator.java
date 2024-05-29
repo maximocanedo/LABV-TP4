@@ -75,9 +75,13 @@ public class Generator {
         pacientes.signupPaciente(random);
         return random;
     }
+    public static boolean EXISTE_LEGAJO_1234 = false;
     
     public static Medico generateAndSaveRandomDoctor(User user) {
+    	boolean exists = Generator.EXISTE_LEGAJO_1234 || medicos.findByFile(1234).isPresent();
         Medico medico = generateRecord(user);
+        if(!exists) medico.setLegajo(1234);
+        else Generator.EXISTE_LEGAJO_1234 = exists;
         medicos.signupMedico(medico);
         return medico;
     }

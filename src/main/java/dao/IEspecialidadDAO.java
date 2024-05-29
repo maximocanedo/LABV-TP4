@@ -1,6 +1,7 @@
 package dao;
 
 import java.util.List;
+import entity.Optional;
 
 import entity.Especialidad;
 
@@ -17,7 +18,7 @@ public interface IEspecialidadDAO {
      * @param id Id de la especialidad.
      * @return Objeto Especialidad con los datos
      */
-    Especialidad getById(int id);
+    Optional<Especialidad> getById(int id);
 
     /**
      * Lista todas las especialidades de la base de datos.

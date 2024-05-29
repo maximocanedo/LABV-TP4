@@ -6,6 +6,7 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
+import entity.Optional;
 import dao.IMedicoDAO;
 import daoImpl.MedicoDAOImpl;
 import entity.Medico;
@@ -25,7 +26,7 @@ public class MedicoLogicImpl implements IMedicoLogic {
     }
 
     @Override
-    public Medico findById(int id) {
+    public Optional<Medico> findById(int id) {
         return repository.getById(id);
     }
 
@@ -53,4 +54,35 @@ public class MedicoLogicImpl implements IMedicoLogic {
     public List<Object[]> getTurnosMedicoEnRangoDeFechas(int legajo, LocalDate fechaInicio, LocalDate fechaFin) {
         return repository.getTurnosMedicoEnRangoDeFechas(legajo, fechaInicio, fechaFin);
     }
+	
+	public List<Integer> TodosMedicosXLegajoP4(){
+		return repository.TodosMedicosXLegajoP4();
+	}
+	
+	public Medico getDoctorWithHighestFile() {
+		return repository.medicoMayorLegajoP5();
+	}
+	
+	public List<Medico> listOrderByFileDescending(int page, int size) {
+		return repository.listOrderByFileDescending(page, size);
+	}
+	
+	public List<Medico> listOrderByFileDescending() {
+		return this.listOrderByFileDescending(1, 10);
+	}
+	
+	public List<Object[]> getTurnosMedicoEnFecha(int legajo, LocalDate fecha) {
+        return repository.getTurnosMedicoEnFecha(legajo, fecha);
+    }
+	
+	@Override
+    public List<Object[]> getTurnosMedicoEnRangoDeFechas(int legajo, LocalDate fechaInicio, LocalDate fechaFin) {
+        return repository.getTurnosMedicoEnRangoDeFechas(legajo, fechaInicio, fechaFin);
+    }
+
+	@Override
+	public Optional<Medico> findByFile(int file) {
+		return repository.findByFile(file);
+	}
+    
 }
