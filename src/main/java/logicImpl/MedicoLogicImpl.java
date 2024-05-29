@@ -39,7 +39,7 @@ public class MedicoLogicImpl implements IMedicoLogic {
 		return repository.listMedicosLegajoAscP2();
 	}
 	
-	public List<String> TodosMedicosXIdP4(){
-		return repository.TodosMedicosXIdP4();
+	public List<String> TodosMedicosXLegajoP4(){
+		return repository.TodosMedicosXLegajoP4();
 	}
 }

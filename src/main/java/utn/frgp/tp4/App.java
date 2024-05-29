@@ -38,7 +38,7 @@ public class App {
     private static void punto4() {
     	///String IDMedico;
     	IMedicoLogic Medicos = new MedicoLogicImpl();
-    	List<String> lista_medicos_P4 = Medicos.TodosMedicosXIdP4();
+    	List<String> lista_medicos_P4 = Medicos.TodosMedicosXLegajoP4();
     	for(String IDMedico : lista_medicos_P4) {
     		System.out.println(IDMedico);
     	}

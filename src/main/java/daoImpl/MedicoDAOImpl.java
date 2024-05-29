@@ -87,7 +87,7 @@ public class MedicoDAOImpl implements IMedicoDAO {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<String> TodosMedicosXIdP4() {
+	public List<String> TodosMedicosXLegajoP4() {
 		final ContainerFor<List<String>> Medicos = new ContainerFor<>(null);
         DataManager.run(session -> {
             String hql = "SELECT m.legajo FROM Medico m";
