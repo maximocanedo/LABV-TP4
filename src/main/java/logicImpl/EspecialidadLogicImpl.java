@@ -7,6 +7,8 @@ import daoImpl.EspecialidadDAOImpl;
 import entity.Especialidad;
 import logic.IEspecialidadLogic;
 
+import entity.Optional;
+
 public class EspecialidadLogicImpl implements IEspecialidadLogic {
 	
 	private final IEspecialidadDAO repository;
@@ -27,7 +29,7 @@ public class EspecialidadLogicImpl implements IEspecialidadLogic {
 	 * @see logicImpl.IEspecialidadLogic#findById(int)
 	 */
 	@Override
-	public Especialidad findById(int id) {
+	public Optional<Especialidad> findById(int id) {
 		return repository.getById(id);
 	}
 	

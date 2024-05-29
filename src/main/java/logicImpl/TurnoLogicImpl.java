@@ -1,6 +1,7 @@
 package logicImpl;
 
 import java.util.Date;
+import entity.Optional;
 import java.util.List;
 
 import dao.ITurnoDAO;
@@ -33,7 +34,7 @@ public class TurnoLogicImpl implements ITurnoLogic {
 	 * @see logicImpl.ITurnoLogic#getById(int)
 	 */
 	@Override
-	public Turno getById(int id) {
+	public Optional<Turno> getById(int id) {
 		return this.repository.getByid(id);
 	}
 	/* (non-Javadoc)

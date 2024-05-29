@@ -1,6 +1,7 @@
 package logicImpl;
 
 import java.util.List;
+import entity.Optional;
 import dao.IMedicoDAO;
 import daoImpl.MedicoDAOImpl;
 import entity.Medico;
@@ -20,7 +21,7 @@ public class MedicoLogicImpl implements IMedicoLogic {
     }
 
     @Override
-    public Medico findById(int id) {
+    public Optional<Medico> findById(int id) {
         return repository.getById(id);
     }
 

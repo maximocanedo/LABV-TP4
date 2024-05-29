@@ -1,7 +1,7 @@
 package dao;
 
 import java.util.List;
-
+import entity.Optional;
 import entity.Paciente;
 
 public interface IPacienteDAO {
@@ -19,7 +19,7 @@ public interface IPacienteDAO {
 	 * @throws Exception 
 	 * @throws NotFoundException 
 	 */
-	Paciente getById(int id);
+	Optional<Paciente> getById(int id);
 
 	/**
 	 * Lista todos los pacientes de la base de datos.

@@ -1,14 +1,14 @@
 package logic;
 
 import java.util.List;
-
+import entity.Optional;
 import entity.Especialidad;
 
 public interface IEspecialidadLogic {
 
 	void add(Especialidad e);
 
-	Especialidad findById(int id);
+	Optional<Especialidad> findById(int id);
 
 	void update(Especialidad e);
 

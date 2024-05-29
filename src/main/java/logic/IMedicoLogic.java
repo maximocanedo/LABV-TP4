@@ -1,13 +1,14 @@
 package logic;
 
 import java.util.List;
+import entity.Optional;
 import entity.Medico;
 
 public interface IMedicoLogic {
 
     void signupMedico(Medico medico);
 
-    Medico findById(int id);
+    Optional<Medico> findById(int id);
 
     List<Medico> list(int page, int size);
 

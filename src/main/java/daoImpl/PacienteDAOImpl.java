@@ -6,7 +6,7 @@ import java.util.List;
 import org.hibernate.*;
 
 import dao.IPacienteDAO;
-import daoImpl.DataManager.ContainerFor;
+import entity.Optional;
 import entity.Paciente;
 
 public class PacienteDAOImpl implements IPacienteDAO {
@@ -21,15 +21,15 @@ public class PacienteDAOImpl implements IPacienteDAO {
     }
 	
 	@Override
-	public Paciente getById(int id) {
-		final ContainerFor<Paciente> cfUser = new ContainerFor<Paciente>(null);
+	public Optional<Paciente> getById(int id) {
+		final Optional<Paciente> cfUser = new Optional<Paciente>();
 		DataManager.run(session -> {
 			String hql = "FROM Paciente WHERE id = :id";
 	        Query query = session.createQuery(hql);
 	        query.setParameter("id", id);
-	        cfUser.object = (Paciente) query.uniqueResult();
+	        cfUser.set((Paciente) query.uniqueResult());
 		});
-		return cfUser.object;
+		return cfUser;
 	}
 		
 	@Override
@@ -40,15 +40,15 @@ public class PacienteDAOImpl implements IPacienteDAO {
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<Paciente> list(int page, int size) {
-		final ContainerFor<List<Paciente>> cfList = new ContainerFor<List<Paciente>>(null);
+		final Optional<List<Paciente>> cfList = new Optional<List<Paciente>>();
 		DataManager.run(session -> {
 			String sqlQuery = "SELECT id, nombre, apellido, dni, telefono, direccion, localidad, provincia, fechaNacimiento, correo FROM pacientes";
 	        Query q = session.createSQLQuery(sqlQuery).addEntity(Paciente.class);
 			q.setFirstResult((page - 1) * size);
             q.setMaxResults(size);
-			cfList.object = q.list();
+			cfList.set(q.list());
 		});
-		return cfList.object;
+		return cfList.get();
     }
 	
 	@Override

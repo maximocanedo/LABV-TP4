@@ -5,7 +5,7 @@ import java.util.List;
 import org.hibernate.Query;
 
 import dao.IMedicoDAO;
-import daoImpl.DataManager.ContainerFor;
+import entity.Optional;
 import entity.Medico;
 
 public class MedicoDAOImpl implements IMedicoDAO {
@@ -18,15 +18,15 @@ public class MedicoDAOImpl implements IMedicoDAO {
     }
     
     @Override
-    public Medico getById(int id) {
-        final ContainerFor<Medico> cfMedico = new ContainerFor<>(null);
+    public Optional<Medico> getById(int id) {
+        final Optional<Medico> cfMedico = new Optional<>(null);
         DataManager.run(session -> {
             String hql = "FROM Medico WHERE id = :id";
             Query query = session.createQuery(hql);
             query.setParameter("id", id);
-            cfMedico.object = (Medico) query.uniqueResult();
+            cfMedico.set((Medico) query.uniqueResult());
         });
-        return cfMedico.object;
+        return cfMedico;
     }
     
     @Override
@@ -37,15 +37,15 @@ public class MedicoDAOImpl implements IMedicoDAO {
     @Override
     @SuppressWarnings("unchecked")
     public List<Medico> list(int page, int size) {
-        final ContainerFor<List<Medico>> cfList = new ContainerFor<>(null);
+        final Optional<List<Medico>> optionalList = new Optional<>();
         DataManager.run(session -> {
             String hql = "FROM Medico";
             Query query = session.createQuery(hql);
             query.setFirstResult((page - 1) * size);
             query.setMaxResults(size);
-            cfList.object = query.list();
+            optionalList.set(query.list());
         });
-        return cfList.object;
+        return optionalList.get();
     }
     
     @Override
@@ -65,35 +65,54 @@ public class MedicoDAOImpl implements IMedicoDAO {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Object[]> listMedicosLegajoAscP2() {
-		final ContainerFor<List<Object[]>> cfList = new ContainerFor<>(null);
+		final Optional<List<Object[]>> optionalList = new Optional<>();
         DataManager.run(session -> {
             String hql = "SELECT m.legajo, m.nombre, m.apellido FROM Medico m ORDER BY m.legajo ASC";
             Query query = session.createQuery(hql);
-            cfList.object = query.list();
+            optionalList.set(query.list());
         });
-        return cfList.object;
+        return optionalList.get();
 	}
 
 	@Override
 	public Medico medicoMayorLegajoP5() {
-		final ContainerFor<Medico> cfMedico = new ContainerFor<>(null);
+		final Optional<Medico> optionalMedico = new Optional<>(null);
         DataManager.run(session -> {
             String hql = "FROM Medico m ORDER BY m.legajo DESC";
             Query query = session.createQuery(hql);
-            cfMedico.object = (Medico) query.uniqueResult();
+            optionalMedico.set((Medico) query.uniqueResult());
         });
-        return cfMedico.object;
+        return optionalMedico.get();
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<String> TodosMedicosXLegajoP4() {
-		final ContainerFor<List<String>> Medicos = new ContainerFor<>(null);
+		final Optional<List<String>> optionalMedicos = new Optional<>(null);
         DataManager.run(session -> {
             String hql = "SELECT m.legajo FROM Medico m";
             Query query = session.createQuery(hql);
-            Medicos.object = query.list();
+            optionalMedicos.set(query.list());
         });
-        return Medicos.object;
+        return optionalMedicos.get();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Medico> listOrderByFileDescending(int page, int size) {
+		final Optional<List<Medico>> optionalMedicos = new Optional<>();
+		DataManager.run(session -> {
+			String hql = "SELECT m FROM Medico m ORDER BY legajo DESC";
+			Query query = session.createQuery(hql);
+            query.setFirstResult((page - 1) * size);
+            query.setMaxResults(size);
+			optionalMedicos.set(query.list());
+		});
+		return optionalMedicos.get();
+	}
+
+	@Override
+	public List<Medico> listOrderByFileDescending() {
+		return listOrderByFileDescending(1, 10);
 	}
 }

@@ -2,6 +2,7 @@ package dao;
 
 import java.util.List;
 
+import entity.Optional;
 import entity.Medico;
 
 public interface IMedicoDAO {
@@ -17,7 +18,7 @@ public interface IMedicoDAO {
      * @param id Id del medico.
      * @return Objeto Medico con los datos.
      */
-    Medico getById(int id);
+    Optional<Medico> getById(int id);
 
     /**
      * Lista todos los medicos de la base de datos.
@@ -44,6 +45,20 @@ public interface IMedicoDAO {
      * @return Lista con los medicos.
      */
     List<Medico> list(int page, int size);
+    
+    /**
+     * Lista todos los médicos de la base de datos, paginable.
+     * @param page Número de página (De 1 en adelante)
+     * @param size Cantidad de elementos por página.
+     * @return Lista de médicos.
+     */
+    List<Medico> listOrderByFileDescending(int page, int size);
+    
+    /**
+     * Lista todos los médicos de la base de datos.
+     * @return Primeros diez registros.
+     */
+    List<Medico> listOrderByFileDescending();
 
     /**
      * Actualiza un medico en la base de datos.

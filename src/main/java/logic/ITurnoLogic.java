@@ -1,6 +1,7 @@
 package logic;
 
 import java.util.Date;
+import entity.Optional;
 import java.util.List;
 
 import entity.Turno;
@@ -11,7 +12,7 @@ public interface ITurnoLogic {
 
 	void disable(Turno t);
 
-	Turno getById(int id);
+	Optional<Turno> getById(int id);
 
 	List<Turno> list(int page, int size);
 

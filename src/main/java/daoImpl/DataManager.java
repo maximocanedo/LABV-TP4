@@ -13,13 +13,7 @@ public class DataManager {
 	private SessionFactory sessionFactory;
 	private Session session;
 	
-	public static class ContainerFor<T> {
-		T object;
-		public ContainerFor(T object) {
-			this.object = object;
-		}
-	}
-	
+		
 	public static void run(Consumer<Session> function, Consumer<Exception> onError) {
 		try {
 			DataManager dm = new DataManager();

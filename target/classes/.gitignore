@@ -1,6 +1,5 @@
-/utn/
-/META-INF/
-/daoImpl/
-/logic/
-/logicImpl/
 /dao/
+/daoImpl/
+/logicImpl/
+/entity/
+/logic/
