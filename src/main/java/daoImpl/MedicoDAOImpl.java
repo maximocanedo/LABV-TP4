@@ -76,13 +76,8 @@ public class MedicoDAOImpl implements IMedicoDAO {
 
 	@Override
 	public Medico medicoMayorLegajoP5() {
-		final Optional<Medico> optionalMedico = new Optional<>(null);
-        DataManager.run(session -> {
-            String hql = "FROM Medico m ORDER BY m.legajo DESC";
-            Query query = session.createQuery(hql);
-            optionalMedico.set((Medico) query.uniqueResult());
-        });
-        return optionalMedico.get();
+		List<Medico> list = this.listOrderByFileDescending(1, 1);
+		return list.get(0);
 	}
 	
 	@SuppressWarnings("unchecked")

@@ -43,4 +43,16 @@ public class MedicoLogicImpl implements IMedicoLogic {
 	public List<Integer> TodosMedicosXLegajoP4(){
 		return repository.TodosMedicosXLegajoP4();
 	}
+	
+	public Medico getDoctorWithHighestFile() {
+		return repository.medicoMayorLegajoP5();
+	}
+	
+	public List<Medico> listOrderByFileDescending(int page, int size) {
+		return repository.listOrderByFileDescending(page, size);
+	}
+	
+	public List<Medico> listOrderByFileDescending() {
+		return this.listOrderByFileDescending(1, 10);
+	}
 }

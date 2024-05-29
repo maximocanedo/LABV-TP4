@@ -27,16 +27,25 @@ public class App {
     public static void main( String[] args ) {
     	// Carga datos
     	generateFakeRecords(10);
-    	//App.punto1();
-    	//App.punto2();
+    	App.punto1();
+    	App.punto2();
     	//App.punto3();
     	App.punto4();
-    	//App.punto5();
-    	//App.punto6();
+    	App.punto5();
+    	App.punto6();
+    }
+    
+    private static void punto1() {
+    	System.out.println("\n\n-> INICIO PUNTO 1\n\n");
+    	MedicoLogicImpl doctorsRepo = new MedicoLogicImpl();
+    	List<Medico> doctors = doctorsRepo.listOrderByFileDescending(1, 10);
+    	for(Medico m : doctors) {
+    		System.out.println(m);
+    	}
     }
     
     private static void punto4() {
-    	///String IDMedico;
+    	System.out.println("\n\n-> INICIO PUNTO 4\n\n");
     	IMedicoLogic Medicos = new MedicoLogicImpl();
     	List<Integer> lista_medicos_P4 = Medicos.TodosMedicosXLegajoP4();
     	for(Integer LMedico : lista_medicos_P4) {
@@ -45,12 +54,14 @@ public class App {
     }
     
     private static void punto5() {
-		IMedicoLogic medicos_repo = new MedicoLogicImpl();
-    	// Medico medico_P5 = medicos_repo.medicoMayorLegajoP5();
-    	//System.out.println("Legajo: " + medico_P5[0] + " Nombre: "+ medico_P5[1] + " Apellido: "+ medico_P5[2]);
+    	System.out.println("\n\n-> INICIO PUNTO 5\n\n");
+    	MedicoLogicImpl logic = new MedicoLogicImpl();
+    	Medico m = logic.getDoctorWithHighestFile();
+    	System.out.println(m);
 	}
 	
 	private static void punto2() {
+    	System.out.println("\n\n-> INICIO PUNTO 2\n\n");
 		IMedicoLogic medicos_repo = new MedicoLogicImpl();
     	List<Object[]> lista_medicos_P2 = medicos_repo.listMedicosLegajoAscP2();
     	for(Object[] medico : lista_medicos_P2) {
@@ -60,6 +71,7 @@ public class App {
 	
 	@SuppressWarnings("deprecation")
 	private static void punto6() {
+    	System.out.println("\n\n-> INICIO PUNTO 6\n\n");
 		Date d = new Date();
     	d.setDate(1);
     	d.setMonth(0);
