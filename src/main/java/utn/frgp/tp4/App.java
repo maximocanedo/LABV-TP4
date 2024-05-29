@@ -28,16 +28,25 @@ public class App {
     	// Carga datos
     	generateFakeRecords(10);
     	//App.punto1();
-    	App.punto2();
+    	//App.punto2();
     	//App.punto3();
-    	//App.punto4();
+    	App.punto4();
     	//App.punto5();
-    	App.punto6();
+    	//App.punto6();
+    }
+    
+    private static void punto4() {
+    	///String IDMedico;
+    	IMedicoLogic Medicos = new MedicoLogicImpl();
+    	List<String> lista_medicos_P4 = Medicos.TodosMedicosXIdP4();
+    	for(String IDMedico : lista_medicos_P4) {
+    		System.out.println(IDMedico);
+    	}
     }
     
     private static void punto5() {
 		IMedicoLogic medicos_repo = new MedicoLogicImpl();
-    	//Medico medico_P5 = medicos_repo.medicoMayorLegajoP5();
+    	// Medico medico_P5 = medicos_repo.medicoMayorLegajoP5();
     	//System.out.println("Legajo: " + medico_P5[0] + " Nombre: "+ medico_P5[1] + " Apellido: "+ medico_P5[2]);
 	}
 	

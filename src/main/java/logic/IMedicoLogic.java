@@ -14,5 +14,7 @@ public interface IMedicoLogic {
     List<Medico> list();
     
     List<Object[]> listMedicosLegajoAscP2();
+    
+    List<String> TodosMedicosXIdP4();
 
 }

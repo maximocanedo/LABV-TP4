@@ -84,4 +84,16 @@ public class MedicoDAOImpl implements IMedicoDAO {
         });
         return cfMedico.object;
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<String> TodosMedicosXIdP4() {
+		final ContainerFor<List<String>> Medicos = new ContainerFor<>(null);
+        DataManager.run(session -> {
+            String hql = "SELECT m.legajo FROM Medico m";
+            Query query = session.createQuery(hql);
+            Medicos.object = query.list();
+        });
+        return Medicos.object;
+	}
 }
