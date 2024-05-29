@@ -65,5 +65,10 @@ public class MedicoLogicImpl implements IMedicoLogic {
     public List<Object[]> getTurnosMedicoEnRangoDeFechas(int legajo, LocalDate fechaInicio, LocalDate fechaFin) {
         return repository.getTurnosMedicoEnRangoDeFechas(legajo, fechaInicio, fechaFin);
     }
+
+	@Override
+	public Optional<Medico> findByFile(int file) {
+		return repository.findByFile(file);
+	}
     
 }

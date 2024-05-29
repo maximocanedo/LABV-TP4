@@ -10,6 +10,8 @@ public interface IMedicoLogic {
     void signupMedico(Medico medico);
 
     Optional<Medico> findById(int id);
+    
+    Optional<Medico> findByFile(int file);
 
     List<Medico> list(int page, int size);
 

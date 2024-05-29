@@ -20,6 +20,13 @@ public interface IMedicoDAO {
      * @return Objeto Medico con los datos.
      */
     Optional<Medico> getById(int id);
+    
+    /**
+     * Buscar por legajo
+     * @param file Legajo
+     * @return Médico.
+     */
+    Optional<Medico> findByFile(int file);
 
     /**
      * Lista todos los medicos de la base de datos.

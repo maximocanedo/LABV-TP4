@@ -55,6 +55,7 @@ public class App {
 	}
 	
 	private static void punto3() {
+    	System.out.println("\n\n-> INICIO PUNTO 3\n\n");
 		LocalDate fecha = LocalDate.of(2025, 1, 1);
 		IMedicoLogic medicos_repo = new MedicoLogicImpl();
 		List<Object[]> turnos = medicos_repo.getTurnosMedicoEnFecha(1234, fecha);
