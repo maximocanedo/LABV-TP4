@@ -56,18 +56,12 @@ public class App {
 	
 	private static void punto3() {
     	System.out.println("\n\n-> INICIO PUNTO 3\n\n");
-		LocalDate fecha = LocalDate.of(2025, 1, 1);
 		IMedicoLogic medicos_repo = new MedicoLogicImpl();
-		List<Object[]> turnos = medicos_repo.getAppointmentsByDoctorAndDate(1234, fecha);
 
-        for (Object[] turno : turnos) {
-            System.out.println("Legajo: " + turno[0] + ", Fecha de Alta: " + turno[1] + ", Estado: " + turno[2]);
-        }
+		LocalDate fecha = LocalDate.of(2024, 12, 31);
+		LocalDate fecha2 = LocalDate.of(2025, 1, 2);
 
-		LocalDate fechaInicio = LocalDate.of(2025, 1, 1);
-        LocalDate fechaFin = LocalDate.of(2025, 12, 31);
-
-		List<Object[]> turnosEnRango = medicos_repo.getAppointmentsByDoctorAndDateRange(1234, fechaInicio, fechaFin);
+		List<Object[]> turnosEnRango = medicos_repo.getAppointmentsByDoctorAndDateRange(1234, fecha, fecha2);
         for (Object[] turno : turnosEnRango) {
             System.out.println("Legajo: " + turno[0] + ", Fecha de Alta: " + turno[1] + ", Estado: " + turno[2]);
         }
@@ -111,23 +105,28 @@ public class App {
     	
 	}
 	
-	public static void generateFakeRecords(int q) {
+	public static void generateFakeRecords(int total) {
 		System.out.println("Se guardarán los objetos Especialidad. ");
 		Generator.generateAndSaveRecords();
-		System.out.println("Se generarán y guardarán " + q + " registros. ");
-		for(int i = 0; i < q; i++) {
-			User u = Generator.generateAndSaveRandomUser();
-			System.out.println(" - " + i + " usuario/s de " + q + ": " + u.getName() + "(@" + u.getUsername() + ")\n");
-			Paciente p = Generator.generateAndSaveRandomPaciente();
-			System.out.println(" - " + i + " paciente/s de " + q + ": " + p.getNombre() + "; DNI N.º: " + p.getDni());
-			Medico m = Generator.generateAndSaveRandomDoctor(u);
-			System.out.println(" - " + i + " médico/s de " + q + ": " + m.getNombre() + "; Legajo N.º: " + m.getLegajo());
-			Turno t = Generator.generateTurnoPunto6(p, m);
-			System.out.println(t);
+		System.out.println("Se generarán y guardarán " + total + " registros. ");
+		for(int i = 0; i < total; i++) {
+			User user = Generator.generateAndSaveRandomUser();
+			System.out.println(" - " + i + " usuario/s de " + total + ": " + user.getName() + "(@" + user.getUsername() + ")\n");
+			Paciente paciente = Generator.generateAndSaveRandomPaciente();
+			System.out.println(" - " + i + " paciente/s de " + total + ": " + paciente.getNombre() + "; DNI N.º: " + paciente.getDni());
+			Medico medico = Generator.generateAndSaveRandomDoctor(user);
+			System.out.println(" - " + i + " médico/s de " + total + ": " + medico.getNombre() + "; Legajo N.º: " + medico.getLegajo());
+			Turno turno = Generator.generateTurnoPunto6(paciente, medico);
+			System.out.println(turno);
+			Turno turnoParaPunto3 = Generator.generateTurnoForDoctor1234(paciente);
+			System.out.println(turnoParaPunto3);
 		}
-		System.out.println("Se generaron " + q + " registros. ");
+		System.out.println("Se generaron " + total + " registros. ");
 	}
 	
+	/**
+	 * Método main usado en el TP4.
+	 */
 	@SuppressWarnings("unused")
 	private static void TP4_Main() {
     	User user = usersRepo.list(1, 1).get(0);

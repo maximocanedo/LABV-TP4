@@ -1,5 +1,6 @@
 package generator;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -30,6 +31,46 @@ public class Generator {
         paciente.setFechaNacimiento(faker.date().birthday());
         paciente.setCorreo(faker.internet().emailAddress());
         return paciente;
+    }
+    
+    public static Turno generateTurnoForDoctor1234(Paciente paciente) {
+        Faker faker = new Faker();
+        ITurnoLogic turnos = new TurnoLogicImpl();
+        
+        // Encontrar el médico con legajo 1234
+        Optional<Medico> optionalMedico = medicos.findByFile(1234);
+        int attempts = 0;
+        while(optionalMedico.isEmpty() && attempts < 4) {
+        	User user = Generator.generateAndSaveRandomUser();
+            Medico medico = generateRecord(user);
+            medico.setLegajo(1234);
+            medicos.add(medico);
+            optionalMedico = medicos.findByFile(1234);
+            attempts++;
+        }
+        
+        Medico medico = optionalMedico.get();
+
+        Turno turno = new Turno();
+        turno.setMedico(medico);
+        turno.setPaciente(paciente);
+        turno.setObservacion("");
+        turno.setEstado(TurnoEstado.PENDIENTE);
+
+
+        Calendar start = Calendar.getInstance();
+        start.set(2025, Calendar.JANUARY, 1, 0, 0, 0);
+        Date startDate = start.getTime();
+
+        Calendar end = Calendar.getInstance();
+        end.set(2025, Calendar.JANUARY, 2, 23, 59, 59);
+        Date endDate = end.getTime();
+
+        Date randomDate = faker.date().between(startDate, endDate);
+        turno.setFecha(randomDate);
+        turnos.register(turno);
+
+        return turno;
     }
     
     public static User generateRandomUser() {
