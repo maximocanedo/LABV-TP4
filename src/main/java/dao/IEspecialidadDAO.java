@@ -14,15 +14,14 @@ public interface IEspecialidadDAO {
     void add(Especialidad especialidad);
 
     /**
-     * Obtengo una especialidad por su id.
+     * Busca una especialidad por su id.
      * @param id Id de la especialidad.
      * @return Objeto Especialidad con los datos
      */
-    Optional<Especialidad> getById(int id);
+    Optional<Especialidad> findById(int id);
 
     /**
      * Lista todas las especialidades de la base de datos.
-     * @return Lista con las especialidades.
      */
     List<Especialidad> list();
 
@@ -30,7 +29,6 @@ public interface IEspecialidadDAO {
      * Lista todas las especialidades de la base de datos, paginable.
      * @param page Numero de pagina (De 1 en adelante)
      * @param size Cantidad de elementos por pagina.
-     * @return Lista con las especialidades.
      */
     List<Especialidad> list(int page, int size);
 
@@ -45,4 +43,5 @@ public interface IEspecialidadDAO {
      * @param especialidad Especialidad a eliminar.
      */
     void erase(Especialidad especialidad);
+
 }

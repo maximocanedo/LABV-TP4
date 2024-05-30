@@ -16,15 +16,13 @@ public interface IUserDAO {
 	/**
 	 * Obtiene un usuario por su nombre de usuario.
 	 * @param username Nombre de usuario.
-	 * @return Objeto User con los datos del usuario en cuestión.
 	 * @throws Exception 
 	 * @throws NotFoundException 
 	 */
-	Optional<User> getByUsername(String username);
+	Optional<User> findByUsername(String username);
 
 	/**
 	 * Lista todos los usuarios de la base de datos.
-	 * @return Lista con los usuarios.
 	 */
 	List<User> list();
 
@@ -32,7 +30,6 @@ public interface IUserDAO {
 	 * Lista todos los usuarios de la base de datos, paginable.
 	 * @param page Número de página (De 1 en adelante)
 	 * @param size Cantidad de elementos.
-	 * @return Lista con los usuarios.
 	 */
 	List<User> list(int page, int size);
 

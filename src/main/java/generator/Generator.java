@@ -72,7 +72,7 @@ public class Generator {
     
     public static Paciente generateAndSaveRandomPaciente() {
         Paciente random = generateRandomPaciente();
-        pacientes.signupPaciente(random);
+        pacientes.add(random);
         return random;
     }
     public static boolean EXISTE_LEGAJO_1234 = false;
@@ -82,7 +82,7 @@ public class Generator {
         Medico medico = generateRecord(user);
         if(!exists) medico.setLegajo(1234);
         else Generator.EXISTE_LEGAJO_1234 = exists;
-        medicos.signupMedico(medico);
+        medicos.add(medico);
         return medico;
     }
     public static User generateAndSaveRandomUser() {

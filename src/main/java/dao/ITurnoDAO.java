@@ -7,20 +7,54 @@ import entity.Optional;
 import entity.Turno;
 
 public interface ITurnoDAO {
-		
-		void add(Turno turno);
+	
+	/**
+	 * Registra un turno
+	 * @param turno Datos del turno.
+	 */
+	void add(Turno turno);
 
-		Optional<Turno> getByid(int id);
+	/**
+	 * Busca un Turno en la base de datos.
+	 * @param id ID del turno.
+	 */
+	Optional<Turno> findById(int id);
 
-		List<Turno> list();
+	/**
+	 * Devuelve una lista de turnos.
+	 */
+	List<Turno> list();
 
-		List<Turno> list(int page, int size);
+	/**
+	 * Devuelve una lista de turnos.
+	 * @param page Número de página (Comienza en 1)
+	 * @param size Tamaño de página
+	 */
+	List<Turno> list(int page, int size);
 
-		void update(Turno turno);
-		
-		void erase(Turno turno);
-		
-		int countPresencesBetween(Date date1, Date date2);
-		
-		int countAbsencesBetween(Date date1, Date date2);
+	/**
+	 * Actualiza la información de un turno en la base de datos.
+	 * @param turno Datos del turno a actualizar.
+	 */
+	void update(Turno turno);
+	
+	/**
+	 * Elimina un turno de la base de datos.
+	 * @param turno Turno a eliminar.
+	 */
+	void erase(Turno turno);
+	
+	/**
+	 * Cuenta la cantidad de turnos marcados como presentes dentro del rango de fechas indicado.
+	 * @param firstDate Primer fecha límite del rango
+	 * @param endDate Segunda fecha límite del rango
+	 */
+	int countPresencesBetween(Date firstDate, Date endDate);
+	
+	/**
+	 * Cuenta la cantidad de turnos marcados como ausentes dentro del rango de fechas indicado.
+	 * @param startDate Primer fecha límite del rango
+	 * @param endDate Primer fecha límite del rango
+	 */
+	int countAbsencesBetween(Date startDate, Date endDate);
 }

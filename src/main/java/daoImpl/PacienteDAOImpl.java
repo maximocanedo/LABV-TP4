@@ -21,7 +21,7 @@ public class PacienteDAOImpl implements IPacienteDAO {
     }
 	
 	@Override
-	public Optional<Paciente> getById(int id) {
+	public Optional<Paciente> findById(int id) {
 		final Optional<Paciente> cfUser = new Optional<Paciente>();
 		DataManager.run(session -> {
 			String hql = "FROM Paciente WHERE id = :id";

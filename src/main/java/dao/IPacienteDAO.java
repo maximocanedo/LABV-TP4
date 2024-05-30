@@ -15,15 +15,13 @@ public interface IPacienteDAO {
 	/**
 	 * Obtiene un paciente por su id.
 	 * @param id. Id del paciente.
-	 * @return Objeto Paciente con los datos del paciente en cuestión.
 	 * @throws Exception 
 	 * @throws NotFoundException 
 	 */
-	Optional<Paciente> getById(int id);
+	Optional<Paciente> findById(int id);
 
 	/**
 	 * Lista todos los pacientes de la base de datos.
-	 * @return Lista con los pacientes.
 	 */
 	List<Paciente> list();
 
@@ -31,7 +29,6 @@ public interface IPacienteDAO {
 	 * Lista todos los pacientes de la base de datos, paginable.
 	 * @param page Número de página (De 1 en adelante)
 	 * @param size Cantidad de elementos.
-	 * @return Lista con los pacientes.
 	 */
 	List<Paciente> list(int page, int size);
 

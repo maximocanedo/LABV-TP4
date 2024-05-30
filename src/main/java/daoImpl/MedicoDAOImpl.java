@@ -19,7 +19,7 @@ public class MedicoDAOImpl implements IMedicoDAO {
     }
     
     @Override
-    public Optional<Medico> getById(int id) {
+    public Optional<Medico> findById(int id) {
         final Optional<Medico> cfMedico = new Optional<>(null);
         DataManager.run(session -> {
             String hql = "FROM Medico WHERE id = :id";
@@ -65,7 +65,7 @@ public class MedicoDAOImpl implements IMedicoDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Object[]> listMedicosLegajoAscP2() {
+	public List<Object[]> listOnlyFileNumbersAndNames() {
 		final Optional<List<Object[]>> optionalList = new Optional<>();
         DataManager.run(session -> {
             String hql = "SELECT m.legajo, m.nombre, m.apellido FROM Medico m ORDER BY m.legajo ASC";
@@ -76,14 +76,14 @@ public class MedicoDAOImpl implements IMedicoDAO {
 	}
 
 	@Override
-	public Medico medicoMayorLegajoP5() {
+	public Medico findDoctorWithHighestFileNumber() {
 		List<Medico> list = this.listOrderByFileDescending(1, 1);
 		return list.get(0);
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Integer> TodosMedicosXLegajoP4(){
+	public List<Integer> listOnlyFileNumbers(){
 		final Optional<List<Integer>> optionalMedicos = new Optional<>();
         DataManager.run(session -> {
             String hql = "SELECT m.legajo FROM Medico m";
@@ -114,7 +114,7 @@ public class MedicoDAOImpl implements IMedicoDAO {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Object[]> getTurnosMedicoEnFecha(int legajo, LocalDate fecha) {
+	public List<Object[]> getAppointmentsByDoctorAndDate(int legajo, LocalDate fecha) {
         final Optional<List<Object[]>> optional = new Optional<>();
         DataManager.run(session -> {
             String hql = "SELECT m.legajo, t.fecha, t.estado " +
@@ -130,7 +130,7 @@ public class MedicoDAOImpl implements IMedicoDAO {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Object[]> getTurnosMedicoEnRangoDeFechas(int legajo, LocalDate fechaInicio, LocalDate fechaFin) {
+	public List<Object[]> getAppointmentsByDoctorAndDateRange(int legajo, LocalDate fechaInicio, LocalDate fechaFin) {
 	    final Optional<List<Object[]>> cfList = new Optional<>();
 	    DataManager.run(session -> {
 	        String hql = "SELECT m.legajo, t.fecha, t.estado " +
@@ -144,7 +144,6 @@ public class MedicoDAOImpl implements IMedicoDAO {
 	    });
 	    return cfList.get();
 	}
-
 
 	@Override
 	public Optional<Medico> findByFile(int file) {

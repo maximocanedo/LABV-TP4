@@ -17,16 +17,17 @@ public class PacienteLogicImpl implements IPacienteLogic {
 	}
 	
 	@Override
-	public void signupPaciente(Paciente paciente) {
+	public void add(Paciente paciente) {
 		repository.add(paciente);
 	}
 	
 	@Override
 	public Optional<Paciente> findById(int id) {
-		return repository.getById(id);
+		return repository.findById(id);
 	}
 	
-	public void update(Paciente paciente) {
+	@Override
+    public void update(Paciente paciente) {
 		repository.update(paciente);
 	}
 	
@@ -35,11 +36,14 @@ public class PacienteLogicImpl implements IPacienteLogic {
 		return repository.list(page, size);
 	}
 	
-	/* (non-Javadoc)
-	 * @see logicImpl.UserLogic#list()
-	 */
 	@Override
-	public List<Paciente> list() {
+    public List<Paciente> list() {
 		return list(1, 15);
+	}
+
+	@Override
+	public void erase(Paciente paciente) {
+		repository.erase(paciente);
+		
 	}	
 }

@@ -12,13 +12,15 @@ import entity.TurnoEstado;
 
 public class TurnoDAOImpl implements ITurnoDAO {
 
-	public void add(Turno turno) {
+	@Override
+    public void add(Turno turno) {
 		DataManager.transact(session -> {
 			session.save(turno);
 		});
 	}
 
-	public Optional<Turno> getByid(int id) {
+	@Override
+    public Optional<Turno> findById(int id) {
 		final Optional<Turno> turno = new Optional<>();
 		DataManager.run(session -> {
 			String hql = "FROM Turno WHERE id = :id";
@@ -29,11 +31,13 @@ public class TurnoDAOImpl implements ITurnoDAO {
 		return turno;
 	}
 
-	public List<Turno> list() {
+	@Override
+    public List<Turno> list() {
 		return list(1, 15);
 	}
 
-	@SuppressWarnings("unchecked")
+	@Override
+    @SuppressWarnings("unchecked")
 	public List<Turno> list(int page, int size) {
 		final Optional<List<Turno>> optional = new Optional<>();
 		DataManager.run(session -> {
@@ -46,13 +50,15 @@ public class TurnoDAOImpl implements ITurnoDAO {
 		return optional.get();
 	}
 
-	public void update(Turno turno) {
+	@Override
+    public void update(Turno turno) {
 		DataManager.transact(session -> {
 			session.update(turno);
 		});
 	}
 
-	public void erase(Turno turno) {
+	@Override
+    public void erase(Turno turno) {
 		DataManager.transact(session -> {
 			session.delete(turno);
 		});

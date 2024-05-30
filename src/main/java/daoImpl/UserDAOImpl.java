@@ -13,9 +13,6 @@ public class UserDAOImpl implements IUserDAO {
 	
 	public UserDAOImpl() {}
 		
-	/* (non-Javadoc)
-	 * @see daoImpl.IUserDAO#add(entity.User)
-	 */
 	@Override
 	public void add(User user) {
 		DataManager.transact(session -> {
@@ -23,11 +20,8 @@ public class UserDAOImpl implements IUserDAO {
 		});
     }
 	
-	/* (non-Javadoc)
-	 * @see daoImpl.IUserDAO#getByUsername(java.lang.String)
-	 */
 	@Override
-	public Optional<User> getByUsername(String username) {
+    public Optional<User> findByUsername(String username) {
 		final Optional<User> cfUser = new Optional<User>(null);
 		DataManager.run(session -> {
 			String hql = "FROM User WHERE username = :username";
@@ -38,21 +32,13 @@ public class UserDAOImpl implements IUserDAO {
 		return cfUser;
 	}
 	
-	
-	
-	/* (non-Javadoc)
-	 * @see daoImpl.IUserDAO#list()
-	 */
 	@Override
-	public List<User> list() {
+    public List<User> list() {
 		return list(1, 15);
     }
 	
-	/* (non-Javadoc)
-	 * @see daoImpl.IUserDAO#list(int, int)
-	 */
 	@Override
-	@SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
 	public List<User> list(int page, int size) {
 		final Optional<List<User>> cfList = new Optional<List<User>>();
 		DataManager.run(session -> {
@@ -65,21 +51,15 @@ public class UserDAOImpl implements IUserDAO {
 		return cfList.get();
     }
 	
-	/* (non-Javadoc)
-	 * @see daoImpl.IUserDAO#update(entity.User)
-	 */
 	@Override
-	public void update(User user) {
+    public void update(User user) {
 		DataManager.transact(session -> {
 			session.update(user);
 		});
 	}
 	
-	/* (non-Javadoc)
-	 * @see daoImpl.IUserDAO#erase(entity.User)
-	 */
 	@Override
-	public void erase(User user) {
+    public void erase(User user) {
 		DataManager.transact(session -> {
 			session.delete(user);
 		});

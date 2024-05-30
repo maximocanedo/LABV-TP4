@@ -16,46 +16,33 @@ public class TurnoLogicImpl implements ITurnoLogic {
 		this.repository = new TurnoDAOImpl();
 	}
 	
-	/* (non-Javadoc)
-	 * @see logicImpl.ITurnoLogic#register(entity.Turno)
-	 */
 	@Override
-	public void register(Turno t) {
+    public void register(Turno t) {
 		this.repository.add(t);
 	}
-	/* (non-Javadoc)
-	 * @see logicImpl.ITurnoLogic#disable(entity.Turno)
-	 */
+	
 	@Override
-	public void disable(Turno t) {
+    public void disable(Turno t) {
 		this.repository.erase(t);
 	}
-	/* (non-Javadoc)
-	 * @see logicImpl.ITurnoLogic#getById(int)
-	 */
+	
 	@Override
-	public Optional<Turno> getById(int id) {
-		return this.repository.getByid(id);
+    public Optional<Turno> findById(int id) {
+		return this.repository.findById(id);
 	}
-	/* (non-Javadoc)
-	 * @see logicImpl.ITurnoLogic#list(int, int)
-	 */
+	
 	@Override
-	public List<Turno> list(int page, int size) {
+    public List<Turno> list(int page, int size) {
 		return this.repository.list(page, size);
 	}
-	/* (non-Javadoc)
-	 * @see logicImpl.ITurnoLogic#list()
-	 */
+	
 	@Override
-	public List<Turno> list() {
+    public List<Turno> list() {
 		return this.repository.list();
 	}
-	/* (non-Javadoc)
-	 * @see logicImpl.ITurnoLogic#update(entity.Turno)
-	 */
+
 	@Override
-	public void update(Turno turno) {
+    public void update(Turno turno) {
 		this.repository.update(turno);
 	}
 

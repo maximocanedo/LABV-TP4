@@ -48,7 +48,7 @@ public class App {
 	private static void punto2() {
     	System.out.println("\n\n-> INICIO PUNTO 2\n\n");
 		IMedicoLogic medicos_repo = new MedicoLogicImpl();
-    	List<Object[]> lista_medicos_P2 = medicos_repo.listMedicosLegajoAscP2();
+    	List<Object[]> lista_medicos_P2 = medicos_repo.listOnlyFileNumbersAndNames();
     	for(Object[] medico : lista_medicos_P2) {
     		System.out.println("Legajo: " + medico[0] + " Nombre: "+ medico[1] + " Apellido: "+ medico[2]);
     	}
@@ -58,7 +58,7 @@ public class App {
     	System.out.println("\n\n-> INICIO PUNTO 3\n\n");
 		LocalDate fecha = LocalDate.of(2025, 1, 1);
 		IMedicoLogic medicos_repo = new MedicoLogicImpl();
-		List<Object[]> turnos = medicos_repo.getTurnosMedicoEnFecha(1234, fecha);
+		List<Object[]> turnos = medicos_repo.getAppointmentsByDoctorAndDate(1234, fecha);
 
         for (Object[] turno : turnos) {
             System.out.println("Legajo: " + turno[0] + ", Fecha de Alta: " + turno[1] + ", Estado: " + turno[2]);
@@ -67,7 +67,7 @@ public class App {
 		LocalDate fechaInicio = LocalDate.of(2025, 1, 1);
         LocalDate fechaFin = LocalDate.of(2025, 12, 31);
 
-		List<Object[]> turnosEnRango = medicos_repo.getTurnosMedicoEnRangoDeFechas(1234, fechaInicio, fechaFin);
+		List<Object[]> turnosEnRango = medicos_repo.getAppointmentsByDoctorAndDateRange(1234, fechaInicio, fechaFin);
         for (Object[] turno : turnosEnRango) {
             System.out.println("Legajo: " + turno[0] + ", Fecha de Alta: " + turno[1] + ", Estado: " + turno[2]);
         }
@@ -76,7 +76,7 @@ public class App {
     private static void punto4() {
     	System.out.println("\n\n-> INICIO PUNTO 4\n\n");
     	IMedicoLogic Medicos = new MedicoLogicImpl();
-    	List<Integer> lista_medicos_P4 = Medicos.TodosMedicosXLegajoP4();
+    	List<Integer> lista_medicos_P4 = Medicos.listOnlyFileNumbers();
     	for(Integer LMedico : lista_medicos_P4) {
     		System.out.println(LMedico);
     	}
@@ -85,7 +85,7 @@ public class App {
     private static void punto5() {
     	System.out.println("\n\n-> INICIO PUNTO 5\n\n");
     	MedicoLogicImpl logic = new MedicoLogicImpl();
-    	Medico m = logic.getDoctorWithHighestFile();
+    	Medico m = logic.findDoctorWithHighestFileNumber();
     	System.out.println(m);
 	}
 	

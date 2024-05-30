@@ -11,14 +11,14 @@ import entity.Especialidad;
 public class EspecialidadDAOImpl implements IEspecialidadDAO {
 
     @Override
-    public void add(Especialidad especialidad) {
+    public void add(Especialidad record) {
         DataManager.transact(session -> {
-            session.save(especialidad);
+            session.save(record);
         });
     }
 
     @Override
-    public Optional<Especialidad> getById(int id) {
+    public Optional<Especialidad> findById(int id) {
         final Optional<Especialidad> optional = new Optional<>();
         DataManager.run(session -> {
             String hql = "FROM Especialidad WHERE id = :id";
@@ -49,16 +49,16 @@ public class EspecialidadDAOImpl implements IEspecialidadDAO {
     }
 
     @Override
-    public void update(Especialidad especialidad) {
+    public void update(Especialidad record) {
         DataManager.transact(session -> {
-            session.update(especialidad);
+            session.update(record);
         });
     }
 
     @Override
-    public void erase(Especialidad especialidad) {
+    public void erase(Especialidad record) {
         DataManager.transact(session -> {
-            session.delete(especialidad);
+            session.delete(record);
         });
     }
 }
