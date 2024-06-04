@@ -156,37 +156,4 @@ public class MedicoDAOImpl implements IMedicoDAO {
 		});
 		return optional;
 	}
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<Object[]> getTurnosMedicoEnFecha(int legajo, LocalDate fecha) {
-        final ContainerFor<List<Object[]>> cfList = new ContainerFor<>(null);
-        DataManager.run(session -> {
-            String hql = "SELECT m.legajo, t.fechaAlta, t.estado " +
-                         "FROM Medico m INNER JOIN m.turnos t " +
-                         "WHERE m.legajo = :legajo AND t.fechaAlta = :fecha";
-            Query query = session.createQuery(hql);
-            query.setParameter("legajo", legajo);
-            query.setParameter("fecha", java.sql.Date.valueOf(fecha));
-            cfList.object = query.list();
-        });
-        return cfList.object;
-    }
-	
-	@SuppressWarnings("unchecked")
-	@Override
-    public List<Object[]> getTurnosMedicoEnRangoDeFechas(int legajo, LocalDate fechaInicio, LocalDate fechaFin) {
-        final ContainerFor<List<Object[]>> cfList = new ContainerFor<>(null);
-        DataManager.run(session -> {
-            String hql = "SELECT m.legajo, t.fechaAlta, t.estado " +
-                         "FROM Medico m INNER JOIN m.turnos t " +
-                         "WHERE m.legajo = :legajo AND t.fechaAlta BETWEEN :fechaInicio AND :fechaFin";
-            Query query = session.createQuery(hql);
-            query.setParameter("legajo", legajo);
-            query.setParameter("fechaInicio", java.sql.Date.valueOf(fechaInicio));
-            query.setParameter("fechaFin", java.sql.Date.valueOf(fechaFin));
-            cfList.object = query.list();
-        });
-        return cfList.object;
-    }
 }

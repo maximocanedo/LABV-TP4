@@ -73,7 +73,6 @@ public interface IMedicoDAO {
     void erase(Medico medico);
     
     /**
-
      * Obtiene todos los legajos de los medicos 
      * @return Lista de legajos.
      */

@@ -2,10 +2,6 @@ package logicImpl;
 
 import java.time.LocalDate;
 import java.util.List;
-
-import org.hibernate.Query;
-import org.hibernate.Session;
-
 import entity.Optional;
 import dao.IMedicoDAO;
 import daoImpl.MedicoDAOImpl;
@@ -44,16 +40,6 @@ public class MedicoLogicImpl implements IMedicoLogic {
 	public List<Object[]> listOnlyFileNumbersAndNames() {
 		return repository.listOnlyFileNumbersAndNames();
 	}
-
-	@Override
-    public List<Object[]> getTurnosMedicoEnFecha(int legajo, LocalDate fecha) {
-        return repository.getTurnosMedicoEnFecha(legajo, fecha);
-    }
-    
-    @Override
-    public List<Object[]> getTurnosMedicoEnRangoDeFechas(int legajo, LocalDate fechaInicio, LocalDate fechaFin) {
-        return repository.getTurnosMedicoEnRangoDeFechas(legajo, fechaInicio, fechaFin);
-    }
 	
 	@Override
     public List<Integer> listOnlyFileNumbers(){
