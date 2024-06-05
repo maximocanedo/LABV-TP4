@@ -2,13 +2,15 @@ package entity;
 
 import javax.persistence.*;
 
-import utils.FormattedLine;
-import utils.IFormattedLine;
-import utils.FormattedLine.Alignment;
+import formatter.Card;
+import formatter.Format;
+import formatter.Formatter;
+import formatter.TextBlock.Alignment;
 
 import java.util.Date;
 
 @Entity
+@Card(name = "Médico")
 @Table(name = "medicos")
 public class Medico {
     @Id
@@ -51,6 +53,11 @@ public class Medico {
     @JoinColumn(name="usuario")
     private User usuario;
     
+    @Format(omitLabel = true, prefix = "@", order = 9)
+    public String getUsername() {
+    	return getUser().getUsername();
+    }
+    
     public User getUser() {
 		return usuario;
 	}
@@ -64,7 +71,7 @@ public class Medico {
 	public Medico() {
     }
 
-  
+	
     public int getId() {
 		return id;
 	}
@@ -74,7 +81,7 @@ public class Medico {
 		this.id = id;
 	}
 
-
+	@Format(label="Legajo", prefix="N.º ", order = 1)
 	public int getLegajo() {
 		return legajo;
 	}
@@ -103,8 +110,13 @@ public class Medico {
 	public void setApellido(String apellido) {
 		this.apellido = apellido;
 	}
+	
+	@Format(omitLabel = true, order = 0)
+	public String getFullName() {
+		return this.getApellido() + ", " + this.getNombre();
+	}
 
-
+	@Format(label="Sexo", order = 3)
 	public String getSexo() {
 		return sexo;
 	}
@@ -114,7 +126,7 @@ public class Medico {
 		this.sexo = sexo;
 	}
 
-
+	@Format(label="Nació el", order = 4)
 	public Date getFechaNacimiento() {
 		return fechaNacimiento;
 	}
@@ -124,7 +136,7 @@ public class Medico {
 		this.fechaNacimiento = fechaNacimiento;
 	}
 
-
+	@Format(omitLabel = true, align = Alignment.RIGHT, order = 7)
 	public String getDireccion() {
 		return direccion;
 	}
@@ -134,7 +146,7 @@ public class Medico {
 		this.direccion = direccion;
 	}
 
-
+	@Format(omitLabel = true, align = Alignment.RIGHT, order = 8)
 	public String getLocalidad() {
 		return localidad;
 	}
@@ -144,7 +156,7 @@ public class Medico {
 		this.localidad = localidad;
 	}
 
-
+	@Format(omitLabel = true, order = 6)
 	public String getCorreo() {
 		return correo;
 	}
@@ -154,7 +166,7 @@ public class Medico {
 		this.correo = correo;
 	}
 
-
+	@Format(omitLabel = true, order = 5)
 	public String getTelefono() {
 		return telefono;
 	}
@@ -164,6 +176,10 @@ public class Medico {
 		this.telefono = telefono;
 	}
 
+	@Format(label = "Esp.", order = 2)
+	public String getSpecialityName() {
+		return especialidad.getNombre();
+	}
 
 	public Especialidad getEspecialidad() {
 		return especialidad;
@@ -177,41 +193,6 @@ public class Medico {
 
 	@Override
     public String toString() {
-		
-		IFormattedLine header = new FormattedLine("[Médico]");
-		header.setLineSize(48);
-		header.setTopHeader(true);
-		header.setAlignment(Alignment.RIGHT);
-		String cont = "";
-		String[] lines = new String[] {
-			apellido + ", " + nombre,
-			"Especialidad: " + especialidad.getNombre(),
-			"Legajo: " + legajo,
-			"Sexo: " + sexo,
-			"Fecha de nacimiento: " + fechaNacimiento,
-		};
-		for(String line: lines) {
-			cont += line + "\n";
-		}
-		IFormattedLine content = new FormattedLine(cont);
-		content.setLineSize(48);
-		IFormattedLine contact = new FormattedLine(
-			direccion + "\n" +
-			localidad + "\n" +
-			correo + "\n" +
-			telefono  + "\n"
-		);
-		contact.setAlignment(Alignment.RIGHT);
-		contact.setLineSize(48);
-		
-		IFormattedLine end = new FormattedLine("@" + usuario.getUsername());
-		end.setAlignment(FormattedLine.Alignment.CENTER);
-		end.setTopHeader(true);
-		end.setHeaderMiddleDelimiters('—');
-		end.setLineSize(48);
-		
-		String tot = header.toString() + content.toString() + contact.toString();
-		
-		return tot + end.toString();
+		return Formatter.of(this).toString();
     }
 }

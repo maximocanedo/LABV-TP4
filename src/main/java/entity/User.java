@@ -3,11 +3,13 @@ package entity;
 
 import javax.persistence.*;
 
-import utils.FormattedLine;
-import utils.IFormattedLine;
-import utils.FormattedLine.Alignment;
+import formatter.Card;
+import formatter.Format;
+import formatter.Formatter;
+
 
 @Entity
+@Card(name="Usuario", size=24)
 @Table(name="users")
 public class User {
 	
@@ -43,6 +45,8 @@ public class User {
 	public void setMedico(Medico medico) {
 		this.medico = medico;
 	}
+	
+	@Format(label="Nombre")
 	public String getName() {
 		return name;
 	}
@@ -51,12 +55,13 @@ public class User {
 		this.name = name;
 	}
 	
-	public void setUsername(String username) {
-		this.username = username;
-	}
-	
+	@Format(omitLabel=true, prefix="@")
 	public String getUsername() {
 		return this.username;
+	}
+	
+	public void setUsername(String username) {
+		this.username = username;
 	}
 	
 	public String getPassword() {
@@ -71,42 +76,14 @@ public class User {
 		this.active = status;
 	}
 	
+	@Format(label="Estado")
 	public boolean isActive() {
 		return this.active;
 	}
 	
 	@Override
 	public String toString() {
-		final int lineSize = 32;
-		IFormattedLine header = new FormattedLine("[User]");
-		header.setLineSize(lineSize);
-		header.setTopHeader(true);
-		header.setAlignment(Alignment.RIGHT);
-		String cont = "";
-		String[] lines = new String[] {
-			name,
-			"(@" + username + ")"
-		};
-		for(String line: lines) {
-			cont += line + "\n";
-		}
-		IFormattedLine content = new FormattedLine(cont);
-		content.setLineSize(lineSize);
-		IFormattedLine contact = new FormattedLine(
-			this.isActive() ? "" : "Usuario deshabilitado. "
-		);
-		contact.setAlignment(Alignment.RIGHT);
-		contact.setLineSize(lineSize);
-		
-		IFormattedLine end = new FormattedLine("···");
-		end.setAlignment(FormattedLine.Alignment.CENTER);
-		end.setTopHeader(true);
-		end.setHeaderMiddleDelimiters('—');
-		end.setLineSize(lineSize);
-		
-		String tot = header.toString() + content.toString() + contact.toString();
-		
-		return tot + end.toString();
+		return Formatter.of(this).toString();
 	}
 	
 }

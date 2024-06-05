@@ -14,11 +14,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import utils.FormattedLine;
-import utils.IFormattedLine;
-import utils.FormattedLine.Alignment;
+import formatter.Card;
+import formatter.Format;
+import formatter.Formatter;
+import entity.TurnoEstado;
 
 @Entity
+@Card
 @Table(name = "turnos")
 public class Turno {
 	
@@ -67,80 +69,63 @@ public class Turno {
 	private Paciente paciente;
 	
 	
-	
+	@Format(label = "Médico asignado: ", prefix = "\n", order = 3)
 	public Medico getMedico() {
 		return medico;
 	}
+	
 	public void setMedico(Medico medico) {
 		this.medico = medico;
 	}
+	
+	@Format(label = "Paciente: ", prefix = "\n", order = 4)
 	public Paciente getPaciente() {
 		return paciente;
 	}
 	public void setPaciente(Paciente paciente) {
 		this.paciente = paciente;
 	}
-	/************************************/
+
+	@Format(label = "ID N.º", order = 0)
 	public int getId() {
 		return id;
 	}
+	
 	public void setId(int id) {
 		this.id = id;
 	}
+	
+	@Format(label = "Fecha y hora: ", order = 1)
 	public Date getFecha() {
 		return fecha;
 	}
 	public void setFecha(Date fecha) {
 		this.fecha = fecha;
 	}
+	
+	@Format(label = "Obs.", order = 5)
 	public String getObservacion() {
 		return observacion;
 	}
 	public void setObservacion(String observacion) {
 		this.observacion = observacion;
 	}
+	
+	@Format(label = "Estado", order = 2)
+	public String getEstadoDescription() {
+		return estado == TurnoEstado.AUSENTE ? "AUSENTE" : (estado == TurnoEstado.PRESENTE ? "PRESENTE" : (estado == TurnoEstado.PENDIENTE ? "PENDIENTE" : "¿?"));
+	}
+	
 	public TurnoEstado getEstado() {
 		return estado;
 	}
 	public void setEstado(TurnoEstado estado) {
 		this.estado = estado;
 	}
+	
 	@Override
 	public String toString() {
-		final int lineSize = 64;
-		IFormattedLine header = new FormattedLine("[Turno]");
-		header.setLineSize(lineSize);
-		header.setTopHeader(true);
-		header.setAlignment(Alignment.RIGHT);
-		String cont = "";
-		String[] lines = new String[] {
-			"Médico: ",
-			medico.toString(),
-			"Paciente: ",
-			paciente.toString(),
-			fecha.toString(),
-			"Observaciones: " + observacion,
-		};
-		for(String line: lines) {
-			cont += line + "\n";
-		}
-		IFormattedLine content = new FormattedLine(cont);
-		content.setLineSize(lineSize);
-		IFormattedLine contact = new FormattedLine(
-			this.getEstado().toString()
-		);
-		contact.setAlignment(Alignment.RIGHT);
-		contact.setLineSize(lineSize);
-		
-		IFormattedLine end = new FormattedLine("···");
-		end.setAlignment(FormattedLine.Alignment.CENTER);
-		end.setTopHeader(true);
-		end.setHeaderMiddleDelimiters('—');
-		end.setLineSize(lineSize);
-		
-		String tot = header.toString() + content.toString() + contact.toString();
-		
-		return tot + end.toString();
+		return Formatter.of(this).toString();
 	}
 	
 	

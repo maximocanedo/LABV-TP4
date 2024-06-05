@@ -1,13 +1,15 @@
-package utils;
+package formatter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FormattedLine implements IFormattedLine {
+import formatter.ITextBlock;
+
+public class TextBlock implements ITextBlock {
 	/**
-	 * LÃ­nea en blanco.
+	 * Línea en blanco.
 	 */
-	public static IFormattedLine BLANK = new FormattedLine("");
+	public static ITextBlock BLANK = new TextBlock("");
 	/**
 	 * Tipos de alineamiento de texto disponibles
 	 */
@@ -32,13 +34,13 @@ public class FormattedLine implements IFormattedLine {
 		/**
 		 * No cortar palabras.
 		 * 
-		 * Si una palabra no entra en una lÃ­nea, se la omite y escribe en la siguiente.
+		 * Si una palabra no entra en una línea, se la omite y escribe en la siguiente.
 		 */
 		NO_WRAP, 
 		/**
 		 * Cortar palabras de ser necesario.
 		 * 
-		 * Si una palabra no entra, imprimir la parte de la palabra que quepe y el resto en la siguiente lÃ­nea.
+		 * Si una palabra no entra, imprimir la parte de la palabra que quepe y el resto en la siguiente línea.
 		 */
 		WRAP_WORDS 
 	};
@@ -49,18 +51,18 @@ public class FormattedLine implements IFormattedLine {
 	private String content;
 	private boolean isTopHeader = false;
 	private boolean isBottomHeader = false;
-	private char topLeftDelimiter = 'Â·';
-	private char topRightDelimiter = 'Â·';
-	private char bottomLeftDelimiter = 'Â·';
-	private char bottomRightDelimiter = 'Â·';
-	private char topHeaderMiddleDelimiter = 'â€”';
-	private char bottomHeaderMiddleDelimiter = 'â€”';
+	private char topLeftDelimiter = '·';
+	private char topRightDelimiter = '·';
+	private char bottomLeftDelimiter = '·';
+	private char bottomRightDelimiter = '·';
+	private char topHeaderMiddleDelimiter = '—';
+	private char bottomHeaderMiddleDelimiter = '—';
 	private Alignment alignment = Alignment.LEFT;
 	private Wrap wrap = Wrap.NO_WRAP;
 	private boolean indent = false;
 	
 
-	public FormattedLine(String content) {
+	public TextBlock(String content) {
 		this.setContent(content);
 	}
 	

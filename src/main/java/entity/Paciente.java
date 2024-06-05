@@ -9,9 +9,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import utils.FormattedLine;
-import utils.IFormattedLine;
-import utils.FormattedLine.Alignment;
+import formatter.Format;
+import formatter.Formatter;
+import formatter.TextBlock.Alignment;
 
 @Entity
 @Table(name="pacientes")
@@ -42,6 +42,7 @@ public class Paciente {
 	public Paciente() {
 	}
 
+	@Format(label = "ID", order = 1)
 	public int getId() {
 		return id;
 	}
@@ -50,6 +51,11 @@ public class Paciente {
 		this.id = id;
 	}
 
+	@Format(omitLabel = true, order = 0)
+	public String getFullName() {
+		return this.getApellido() + ", " + this.getNombre();
+	}
+	
 	public String getNombre() {
 		return nombre;
 	}
@@ -66,6 +72,7 @@ public class Paciente {
 		this.apellido = apellido;
 	}
 
+	@Format(label = "DNI N.º", order = 2)
 	public int getDni() {
 		return dni;
 	}
@@ -73,7 +80,8 @@ public class Paciente {
 	public void setDni(int dni) {
 		this.dni = dni;
 	}
-
+	
+	@Format(omitLabel = true, order = 3)
 	public String getTelefono() {
 		return telefono;
 	}
@@ -82,6 +90,7 @@ public class Paciente {
 		this.telefono = telefono;
 	}
 
+	@Format(omitLabel = true, align = Alignment.RIGHT, order = 6)
 	public String getDireccion() {
 		return direccion;
 	}
@@ -90,6 +99,7 @@ public class Paciente {
 		this.direccion = direccion;
 	}
 
+	@Format(omitLabel = true, align = Alignment.RIGHT, order = 7)
 	public String getLocalidad() {
 		return localidad;
 	}
@@ -98,6 +108,7 @@ public class Paciente {
 		this.localidad = localidad;
 	}
 
+	@Format(omitLabel = true, align = Alignment.RIGHT, order = 8)
 	public String getProvincia() {
 		return provincia;
 	}
@@ -106,6 +117,7 @@ public class Paciente {
 		this.provincia = provincia;
 	}
 
+	@Format(label = "Nació el", order = 5)
 	public Date getFechaNacimiento() {
 		return fechaNacimiento;
 	}
@@ -114,6 +126,7 @@ public class Paciente {
 		this.fechaNacimiento = fechaNacimiento;
 	}
 
+	@Format(omitLabel = true, order = 4)
 	public String getCorreo() {
 		return correo;
 	}
@@ -122,36 +135,7 @@ public class Paciente {
 		this.correo = correo;
 	}
 	
-	public String toString() {		
-		IFormattedLine header = new FormattedLine("[Paciente]");
-		header.setLineSize(48);
-		header.setTopHeader(true);
-		header.setAlignment(Alignment.RIGHT);
-		
-		String cont = "";
-		String[] lines = new String[] {
-			"ID: " + String.valueOf(id),
-			"Nombre: " + nombre + " " + apellido, 
-			"DNI N.º: " + String.valueOf(dni),
-			"Fecha de nacimiento: " + String.valueOf(fechaNacimiento),
-			direccion, 
-			localidad + "," + provincia,
-			correo
-		};
-		for(String line: lines) {
-			cont += line + "\n";
-		}
-		IFormattedLine content = new FormattedLine(cont);
-		content.setLineSize(48);
-				
-		IFormattedLine end = new FormattedLine("···");
-		end.setAlignment(FormattedLine.Alignment.CENTER);
-		end.setTopHeader(true);
-		end.setHeaderMiddleDelimiters('—');
-		end.setLineSize(48);
-		
-		String tot = header.toString() + content.toString();
-		
-		return tot + end.toString();
+	public String toString() {
+		return Formatter.of(this).toString();
 	}
 }

@@ -1,9 +1,9 @@
-package utils;
+package formatter;
 
-import utils.FormattedLine.Alignment;
-import utils.FormattedLine.Wrap;
+import formatter.TextBlock.Alignment;
+import formatter.TextBlock.Wrap;
 
-public interface IFormattedLine {
+public interface ITextBlock {
 
 	/**
 	 * Devuelve las líneas generadas.

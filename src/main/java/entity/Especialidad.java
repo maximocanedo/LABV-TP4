@@ -7,12 +7,18 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import formatter.Card;
+import formatter.Format;
+import formatter.Formatter;
+
+@Card(size=24)
 @Entity
 @Table(name = "especialidades")
 public class Especialidad {
+	
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column
@@ -24,6 +30,7 @@ public class Especialidad {
     public Especialidad() {
     }
 
+    @Format(label="ID")
     public int getId() {
         return id;
     }
@@ -31,7 +38,8 @@ public class Especialidad {
     public void setId(int id) {
         this.id = id;
     }
-
+    
+    @Format(label="Nombre")
     public String getNombre() {
         return nombre;
     }
@@ -39,7 +47,8 @@ public class Especialidad {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
-
+    
+    @Format(omitLabel=true)
     public String getDescripcion() {
         return descripcion;
     }
@@ -50,6 +59,6 @@ public class Especialidad {
 
     @Override
     public String toString() {
-        return "Especialidad [id=" + id + ", nombre=" + nombre + ", descripcion=" + descripcion + "]";
+        return Formatter.of(this).toString();
     }
 }
