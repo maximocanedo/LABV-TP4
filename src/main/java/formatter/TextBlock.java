@@ -7,7 +7,7 @@ import formatter.ITextBlock;
 
 public class TextBlock implements ITextBlock {
 	/**
-	 * Línea en blanco.
+	 * LÃ­nea en blanco.
 	 */
 	public static ITextBlock BLANK = new TextBlock("");
 	/**
@@ -34,13 +34,13 @@ public class TextBlock implements ITextBlock {
 		/**
 		 * No cortar palabras.
 		 * 
-		 * Si una palabra no entra en una línea, se la omite y escribe en la siguiente.
+		 * Si una palabra no entra en una lÃ­nea, se la omite y escribe en la siguiente.
 		 */
 		NO_WRAP, 
 		/**
 		 * Cortar palabras de ser necesario.
 		 * 
-		 * Si una palabra no entra, imprimir la parte de la palabra que quepe y el resto en la siguiente línea.
+		 * Si una palabra no entra, imprimir la parte de la palabra que quepe y el resto en la siguiente lÃ­nea.
 		 */
 		WRAP_WORDS 
 	};
@@ -51,12 +51,12 @@ public class TextBlock implements ITextBlock {
 	private String content;
 	private boolean isTopHeader = false;
 	private boolean isBottomHeader = false;
-	private char topLeftDelimiter = '·';
-	private char topRightDelimiter = '·';
-	private char bottomLeftDelimiter = '·';
-	private char bottomRightDelimiter = '·';
-	private char topHeaderMiddleDelimiter = '—';
-	private char bottomHeaderMiddleDelimiter = '—';
+	private char topLeftDelimiter = 'Â·';
+	private char topRightDelimiter = 'Â·';
+	private char bottomLeftDelimiter = 'Â·';
+	private char bottomRightDelimiter = 'Â·';
+	private char topHeaderMiddleDelimiter = 'â€”';
+	private char bottomHeaderMiddleDelimiter = 'â€”';
 	private Alignment alignment = Alignment.LEFT;
 	private Wrap wrap = Wrap.NO_WRAP;
 	private boolean indent = false;

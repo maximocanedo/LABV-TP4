@@ -10,7 +10,7 @@ import formatter.TextBlock.Alignment;
 import java.util.Date;
 
 @Entity
-@Card(name = "Médico")
+@Card(name = "Médico", size = 48)
 @Table(name = "medicos")
 public class Medico {
     @Id

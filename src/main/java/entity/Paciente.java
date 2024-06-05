@@ -9,11 +9,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import formatter.Card;
 import formatter.Format;
 import formatter.Formatter;
 import formatter.TextBlock.Alignment;
 
 @Entity
+@Card(size = 48)
 @Table(name="pacientes")
 public class Paciente {
 	@Id

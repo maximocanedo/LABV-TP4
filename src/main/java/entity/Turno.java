@@ -20,7 +20,7 @@ import formatter.Formatter;
 import entity.TurnoEstado;
 
 @Entity
-@Card
+@Card(size = 64)
 @Table(name = "turnos")
 public class Turno {
 	
@@ -69,7 +69,7 @@ public class Turno {
 	private Paciente paciente;
 	
 	
-	@Format(label = "Médico asignado: ", prefix = "\n", order = 3)
+	@Format(label = "Médico asignado", prefix = "\n", order = 3)
 	public Medico getMedico() {
 		return medico;
 	}
@@ -78,7 +78,7 @@ public class Turno {
 		this.medico = medico;
 	}
 	
-	@Format(label = "Paciente: ", prefix = "\n", order = 4)
+	@Format(label = "Paciente", prefix = "\n", order = 4)
 	public Paciente getPaciente() {
 		return paciente;
 	}
@@ -95,7 +95,7 @@ public class Turno {
 		this.id = id;
 	}
 	
-	@Format(label = "Fecha y hora: ", order = 1)
+	@Format(label = "Fecha y hora", order = 1)
 	public Date getFecha() {
 		return fecha;
 	}

@@ -15,7 +15,7 @@ public class Formatter {
 	private String displayClassName;
 	private ITextBlock header = new TextBlock("");
 	private String content;
-	private ITextBlock footer = new TextBlock("···");
+	private ITextBlock footer = new TextBlock("Â·Â·Â·");
 	private ArrayList<Method> fields = new ArrayList<>();
 	private ArrayList<Method> fieldGetters = new ArrayList<>();
 
@@ -92,11 +92,11 @@ public class Formatter {
             	if(field == null || field.ignore()) continue;
             	if((!stable && (field.order() < 0 || field.order() >= i)) || field.order() < 0) {
             		nonIndexedMethods.add(m);
-            		lg("Se agregó " + m.getName() + "() a la lista del final." );
+            		lg("Se agregï¿½ " + m.getName() + "() a la lista del final." );
             	}
             	else if(field.order() == i) {
             		this.fields.add(i, m); 
-            		lg("Se agregó " + m.getName() + "() porque coincide i ("+i+") = order ("+field.order()+")" );
+            		lg("Se agregï¿½ " + m.getName() + "() porque coincide i ("+i+") = order ("+field.order()+")" );
             		found = true;
             		break;
             	}
@@ -105,7 +105,7 @@ public class Formatter {
         }
         for(Method m : nonIndexedMethods) {
         	this.fields.add(m);
-    		lg("Se agregó " + m.getName() + "() al final" );
+    		lg("Se agregï¿½ " + m.getName() + "() al final" );
         }
         this.updateContent();
 	}
@@ -169,6 +169,7 @@ public class Formatter {
 		this.card = card;
 		this.updateDisplayClassName();
 		this.header.setLineSize(this.card.size());
+		this.footer.setLineSize(this.card.size());
         
 	}
 	
