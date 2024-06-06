@@ -8,6 +8,7 @@ import entity.Especialidad;
 import logic.IEspecialidadLogic;
 
 import entity.Optional;
+import exceptions.NotFoundException;
 
 public class EspecialidadLogicImpl implements IEspecialidadLogic {
 	
@@ -28,33 +29,44 @@ public class EspecialidadLogicImpl implements IEspecialidadLogic {
 	}
 	
 	@Override
-    public void update(Especialidad e) {
+    public void update(Especialidad e) throws NotFoundException {
 		repository.update(e);
 	}
 	
 	@Override
-    public void disable(Especialidad e) {
-		return; // No hay campo "active" en Especialidad.
+    public void disable(int id) throws NotFoundException {
+		repository.disable(id);
 	}
 	
 	@Override
-    public void enable(Especialidad e) {
-		return; // No hay campo "active" en Especialidad.
+    public void enable(int id) throws NotFoundException {
+		repository.enable(id);
 	}
 	
 	@Override
-    public void permanentlyDelete(Especialidad e) {
-		repository.erase(e);
+	public List<Especialidad> list(int page, int size, boolean includeInactiveRecords) {
+		return repository.list(page, size, includeInactiveRecords);
 	}
 	
 	@Override
     public List<Especialidad> list(int page, int size) {
-		return repository.list(page, size);
+		return list(page, size, false);
+	}
+	
+	@Override
+    public List<Especialidad> list(boolean includeInactiveRecords) {
+		return list(1, 15, includeInactiveRecords);
 	}
 	
 	@Override
     public List<Especialidad> list() {
-		return list(1, 15);
+		return list(1, 15, false);
+	}
+
+	@Override
+	@Deprecated
+	public void permanentlyDelete(Especialidad especialidad) {
+		return;
 	}
 	
 }

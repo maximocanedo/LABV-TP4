@@ -2,7 +2,7 @@ package dao;
 
 import java.util.List;
 import entity.Optional;
-
+import exceptions.NotFoundException;
 import entity.Especialidad;
 
 public interface IEspecialidadDAO {
@@ -31,17 +31,33 @@ public interface IEspecialidadDAO {
      * @param size Cantidad de elementos por pagina.
      */
     List<Especialidad> list(int page, int size);
+    
+    /**
+     * Lista las especialidades, permite incluir registros inactivos.
+     */
+    List<Especialidad> list(boolean showInactiveRecords);
+    
+    /**
+     * Lista las especialidades, permite incluir registros inactivos, paginable.
+     */
+    List<Especialidad> list(int page, int size, boolean showInactiveRecords);
 
     /**
      * Actualiza una especialidad en la base de datos.
      * @param especialidad Especialidad con los datos a actualizar.
      */
-    void update(Especialidad especialidad);
+    void update(Especialidad especialidad) throws NotFoundException;
 
     /**
-     * Elimina permanentemente una especialidad de la base de datos.
+     * Deshabilita una especialidad de la base de datos.
      * @param especialidad Especialidad a eliminar.
      */
-    void erase(Especialidad especialidad);
+    void disable(int id) throws NotFoundException;
+    
+    /**
+     * Rehabilita una especialidad de la base de datos.
+     * @param especialidad Especialidad a eliminar.
+     */
+    void enable(int id) throws NotFoundException;
 
 }

@@ -26,11 +26,23 @@ public class Especialidad {
 
     @Column
     private String descripcion;
+    
+    @Column
+    private boolean active;
 
     public Especialidad() {
     }
 
-    @Format(label="ID")
+    @Format(omitLabel=true, whenTrue="", whenFalse="Turno eliminado", order = 3)
+    public boolean isActive() {
+    	return active;
+    }
+    
+    public void setActiveStatus(boolean active) {
+    	this.active = active;
+    }
+    
+    @Format(label="ID", order = 0)
     public int getId() {
         return id;
     }
@@ -39,7 +51,7 @@ public class Especialidad {
         this.id = id;
     }
     
-    @Format(label="Nombre")
+    @Format(label="Nombre", order = 1)
     public String getNombre() {
         return nombre;
     }
@@ -48,7 +60,7 @@ public class Especialidad {
         this.nombre = nombre;
     }
     
-    @Format(omitLabel=true)
+    @Format(omitLabel=true, order = 2)
     public String getDescripcion() {
         return descripcion;
     }
