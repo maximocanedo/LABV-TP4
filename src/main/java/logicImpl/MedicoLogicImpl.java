@@ -3,6 +3,7 @@ package logicImpl;
 import java.time.LocalDate;
 import java.util.List;
 import entity.Optional;
+import exceptions.NotFoundException;
 import dao.IMedicoDAO;
 import daoImpl.MedicoDAOImpl;
 import entity.Medico;
@@ -74,6 +75,39 @@ public class MedicoLogicImpl implements IMedicoLogic {
 	@Override
 	public Optional<Medico> findByFile(int file) {
 		return repository.findByFile(file);
+	}
+
+	@Override
+	public Optional<Medico> findById(int id, boolean includeInactive) {
+		return repository.findById(id, includeInactive);
+	}
+
+	@Override
+	public List<Medico> list(int page, int size, boolean includeInactive) {
+		return repository.list(page, size, includeInactive);
+	}
+
+	@Override
+	public void update(Medico medico) throws NotFoundException {
+		repository.update(medico);
+		
+	}
+
+	@Override
+	@Deprecated
+	public void erase(Medico medico) {
+		repository.erase(medico);
+	}
+
+	@Override
+	public void disable(int id) throws NotFoundException {
+		repository.disable(id);
+		
+	}
+
+	@Override
+	public void enable(int id) throws NotFoundException {
+		repository.disable(id);
 	}
     
 }

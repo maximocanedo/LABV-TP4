@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import entity.Optional;
+import exceptions.NotFoundException;
 import entity.Medico;
 
 public interface IMedicoDAO {
@@ -25,6 +26,13 @@ public interface IMedicoDAO {
      * @param file Legajo
      */
     Optional<Medico> findByFile(int file);
+    
+    /**
+     * Busca un médico por su ID.
+     * @param id ID del medico.
+     * @param searchDisabled Si se buscan registros deshabilitados.
+     */
+    Optional<Medico> findById(int id, boolean searchDisabled);
 
     /**
      * Lista todos los medicos de la base de datos.
@@ -49,6 +57,14 @@ public interface IMedicoDAO {
     List<Medico> list(int page, int size);
     
     /**
+     * Lista todos los medicos de la base de datos, paginable.
+     * @param page Numero de pagina (De 1 en adelante)
+     * @param size Cantidad de elementos por pagina.
+     * @param includeInactiveRecords Incluir registros inactivos.
+     */
+    List<Medico> list(int page, int size, boolean includeInactiveRecords);
+    
+    /**
      * Lista todos los médicos de la base de datos, paginable.
      * @param page Número de página (De 1 en adelante)
      * @param size Cantidad de elementos por página.
@@ -64,13 +80,28 @@ public interface IMedicoDAO {
      * Actualiza un medico en la base de datos.
      * @param medico Medico con los datos a actualizar.
      */
-    void update(Medico medico);
+    void update(Medico medico) throws NotFoundException;
 
     /**
      * Elimina permanentemente un medico de la base de datos.
      * @param medico Medico a eliminar.
      */
+    @Deprecated
     void erase(Medico medico);
+    
+    /**
+     * Deshabilita un médico de la base de datos.
+     * @param id ID del médico a eliminar.
+     * @throws NotFoundException Si el ID ingresado no corresponde a ningún médico.
+     */
+    void disable(int id) throws NotFoundException;
+    
+    /**
+     * Rehabilita un médico de la base de datos.
+     * @param id ID del médico a rehabilitar.
+     * @throws NotFoundException Si el ID ingresado no corresponde a ningún médico.
+     */
+    void enable(int id) throws NotFoundException;
     
     /**
      * Obtiene todos los legajos de los medicos 

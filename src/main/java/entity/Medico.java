@@ -15,10 +15,10 @@ import java.util.Date;
 public class Medico {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
+    @Column(unique = true)
     private int id;
 
-    @Column
+    @Column(unique = true)
     private int legajo;
 
     @Column
@@ -53,6 +53,23 @@ public class Medico {
     @JoinColumn(name="usuario")
     private User usuario;
     
+    @Column
+    private boolean active;
+    
+
+	public Medico() {
+    }
+	
+	public void setActiveStatus(boolean active) {
+		this.active = active;
+	}
+
+	@Format(omitLabel = true, whenTrue = "", whenFalse = "(!) Médico deshabilitado")
+	public boolean isActive() {
+		return active;
+	}
+	
+    
     @Format(omitLabel = true, prefix = "@", order = 9)
     public String getUsername() {
     	return getUser().getUsername();
@@ -66,10 +83,6 @@ public class Medico {
 	public void setUser(User user) {
 		this.usuario = user;
 	}
-
-
-	public Medico() {
-    }
 
 	
     public int getId() {

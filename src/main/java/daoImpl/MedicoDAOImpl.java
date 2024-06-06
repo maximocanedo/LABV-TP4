@@ -7,6 +7,7 @@ import org.hibernate.Query;
 
 import dao.IMedicoDAO;
 import entity.Optional;
+import exceptions.NotFoundException;
 import entity.Medico;
 
 public class MedicoDAOImpl implements IMedicoDAO {
@@ -19,10 +20,10 @@ public class MedicoDAOImpl implements IMedicoDAO {
     }
     
     @Override
-    public Optional<Medico> findById(int id) {
+    public Optional<Medico> findById(int id, boolean searchDisabled) {
         final Optional<Medico> cfMedico = new Optional<>(null);
         DataManager.run(session -> {
-            String hql = "FROM Medico WHERE id = :id";
+            String hql = "FROM Medico WHERE id = :id" + (searchDisabled ? "" : " AND active");
             Query query = session.createQuery(hql);
             query.setParameter("id", id);
             cfMedico.set((Medico) query.uniqueResult());
@@ -36,27 +37,47 @@ public class MedicoDAOImpl implements IMedicoDAO {
     }
     
     @Override
-    @SuppressWarnings("unchecked")
     public List<Medico> list(int page, int size) {
-        final Optional<List<Medico>> optionalList = new Optional<>();
-        DataManager.run(session -> {
-            String hql = "FROM Medico";
-            Query query = session.createQuery(hql);
-            query.setFirstResult((page - 1) * size);
-            query.setMaxResults(size);
-            optionalList.set(query.list());
-        });
-        return optionalList.get();
+        return list(page, size, false);
     }
     
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Medico> list(int page, int size, boolean includeInactiveRecords) {
+		 final Optional<List<Medico>> optionalList = new Optional<>();
+	        DataManager.run(session -> {
+	            String hql = "FROM Medico" + (includeInactiveRecords ? "" : " WHERE active");
+	            Query query = session.createQuery(hql);
+	            query.setFirstResult((page - 1) * size);
+	            query.setMaxResults(size);
+	            optionalList.set(query.list());
+	        });
+	        return optionalList.get();
+	}
+    
     @Override
-    public void update(Medico medico) {
+    public void update(Medico medico) throws NotFoundException {
+    	Optional<Medico> search = findById(medico.getId());
+    	if(search.isEmpty()) throw new NotFoundException();
         DataManager.transact(session -> {
-            session.update(medico);
+        	Medico original = search.get();
+        	if (medico.getNombre() != null) original.setNombre(medico.getNombre());
+            if (medico.getApellido() != null) original.setApellido(medico.getApellido());
+            if (medico.getSexo() != null) original.setSexo(medico.getSexo());
+            if (medico.getFechaNacimiento() != null) original.setFechaNacimiento(medico.getFechaNacimiento());
+            if (medico.getDireccion() != null) original.setDireccion(medico.getDireccion());
+            if (medico.getLocalidad() != null) original.setLocalidad(medico.getLocalidad());
+            if (medico.getCorreo() != null) original.setCorreo(medico.getCorreo());
+            if (medico.getTelefono() != null) original.setTelefono(medico.getTelefono());
+            if (medico.getEspecialidad() != null) original.setEspecialidad(medico.getEspecialidad());
+            if (medico.getUser() != null) original.setUser(medico.getUser());
+            session.update(original);
         });
     }
     
     @Override
+    @Deprecated
     public void erase(Medico medico) {
         DataManager.transact(session -> {
             session.delete(medico);
@@ -155,5 +176,30 @@ public class MedicoDAOImpl implements IMedicoDAO {
 			optional.set((Medico) query.uniqueResult()); 
 		});
 		return optional;
+	}
+
+	@Override
+	public Optional<Medico> findById(int id) {
+		return findById(id, false);
+	}
+	
+	private void updateStatus(int id, boolean newStatus) throws NotFoundException {
+		Optional<Medico> search = findById(id);
+    	if(search.isEmpty()) throw new NotFoundException();
+        DataManager.transact(session -> {
+        	Medico original = search.get();
+        	original.setActiveStatus(newStatus);
+            session.update(original);
+        });
+	}
+
+	@Override
+	public void disable(int id) throws NotFoundException {
+		updateStatus(id, false);
+	}
+
+	@Override
+	public void enable(int id) throws NotFoundException {
+		updateStatus(id, true);
 	}
 }
