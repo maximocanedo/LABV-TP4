@@ -5,39 +5,39 @@ import java.util.List;
 
 import entity.Optional;
 import exceptions.NotFoundException;
-import entity.Medico;
+import entity.Doctor;
 
-public interface IMedicoDAO {
+public interface IDoctorDAO {
 
     /**
      * Agrega un medico a la base de datos.
      * @param medico datos del medico a agregar.
      */
-    void add(Medico medico);
+    void add(Doctor medico);
 
     /**
      * Busca un médico por su ID.
      * @param id ID del medico.
      */
-    Optional<Medico> findById(int id);
+    Optional<Doctor> findById(int id);
     
     /**
      * Busca un médico por su legajo.
      * @param file Legajo
      */
-    Optional<Medico> findByFile(int file);
+    Optional<Doctor> findByFile(int file);
     
     /**
      * Busca un médico por su ID.
      * @param id ID del medico.
      * @param searchDisabled Si se buscan registros deshabilitados.
      */
-    Optional<Medico> findById(int id, boolean searchDisabled);
+    Optional<Doctor> findById(int id, boolean searchDisabled);
 
     /**
      * Lista todos los medicos de la base de datos.
      */
-    List<Medico> list();
+    List<Doctor> list();
     
     /**
      * Lista los legajos de los medicos de la base de datos.
@@ -47,14 +47,14 @@ public interface IMedicoDAO {
     /**
      * Obtiene el medico con el legajo de mayor valor de la base de datos.
      */
-    Medico findDoctorWithHighestFileNumber();
+    Doctor findDoctorWithHighestFileNumber();
 
     /**
      * Lista todos los medicos de la base de datos, paginable.
      * @param page Numero de pagina (De 1 en adelante)
      * @param size Cantidad de elementos por pagina.
      */
-    List<Medico> list(int page, int size);
+    List<Doctor> list(int page, int size);
     
     /**
      * Lista todos los medicos de la base de datos, paginable.
@@ -62,32 +62,32 @@ public interface IMedicoDAO {
      * @param size Cantidad de elementos por pagina.
      * @param includeInactiveRecords Incluir registros inactivos.
      */
-    List<Medico> list(int page, int size, boolean includeInactiveRecords);
+    List<Doctor> list(int page, int size, boolean includeInactiveRecords);
     
     /**
      * Lista todos los médicos de la base de datos, paginable.
      * @param page Número de página (De 1 en adelante)
      * @param size Cantidad de elementos por página.
      */
-    List<Medico> listOrderByFileDescending(int page, int size);
+    List<Doctor> listOrderByFileDescending(int page, int size);
     
     /**
      * Lista todos los médicos de la base de datos.
      */
-    List<Medico> listOrderByFileDescending();
+    List<Doctor> listOrderByFileDescending();
 
     /**
      * Actualiza un medico en la base de datos.
      * @param medico Medico con los datos a actualizar.
      */
-    void update(Medico medico);
+    void update(Doctor medico);
 
     /**
      * Elimina permanentemente un medico de la base de datos.
      * @param medico Medico a eliminar.
      */
     @Deprecated
-    void erase(Medico medico);
+    void erase(Doctor medico);
     
     /**
      * Deshabilita un médico de la base de datos.

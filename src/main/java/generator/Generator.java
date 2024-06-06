@@ -16,7 +16,7 @@ public class Generator {
 
     private static IUserLogic users = new UserLogicImpl();
     private static IPacienteLogic pacientes = new PacienteLogicImpl();
-    private static IMedicoLogic medicos = new MedicoLogicImpl();
+    private static IDoctorLogic medicos = new DoctorLogicImpl();
     
     public static Paciente generateRandomPaciente() {
         Faker faker = new Faker();
@@ -38,18 +38,18 @@ public class Generator {
         ITurnoLogic turnos = new TurnoLogicImpl();
         
         // Encontrar el médico con legajo 1234
-        Optional<Medico> optionalMedico = medicos.findByFile(1234);
+        Optional<Doctor> optionalMedico = medicos.findByFile(1234);
         int attempts = 0;
         while(optionalMedico.isEmpty() && attempts < 4) {
         	User user = Generator.generateAndSaveRandomUser();
-            Medico medico = generateRecord(user);
-            medico.setLegajo(1234);
+            Doctor medico = generateRecord(user);
+            medico.setFile(1234);
             medicos.add(medico);
             optionalMedico = medicos.findByFile(1234);
             attempts++;
         }
         
-        Medico medico = optionalMedico.get();
+        Doctor medico = optionalMedico.get();
 
         Turno turno = new Turno();
         turno.setMedico(medico);
@@ -83,25 +83,25 @@ public class Generator {
         return user;
     }
     
-    public static Medico generateRecord(User user) {
+    public static Doctor generateRecord(User user) {
         Faker faker = new Faker();
         Specialty[] especialidades = Generator.generateRecords();
         Random r = new Random();
         Specialty random = especialidades[r.nextInt(especialidades.length)];
-        Medico medico = new Medico();
+        Doctor medico = new Doctor();
         Name nn = faker.name();
         Address aa = faker.address();
-        medico.setApellido(nn.lastName());
-        medico.setNombre(nn.firstName());
-        medico.setCorreo(faker.internet().emailAddress());
-        medico.setEspecialidad(random);
-        medico.setDireccion(aa.fullAddress());
-        medico.setFechaNacimiento(faker.date().birthday());
-        medico.setLegajo(r.nextInt(10000));
-        medico.setLocalidad(faker.address().city());
-        medico.setSexo(r.nextInt(10) % 2 == 0 ? "M" : "F");
+        medico.setSurname(nn.lastName());
+        medico.setName(nn.firstName());
+        medico.setEmail(faker.internet().emailAddress());
+        medico.setSpecialty(random);
+        medico.setAddress(aa.fullAddress());
+        medico.setBirth(faker.date().birthday());
+        medico.setFile(r.nextInt(10000));
+        medico.setLocalty(faker.address().city());
+        medico.setSex(r.nextInt(10) % 2 == 0 ? "M" : "F");
         medico.setUser(user);
-        medico.setTelefono(faker.phoneNumber().phoneNumber());
+        medico.setPhone(faker.phoneNumber().phoneNumber());
         return medico;
     }
     
@@ -118,10 +118,10 @@ public class Generator {
     }
     public static boolean EXISTE_LEGAJO_1234 = false;
     
-    public static Medico generateAndSaveRandomDoctor(User user) {
+    public static Doctor generateAndSaveRandomDoctor(User user) {
     	boolean exists = Generator.EXISTE_LEGAJO_1234 || medicos.findByFile(1234).isPresent();
-        Medico medico = generateRecord(user);
-        if(!exists) medico.setLegajo(1234);
+        Doctor medico = generateRecord(user);
+        if(!exists) medico.setFile(1234);
         else Generator.EXISTE_LEGAJO_1234 = exists;
         medicos.add(medico);
         return medico;
@@ -132,7 +132,7 @@ public class Generator {
         return user;
     }
     
-    public static Turno generateTurno(Paciente p, Medico m) {
+    public static Turno generateTurno(Paciente p, Doctor m) {
     	Faker f = new Faker();
     	Turno t = new Turno();
     	t.setMedico(m);
@@ -147,7 +147,7 @@ public class Generator {
     }
     
     @SuppressWarnings("deprecation")
-	public static Turno generateTurnoPunto6(Paciente p, Medico m) {
+	public static Turno generateTurnoPunto6(Paciente p, Doctor m) {
     	Faker f = new Faker();
     	Turno t = new Turno();
     	t.setMedico(m);

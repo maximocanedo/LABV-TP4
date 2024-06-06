@@ -5,49 +5,49 @@ import java.util.List;
 
 import org.hibernate.Query;
 
-import dao.IMedicoDAO;
+import dao.IDoctorDAO;
 import entity.Optional;
 import exceptions.NotFoundException;
-import entity.Medico;
+import entity.Doctor;
 
-public class MedicoDAOImpl implements IMedicoDAO {
+public class DoctorDAOImpl implements IDoctorDAO {
     
     @Override
-    public void add(Medico medico) {
+    public void add(Doctor medico) {
         DataManager.transact(session -> {
             session.save(medico);
         });
     }
     
     @Override
-    public Optional<Medico> findById(int id, boolean searchDisabled) {
-        final Optional<Medico> cfMedico = new Optional<>(null);
+    public Optional<Doctor> findById(int id, boolean searchDisabled) {
+        final Optional<Doctor> cfMedico = new Optional<>(null);
         DataManager.run(session -> {
-            String hql = "FROM Medico WHERE id = :id" + (searchDisabled ? "" : " AND active");
+            String hql = "FROM Doctor WHERE id = :id" + (searchDisabled ? "" : " AND active");
             Query query = session.createQuery(hql);
             query.setParameter("id", id);
-            cfMedico.set((Medico) query.uniqueResult());
+            cfMedico.set((Doctor) query.uniqueResult());
         });
         return cfMedico;
     }
     
     @Override
-    public List<Medico> list() {
+    public List<Doctor> list() {
         return list(1, 15);
     }
     
     @Override
-    public List<Medico> list(int page, int size) {
+    public List<Doctor> list(int page, int size) {
         return list(page, size, false);
     }
     
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Medico> list(int page, int size, boolean includeInactiveRecords) {
-		 final Optional<List<Medico>> optionalList = new Optional<>();
+	public List<Doctor> list(int page, int size, boolean includeInactiveRecords) {
+		 final Optional<List<Doctor>> optionalList = new Optional<>();
 	        DataManager.run(session -> {
-	            String hql = "FROM Medico" + (includeInactiveRecords ? "" : " WHERE active");
+	            String hql = "FROM Doctor" + (includeInactiveRecords ? "" : " WHERE active");
 	            Query query = session.createQuery(hql);
 	            query.setFirstResult((page - 1) * size);
 	            query.setMaxResults(size);
@@ -57,7 +57,7 @@ public class MedicoDAOImpl implements IMedicoDAO {
 	}
     
     @Override
-    public void update(Medico medico) {
+    public void update(Doctor medico) {
         DataManager.transact(session -> {
             session.update(medico);
         });
@@ -65,7 +65,7 @@ public class MedicoDAOImpl implements IMedicoDAO {
     
     @Override
     @Deprecated
-    public void erase(Medico medico) {
+    public void erase(Doctor medico) {
         DataManager.transact(session -> {
             session.delete(medico);
         });
@@ -76,7 +76,7 @@ public class MedicoDAOImpl implements IMedicoDAO {
 	public List<Object[]> listOnlyFileNumbersAndNames() {
 		final Optional<List<Object[]>> optionalList = new Optional<>();
         DataManager.run(session -> {
-            String hql = "SELECT m.legajo, m.nombre, m.apellido FROM Medico m ORDER BY m.legajo ASC";
+            String hql = "SELECT m.file, m.name, m.surname FROM Doctor m ORDER BY m.file ASC";
             Query query = session.createQuery(hql);
             optionalList.set(query.list());
         });
@@ -84,8 +84,8 @@ public class MedicoDAOImpl implements IMedicoDAO {
 	}
 
 	@Override
-	public Medico findDoctorWithHighestFileNumber() {
-		List<Medico> list = this.listOrderByFileDescending(1, 1);
+	public Doctor findDoctorWithHighestFileNumber() {
+		List<Doctor> list = this.listOrderByFileDescending(1, 1);
 		return list.get(0);
 	}
 	
@@ -94,7 +94,7 @@ public class MedicoDAOImpl implements IMedicoDAO {
 	public List<Integer> listOnlyFileNumbers(){
 		final Optional<List<Integer>> optionalMedicos = new Optional<>();
         DataManager.run(session -> {
-            String hql = "SELECT m.legajo FROM Medico m";
+            String hql = "SELECT m.file FROM Doctor m";
             Query query = session.createQuery(hql);
             optionalMedicos.set(query.list());
         });
@@ -103,10 +103,10 @@ public class MedicoDAOImpl implements IMedicoDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Medico> listOrderByFileDescending(int page, int size) {
-		final Optional<List<Medico>> optionalMedicos = new Optional<>();
+	public List<Doctor> listOrderByFileDescending(int page, int size) {
+		final Optional<List<Doctor>> optionalMedicos = new Optional<>();
 		DataManager.run(session -> {
-			String hql = "SELECT m FROM Medico m ORDER BY legajo DESC";
+			String hql = "SELECT m FROM Doctor m ORDER BY m.file DESC";
 			Query query = session.createQuery(hql);
             query.setFirstResult((page - 1) * size);
             query.setMaxResults(size);
@@ -116,7 +116,7 @@ public class MedicoDAOImpl implements IMedicoDAO {
 	}
 
 	@Override
-	public List<Medico> listOrderByFileDescending() {
+	public List<Doctor> listOrderByFileDescending() {
 		return listOrderByFileDescending(1, 10);
 	}
 	
@@ -125,9 +125,9 @@ public class MedicoDAOImpl implements IMedicoDAO {
 	public List<Object[]> getAppointmentsByDoctorAndDate(int legajo, LocalDate fecha) {
         final Optional<List<Object[]>> optional = new Optional<>();
         DataManager.run(session -> {
-            String hql = "SELECT m.legajo, t.fecha, t.estado " +
+            String hql = "SELECT m.file, t.fecha, t.estado " +
                          "FROM Turno t INNER JOIN t.medico m " +
-                         "WHERE m.legajo = :legajo AND t.fecha = :fecha";
+                         "WHERE m.file = :legajo AND t.fecha = :fecha";
             Query query = session.createQuery(hql);
             query.setParameter("legajo", legajo);
             query.setParameter("fecha", java.sql.Date.valueOf(fecha));
@@ -141,9 +141,9 @@ public class MedicoDAOImpl implements IMedicoDAO {
 	public List<Object[]> getAppointmentsByDoctorAndDateRange(int legajo, LocalDate fechaInicio, LocalDate fechaFin) {
 	    final Optional<List<Object[]>> cfList = new Optional<>();
 	    DataManager.run(session -> {
-	        String hql = "SELECT m.legajo, t.fecha, t.estado " +
+	        String hql = "SELECT m.file, t.fecha, t.estado " +
 	                     "FROM Turno t INNER JOIN t.medico m " +
-	                     "WHERE m.legajo = :legajo AND t.fecha BETWEEN :fechaInicio AND :fechaFin";
+	                     "WHERE m.file = :legajo AND t.fecha BETWEEN :fechaInicio AND :fechaFin";
 	        Query query = session.createQuery(hql);
 	        query.setParameter("legajo", legajo);
 	        query.setParameter("fechaInicio", java.sql.Date.valueOf(fechaInicio));
@@ -154,28 +154,28 @@ public class MedicoDAOImpl implements IMedicoDAO {
 	}
 
 	@Override
-	public Optional<Medico> findByFile(int file) {
-		final Optional<Medico> optional = new Optional<>();
+	public Optional<Doctor> findByFile(int file) {
+		final Optional<Doctor> optional = new Optional<>();
 		DataManager.run(session -> {
-			String hql = "SELECT m FROM Medico m WHERE m.legajo = :legajo";
+			String hql = "SELECT m FROM Doctor m WHERE m.file = :legajo";
 			Query query = session.createQuery(hql);
 			query.setParameter("legajo", file);
-			optional.set((Medico) query.uniqueResult()); 
+			optional.set((Doctor) query.uniqueResult()); 
 		});
 		return optional;
 	}
 
 	@Override
-	public Optional<Medico> findById(int id) {
+	public Optional<Doctor> findById(int id) {
 		return findById(id, false);
 	}
 	
 	private void updateStatus(int id, boolean newStatus) throws NotFoundException {
-		Optional<Medico> search = findById(id, newStatus);
+		Optional<Doctor> search = findById(id, newStatus);
     	if(search.isEmpty()) throw new NotFoundException();
         DataManager.transact(session -> {
-        	Medico original = search.get();
-        	original.setActiveStatus(newStatus);
+        	Doctor original = search.get();
+        	original.setActive(newStatus);
             session.update(original);
         });
 	}

@@ -27,8 +27,8 @@ public class User {
 	@Column(name="active")
 	private boolean active = true;
 	
-	@OneToOne(mappedBy="usuario")
-	private Medico medico;
+	@OneToOne(mappedBy="user")
+	private Doctor medico;
 	
 	public User() {
 		
@@ -38,11 +38,11 @@ public class User {
 
 
 	
-	public Medico getMedico() {
+	public Doctor getMedico() {
 		return medico;
 	}
 
-	public void setMedico(Medico medico) {
+	public void setMedico(Doctor medico) {
 		this.medico = medico;
 	}
 	
