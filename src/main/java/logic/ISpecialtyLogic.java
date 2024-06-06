@@ -3,28 +3,28 @@ package logic;
 import java.util.List;
 import entity.Optional;
 import exceptions.NotFoundException;
-import entity.Especialidad;
+import entity.Specialty;
 
-public interface IEspecialidadLogic {
+public interface ISpecialtyLogic {
 
 	/**
      * Agrega una especialidad a la base de datos.
-     * @param especialidad Datos de la especialidad a agregar.
+     * @param specialty Datos de la especialidad a agregar.
      */
-	void add(Especialidad especialidad);
+	void add(Specialty specialty);
 
 	/**
      * Busca una especialidad por su id.
      * @param id Id de la especialidad.
      * @return Objeto Especialidad con los datos
      */
-	Optional<Especialidad> findById(int id);
+	Optional<Specialty> findById(int id);
 
 	/**
      * Actualiza una especialidad en la base de datos.
-     * @param especialidad Especialidad con los datos a actualizar.
+     * @param specialty Especialidad con los datos a actualizar.
      */
-	void update(Especialidad especialidad) throws NotFoundException;
+	void update(Specialty specialty) throws NotFoundException;
 
 	/**
      * Deshabilita una especialidad de la base de datos.
@@ -40,10 +40,10 @@ public interface IEspecialidadLogic {
 
 	/**
      * Elimina permanentemente una especialidad de la base de datos.
-     * @param especialidad Especialidad a eliminar.
+     * @param specialty Especialidad a eliminar.
      */
 	@Deprecated
-	void permanentlyDelete(Especialidad especialidad);
+	void permanentlyDelete(Specialty specialty);
 	
 	/**
      * Lista todas las especialidades de la base de datos, paginable.
@@ -51,24 +51,24 @@ public interface IEspecialidadLogic {
      * @param size Cantidad de elementos por pagina.
      * @param includeInactiveRecords Si se deben incluir registros deshabilitados en la lista.
      */
-	List<Especialidad> list(int page, int size, boolean includeInactiveRecords);
+	List<Specialty> list(int page, int size, boolean includeInactiveRecords);
 
 	/**
      * Lista todas las especialidades de la base de datos, paginable.
      * @param page Numero de pagina (De 1 en adelante)
      * @param size Cantidad de elementos por pagina.
      */
-	List<Especialidad> list(int page, int size);
+	List<Specialty> list(int page, int size);
 	
 	/**
      * Lista todas las especialidades de la base de datos.
      * @param includeInactiveRecords Si se deben incluir registros deshabilitados en la lista.
      */
-	List<Especialidad> list(boolean includeInactiveRecords);
+	List<Specialty> list(boolean includeInactiveRecords);
 
 	/**
     * Lista todas las especialidades de la base de datos.
     */
-	List<Especialidad> list();
+	List<Specialty> list();
 
 }

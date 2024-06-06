@@ -47,7 +47,7 @@ public class Medico {
 
     @ManyToOne
     @JoinColumn(name = "especialidad_id")
-    private Especialidad especialidad;
+    private Specialty especialidad;
 
     @OneToOne(cascade= {CascadeType.ALL})
     @JoinColumn(name="usuario")
@@ -191,15 +191,15 @@ public class Medico {
 
 	@Format(label = "Esp.", order = 2)
 	public String getSpecialityName() {
-		return especialidad.getNombre();
+		return especialidad.getName();
 	}
 
-	public Especialidad getEspecialidad() {
+	public Specialty getEspecialidad() {
 		return especialidad;
 	}
 
 
-	public void setEspecialidad(Especialidad especialidad) {
+	public void setEspecialidad(Specialty especialidad) {
 		this.especialidad = especialidad;
 	}
 

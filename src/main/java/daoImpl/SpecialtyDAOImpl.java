@@ -4,49 +4,49 @@ import java.util.List;
 
 import org.hibernate.Query;
 
-import dao.IEspecialidadDAO;
+import dao.ISpecialtyDAO;
 import entity.Optional;
 import exceptions.NotFoundException;
-import entity.Especialidad;
+import entity.Specialty;
 
-public class EspecialidadDAOImpl implements IEspecialidadDAO {
+public class SpecialtyDAOImpl implements ISpecialtyDAO {
 
     @Override
-    public void add(Especialidad record) {
+    public void add(Specialty record) {
         DataManager.transact(session -> {
             session.save(record);
         });
     }
 
     @Override
-    public Optional<Especialidad> findById(int id) {
+    public Optional<Specialty> findById(int id) {
         return findById(id, false);
     }
     
     @Override
-    public Optional<Especialidad> findById(int id, boolean includeInactives) {
-        final Optional<Especialidad> optional = new Optional<>();
+    public Optional<Specialty> findById(int id, boolean includeInactives) {
+        final Optional<Specialty> optional = new Optional<>();
         DataManager.run(session -> {
             String hql = "FROM Especialidad WHERE id = :id" + (includeInactives ? "" : " AND active");
             Query query = session.createQuery(hql);
             query.setParameter("id", id);
-            optional.set((Especialidad) query.uniqueResult());
+            optional.set((Specialty) query.uniqueResult());
         });
         return optional;
     }
 
     @Override
-    public List<Especialidad> list() {
+    public List<Specialty> list() {
         return list(1, 15);
     }
 
     @Override
-    public List<Especialidad> list(int page, int size) {
+    public List<Specialty> list(int page, int size) {
         return this.list(page, size, false);
     }
 
     @Override
-    public void update(Especialidad record) {
+    public void update(Specialty record) {
         DataManager.transact(session -> {
             session.update(record);
         });
@@ -54,41 +54,41 @@ public class EspecialidadDAOImpl implements IEspecialidadDAO {
 
     @Override
     public void disable(int id) throws NotFoundException {
-    	Optional<Especialidad> file = findById(id);
+    	Optional<Specialty> file = findById(id);
     	if(file.isEmpty()) throw new NotFoundException();
         DataManager.transact(session -> {
-            Especialidad original = file.get();
-            original.setActiveStatus(false);
+            Specialty original = file.get();
+            original.setActive(false);
             session.update(original);
         });
     }
     
     @Override
     public void enable(int id) throws NotFoundException {
-    	Optional<Especialidad> file = findById(id, true);
+    	Optional<Specialty> file = findById(id, true);
     	if(file.isEmpty()) throw new NotFoundException();
         DataManager.transact(session -> {
-            Especialidad original = file.get();
-            original.setActiveStatus(true);
+            Specialty original = file.get();
+            original.setActive(true);
             session.update(original);
         });
     }
 
 	@Override
-	public List<Especialidad> list(boolean showInactiveRecords) {
+	public List<Specialty> list(boolean showInactiveRecords) {
 		return this.list(1, 10, showInactiveRecords);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Especialidad> list(int page, int size, boolean showInactiveRecords) {
-		final Optional<List<Especialidad>> optional = new Optional<>();
+	public List<Specialty> list(int page, int size, boolean showInactiveRecords) {
+		final Optional<List<Specialty>> optional = new Optional<>();
         DataManager.run(session -> {
             String hql = "SELECT e FROM Especialidad e" + (showInactiveRecords ? "" : " WHERE e.active");
             Query query = session.createQuery(hql);
             query.setFirstResult((page - 1) * size);
             query.setMaxResults(size);
-            optional.set(((List<Especialidad>) query.list()));
+            optional.set(((List<Specialty>) query.list()));
         });
         return optional.get();
 	}
