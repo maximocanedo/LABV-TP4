@@ -19,7 +19,7 @@ import formatter.TextBlock.Alignment;
 @Table(name="pacientes")
 public class Paciente {
 	@Id
-	@Column
+	@Column(unique = true)
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 	@Column
@@ -40,6 +40,8 @@ public class Paciente {
 	private Date fechaNacimiento;
 	@Column
 	private String correo;
+	@Column
+    private boolean active = true;
 	
 	public Paciente() {
 	}
@@ -135,6 +137,15 @@ public class Paciente {
 
 	public void setCorreo(String correo) {
 		this.correo = correo;
+	}
+	
+	@Format(omitLabel = true, whenTrue = "", whenFalse = "(!) Paciente deshabilitado. ")
+	public boolean isActive() {
+		return active;
+	}
+	
+	public void setActiveStatus(boolean active) {
+		this.active = active;
 	}
 	
 	public String toString() {

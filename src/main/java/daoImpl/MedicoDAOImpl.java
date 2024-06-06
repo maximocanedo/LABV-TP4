@@ -57,22 +57,9 @@ public class MedicoDAOImpl implements IMedicoDAO {
 	}
     
     @Override
-    public void update(Medico medico) throws NotFoundException {
-    	Optional<Medico> search = findById(medico.getId());
-    	if(search.isEmpty()) throw new NotFoundException();
+    public void update(Medico medico) {
         DataManager.transact(session -> {
-        	Medico original = search.get();
-        	if (medico.getNombre() != null) original.setNombre(medico.getNombre());
-            if (medico.getApellido() != null) original.setApellido(medico.getApellido());
-            if (medico.getSexo() != null) original.setSexo(medico.getSexo());
-            if (medico.getFechaNacimiento() != null) original.setFechaNacimiento(medico.getFechaNacimiento());
-            if (medico.getDireccion() != null) original.setDireccion(medico.getDireccion());
-            if (medico.getLocalidad() != null) original.setLocalidad(medico.getLocalidad());
-            if (medico.getCorreo() != null) original.setCorreo(medico.getCorreo());
-            if (medico.getTelefono() != null) original.setTelefono(medico.getTelefono());
-            if (medico.getEspecialidad() != null) original.setEspecialidad(medico.getEspecialidad());
-            if (medico.getUser() != null) original.setUser(medico.getUser());
-            session.update(original);
+            session.update(medico);
         });
     }
     
@@ -184,7 +171,7 @@ public class MedicoDAOImpl implements IMedicoDAO {
 	}
 	
 	private void updateStatus(int id, boolean newStatus) throws NotFoundException {
-		Optional<Medico> search = findById(id);
+		Optional<Medico> search = findById(id, newStatus);
     	if(search.isEmpty()) throw new NotFoundException();
         DataManager.transact(session -> {
         	Medico original = search.get();

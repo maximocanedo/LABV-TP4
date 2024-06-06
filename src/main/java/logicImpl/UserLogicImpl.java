@@ -8,6 +8,7 @@ import org.mindrot.jbcrypt.BCrypt;
 import dao.IUserDAO;
 import daoImpl.UserDAOImpl;
 import entity.User;
+import exceptions.NotFoundException;
 import logic.IUserLogic;
 
 public class UserLogicImpl implements IUserLogic {
@@ -58,6 +59,11 @@ public class UserLogicImpl implements IUserLogic {
 	}
 	
 	@Override
+    public Optional<User> findByUsername(String username, boolean includeInactive) {
+		return hideSensitiveData(repository.findByUsername(username, includeInactive));
+	}
+	
+	@Override
     public void disable(User user) {
 		user.setActiveState(false);
 		repository.update(user);
@@ -75,28 +81,32 @@ public class UserLogicImpl implements IUserLogic {
 	}
 	
 	@Override
+    public List<User> list(int page, int size, boolean includeInactives) {
+		return repository.list(page, size, includeInactives);
+	}
+	
+	@Override
     public List<User> list() {
 		return list(1, 15);
 	}
 	
 	@Override
-    public boolean changePassword(String username, String currentPassword, String newPassword) {
-		// TODO: Implementar excepciones.
-		Optional<User> optional = check(username, currentPassword);
-		if(optional.isEmpty()) return false;
-		User user = optional.get();
-		user.setPassword(hash(newPassword));
-		repository.update(user);
-		return true;
+    public void changePassword(String username, String currentPassword, String newPassword) throws NotFoundException {
+		Optional<User> search = check(username, currentPassword);
+		if(search.isEmpty()) throw new NotFoundException();
+		User original = search.get();
+		original.setPassword(hash(newPassword));
+		repository.update(original);
 	}
 	
 	@Override
-    public boolean update(User user) {
-		Optional<User> original = repository.findByUsername(user.getUsername());
-		if(original.isEmpty()) return false;
-		user.setPassword(original.get().getPassword());
+    public void update(User user) throws NotFoundException {
+		Optional<User> search = repository.findByUsername(user.getUsername());
+		if(search.isEmpty()) throw new NotFoundException();
+		User original = search.get();
+		if(user.getName() != null) original.setName(user.getName());
+		if(user.getMedico() != null) original.setMedico(user.getMedico());
 		repository.update(user);
-		return true;
 	}
 	
 }

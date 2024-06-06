@@ -8,6 +8,7 @@ import org.hibernate.*;
 import dao.IUserDAO;
 import entity.Optional;
 import entity.User;
+import exceptions.NotFoundException;
 
 public class UserDAOImpl implements IUserDAO {
 	
@@ -22,9 +23,14 @@ public class UserDAOImpl implements IUserDAO {
 	
 	@Override
     public Optional<User> findByUsername(String username) {
+		return findByUsername(username, false);
+	}
+	
+	@Override
+    public Optional<User> findByUsername(String username, boolean includeInactives) {
 		final Optional<User> cfUser = new Optional<User>(null);
 		DataManager.run(session -> {
-			String hql = "FROM User WHERE username = :username";
+			String hql = "FROM User WHERE username = :username" + (includeInactives ? "" : " AND active");
 	        Query query = session.createQuery(hql);
 	        query.setParameter("username", username);
 	        cfUser.set((User) query.uniqueResult());
@@ -39,10 +45,10 @@ public class UserDAOImpl implements IUserDAO {
 	
 	@Override
     @SuppressWarnings("unchecked")
-	public List<User> list(int page, int size) {
+	public List<User> list(int page, int size, boolean includeInactives) {
 		final Optional<List<User>> cfList = new Optional<List<User>>();
 		DataManager.run(session -> {
-			String sqlQuery = "SELECT username, null as password, name, active FROM users";
+			String sqlQuery = "SELECT username, null as password, name, active FROM users" + (includeInactives ? "" : " AND active");
 	        Query q = session.createSQLQuery(sqlQuery).addEntity(User.class);
 			q.setFirstResult((page - 1) * size);
             q.setMaxResults(size);
@@ -59,10 +65,36 @@ public class UserDAOImpl implements IUserDAO {
 	}
 	
 	@Override
+	@Deprecated
     public void erase(User user) {
 		DataManager.transact(session -> {
 			session.delete(user);
 		});
+	}
+
+	@Override
+	public List<User> list(int page, int size) {
+		return list(page, size, false);
+	}
+
+	private void updateStatus(String username, boolean newStatus) throws NotFoundException {
+		Optional<User> search = findByUsername(username, newStatus);
+    	if(search.isEmpty()) throw new NotFoundException();
+        DataManager.transact(session -> {
+        	User original = search.get();
+        	original.setActiveState(newStatus);
+            session.update(original);
+        });
+	}
+	
+	@Override
+	public void disable(String username) throws NotFoundException {
+		updateStatus(username, false);	
+	}
+
+	@Override
+	public void enable(String username) throws NotFoundException {
+		updateStatus(username, true);	
 	}
 	
 	

@@ -28,7 +28,7 @@ public class Especialidad {
     private String descripcion;
     
     @Column
-    private boolean active;
+    private boolean active = true;
 
     public Especialidad() {
     }

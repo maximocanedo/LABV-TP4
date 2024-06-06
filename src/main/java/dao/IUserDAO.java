@@ -4,6 +4,7 @@ import java.util.List;
 
 import entity.Optional;
 import entity.User;
+import exceptions.NotFoundException;
 
 public interface IUserDAO {
 
@@ -20,6 +21,14 @@ public interface IUserDAO {
 	 * @throws NotFoundException 
 	 */
 	Optional<User> findByUsername(String username);
+	
+	/**
+	 * Obtiene un usuario por su nombre de usuario.
+	 * @param username Nombre de usuario.
+	 * @throws Exception 
+	 * @throws NotFoundException 
+	 */
+	Optional<User> findByUsername(String username, boolean includeInactives);
 
 	/**
 	 * Lista todos los usuarios de la base de datos.
@@ -32,6 +41,13 @@ public interface IUserDAO {
 	 * @param size Cantidad de elementos.
 	 */
 	List<User> list(int page, int size);
+	
+	/**
+	 * Lista todos los usuarios de la base de datos, paginable.
+	 * @param page Número de página (De 1 en adelante)
+	 * @param size Cantidad de elementos.
+	 */
+	List<User> list(int page, int size, boolean includeInactives);
 
 	/**
 	 * Actualiza un usuario de la base de datos.
@@ -43,6 +59,11 @@ public interface IUserDAO {
 	 * Elimina permanentemente un usuario de la base de datos.
 	 * @param user Usuario a eliminar.
 	 */
+	@Deprecated
 	void erase(User user);
+	
+	void disable(String username) throws NotFoundException;
+	
+	void enable(String username) throws NotFoundException;
 
 }

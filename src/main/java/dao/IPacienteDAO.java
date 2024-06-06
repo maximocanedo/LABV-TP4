@@ -3,6 +3,7 @@ package dao;
 import java.util.List;
 import entity.Optional;
 import entity.Paciente;
+import exceptions.NotFoundException;
 
 public interface IPacienteDAO {
 
@@ -15,10 +16,14 @@ public interface IPacienteDAO {
 	/**
 	 * Obtiene un paciente por su id.
 	 * @param id. Id del paciente.
-	 * @throws Exception 
-	 * @throws NotFoundException 
 	 */
 	Optional<Paciente> findById(int id);
+	
+	/**
+	 * Obtiene un paciente por su id.
+	 * @param id. Id del paciente.
+	 */
+	Optional<Paciente> findById(int id, boolean includeInactives);
 
 	/**
 	 * Lista todos los pacientes de la base de datos.
@@ -31,6 +36,13 @@ public interface IPacienteDAO {
 	 * @param size Cantidad de elementos.
 	 */
 	List<Paciente> list(int page, int size);
+	
+	/**
+	 * Lista todos los pacientes de la base de datos, paginable.
+	 * @param page Número de página (De 1 en adelante)
+	 * @param size Cantidad de elementos.
+	 */
+	List<Paciente> list(int page, int size, boolean includeInactives);
 
 	/**
 	 * Actualiza un paciente de la base de datos.
@@ -42,6 +54,21 @@ public interface IPacienteDAO {
 	 * Elimina permanentemente un paciente de la base de datos.
 	 * @param paciente Paciente a eliminar.
 	 */
+	@Deprecated
 	void erase(Paciente paciente);
+	
+	/**
+     * Deshabilita un paciente de la base de datos.
+     * @param id ID del paciente a eliminar.
+     * @throws NotFoundException Si el ID ingresado no corresponde a ningún paciente.
+     */
+    void disable(int id) throws NotFoundException;
+    
+    /**
+     * Rehabilita un paciente de la base de datos.
+     * @param id ID del paciente a rehabilitar.
+     * @throws NotFoundException Si el ID ingresado no corresponde a ningún paciente.
+     */
+    void enable(int id) throws NotFoundException;
 
 }

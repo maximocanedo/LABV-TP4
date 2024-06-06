@@ -132,16 +132,16 @@ public class App {
     	User user = usersRepo.list(1, 1).get(0);
     	System.out.println(user);
     	user.setName("Roberto Castañeda");
-    	boolean s = usersRepo.update(user);
-    	if(s) {
+    	try {
+    		usersRepo.update(user);
     		System.out.println("Se cambió correctamente el nombre. ");
     		System.out.println(user);
-    	} else {
+        	// Borrar un registro
+        	usersRepo.disable(user);
+        	System.out.println("Se deshabilitó correctamente el usuario. ");
+    	} catch (Exception e) {
     		System.out.println("Error al intentar cambiar el nombre. ");
     	}
-    	// Borrar un registro
-    	usersRepo.disable(user);
-    	System.out.println("Se deshabilitó correctamente el usuario. ");
     	
     	// Listar médicos
     	IMedicoLogic medicos_repo = new MedicoLogicImpl();

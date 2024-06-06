@@ -80,7 +80,7 @@ public interface IMedicoDAO {
      * Actualiza un medico en la base de datos.
      * @param medico Medico con los datos a actualizar.
      */
-    void update(Medico medico) throws NotFoundException;
+    void update(Medico medico);
 
     /**
      * Elimina permanentemente un medico de la base de datos.

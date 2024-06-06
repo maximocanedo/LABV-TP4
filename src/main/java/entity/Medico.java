@@ -54,7 +54,7 @@ public class Medico {
     private User usuario;
     
     @Column
-    private boolean active;
+    private boolean active = true;
     
 
 	public Medico() {

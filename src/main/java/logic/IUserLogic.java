@@ -4,6 +4,7 @@ import java.util.List;
 import entity.Optional;
 
 import entity.User;
+import exceptions.NotFoundException;
 
 public interface IUserLogic {
 
@@ -26,18 +27,31 @@ public interface IUserLogic {
 	 * @param username Nombre de usuario
 	 */
 	Optional<User> findByUsername(String username);
+	
+	/**
+	 * Busca un usuario por su nombre de usuario.
+	 * @param username Nombre de usuario
+	 */
+	Optional<User> findByUsername(String username, boolean includeInactives);
 
 	/**
 	 * Deshabilita un usuario.
 	 * @param user Usuario a deshabilitar.
 	 */
-	void disable(User user);
+	void disable(User user) throws NotFoundException;
 
 	/**
 	 * Habilita un usuario.
 	 * @param user Usuario a habilitar.
 	 */
-	void enable(User user);
+	void enable(User user) throws NotFoundException;
+
+	/**
+	 * Lista todos los usuarios de la base de datos.
+	 * @param page Número de página (De 1 en adelante)
+	 * @param size Cantidad de elementos.
+	 */
+	List<User> list(int page, int size, boolean includeInactives);
 
 	/**
 	 * Lista todos los usuarios de la base de datos.
@@ -56,15 +70,13 @@ public interface IUserLogic {
 	 * @param username Nombre de usuario.
 	 * @param currentPassword Contraseña actual.
 	 * @param newPassword Nueva contraseña.
-	 * @return Resultado de la operación.
 	 */
-	boolean changePassword(String username, String currentPassword, String newPassword);
+	void changePassword(String username, String currentPassword, String newPassword) throws NotFoundException;
 	
 	/**
 	 * Actualiza los datos (Salvo la contraseña) del usuario.
 	 * @param user Usuario con los datos a actualizar.
-	 * @return Resultado de la operación.
 	 */
-	boolean update(User user);
+	void update(User user) throws NotFoundException;
 
 }

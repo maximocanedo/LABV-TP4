@@ -38,10 +38,21 @@ public class Turno {
 	@Column(name="estado")
 	@Enumerated(EnumType.STRING)
 	private TurnoEstado estado;
+
+	@ManyToOne(cascade= {CascadeType.ALL})
+	@JoinColumn(name="id_medico")
+	private Medico medico;
 	
+	
+	@ManyToOne(cascade= {CascadeType.ALL})
+	@JoinColumn(name="id_paciente")
+	private Paciente paciente;
+
+	@Column
+    private boolean active = true;
 	
 
-	
+	@Deprecated
 	public Turno(int id, Date fecha, String observacion, TurnoEstado estado, Medico medico,
 			Paciente paciente) {
 		this.id = id;
@@ -52,21 +63,8 @@ public class Turno {
 		this.paciente = paciente;
 	}
 
-	public Turno() {
-		
-	}
+	public Turno() {}
 	
-	
-	
-	
-	@ManyToOne(cascade= {CascadeType.ALL})
-	@JoinColumn(name="id_medico")
-	private Medico medico;
-	
-	
-	@ManyToOne(cascade= {CascadeType.ALL})
-	@JoinColumn(name="id_paciente")
-	private Paciente paciente;
 	
 	
 	@Format(label = "Médico asignado", prefix = "\n", order = 3)
@@ -121,6 +119,15 @@ public class Turno {
 	}
 	public void setEstado(TurnoEstado estado) {
 		this.estado = estado;
+	}
+	
+	@Format(omitLabel = true, whenTrue = "", whenFalse = "(!) Turno deshabilitado. ")
+	public boolean isActive() {
+		return this.active;
+	}
+	
+	public void setActiveStatus(boolean active) {
+		this.active = active;
 	}
 	
 	@Override

@@ -20,9 +20,14 @@ public class EspecialidadDAOImpl implements IEspecialidadDAO {
 
     @Override
     public Optional<Especialidad> findById(int id) {
+        return findById(id, false);
+    }
+    
+    @Override
+    public Optional<Especialidad> findById(int id, boolean includeInactives) {
         final Optional<Especialidad> optional = new Optional<>();
         DataManager.run(session -> {
-            String hql = "FROM Especialidad WHERE id = :id";
+            String hql = "FROM Especialidad WHERE id = :id" + (includeInactives ? "" : " AND active");
             Query query = session.createQuery(hql);
             query.setParameter("id", id);
             optional.set((Especialidad) query.uniqueResult());
@@ -41,16 +46,9 @@ public class EspecialidadDAOImpl implements IEspecialidadDAO {
     }
 
     @Override
-    public void update(Especialidad record) throws NotFoundException {
-    	Optional<Especialidad> file = findById(record.getId());
-    	if(file.isEmpty()) throw new NotFoundException();
+    public void update(Especialidad record) {
         DataManager.transact(session -> {
-            Especialidad original = file.get();
-            if(record.getNombre() != null)
-            	original.setNombre(record.getNombre());
-            if(record.getDescripcion() != null)
-            	original.setDescripcion(record.getDescripcion());
-            session.update(original);
+            session.update(record);
         });
     }
 
@@ -67,7 +65,7 @@ public class EspecialidadDAOImpl implements IEspecialidadDAO {
     
     @Override
     public void enable(int id) throws NotFoundException {
-    	Optional<Especialidad> file = findById(id);
+    	Optional<Especialidad> file = findById(id, true);
     	if(file.isEmpty()) throw new NotFoundException();
         DataManager.transact(session -> {
             Especialidad original = file.get();

@@ -46,7 +46,7 @@ public interface IEspecialidadDAO {
      * Actualiza una especialidad en la base de datos.
      * @param especialidad Especialidad con los datos a actualizar.
      */
-    void update(Especialidad especialidad) throws NotFoundException;
+    void update(Especialidad especialidad);
 
     /**
      * Deshabilita una especialidad de la base de datos.
@@ -59,5 +59,7 @@ public interface IEspecialidadDAO {
      * @param especialidad Especialidad a eliminar.
      */
     void enable(int id) throws NotFoundException;
+
+	Optional<Especialidad> findById(int id, boolean includeInactives);
 
 }

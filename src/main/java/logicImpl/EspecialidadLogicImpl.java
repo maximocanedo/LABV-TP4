@@ -29,8 +29,15 @@ public class EspecialidadLogicImpl implements IEspecialidadLogic {
 	}
 	
 	@Override
-    public void update(Especialidad e) throws NotFoundException {
-		repository.update(e);
+    public void update(Especialidad record) throws NotFoundException {
+    	Optional<Especialidad> file = findById(record.getId());
+    	if(file.isEmpty()) throw new NotFoundException();
+        Especialidad original = file.get();
+        if(record.getNombre() != null)
+        	original.setNombre(record.getNombre());
+        if(record.getDescripcion() != null)
+        	original.setDescripcion(record.getDescripcion());
+		repository.update(original);
 	}
 	
 	@Override

@@ -89,8 +89,20 @@ public class MedicoLogicImpl implements IMedicoLogic {
 
 	@Override
 	public void update(Medico medico) throws NotFoundException {
-		repository.update(medico);
-		
+    	Optional<Medico> search = findById(medico.getId());
+    	if(search.isEmpty()) throw new NotFoundException();
+    	Medico original = search.get();
+    	if (medico.getNombre() != null) original.setNombre(medico.getNombre());
+        if (medico.getApellido() != null) original.setApellido(medico.getApellido());
+        if (medico.getSexo() != null) original.setSexo(medico.getSexo());
+        if (medico.getFechaNacimiento() != null) original.setFechaNacimiento(medico.getFechaNacimiento());
+        if (medico.getDireccion() != null) original.setDireccion(medico.getDireccion());
+        if (medico.getLocalidad() != null) original.setLocalidad(medico.getLocalidad());
+        if (medico.getCorreo() != null) original.setCorreo(medico.getCorreo());
+        if (medico.getTelefono() != null) original.setTelefono(medico.getTelefono());
+        if (medico.getEspecialidad() != null) original.setEspecialidad(medico.getEspecialidad());
+        if (medico.getUser() != null) original.setUser(medico.getUser());
+		repository.update(original);
 	}
 
 	@Override
