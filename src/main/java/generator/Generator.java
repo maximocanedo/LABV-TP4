@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+import org.hibernate.exception.ConstraintViolationException;
+
 import com.github.javafaker.Address;
 import com.github.javafaker.Faker;
 import com.github.javafaker.Name;
@@ -18,12 +20,16 @@ public class Generator {
     private static IPatientLogic pacientes = new PatientLogicImpl();
     private static IDoctorLogic medicos = new DoctorLogicImpl();
     
+    
+    
     public static Patient generateRandomPaciente() {
         Faker faker = new Faker();
         Patient paciente = new Patient();
         paciente.setName(faker.name().firstName());
         paciente.setSurname(faker.name().lastName());
-        paciente.setDni(45489657);
+        Random random = new Random();
+        int dni = random.nextInt(90000000) + 10000000 + random.nextInt(500);
+        paciente.setDni(dni);
         paciente.setPhone(faker.phoneNumber().cellPhone());
         paciente.setAddress(faker.address().streetAddress());
         paciente.setLocalty(faker.address().city());
@@ -33,9 +39,9 @@ public class Generator {
         return paciente;
     }
     
-    public static Turno generateTurnoForDoctor1234(Patient paciente) {
+    public static Appointment generateTurnoForDoctor1234(Patient paciente) {
         Faker faker = new Faker();
-        ITurnoLogic turnos = new TurnoLogicImpl();
+        IAppointmentLogic turnos = new AppointmentLogicImpl();
         
         // Encontrar el médico con legajo 1234
         Optional<Doctor> optionalMedico = medicos.findByFile(1234);
@@ -51,11 +57,11 @@ public class Generator {
         
         Doctor medico = optionalMedico.get();
 
-        Turno turno = new Turno();
-        turno.setMedico(medico);
-        turno.setPaciente(paciente);
-        turno.setObservacion("");
-        turno.setEstado(TurnoEstado.PENDIENTE);
+        Appointment turno = new Appointment();
+        turno.setAssignedDoctor(medico);
+        turno.setPatient(paciente);
+        turno.setRemarks("");
+        turno.setStatus(AppointmentStatus.PENDING);
 
 
         Calendar start = Calendar.getInstance();
@@ -67,8 +73,13 @@ public class Generator {
         Date endDate = end.getTime();
 
         Date randomDate = faker.date().between(startDate, endDate);
-        turno.setFecha(randomDate);
-        turnos.register(turno);
+        turno.setDate(randomDate);
+        try {
+        	turnos.register(turno);
+        } catch(ConstraintViolationException e) {
+        	// Expected error:
+        	// El DNI es generado al azar, y puede a veces coincidir con un DNI ya existente.
+        }
 
         return turno;
     }
@@ -132,29 +143,29 @@ public class Generator {
         return user;
     }
     
-    public static Turno generateTurno(Patient p, Doctor m) {
+    public static Appointment generateTurno(Patient p, Doctor m) {
     	Faker f = new Faker();
-    	Turno t = new Turno();
-    	t.setMedico(m);
-    	t.setPaciente(p);
-    	t.setObservacion("");
-    	t.setEstado(TurnoEstado.PENDIENTE);
-    	t.setFecha(f.date().future(1280, TimeUnit.DAYS));
-    	ITurnoLogic turnos = new TurnoLogicImpl();
+    	Appointment t = new Appointment();
+    	t.setAssignedDoctor(m);
+    	t.setPatient(p);
+    	t.setRemarks("");
+    	t.setStatus(AppointmentStatus.PENDING);
+    	t.setDate(f.date().future(1280, TimeUnit.DAYS));
+    	IAppointmentLogic turnos = new AppointmentLogicImpl();
     	turnos.register(t);
     	return t;
     	
     }
     
     @SuppressWarnings("deprecation")
-	public static Turno generateTurnoPunto6(Patient p, Doctor m) {
+	public static Appointment generateTurnoPunto6(Patient p, Doctor m) {
     	Faker f = new Faker();
-    	Turno t = new Turno();
-    	t.setMedico(m);
-    	t.setPaciente(p);
-    	t.setObservacion("");
+    	Appointment t = new Appointment();
+    	t.setAssignedDoctor(m);
+    	t.setPatient(p);
+    	t.setRemarks("");
     	boolean presente = f.bool().bool();
-    	t.setEstado(presente ? TurnoEstado.PRESENTE : TurnoEstado.AUSENTE);
+    	t.setStatus(presente ? AppointmentStatus.PRESENT : AppointmentStatus.ABSENT);
     	Date d = new Date();
     	d.setDate(1);
     	d.setMonth(0);
@@ -163,8 +174,8 @@ public class Generator {
     	d2.setDate(1);
     	d2.setMonth(2);
     	d2.setYear(124);
-    	t.setFecha(f.date().between(d, d2));
-    	ITurnoLogic turnos = new TurnoLogicImpl();
+    	t.setDate(f.date().between(d, d2));
+    	IAppointmentLogic turnos = new AppointmentLogicImpl();
     	turnos.register(t);
     	return t;
     	
@@ -181,6 +192,7 @@ public class Generator {
     }
     
     public static Specialty[] generateRecords() {
+    	// TODO: Reemplazar por beans
         Specialty cirugiaGeneral = new Specialty();
         cirugiaGeneral.setId(1);
         cirugiaGeneral.setName("Cirugía General");

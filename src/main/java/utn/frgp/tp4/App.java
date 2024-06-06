@@ -6,15 +6,15 @@ import java.util.List;
 
 import entity.Doctor;
 import entity.Patient;
-import entity.Turno;
+import entity.Appointment;
 import entity.User;
 import generator.Generator;
 import logic.IDoctorLogic;
-import logic.ITurnoLogic;
+import logic.IAppointmentLogic;
 import logic.IUserLogic;
 import logicImpl.DoctorLogicImpl;
 import logicImpl.PatientLogicImpl;
-import logicImpl.TurnoLogicImpl;
+import logicImpl.AppointmentLogicImpl;
 import logicImpl.UserLogicImpl;
 
 /**
@@ -94,7 +94,7 @@ public class App {
     	d2.setDate(1);
     	d2.setMonth(2);
     	d2.setYear(124);
-    	ITurnoLogic turnos = new TurnoLogicImpl();
+    	IAppointmentLogic turnos = new AppointmentLogicImpl();
     	int presentes = turnos.countPresencesBetween(d, d2);
     	int ausentes = turnos.countAbsencesBetween(d, d2);
     	double total = presentes + ausentes;
@@ -116,9 +116,9 @@ public class App {
 			System.out.println(" - " + i + " paciente/s de " + total + ": " + paciente.getName() + "; DNI N.º: " + paciente.getDni());
 			Doctor medico = Generator.generateAndSaveRandomDoctor(user);
 			System.out.println(" - " + i + " médico/s de " + total + ": " + medico.getName() + "; Legajo N.º: " + medico.getFile());
-			Turno turno = Generator.generateTurnoPunto6(paciente, medico);
+			Appointment turno = Generator.generateTurnoPunto6(paciente, medico);
 			System.out.println(turno);
-			Turno turnoParaPunto3 = Generator.generateTurnoForDoctor1234(paciente);
+			Appointment turnoParaPunto3 = Generator.generateTurnoForDoctor1234(paciente);
 			System.out.println(turnoParaPunto3);
 		}
 		System.out.println("Se generaron " + total + " registros. ");

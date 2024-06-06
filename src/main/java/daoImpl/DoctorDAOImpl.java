@@ -125,8 +125,8 @@ public class DoctorDAOImpl implements IDoctorDAO {
 	public List<Object[]> getAppointmentsByDoctorAndDate(int legajo, LocalDate fecha) {
         final Optional<List<Object[]>> optional = new Optional<>();
         DataManager.run(session -> {
-            String hql = "SELECT m.file, t.fecha, t.estado " +
-                         "FROM Turno t INNER JOIN t.medico m " +
+            String hql = "SELECT m.file, t.date, t.status " +
+                         "FROM Appointment t INNER JOIN t.assignedDoctor m " +
                          "WHERE m.file = :legajo AND t.fecha = :fecha";
             Query query = session.createQuery(hql);
             query.setParameter("legajo", legajo);
@@ -141,9 +141,9 @@ public class DoctorDAOImpl implements IDoctorDAO {
 	public List<Object[]> getAppointmentsByDoctorAndDateRange(int legajo, LocalDate fechaInicio, LocalDate fechaFin) {
 	    final Optional<List<Object[]>> cfList = new Optional<>();
 	    DataManager.run(session -> {
-	        String hql = "SELECT m.file, t.fecha, t.estado " +
-	                     "FROM Turno t INNER JOIN t.medico m " +
-	                     "WHERE m.file = :legajo AND t.fecha BETWEEN :fechaInicio AND :fechaFin";
+	        String hql = "SELECT m.file, t.date, t.status " +
+	                     "FROM Appointment t INNER JOIN t.assignedDoctor m " +
+	                     "WHERE m.file = :legajo AND t.date BETWEEN :fechaInicio AND :fechaFin";
 	        Query query = session.createQuery(hql);
 	        query.setParameter("legajo", legajo);
 	        query.setParameter("fechaInicio", java.sql.Date.valueOf(fechaInicio));
