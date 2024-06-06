@@ -65,13 +65,13 @@ public class UserLogicImpl implements IUserLogic {
 	
 	@Override
     public void disable(User user) {
-		user.setActiveState(false);
+		user.setActive(false);
 		repository.update(user);
 	}
 	
 	@Override
     public void enable(User user) {
-		user.setActiveState(true);
+		user.setActive(true);
 		repository.update(user);
 	}
 	
@@ -105,7 +105,7 @@ public class UserLogicImpl implements IUserLogic {
 		if(search.isEmpty()) throw new NotFoundException();
 		User original = search.get();
 		if(user.getName() != null) original.setName(user.getName());
-		if(user.getMedico() != null) original.setMedico(user.getMedico());
+		if(user.getDoctor() != null) original.setDoctor(user.getDoctor());
 		repository.update(user);
 	}
 	

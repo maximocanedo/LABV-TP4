@@ -82,7 +82,7 @@ public class UserDAOImpl implements IUserDAO {
     	if(search.isEmpty()) throw new NotFoundException();
         DataManager.transact(session -> {
         	User original = search.get();
-        	original.setActiveState(newStatus);
+        	original.setActive(newStatus);
             session.update(original);
         });
 	}

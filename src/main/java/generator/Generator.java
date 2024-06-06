@@ -90,7 +90,7 @@ public class Generator {
         user.setName(faker.name().fullName());
         user.setUsername(faker.name().username());
         user.setPassword("12345678"); // Todos los usuarios generados automáticamente usarán esta contraseña.
-        user.setActiveState(true);
+        user.setActive(true);
         return user;
     }
     

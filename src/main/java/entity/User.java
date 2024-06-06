@@ -13,73 +13,69 @@ import formatter.Formatter;
 @Table(name="users")
 public class User {
 	
+	private String username;
+	private String name;
+	private String password;
+	private boolean active = true;
+	private Doctor doctor;
+	
+	public User() {}
+	
+	/* # Getters */
+	
 	@Id
 	@Column(name="username", unique=true, nullable=false)
-	private String username;
-	
+	@Format(omitLabel=true, prefix="@")
+	public String getUsername() {
+		return this.username;
+	}
+
 	@Column(name="name")
-	private String name;
-	
-	@Basic(fetch = FetchType.LAZY)
-	@Column(name="password")
-	private String password;
-	
-	@Column(name="active")
-	private boolean active = true;
-	
-	@OneToOne(mappedBy="user")
-	private Doctor medico;
-	
-	public User() {
-		
-	}
-	
-	
-
-
-	
-	public Doctor getMedico() {
-		return medico;
-	}
-
-	public void setMedico(Doctor medico) {
-		this.medico = medico;
-	}
-	
 	@Format(label="Nombre")
 	public String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	@Basic(fetch = FetchType.LAZY)
+	@Column(name="password")
+	public String getPassword() {
+		return this.password;
 	}
-	
-	@Format(omitLabel=true, prefix="@")
-	public String getUsername() {
-		return this.username;
+
+	@Column(name="active")
+	@Format(omitLabel = true, whenTrue = "", whenFalse = "(!) Usuario deshabilitado. ")
+	public boolean isActive() {
+		return this.active;
 	}
+
+	@OneToOne(mappedBy="user")
+	public Doctor getDoctor() {
+		return doctor;
+	}
+
+	/* # Setters */
 	
 	public void setUsername(String username) {
 		this.username = username;
 	}
-	
-	public String getPassword() {
-		return this.password;
+
+	public void setName(String name) {
+		this.name = name;
 	}
-	
+
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
-	public void setActiveState(boolean status) {
+
+	public void setActive(boolean status) {
 		this.active = status;
 	}
 	
-	@Format(label="Estado")
-	public boolean isActive() {
-		return this.active;
+	public void setDoctor(Doctor medico) {
+		this.doctor = medico;
 	}
+	
+	/* # Otros métodos */
 	
 	@Override
 	public String toString() {
