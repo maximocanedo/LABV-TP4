@@ -182,6 +182,8 @@ public class Doctor {
 		this.active = active;
 	}
 	
+	/* # Otros métodos */
+	
 	@Override
     public String toString() {
 		return Formatter.of(this).toString();

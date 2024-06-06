@@ -15,25 +15,25 @@ import logicImpl.*;
 public class Generator {
 
     private static IUserLogic users = new UserLogicImpl();
-    private static IPacienteLogic pacientes = new PacienteLogicImpl();
+    private static IPatientLogic pacientes = new PatientLogicImpl();
     private static IDoctorLogic medicos = new DoctorLogicImpl();
     
-    public static Paciente generateRandomPaciente() {
+    public static Patient generateRandomPaciente() {
         Faker faker = new Faker();
-        Paciente paciente = new Paciente();
-        paciente.setNombre(faker.name().firstName());
-        paciente.setApellido(faker.name().lastName());
+        Patient paciente = new Patient();
+        paciente.setName(faker.name().firstName());
+        paciente.setSurname(faker.name().lastName());
         paciente.setDni(45489657);
-        paciente.setTelefono(faker.phoneNumber().cellPhone());
-        paciente.setDireccion(faker.address().streetAddress());
-        paciente.setLocalidad(faker.address().city());
-        paciente.setProvincia(faker.address().state());
-        paciente.setFechaNacimiento(faker.date().birthday());
-        paciente.setCorreo(faker.internet().emailAddress());
+        paciente.setPhone(faker.phoneNumber().cellPhone());
+        paciente.setAddress(faker.address().streetAddress());
+        paciente.setLocalty(faker.address().city());
+        paciente.setProvince(faker.address().state());
+        paciente.setBirth(faker.date().birthday());
+        paciente.setEmail(faker.internet().emailAddress());
         return paciente;
     }
     
-    public static Turno generateTurnoForDoctor1234(Paciente paciente) {
+    public static Turno generateTurnoForDoctor1234(Patient paciente) {
         Faker faker = new Faker();
         ITurnoLogic turnos = new TurnoLogicImpl();
         
@@ -111,8 +111,8 @@ public class Generator {
         return random;
     }
     
-    public static Paciente generateAndSaveRandomPaciente() {
-        Paciente random = generateRandomPaciente();
+    public static Patient generateAndSaveRandomPaciente() {
+        Patient random = generateRandomPaciente();
         pacientes.add(random);
         return random;
     }
@@ -132,7 +132,7 @@ public class Generator {
         return user;
     }
     
-    public static Turno generateTurno(Paciente p, Doctor m) {
+    public static Turno generateTurno(Patient p, Doctor m) {
     	Faker f = new Faker();
     	Turno t = new Turno();
     	t.setMedico(m);
@@ -147,7 +147,7 @@ public class Generator {
     }
     
     @SuppressWarnings("deprecation")
-	public static Turno generateTurnoPunto6(Paciente p, Doctor m) {
+	public static Turno generateTurnoPunto6(Patient p, Doctor m) {
     	Faker f = new Faker();
     	Turno t = new Turno();
     	t.setMedico(m);

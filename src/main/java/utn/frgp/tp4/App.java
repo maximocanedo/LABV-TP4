@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import entity.Doctor;
-import entity.Paciente;
+import entity.Patient;
 import entity.Turno;
 import entity.User;
 import generator.Generator;
@@ -13,7 +13,7 @@ import logic.IDoctorLogic;
 import logic.ITurnoLogic;
 import logic.IUserLogic;
 import logicImpl.DoctorLogicImpl;
-import logicImpl.PacienteLogicImpl;
+import logicImpl.PatientLogicImpl;
 import logicImpl.TurnoLogicImpl;
 import logicImpl.UserLogicImpl;
 
@@ -112,8 +112,8 @@ public class App {
 		for(int i = 0; i < total; i++) {
 			User user = Generator.generateAndSaveRandomUser();
 			System.out.println(" - " + i + " usuario/s de " + total + ": " + user.getName() + "(@" + user.getUsername() + ")\n");
-			Paciente paciente = Generator.generateAndSaveRandomPaciente();
-			System.out.println(" - " + i + " paciente/s de " + total + ": " + paciente.getNombre() + "; DNI N.º: " + paciente.getDni());
+			Patient paciente = Generator.generateAndSaveRandomPaciente();
+			System.out.println(" - " + i + " paciente/s de " + total + ": " + paciente.getName() + "; DNI N.º: " + paciente.getDni());
 			Doctor medico = Generator.generateAndSaveRandomDoctor(user);
 			System.out.println(" - " + i + " médico/s de " + total + ": " + medico.getName() + "; Legajo N.º: " + medico.getFile());
 			Turno turno = Generator.generateTurnoPunto6(paciente, medico);
@@ -150,9 +150,9 @@ public class App {
     		System.out.println(medico);
     	}
     	
-    	PacienteLogicImpl paciente_repo = new PacienteLogicImpl();
-    	List<Paciente> pacientes = paciente_repo.list(1, 10);
-    	for(Paciente paciente : pacientes) {
+    	PatientLogicImpl paciente_repo = new PatientLogicImpl();
+    	List<Patient> pacientes = paciente_repo.list(1, 10);
+    	for(Patient paciente : pacientes) {
     		System.out.println(paciente);
     	}
 	}

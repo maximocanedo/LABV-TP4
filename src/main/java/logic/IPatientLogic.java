@@ -4,60 +4,60 @@ import java.util.List;
 
 import entity.Optional;
 
-import entity.Paciente;
+import entity.Patient;
 import exceptions.NotFoundException;
 
-public interface IPacienteLogic {
+public interface IPatientLogic {
 
 	/**
 	 * Agrega un paciente a la base de datos.
 	 * @param paciente Datos del paciente a agregar. Debe contener la contraseña ya encriptada.
 	 */
-	void add(Paciente paciente);
+	void add(Patient paciente);
 
 	/**
 	 * Obtiene un paciente por su id.
 	 * @param id. Id del paciente.
 	 */
-	Optional<Paciente> findById(int id);
+	Optional<Patient> findById(int id);
 	
 	/**
 	 * Obtiene un paciente por su id.
 	 * @param id. Id del paciente.
 	 */
-	Optional<Paciente> findById(int id, boolean includeInactives);
+	Optional<Patient> findById(int id, boolean includeInactives);
 	
 	/**
 	 * Lista todos los pacientes de la base de datos, paginable.
 	 * @param page Número de página (De 1 en adelante)
 	 * @param size Cantidad de elementos.
 	 */
-	List<Paciente> list(int page, int size, boolean includeInactives);
+	List<Patient> list(int page, int size, boolean includeInactives);
 
 	/**
 	 * Lista todos los pacientes de la base de datos, paginable.
 	 * @param page Número de página (De 1 en adelante)
 	 * @param size Cantidad de elementos.
 	 */
-	List<Paciente> list(int page, int size);
+	List<Patient> list(int page, int size);
 
 	/**
 	 * Lista todos los pacientes de la base de datos.
 	 */
-	List<Paciente> list();
+	List<Patient> list();
 
 	/**
 	 * Actualiza un paciente de la base de datos.
 	 * @param paciente Paciente con los datos a actualizar.
 	 */
-	void update(Paciente paciente) throws NotFoundException;
+	void update(Patient paciente) throws NotFoundException;
 	
 	/**
 	 * Elimina permanentemente un paciente de la base de datos.
 	 * @param paciente Paciente a eliminar.
 	 */
 	@Deprecated
-	void erase(Paciente paciente);
+	void erase(Patient paciente);
 	
 	/**
 	 * Deshabilita un paciente de la base de datos.

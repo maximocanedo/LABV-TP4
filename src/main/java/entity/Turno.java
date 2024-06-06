@@ -46,7 +46,7 @@ public class Turno {
 	
 	@ManyToOne(cascade= {CascadeType.ALL})
 	@JoinColumn(name="id_paciente")
-	private Paciente paciente;
+	private Patient paciente;
 
 	@Column
     private boolean active = true;
@@ -54,7 +54,7 @@ public class Turno {
 
 	@Deprecated
 	public Turno(int id, Date fecha, String observacion, TurnoEstado estado, Doctor medico,
-			Paciente paciente) {
+			Patient paciente) {
 		this.id = id;
 		this.fecha = fecha;
 		this.observacion = observacion;
@@ -77,10 +77,10 @@ public class Turno {
 	}
 	
 	@Format(label = "Paciente", prefix = "\n", order = 4)
-	public Paciente getPaciente() {
+	public Patient getPaciente() {
 		return paciente;
 	}
-	public void setPaciente(Paciente paciente) {
+	public void setPaciente(Patient paciente) {
 		this.paciente = paciente;
 	}
 
