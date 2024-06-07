@@ -8,6 +8,7 @@ import formatter.Formatter;
 import formatter.TextBlock.Alignment;
 
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Card(name = "Médico", size = 48)
@@ -26,6 +27,7 @@ public class Doctor {
     private String phone;
     private Specialty specialty;
     private User user;
+    private Set<Schedule> schedules;
     private boolean active = true;
     
 
@@ -121,11 +123,31 @@ public class Doctor {
 	public String getSpecialtyName() {
 		return specialty.getName();
 	}
-
+	
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "doctor_schedules",
+        joinColumns = @JoinColumn(name = "doctor"),
+        inverseJoinColumns = @JoinColumn(name = "schedule")
+    )
+	public Set<Schedule> getSchedules() {
+		return this.schedules;
+	}
+	
 	@Column(name = "active")
 	@Format(omitLabel = true, whenTrue = "", whenFalse = "(!) Médico deshabilitado")
 	public boolean isActive() {
 		return active;
+	}
+	
+	@Transient
+	@Format(label = "Horarios")
+	public String listSchedules() {
+		String schedules = "";
+		for(Schedule schedule : this.getSchedules()) {
+			schedules += "\n · " + schedule;
+		}
+		return schedules;
 	}
 	
 	/* # Setters */
@@ -177,12 +199,24 @@ public class Doctor {
 	public void setUser(User user) {
 		this.user = user;
 	}
+	
+	public void setSchedules(Set<Schedule> schedules) {
+		this.schedules = schedules;
+	}
 
 	public void setActive(boolean active) {
 		this.active = active;
 	}
 	
 	/* # Otros métodos */
+	
+	public void addSchedule(Schedule schedule) {
+        this.schedules.add(schedule);
+    }
+
+    public void removeSchedule(Schedule schedule) {
+        this.schedules.remove(schedule);
+    }
 	
 	@Override
     public String toString() {

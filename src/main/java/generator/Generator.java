@@ -1,8 +1,11 @@
 package generator;
 
+import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import org.hibernate.exception.ConstraintViolationException;
@@ -129,11 +132,73 @@ public class Generator {
     }
     public static boolean EXISTE_LEGAJO_1234 = false;
     
+    
+    public static Set<Schedule> generateRandomSchedules() {
+        Random random = new Random();
+        Set<Schedule> schedules = new HashSet<>();
+        
+        // Número de horarios a generar
+        int numberOfSchedules = random.nextInt(5) + 1; // 1-5 horarios
+        
+        while (schedules.size() < numberOfSchedules) {
+            Day beginDay = Day.values()[random.nextInt(Day.values().length)];
+            LocalTime startTime = LocalTime.of(random.nextInt(24), random.nextInt(60));
+            int duration = random.nextInt(12) + 1; // Máximo 12 h
+            LocalTime endTime = startTime.plusHours(duration);
+
+            Day finishDay = beginDay;
+            if (endTime.isBefore(startTime)) {
+                finishDay = Day.values()[(beginDay.ordinal() + 1) % Day.values().length];
+            }
+
+            Schedule newSchedule = new Schedule();
+            newSchedule.setBeginDay(beginDay);
+            newSchedule.setFinishDay(finishDay);
+            newSchedule.setStartTime(startTime);
+            newSchedule.setEndTime(endTime);
+            newSchedule.setActive(true); 
+
+            if (isNonOverlapping(newSchedule, schedules)) {
+                schedules.add(newSchedule);
+            }
+        }
+
+        return schedules;
+    	
+    }
+    
+    private static boolean isNonOverlapping(Schedule newSchedule, Set<Schedule> schedules) {
+        for (Schedule existingSchedule : schedules) {
+            if (newSchedule.getBeginDay() == existingSchedule.getBeginDay()) {
+                // Horarios en el mismo día
+                if (newSchedule.getEndTime().isAfter(existingSchedule.getStartTime()) &&
+                    newSchedule.getStartTime().isBefore(existingSchedule.getEndTime())) {
+                    return false;
+                }
+            } else if (newSchedule.getFinishDay() == existingSchedule.getBeginDay()) {
+                // Horario termina al otro día
+                if (newSchedule.getEndTime().isAfter(existingSchedule.getStartTime()) &&
+                    newSchedule.getEndTime().isBefore(existingSchedule.getEndTime())) {
+                    return false;
+                }
+            } else if (newSchedule.getBeginDay() == existingSchedule.getFinishDay()) {
+                // Horario comienza al final del día anterior
+                if (newSchedule.getStartTime().isBefore(existingSchedule.getEndTime()) &&
+                    newSchedule.getStartTime().isAfter(existingSchedule.getStartTime())) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
     public static Doctor generateAndSaveRandomDoctor(User user) {
     	boolean exists = Generator.EXISTE_LEGAJO_1234 || medicos.findByFile(1234).isPresent();
         Doctor medico = generateRecord(user);
         if(!exists) medico.setFile(1234);
         else Generator.EXISTE_LEGAJO_1234 = exists;
+
+        medico.setSchedules(generateRandomSchedules());
         medicos.add(medico);
         return medico;
     }
@@ -250,5 +315,11 @@ public class Generator {
         };
     }
 
+    public static void main(String[] args) {
+    	Set<Schedule> s = Generator.generateRandomSchedules();
+    	for(Schedule sc : s) {
+    		System.out.println("\n" + sc);
+    	}
+    }
    
 }
