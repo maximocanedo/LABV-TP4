@@ -28,12 +28,12 @@ public class App {
     public static void main( String[] args ) {
     	// Carga datos
     	generateFakeRecords(10);
-    	App.punto1();
-    	App.punto2();
-    	App.punto3();
-    	App.punto4();
-    	App.punto5();
-    	App.punto6();
+    	//App.punto1();
+    	//App.punto2();
+    	//App.punto3();
+    	//App.punto4();
+    	//App.punto5();
+    	//App.punto6();
     }
     
     private static void punto1() {
@@ -115,6 +115,7 @@ public class App {
 			Patient paciente = Generator.generateAndSaveRandomPaciente();
 			System.out.println(" - " + i + " paciente/s de " + total + ": " + paciente.getName() + "; DNI N.º: " + paciente.getDni());
 			Doctor medico = Generator.generateAndSaveRandomDoctor(user);
+			System.out.println(medico);
 			System.out.println(" - " + i + " médico/s de " + total + ": " + medico.getName() + "; Legajo N.º: " + medico.getFile());
 			Appointment turno = Generator.generateTurnoPunto6(paciente, medico);
 			System.out.println(turno);
