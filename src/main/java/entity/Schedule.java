@@ -2,7 +2,6 @@ package entity;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.UUID;
 
 import javax.persistence.*;
 
