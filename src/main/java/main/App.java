@@ -30,7 +30,7 @@ public class App {
 	
     public static void main( String[] args ) {
     	// Carga datos
-    	generateFakeRecords(10);
+    	//generateFakeRecords(10);
     	//App.punto1();
     	//App.punto2();
     	//App.punto3();
@@ -38,11 +38,15 @@ public class App {
     	//App.punto5();
     	//App.punto6();
         @SuppressWarnings("resource")
-		ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+		ApplicationContext context = new ClassPathXmlApplicationContext("resources/beans.xml");
         
-        Doctor doctor = (Doctor) context.getBean("doctor");
+        //Doctor doctor = (Doctor) context.getBean("doctor");
         
-        doctor.toString();
+        //doctor.toString();
+        
+        Patient paciente = (Patient) context.getBean("paciente");
+        
+        System.out.println(paciente.toString());
 
     }
     

@@ -3,7 +3,11 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans 
                            http://www.springframework.org/schema/beans/spring-beans.xsd">
-
+                           
+    <bean id="dateFormat" class="java.text.SimpleDateFormat">
+		<constructor-arg value="yyyy-MM-dd" />
+	</bean>
+	<!-- 
     <bean id="doctor" class="entity.Doctor">
         <property name="id" value="1"/>
         <property name="file" value="123456"/>
@@ -11,9 +15,9 @@
         <property name="surname" value="Pérez"/>
         <property name="sex" value="Masculino"/>
         <property name="birth">
-            <bean class="java.util.Date">
-                <constructor-arg type="long" value="1715107200000"/> 
-            </bean>
+            <bean factory-bean="dateFormat" factory-method="parse">
+				<constructor-arg value="1990-12-06" />
+			</bean>
         </property>
         <property name="address" value="123 Calle Falsa"/>
         <property name="localty" value="Ciudad"/>
@@ -27,8 +31,8 @@
         </property>
         <property name="user">
             <bean class="entity.User">
-                <property name="id" value="1"/>
-                <property name="username" value="jperez"/>
+                <property name="username" value="1"/>
+                <property name="name" value="jperez"/>
                 <property name="password" value="password"/>
             </bean>
         </property>
@@ -38,9 +42,9 @@
                     <property name="id" value="1"/>
                     <property name="day" value="Lunes"/>
                     <property name="startTime">
-                        <bean class="java.sql.Time">
-                            <constructor-arg type="long" value="28800000"/> 
-                        </bean>
+                        <bean factory-bean="dateFormat" factory-method="parse">
+							<constructor-arg value="1990-12-06" />
+						</bean>
                     </property>
                     <property name="endTime">
                         <bean class="java.sql.Time">
@@ -66,5 +70,21 @@
         </property>
         <property name="active" value="true"/>
     </bean>
-
+     -->
+	<bean id="paciente" class="entity.Patient">
+		<property name="id" value="1"></property>
+		<property name="name" value="Pedro"></property>
+		<property name="surname" value="Escalas"></property>
+		<property name="dni" value="37855964"></property>
+		<property name="phone" value="+5491136659897"></property>
+		<property name="address" value="Avenida Santa Fe 2036"></property>
+		<property name="localty" value="Vicente Lopez"></property>
+		<property name="province" value="Buenos Aires"></property>
+		<property name="birth">
+			<bean factory-bean="dateFormat" factory-method="parse">
+				<constructor-arg value="1985-05-09" />
+			</bean>
+		</property>
+		<property name="email" value="pedroescalas@example.com"></property>
+	</bean>
 </beans>
