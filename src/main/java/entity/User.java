@@ -29,7 +29,7 @@ public class User {
 	public String getUsername() {
 		return this.username;
 	}
-
+	
 	@Column(name="name")
 	@Format(label="Nombre")
 	public String getName() {

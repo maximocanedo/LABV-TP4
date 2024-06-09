@@ -1,11 +1,25 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
        xsi:schemaLocation="http://www.springframework.org/schema/beans 
-                           http://www.springframework.org/schema/beans/spring-beans.xsd">
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/mvc
+                           http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <mvc:annotation-driven conversion-service="conversionService"/>
+
+    <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+        <property name="converters">
+            <set>
+                <ref bean="stringToLocalTimeConverter"/>
+            </set>
+        </property>
+    </bean>
+
+    <bean id="stringToLocalTimeConverter" class="localTimeConverter.StringToLocalTimeConverter"/>
 
     <bean id="doctor" class="entity.Doctor">
-        <property name="id" value="1"/>
+        <!-- Propiedades del Doctor -->
         <property name="file" value="123456"/>
         <property name="name" value="Juan"/>
         <property name="surname" value="Pérez"/>
@@ -27,7 +41,6 @@
         </property>
         <property name="user">
             <bean class="entity.User">
-                <property name="id" value="1"/>
                 <property name="username" value="jperez"/>
                 <property name="password" value="password"/>
             </bean>
@@ -36,35 +49,23 @@
             <set>
                 <bean class="entity.Schedule">
                     <property name="id" value="1"/>
-                    <property name="day" value="Lunes"/>
-                    <property name="startTime">
-                        <bean class="java.sql.Time">
-                            <constructor-arg type="long" value="28800000"/> 
-                        </bean>
-                    </property>
-                    <property name="endTime">
-                        <bean class="java.sql.Time">
-                            <constructor-arg type="long" value="57600000"/>
-                        </bean>
-                    </property>
+                    <property name="beginDay" value="MONDAY"/>
+                    <property name="finishDay" value="WEDNESDAY"/>
+                    <property name="startTime" value="08:00:00"/>
+                    <property name="endTime" value="16:00:00"/>
                 </bean>
                 <bean class="entity.Schedule">
                     <property name="id" value="2"/>
-                    <property name="day" value="Miércoles"/>
-                    <property name="startTime">
-                        <bean class="java.sql.Time">
-                            <constructor-arg type="long" value="28800000"/> 
-                        </bean>
-                    </property>
-                    <property name="endTime">
-                        <bean class="java.sql.Time">
-                            <constructor-arg type="long" value="57600000"/> 
-                        </bean>
-                    </property>
+                    <property name="beginDay" value="WEDNESDAY"/>
+                    <property name="finishDay" value="FRIDAY"/>
+                    <property name="startTime" value="08:00:00"/>
+                    <property name="endTime" value="16:00:00"/>
                 </bean>
             </set>
         </property>
         <property name="active" value="true"/>
     </bean>
+<bean id="generator" class="generator.Generator"/>
 
+    <mvc:annotation-driven conversion-service="conversionService"/>
 </beans>

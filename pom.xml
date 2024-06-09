@@ -12,76 +12,76 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <spring.version>5.3.25</spring.version>
+    <hibernate.version>5.4.32.Final</hibernate.version>
+    <slf4j.version>1.7.32</slf4j.version>
   </properties>
 
   <dependencies>
-		<dependency>
+    <!-- Spring dependencies -->
+       <dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
 			<version>4.2.5.RELEASE</version>
 		</dependency>
 
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>2.5</version>
-			<scope>provided</scope>
-		</dependency>
-  
-  
+    <!-- Servlet API -->
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <version>2.5</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- JUnit for testing -->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>3.8.1</version>
+      <version>4.13.2</version>
       <scope>test</scope>
     </dependency>
-    <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
-	<dependency>
-	    <groupId>org.hibernate</groupId>
-	    <artifactId>hibernate-core</artifactId>
-	    <version>4.1.0.Final</version>
-	    <type>pom</type>
-	</dependency>
-	<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-entitymanager -->
-	<dependency>
-	    <groupId>org.hibernate</groupId>
-	    <artifactId>hibernate-entitymanager</artifactId>
-	    <version>4.1.0.Final</version>
-	</dependency>
-	<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
-	<dependency>
-	    <groupId>mysql</groupId>
-	    <artifactId>mysql-connector-java</artifactId>
-	    <version>8.0.33</version>
-	</dependency>
-	<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-log4j12 -->
-	<dependency>
-	    <groupId>org.slf4j</groupId>
-	    <artifactId>slf4j-log4j12</artifactId>
-	    <version>1.5.2</version>
-	    <type>pom</type>
-	    <scope>test</scope>
-	</dependency>
-	<dependency>
-	    <groupId>org.mindrot</groupId>
-	    <artifactId>jbcrypt</artifactId>
-	    <version>0.4</version>
-	</dependency>
-	<!-- https://mvnrepository.com/artifact/com.github.javafaker/javafaker -->
-	<dependency>
-	    <groupId>com.github.javafaker</groupId>
-	    <artifactId>javafaker</artifactId>
-	    <version>1.0.2</version>
-	</dependency>
 
-<!-- https://mvnrepository.com/artifact/org.hibernate.orm/hibernate-core -->
-<dependency>
-    <groupId>org.hibernate.orm</groupId>
-    <artifactId>hibernate-core</artifactId>
-    <version>6.0.0.Final</version>
-</dependency>
+    <!-- Hibernate dependencies -->
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-core</artifactId>
+      <version>${hibernate.version}</version>
+      <type>pom</type>
+    </dependency>
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-entitymanager</artifactId>
+      <version>${hibernate.version}</version>
+    </dependency>
 
-	
-    
+    <!-- MySQL connector -->
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>8.0.33</version>
+    </dependency>
+
+    <!-- SLF4J for logging -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+      <version>${slf4j.version}</version>
+      <type>pom</type>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- BCrypt for password hashing -->
+    <dependency>
+      <groupId>org.mindrot</groupId>
+      <artifactId>jbcrypt</artifactId>
+      <version>0.4</version>
+    </dependency>
+
+    <!-- Java Faker for generating fake data -->
+    <dependency>
+      <groupId>com.github.javafaker</groupId>
+      <artifactId>javafaker</artifactId>
+      <version>1.0.2</version>
+    </dependency>
   </dependencies>
 </project>

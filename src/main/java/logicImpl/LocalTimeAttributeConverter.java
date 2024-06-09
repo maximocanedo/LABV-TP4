@@ -3,12 +3,12 @@ package logicImpl;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
-import jakarta.persistence.AttributeConverter;
-import jakarta.persistence.Converter;
+import javax.persistence.AttributeConverter;
+import javax.persistence.Converter;
 
 @Converter(autoApply = true)
 public class LocalTimeAttributeConverter implements AttributeConverter<LocalTime, String> {
-    
+
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("HH:mm:ss");
 
     @Override
