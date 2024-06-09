@@ -51,22 +51,6 @@ public class Config {
 		doctor.setSchedules(schedules);
 		return doctor;
 	}
-	/*
-	 * 
-	 * <property name="id" value="1"></property>
-		<property name="name" value="Pedro"></property>
-		<property name="surname" value="Escalas"></property>
-		<property name="dni" value="37855964"></property>
-		<property name="phone" value="+5491136659897"></property>
-		<property name="address" value="Avenida Santa Fe 2036"></property>
-		<property name="localty" value="Vicente Lopez"></property>
-		<property name="province" value="Buenos Aires"></property>
-		<property name="birth">
-			<bean factory-bean="dateFormat" factory-method="parse">
-				<constructor-arg value="1985-05-09" />
-			</bean>
-		</property>
-		<property name="email" value="pedroescalas@example.com"></property>*/
 	@Bean
 	public Patient paciente() throws ParseException {
 		Patient paciente = new Patient();
