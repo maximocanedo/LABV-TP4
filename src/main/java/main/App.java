@@ -32,12 +32,11 @@ import resources.Config;
  */
 public class App {
 	
-
-	@Autowired
     private UserLogicImpl users;
 	private Generator generator;
 	
 	public App() {
+		users = new UserLogicImpl();
 		generator = new Generator();
 	}
 	
