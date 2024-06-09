@@ -1,5 +1,6 @@
 package main;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -31,31 +32,44 @@ import resources.Config;
  */
 public class App {
 	
-	private static IUserLogic usersRepo = new UserLogicImpl();
+
+	@Autowired
+    private UserLogicImpl users;
+	private Generator generator;
 	
-    public static void main( String[] args ) {
+	public App() {
+		generator = new Generator();
+	}
+	
+	public void main() {
     	// Carga datos
-    	//generateFakeRecords(10);
+        @SuppressWarnings("resource")
+		ApplicationContext context = new AnnotationConfigApplicationContext(Config.class);
+    	generateFakeRecords(10);
     	//App.punto1();
     	//App.punto2();
     	//App.punto3();
     	//App.punto4();
     	//App.punto5();
     	//App.punto6();
-        @SuppressWarnings("resource")
-		ApplicationContext context = new AnnotationConfigApplicationContext(Config.class);
         
         Doctor doctor = (Doctor) context.getBean("doctor");
         
-        System.out.println(doctor.toString());;
+        System.out.println(doctor.toString());
         
         Patient paciente = (Patient) context.getBean("paciente");
         
         System.out.println(paciente.toString());
-
+		
+	}
+	
+    public static void main( String[] args ) {
+    	App app = new App();
+    	app.main();
     }
     
-    private static void punto1() {
+    // PENDIENTE BEANS
+    private void punto1() {
     	System.out.println("\n\n-> INICIO PUNTO 1\n\n");
     	DoctorLogicImpl doctorsRepo = new DoctorLogicImpl();
     	List<Doctor> doctors = doctorsRepo.listOrderByFileDescending(1, 10);
@@ -64,7 +78,7 @@ public class App {
     	}
     }
     
-	private static void punto2() {
+	private void punto2() {
     	System.out.println("\n\n-> INICIO PUNTO 2\n\n");
 		IDoctorLogic medicos_repo = new DoctorLogicImpl();
     	List<Object[]> lista_medicos_P2 = medicos_repo.listOnlyFileNumbersAndNames();
@@ -73,7 +87,7 @@ public class App {
     	}
 	}
 	
-	private static void punto3() {
+	private void punto3() {
     	System.out.println("\n\n-> INICIO PUNTO 3\n\n");
 		IDoctorLogic medicos_repo = new DoctorLogicImpl();
 
@@ -86,7 +100,7 @@ public class App {
         }
 	}
     
-    private static void punto4() {
+    private void punto4() {
     	System.out.println("\n\n-> INICIO PUNTO 4\n\n");
     	IDoctorLogic Medicos = new DoctorLogicImpl();
     	List<Integer> lista_medicos_P4 = Medicos.listOnlyFileNumbers();
@@ -95,7 +109,7 @@ public class App {
     	}
     }
     
-    private static void punto5() {
+    private void punto5() {
     	System.out.println("\n\n-> INICIO PUNTO 5\n\n");
     	DoctorLogicImpl logic = new DoctorLogicImpl();
     	Doctor m = logic.findDoctorWithHighestFileNumber();
@@ -103,7 +117,7 @@ public class App {
 	}
 	
 	@SuppressWarnings("deprecation")
-	private static void punto6() {
+	private void punto6() {
     	System.out.println("\n\n-> INICIO PUNTO 6\n\n");
 		Date d = new Date();
     	d.setDate(1);
@@ -124,21 +138,21 @@ public class App {
     	
 	}
 	
-	public static void generateFakeRecords(int total) {
+	public void generateFakeRecords(int total) {
 		System.out.println("Se guardarán los objetos Especialidad. ");
-		Generator.generateAndSaveRecords();
+		generator.generateAndSaveRecords();
 		System.out.println("Se generarán y guardarán " + total + " registros. ");
 		for(int i = 0; i < total; i++) {
-			User user = Generator.generateAndSaveRandomUser();
+			User user = generator.generateAndSaveRandomUser();
 			System.out.println(" - " + i + " usuario/s de " + total + ": " + user.getName() + "(@" + user.getUsername() + ")\n");
-			Patient paciente = Generator.generateAndSaveRandomPaciente();
+			Patient paciente = generator.generateAndSaveRandomPaciente();
 			System.out.println(" - " + i + " paciente/s de " + total + ": " + paciente.getName() + "; DNI N.º: " + paciente.getDni());
-			Doctor medico = Generator.generateAndSaveRandomDoctor(user);
+			Doctor medico = generator.generateAndSaveRandomDoctor(user);
 			System.out.println(medico);
 			System.out.println(" - " + i + " médico/s de " + total + ": " + medico.getName() + "; Legajo N.º: " + medico.getFile());
-			Appointment turno = Generator.generateTurnoPunto6(paciente, medico);
+			Appointment turno = generator.generateTurnoPunto6(paciente, medico);
 			System.out.println(turno);
-			Appointment turnoParaPunto3 = Generator.generateTurnoForDoctor1234(paciente);
+			Appointment turnoParaPunto3 = generator.generateTurnoForDoctor1234(paciente);
 			System.out.println(turnoParaPunto3);
 		}
 		System.out.println("Se generaron " + total + " registros. ");
@@ -148,16 +162,16 @@ public class App {
 	 * Método main usado en el TP4.
 	 */
 	@SuppressWarnings("unused")
-	private static void TP4_Main() {
-    	User user = usersRepo.list(1, 1).get(0);
+	private void TP4_Main() {
+    	User user = users.list(1, 1).get(0);
     	System.out.println(user);
     	user.setName("Roberto Castañeda");
     	try {
-    		usersRepo.update(user);
+    		users.update(user);
     		System.out.println("Se cambió correctamente el nombre. ");
     		System.out.println(user);
         	// Borrar un registro
-        	usersRepo.disable(user);
+        	users.disable(user);
         	System.out.println("Se deshabilitó correctamente el usuario. ");
     	} catch (Exception e) {
     		System.out.println("Error al intentar cambiar el nombre. ");

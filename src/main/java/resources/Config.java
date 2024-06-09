@@ -10,15 +10,28 @@ import java.util.Set;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import daoImpl.UserDAOImpl;
 import entity.Day;
 import entity.Doctor;
 import entity.Patient;
 import entity.Schedule;
 import entity.Specialty;
 import entity.User;
+import logicImpl.UserLogicImpl;
 
 @Configuration
 public class Config {
+	
+	@Bean 
+	public UserDAOImpl userRepository() {
+		return new UserDAOImpl();
+	}
+	
+	@Bean
+	public UserLogicImpl users() {
+		return new UserLogicImpl();
+	}
+	
 	@Bean
 	public Doctor doctor() throws ParseException {
 		Doctor doctor = new Doctor();

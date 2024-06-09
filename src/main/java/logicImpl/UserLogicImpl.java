@@ -4,6 +4,7 @@ import java.util.List;
 import entity.Optional;
 
 import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import dao.IUserDAO;
 import daoImpl.UserDAOImpl;
@@ -13,10 +14,11 @@ import logic.IUserLogic;
 
 public class UserLogicImpl implements IUserLogic {
 	
-	private final IUserDAO repository;
+	@Autowired
+	private UserDAOImpl repository;
 	
 	public UserLogicImpl() {
-		repository = new UserDAOImpl();
+		//repository = new UserDAOImpl();
 	}
 	
 	private String hash(String clear) {
