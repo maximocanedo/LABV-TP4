@@ -1,8 +1,6 @@
 package generator;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.github.javafaker.Faker;
 
 import entity.User;
@@ -11,12 +9,12 @@ import logicImpl.UserLogicImpl;
 public class UserGenerator implements IEntityGenerator<User> {
 
 
-	@Autowired
     private UserLogicImpl users;
     private Faker faker;
     
     public UserGenerator() {
     	faker = new Faker();
+    	users = new UserLogicImpl();
     }
     
 	@Override
