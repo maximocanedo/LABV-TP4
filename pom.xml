@@ -15,6 +15,20 @@
   </properties>
 
   <dependencies>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>4.2.5.RELEASE</version>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.5</version>
+			<scope>provided</scope>
+		</dependency>
+  
+  
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -59,6 +73,7 @@
 	    <artifactId>javafaker</artifactId>
 	    <version>1.0.2</version>
 	</dependency>
+
 <!-- https://mvnrepository.com/artifact/org.hibernate.orm/hibernate-core -->
 <dependency>
     <groupId>org.hibernate.orm</groupId>

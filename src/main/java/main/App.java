@@ -1,5 +1,7 @@
 package main;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
@@ -16,6 +18,7 @@ import logicImpl.DoctorLogicImpl;
 import logicImpl.PatientLogicImpl;
 import logicImpl.AppointmentLogicImpl;
 import logicImpl.UserLogicImpl;
+
 
 /**
  * Hello world!
@@ -34,6 +37,13 @@ public class App {
     	//App.punto4();
     	//App.punto5();
     	//App.punto6();
+        @SuppressWarnings("resource")
+		ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+        
+        Doctor doctor = (Doctor) context.getBean("doctor");
+        
+        doctor.toString();
+
     }
     
     private static void punto1() {

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="doctor" class="entity.Doctor">
+        <property name="id" value="1"/>
+        <property name="file" value="123456"/>
+        <property name="name" value="Juan"/>
+        <property name="surname" value="Pérez"/>
+        <property name="sex" value="Masculino"/>
+        <property name="birth">
+            <bean class="java.util.Date">
+                <constructor-arg type="long" value="1715107200000"/> 
+            </bean>
+        </property>
+        <property name="address" value="123 Calle Falsa"/>
+        <property name="localty" value="Ciudad"/>
+        <property name="email" value="juan.perez@example.com"/>
+        <property name="phone" value="555-1234"/>
+        <property name="specialty">
+            <bean class="entity.Specialty">
+                <property name="id" value="1"/>
+                <property name="name" value="Cardiología"/>
+            </bean>
+        </property>
+        <property name="user">
+            <bean class="entity.User">
+                <property name="id" value="1"/>
+                <property name="username" value="jperez"/>
+                <property name="password" value="password"/>
+            </bean>
+        </property>
+        <property name="schedules">
+            <set>
+                <bean class="entity.Schedule">
+                    <property name="id" value="1"/>
+                    <property name="day" value="Lunes"/>
+                    <property name="startTime">
+                        <bean class="java.sql.Time">
+                            <constructor-arg type="long" value="28800000"/> 
+                        </bean>
+                    </property>
+                    <property name="endTime">
+                        <bean class="java.sql.Time">
+                            <constructor-arg type="long" value="57600000"/>
+                        </bean>
+                    </property>
+                </bean>
+                <bean class="entity.Schedule">
+                    <property name="id" value="2"/>
+                    <property name="day" value="Miércoles"/>
+                    <property name="startTime">
+                        <bean class="java.sql.Time">
+                            <constructor-arg type="long" value="28800000"/> 
+                        </bean>
+                    </property>
+                    <property name="endTime">
+                        <bean class="java.sql.Time">
+                            <constructor-arg type="long" value="57600000"/> 
+                        </bean>
+                    </property>
+                </bean>
+            </set>
+        </property>
+        <property name="active" value="true"/>
+    </bean>
+
+</beans>
