@@ -1,7 +1,11 @@
 package main;
 
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.core.io.ClassPathResource;
+
+import java.beans.Beans;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
@@ -18,6 +22,7 @@ import logicImpl.DoctorLogicImpl;
 import logicImpl.PatientLogicImpl;
 import logicImpl.AppointmentLogicImpl;
 import logicImpl.UserLogicImpl;
+import resources.Config;
 
 
 /**
@@ -38,11 +43,11 @@ public class App {
     	//App.punto5();
     	//App.punto6();
         @SuppressWarnings("resource")
-		ApplicationContext context = new ClassPathXmlApplicationContext("resources/beans.xml");
+		ApplicationContext context = new AnnotationConfigApplicationContext(Config.class);
         
-        //Doctor doctor = (Doctor) context.getBean("doctor");
+        Doctor doctor = (Doctor) context.getBean("doctor");
         
-        //doctor.toString();
+        System.out.println(doctor.toString());;
         
         Patient paciente = (Patient) context.getBean("paciente");
         
