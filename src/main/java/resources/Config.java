@@ -35,6 +35,8 @@ public class Config {
 	@Bean
 	public Doctor doctor() throws ParseException {
 		Doctor doctor = new Doctor();
+		
+		/*
 		doctor.setId(1);
 		doctor.setFile(12132);
 		doctor.setName("Juan");
@@ -63,6 +65,8 @@ public class Config {
 		schedules.add(schedule);
 		doctor.setSchedules(schedules);
 		return doctor;
+		//*/
+		return null;
 	}
 	@Bean
 	public Patient paciente() throws ParseException {

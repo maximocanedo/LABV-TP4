@@ -52,9 +52,9 @@ public class App {
     	//App.punto5();
     	//App.punto6();
         
-        Doctor doctor = (Doctor) context.getBean("doctor");
+       // Doctor doctor = (Doctor) context.getBean("doctor");
         
-        System.out.println(doctor.toString());
+        //System.out.println(doctor.toString());
         
         Patient paciente = (Patient) context.getBean("paciente");
         
