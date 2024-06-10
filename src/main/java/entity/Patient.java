@@ -157,4 +157,10 @@ public class Patient {
 	public String toString() {
 		return Formatter.of(this).toString();
 	}
+	public void iniPatient() {
+		System.out.println("Se inicializa bean");
+	} 
+	public void destroyPatient(){
+		System.out.println("Se destruye bean");
+	}
 }

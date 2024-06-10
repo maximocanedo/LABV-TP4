@@ -66,6 +66,19 @@
         <property name="active" value="true"/>
     </bean>
 <bean id="generator" class="generator.Generator"/>
-
     <mvc:annotation-driven conversion-service="conversionService"/>
+            <!-- Propiedades del Patient -->
+<bean id="Patient1" class="entity.Patient" init-method="iniPatient" destroy-method="destroyPatient">
+ <property name="id" value="3"/>
+ <property name="name" value="Josaelo"/>
+ <property name="surname" value="Ramirez"/>
+ <property name="dni" value="33256656"/>
+ <property name="phone" value="12345677"/>
+ <property name="address" value="Av san martin 333"/>
+ <property name="localty" value="Tigre"/>
+ <property name="province" value="Buenos aires"/>
+ <property name="birth" value="1990-01-01"/>
+ <property name="email" value="Josaelo@gmail.com"/>
+ <property name="active" value="true"/>
+</bean>
 </beans>

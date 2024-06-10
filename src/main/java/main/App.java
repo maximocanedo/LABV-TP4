@@ -11,11 +11,14 @@ import generator.Generator;
 public class App {
 
     public static void main(String[] args) {
-        ApplicationContext context = new ClassPathXmlApplicationContext("resources/beans.xml");
-
-        Generator generator = context.getBean(Generator.class);
-        generateFakeRecords(generator, 10);
-        ((ClassPathXmlApplicationContext) context).close();
+     ApplicationContext context = new ClassPathXmlApplicationContext("resources/beans.xml");
+    Generator generator = context.getBean(Generator.class);
+    generateFakeRecords(generator, 10);
+    ((ClassPathXmlApplicationContext) context).close();
+    /*pasientes */
+    pasientes();
+    	
+         
     }
 
     public static void generateFakeRecords(Generator generator, int total) {
@@ -37,4 +40,11 @@ public class App {
         }
         System.out.println("Se generaron " + total + " registros. ");
     }
+    
+    public static void pasientes(){
+     	ApplicationContext context1 = new ClassPathXmlApplicationContext("resources/beans.xml");
+     	Patient p1=(Patient)context1.getBean("Patient1");
+   		System.out.println(p1.toString());
+    }
+    
 }
