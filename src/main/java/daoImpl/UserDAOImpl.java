@@ -4,6 +4,7 @@ import java.util.List;
 
 
 import org.hibernate.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import dao.IUserDAO;
@@ -14,11 +15,14 @@ import exceptions.NotFoundException;
 @Component
 public class UserDAOImpl implements IUserDAO {
 	
+	@Autowired
+	public DataManager dataManager;
+	
 	public UserDAOImpl() {}
 		
 	@Override
 	public void add(User user) {
-		DataManager.transact(session -> {
+		dataManager.transact(session -> {
 			session.save(user);
 		});
     }
@@ -31,7 +35,7 @@ public class UserDAOImpl implements IUserDAO {
 	@Override
     public Optional<User> findByUsername(String username, boolean includeInactives) {
 		final Optional<User> cfUser = new Optional<User>(null);
-		DataManager.run(session -> {
+		dataManager.run(session -> {
 			String hql = "FROM User WHERE username = :username" + (includeInactives ? "" : " AND active");
 	        Query query = session.createQuery(hql);
 	        query.setParameter("username", username);
@@ -49,7 +53,7 @@ public class UserDAOImpl implements IUserDAO {
     @SuppressWarnings("unchecked")
 	public List<User> list(int page, int size, boolean includeInactives) {
 		final Optional<List<User>> cfList = new Optional<List<User>>();
-		DataManager.run(session -> {
+		dataManager.run(session -> {
 			String sqlQuery = "SELECT username, null as password, name, active FROM users" + (includeInactives ? "" : " AND active");
 	        Query q = session.createSQLQuery(sqlQuery).addEntity(User.class);
 			q.setFirstResult((page - 1) * size);
@@ -61,7 +65,7 @@ public class UserDAOImpl implements IUserDAO {
 	
 	@Override
     public void update(User user) {
-		DataManager.transact(session -> {
+		dataManager.transact(session -> {
 			session.update(user);
 		});
 	}
@@ -69,7 +73,7 @@ public class UserDAOImpl implements IUserDAO {
 	@Override
 	@Deprecated
     public void erase(User user) {
-		DataManager.transact(session -> {
+		dataManager.transact(session -> {
 			session.delete(user);
 		});
 	}
@@ -82,7 +86,7 @@ public class UserDAOImpl implements IUserDAO {
 	private void updateStatus(String username, boolean newStatus) throws NotFoundException {
 		Optional<User> search = findByUsername(username, newStatus);
     	if(search.isEmpty()) throw new NotFoundException();
-        DataManager.transact(session -> {
+    	dataManager.transact(session -> {
         	User original = search.get();
         	original.setActive(newStatus);
             session.update(original);

@@ -19,7 +19,7 @@ public class Generator {
 	private PatientGenerator patients;
 	
 	@Autowired
-	private UserGenerator users;
+	private UserGenerator userGenerator;
 
 	// TODO Reemplazar por beans.
     public Generator() {
@@ -47,7 +47,7 @@ public class Generator {
 		
 		for(int i = 0; i < total; i++) {
 			// Generar
-			User user = users.save();
+			User user = userGenerator.save();
 			Patient paciente = patients.save();
 			Doctor medico = doctors.save(user);
 			Appointment turno = appointments.saveforP6(paciente, medico);

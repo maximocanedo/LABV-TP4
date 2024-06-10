@@ -12,9 +12,15 @@ import entity.Doctor;
 
 public class DoctorDAOImpl implements IDoctorDAO {
     
+	private DataManager dataManager;
+	
+	public DoctorDAOImpl() {
+		dataManager = new DataManager();
+	}
+	
     @Override
     public void add(Doctor medico) {
-        DataManager.transact(session -> {
+    	dataManager.transact(session -> {
             session.save(medico);
         });
     }
@@ -22,7 +28,7 @@ public class DoctorDAOImpl implements IDoctorDAO {
     @Override
     public Optional<Doctor> findById(int id, boolean searchDisabled) {
         final Optional<Doctor> cfMedico = new Optional<>(null);
-        DataManager.run(session -> {
+        dataManager.run(session -> {
             String hql = "FROM Doctor WHERE id = :id" + (searchDisabled ? "" : " AND active");
             Query query = session.createQuery(hql);
             query.setParameter("id", id);
@@ -46,7 +52,7 @@ public class DoctorDAOImpl implements IDoctorDAO {
 	@Override
 	public List<Doctor> list(int page, int size, boolean includeInactiveRecords) {
 		 final Optional<List<Doctor>> optionalList = new Optional<>();
-	        DataManager.run(session -> {
+		 dataManager.run(session -> {
 	            String hql = "FROM Doctor" + (includeInactiveRecords ? "" : " WHERE active");
 	            Query query = session.createQuery(hql);
 	            query.setFirstResult((page - 1) * size);
@@ -58,7 +64,7 @@ public class DoctorDAOImpl implements IDoctorDAO {
     
     @Override
     public void update(Doctor medico) {
-        DataManager.transact(session -> {
+    	dataManager.transact(session -> {
             session.update(medico);
         });
     }
@@ -66,7 +72,7 @@ public class DoctorDAOImpl implements IDoctorDAO {
     @Override
     @Deprecated
     public void erase(Doctor medico) {
-        DataManager.transact(session -> {
+    	dataManager.transact(session -> {
             session.delete(medico);
         });
     }
@@ -75,7 +81,7 @@ public class DoctorDAOImpl implements IDoctorDAO {
 	@Override
 	public List<Object[]> listOnlyFileNumbersAndNames() {
 		final Optional<List<Object[]>> optionalList = new Optional<>();
-        DataManager.run(session -> {
+		dataManager.run(session -> {
             String hql = "SELECT m.file, m.name, m.surname FROM Doctor m ORDER BY m.file ASC";
             Query query = session.createQuery(hql);
             optionalList.set(query.list());
@@ -93,7 +99,7 @@ public class DoctorDAOImpl implements IDoctorDAO {
 	@Override
 	public List<Integer> listOnlyFileNumbers(){
 		final Optional<List<Integer>> optionalMedicos = new Optional<>();
-        DataManager.run(session -> {
+		dataManager.run(session -> {
             String hql = "SELECT m.file FROM Doctor m";
             Query query = session.createQuery(hql);
             optionalMedicos.set(query.list());
@@ -105,7 +111,7 @@ public class DoctorDAOImpl implements IDoctorDAO {
 	@Override
 	public List<Doctor> listOrderByFileDescending(int page, int size) {
 		final Optional<List<Doctor>> optionalMedicos = new Optional<>();
-		DataManager.run(session -> {
+		dataManager.run(session -> {
 			String hql = "SELECT m FROM Doctor m ORDER BY m.file DESC";
 			Query query = session.createQuery(hql);
             query.setFirstResult((page - 1) * size);
@@ -124,7 +130,7 @@ public class DoctorDAOImpl implements IDoctorDAO {
 	@Override
 	public List<Object[]> getAppointmentsByDoctorAndDate(int legajo, LocalDate fecha) {
         final Optional<List<Object[]>> optional = new Optional<>();
-        DataManager.run(session -> {
+        dataManager.run(session -> {
             String hql = "SELECT m.file, t.date, t.status " +
                          "FROM Appointment t INNER JOIN t.assignedDoctor m " +
                          "WHERE m.file = :legajo AND t.fecha = :fecha";
@@ -140,7 +146,7 @@ public class DoctorDAOImpl implements IDoctorDAO {
 	@Override
 	public List<Object[]> getAppointmentsByDoctorAndDateRange(int legajo, LocalDate fechaInicio, LocalDate fechaFin) {
 	    final Optional<List<Object[]>> cfList = new Optional<>();
-	    DataManager.run(session -> {
+	    dataManager.run(session -> {
 	        String hql = "SELECT m.file, t.date, t.status " +
 	                     "FROM Appointment t INNER JOIN t.assignedDoctor m " +
 	                     "WHERE m.file = :legajo AND t.date BETWEEN :fechaInicio AND :fechaFin";
@@ -156,7 +162,7 @@ public class DoctorDAOImpl implements IDoctorDAO {
 	@Override
 	public Optional<Doctor> findByFile(int file) {
 		final Optional<Doctor> optional = new Optional<>();
-		DataManager.run(session -> {
+		dataManager.run(session -> {
 			String hql = "SELECT m FROM Doctor m WHERE m.file = :legajo";
 			Query query = session.createQuery(hql);
 			query.setParameter("legajo", file);
@@ -173,7 +179,7 @@ public class DoctorDAOImpl implements IDoctorDAO {
 	private void updateStatus(int id, boolean newStatus) throws NotFoundException {
 		Optional<Doctor> search = findById(id, newStatus);
     	if(search.isEmpty()) throw new NotFoundException();
-        DataManager.transact(session -> {
+    	dataManager.transact(session -> {
         	Doctor original = search.get();
         	original.setActive(newStatus);
             session.update(original);

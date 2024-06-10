@@ -11,12 +11,16 @@ import entity.Patient;
 import exceptions.NotFoundException;
 
 public class PatientDAOImpl implements IPatientDAO {
+
+	private DataManager dataManager;
 	
-	public PatientDAOImpl() {}
-		
+	public PatientDAOImpl() {
+		dataManager = new DataManager();
+	}
+	
 	@Override
 	public void add(Patient paciente) {
-		DataManager.transact(session -> {
+		dataManager.transact(session -> {
 			session.save(paciente);
 		});
     }
@@ -29,7 +33,7 @@ public class PatientDAOImpl implements IPatientDAO {
 	@Override
 	public Optional<Patient> findById(int id, boolean includeInactives) {
 		final Optional<Patient> cfUser = new Optional<Patient>();
-		DataManager.run(session -> {
+		dataManager.run(session -> {
 			String hql = "FROM Patient WHERE id = :id" + (includeInactives ? "" : " AND active");
 	        Query query = session.createQuery(hql);
 	        query.setParameter("id", id);
@@ -52,7 +56,7 @@ public class PatientDAOImpl implements IPatientDAO {
 	@SuppressWarnings("unchecked")
 	public List<Patient> list(int page, int size, boolean includeInactives) {
 		final Optional<List<Patient>> cfList = new Optional<List<Patient>>();
-		DataManager.run(session -> {
+		dataManager.run(session -> {
 			String hql = "FROM Patient" + (includeInactives ? "" : " WHERE active");
 			Query query = session.createQuery(hql);
             query.setFirstResult((page - 1) * size);
@@ -64,7 +68,7 @@ public class PatientDAOImpl implements IPatientDAO {
 	
 	@Override
 	public void update(Patient paciente) {
-		DataManager.transact(session -> {
+		dataManager.transact(session -> {
 			session.update(paciente);
 		});
 	}
@@ -72,7 +76,7 @@ public class PatientDAOImpl implements IPatientDAO {
 	@Override
 	@Deprecated
 	public void erase(Patient paciente) {
-		DataManager.transact(session -> {
+		dataManager.transact(session -> {
 			session.delete(paciente);
 		});
 	}
@@ -80,7 +84,7 @@ public class PatientDAOImpl implements IPatientDAO {
 	private void updateStatus(int id, boolean newStatus) throws NotFoundException {
 		Optional<Patient> search = findById(id, newStatus);
     	if(search.isEmpty()) throw new NotFoundException();
-        DataManager.transact(session -> {
+    	dataManager.transact(session -> {
         	Patient original = search.get();
         	original.setActive(newStatus);
             session.update(original);

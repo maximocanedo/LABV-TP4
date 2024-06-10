@@ -8,9 +8,15 @@ import org.springframework.context.annotation.Configuration;
 import com.github.javafaker.Faker;
 
 import generator.Generator;
+import generator.UserGenerator;
 
 @Configuration
 public class GeneratorConfig {
+	
+	@Bean
+	public UserGenerator userGenerator() {
+		return new UserGenerator();
+	}
 
 	@Bean
 	public Generator generator() {
