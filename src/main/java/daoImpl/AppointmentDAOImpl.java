@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Query;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import dao.IAppointmentDAO;
 import entity.Optional;
@@ -11,11 +13,17 @@ import entity.Appointment;
 import entity.AppointmentStatus;
 import exceptions.NotFoundException;
 
+@Component
 public class AppointmentDAOImpl implements IAppointmentDAO {
+	
+	@Autowired
+	private DataManager dataManager;
+	
+	public AppointmentDAOImpl() {}
 
 	@Override
     public void add(Appointment turno) {
-		DataManager.transact(session -> {
+		dataManager.transact(session -> {
 			session.save(turno);
 		});
 	}
@@ -28,7 +36,7 @@ public class AppointmentDAOImpl implements IAppointmentDAO {
 	@Override
     public Optional<Appointment> findById(int id, boolean includeInactives) {
 		final Optional<Appointment> turno = new Optional<>();
-		DataManager.run(session -> {
+		dataManager.run(session -> {
 			String hql = "FROM Appointment WHERE id = :id" + (includeInactives ? "" : " AND active");
 			Query query = session.createQuery(hql);
 			query.setParameter("id", id);
@@ -51,7 +59,7 @@ public class AppointmentDAOImpl implements IAppointmentDAO {
     @SuppressWarnings("unchecked")
 	public List<Appointment> list(int page, int size, boolean includeInactives) {
 		final Optional<List<Appointment>> optional = new Optional<>();
-		DataManager.run(session -> {
+		dataManager.run(session -> {
 			String hql = "FROM Appointment" + (includeInactives ? "" : " WHERE active");
 			Query query = session.createQuery(hql);
 			query.setFirstResult((page - 1) * size);
@@ -63,7 +71,7 @@ public class AppointmentDAOImpl implements IAppointmentDAO {
 
 	@Override
     public void update(Appointment turno) {
-		DataManager.transact(session -> {
+		dataManager.transact(session -> {
 			session.update(turno);
 		});
 	}
@@ -71,7 +79,7 @@ public class AppointmentDAOImpl implements IAppointmentDAO {
 	@Override
 	@Deprecated
     public void erase(Appointment turno) {
-		DataManager.transact(session -> {
+		dataManager.transact(session -> {
 			session.delete(turno);
 		});
 	}
@@ -79,7 +87,7 @@ public class AppointmentDAOImpl implements IAppointmentDAO {
 	private void updateStatus(int id, boolean newStatus) throws NotFoundException {
 		Optional<Appointment> search = findById(id, newStatus);
     	if(search.isEmpty()) throw new NotFoundException();
-        DataManager.transact(session -> {
+    	dataManager.transact(session -> {
         	Appointment original = search.get();
         	original.setActive(newStatus);
             session.update(original);
@@ -99,7 +107,7 @@ public class AppointmentDAOImpl implements IAppointmentDAO {
 	@Override
 	public int countPresencesBetween(Date date1, Date date2) {
 		final Optional<Integer> r = new Optional<Integer>(0);
-		DataManager.run(session -> {
+		dataManager.run(session -> {
 			String queryString = "SELECT COUNT(*) FROM Appointment t WHERE t.status = :e AND t.date BETWEEN :d1 AND :d2";
 			Query query = session.createQuery(queryString);
 			query.setParameter("e", AppointmentStatus.PRESENT);
@@ -114,7 +122,7 @@ public class AppointmentDAOImpl implements IAppointmentDAO {
 	@Override
 	public int countAbsencesBetween(Date date1, Date date2) {
 		final Optional<Integer> r = new Optional<Integer>(0);
-		DataManager.run(session -> {
+		dataManager.run(session -> {
 			String queryString = "SELECT COUNT(*) FROM Appointment t WHERE t.status = :e AND t.date BETWEEN :d1 AND :d2";
 			Query query = session.createQuery(queryString);
 			query.setParameter("e", AppointmentStatus.ABSENT);

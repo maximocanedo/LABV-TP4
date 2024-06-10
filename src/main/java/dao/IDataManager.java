@@ -1,11 +1,19 @@
 package dao;
 
+import java.util.function.Consumer;
+
 import org.hibernate.Session;
 
 public interface IDataManager {
 	
-	Session open();
+	void run(Consumer<Session> function, Consumer<Exception> onError);
 	
-	void close();
-
+	void run(Consumer<Session> function);
+	
+	void transact(Consumer<Session> function, Consumer<Exception> onError);
+	
+	void transact(Consumer<Session> function);
+	
+	void shutdown();
+	
 }

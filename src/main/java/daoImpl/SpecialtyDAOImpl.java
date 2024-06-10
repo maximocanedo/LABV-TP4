@@ -3,17 +3,25 @@ package daoImpl;
 import java.util.List;
 
 import org.hibernate.Query;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import dao.ISpecialtyDAO;
 import entity.Optional;
 import exceptions.NotFoundException;
 import entity.Specialty;
 
+@Component
 public class SpecialtyDAOImpl implements ISpecialtyDAO {
 
+	@Autowired
+	private DataManager dataManager;
+	
+	public SpecialtyDAOImpl() {}
+	
     @Override
     public void add(Specialty record) {
-        DataManager.transact(session -> {
+    	dataManager.transact(session -> {
             session.save(record);
         });
     }
@@ -26,7 +34,7 @@ public class SpecialtyDAOImpl implements ISpecialtyDAO {
     @Override
     public Optional<Specialty> findById(int id, boolean includeInactives) {
         final Optional<Specialty> optional = new Optional<>();
-        DataManager.run(session -> {
+        dataManager.run(session -> {
             String hql = "FROM Especialidad WHERE id = :id" + (includeInactives ? "" : " AND active");
             Query query = session.createQuery(hql);
             query.setParameter("id", id);
@@ -47,7 +55,7 @@ public class SpecialtyDAOImpl implements ISpecialtyDAO {
 
     @Override
     public void update(Specialty record) {
-        DataManager.transact(session -> {
+    	dataManager.transact(session -> {
             session.update(record);
         });
     }
@@ -56,7 +64,7 @@ public class SpecialtyDAOImpl implements ISpecialtyDAO {
     public void disable(int id) throws NotFoundException {
     	Optional<Specialty> file = findById(id);
     	if(file.isEmpty()) throw new NotFoundException();
-        DataManager.transact(session -> {
+    	dataManager.transact(session -> {
             Specialty original = file.get();
             original.setActive(false);
             session.update(original);
@@ -67,7 +75,7 @@ public class SpecialtyDAOImpl implements ISpecialtyDAO {
     public void enable(int id) throws NotFoundException {
     	Optional<Specialty> file = findById(id, true);
     	if(file.isEmpty()) throw new NotFoundException();
-        DataManager.transact(session -> {
+    	dataManager.transact(session -> {
             Specialty original = file.get();
             original.setActive(true);
             session.update(original);
@@ -83,7 +91,7 @@ public class SpecialtyDAOImpl implements ISpecialtyDAO {
 	@Override
 	public List<Specialty> list(int page, int size, boolean showInactiveRecords) {
 		final Optional<List<Specialty>> optional = new Optional<>();
-        DataManager.run(session -> {
+		dataManager.run(session -> {
             String hql = "SELECT e FROM Especialidad e" + (showInactiveRecords ? "" : " WHERE e.active");
             Query query = session.createQuery(hql);
             query.setFirstResult((page - 1) * size);

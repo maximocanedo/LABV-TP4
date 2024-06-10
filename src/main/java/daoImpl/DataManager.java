@@ -12,69 +12,75 @@ import org.hibernate.service.ServiceRegistryBuilder;
 import dao.IDataManager;
 
 public class DataManager implements IDataManager {
-	private SessionFactory sessionFactory;
-	private Session session;
 	
-		
-	public static void run(Consumer<Session> function, Consumer<Exception> onError) {
+	private static SessionFactory sessionFactory;
+	
+	static {
 		try {
-			DataManager dm = new DataManager();
-			Session session = dm.open();
-			function.accept(session);
-			session.close();
+			Configuration configuration = new Configuration();
+			configuration.configure();
+			ServiceRegistry serviceRegistry = new ServiceRegistryBuilder().applySettings(configuration.getProperties()).buildServiceRegistry();
+			sessionFactory = configuration.buildSessionFactory(serviceRegistry);
+			
 		} catch(Exception e) {
-			onError.accept(e);
+			
 		}
 	}
-	
-	
-	public static void run(Consumer<Session> function) {
-		DataManager dm = new DataManager();
-		Session session = dm.open();
-		function.accept(session);
-		session.close();
-	}
-	
-	public static void transact(Consumer<Session> function, Consumer<Exception> onError) {
-		DataManager dm = new DataManager();
-		Session session = dm.open();
-		Transaction transaction = session.beginTransaction();
-		try {
-			function.accept(session);
-			transaction.commit();
-		} catch(Exception e) {
-			/*if(transaction != null) {
-				transaction.rollback();
-			}*/
-			onError.accept(e);
-		} finally {
-			if(session != null && session.isOpen()) 
-				session.close();
-		}
-	}
-	
-	public static void transact(Consumer<Session> function) {
-		DataManager.transact(function, exception -> {
-			exception.printStackTrace();
-		});
-	}
-	
-	public DataManager() {
-		Configuration configuration = new Configuration();
-		configuration.configure();
-		ServiceRegistry serviceRegistry = new ServiceRegistryBuilder().applySettings(configuration.getProperties()).buildServiceRegistry();
-		sessionFactory = configuration.buildSessionFactory(serviceRegistry);
-	}
-	
-	public Session open() {
-		session = sessionFactory.openSession();
-		return session;
-	}
-	
-	public void close() {
-		session.close();
-		sessionFactory.close();
-	}
-	
+
+    // Ejecuta la operación pasada en una sesión abierta
+    public void run(Consumer<Session> function, Consumer<Exception> onError) {
+        Session session = null;
+        try {
+            session = getSession();
+            function.accept(session);
+        } catch (Exception e) {
+            onError.accept(e);
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
+        }
+    }
+
+    public void run(Consumer<Session> function) {
+        run(function, Exception::printStackTrace);
+    }
+
+    public void transact(Consumer<Session> function, Consumer<Exception> onError) {
+        Session session = null;
+        Transaction transaction = null;
+        try {
+            session = getSession();
+            transaction = session.beginTransaction();
+            function.accept(session);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            onError.accept(e);
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
+        }
+    }
+
+    public void transact(Consumer<Session> function) {
+        transact(function, Exception::printStackTrace);
+    }
+
+    private Session getSession() {
+        if (sessionFactory == null) {
+            throw new IllegalStateException("SessionFactory is not initialized.");
+        }
+        return sessionFactory.openSession();
+    }
+
+    public void shutdown() {
+        if (sessionFactory != null) {
+            sessionFactory.close();
+        }
+    }
 	
 }
