@@ -1,21 +1,24 @@
 package logicImpl;
 
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import entity.Optional;
 
 import dao.IPatientDAO;
-import daoImpl.PatientDAOImpl;
 import entity.Patient;
 import exceptions.NotFoundException;
 import logic.IPatientLogic;
 
+@Component
 public class PatientLogicImpl implements IPatientLogic {
 	
-	private final IPatientDAO repository;
+	@Autowired
+	private IPatientDAO repository;
 	
-	public PatientLogicImpl() {
-		repository = new PatientDAOImpl();
-	}
+	public PatientLogicImpl() {}
 	
 	@Override
 	public void add(Patient paciente) {

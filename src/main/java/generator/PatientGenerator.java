@@ -2,23 +2,25 @@ package generator;
 
 import java.util.Random;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
+
 import com.github.javafaker.Faker;
 
 import entity.Patient;
 import logic.IPatientLogic;
-import logicImpl.PatientLogicImpl;
-
+@Component
 public class PatientGenerator implements IEntityGenerator<Patient> {
 
+	@Autowired
     private IPatientLogic pacientes;
-    private Random random;
+    @Autowired
     private Faker faker;
+    @Autowired
+    private Random random;
     
-	public PatientGenerator() {
-		pacientes = new PatientLogicImpl();
-		faker = new Faker();
-		random = new Random();
-	}
+	public PatientGenerator() {}
 
 	@Override
 	public Patient generate() {
