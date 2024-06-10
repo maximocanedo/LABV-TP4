@@ -1,30 +1,32 @@
 package logicImpl;
 
 import java.util.List;
-import entity.Optional;
 
-import dao.IPatientDAO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import daoImpl.PatientDAOImpl;
+import entity.Optional;
 import entity.Patient;
 import exceptions.NotFoundException;
 import logic.IPatientLogic;
 
+@Component
 public class PatientLogicImpl implements IPatientLogic {
 	
-	private final IPatientDAO repository;
+	@Autowired
+	private PatientDAOImpl patientsrepository;
 	
-	public PatientLogicImpl() {
-		repository = new PatientDAOImpl();
-	}
+	public PatientLogicImpl() { }
 	
 	@Override
 	public void add(Patient paciente) {
-		repository.add(paciente);
+		patientsrepository.add(paciente);
 	}
 	
 	@Override
 	public Optional<Patient> findById(int id) {
-		return repository.findById(id);
+		return patientsrepository.findById(id);
 	}
 	
 	@Override
@@ -41,12 +43,12 @@ public class PatientLogicImpl implements IPatientLogic {
         if (paciente.getProvince() != null) original.setProvince(paciente.getProvince());
         if (paciente.getBirth() != null) original.setBirth(paciente.getBirth());
         if (paciente.getEmail() != null) original.setEmail(paciente.getEmail());
-		repository.update(paciente);
+		patientsrepository.update(paciente);
 	}
 	
 	@Override
 	public List<Patient> list(int page, int size) {
-		return repository.list(page, size);
+		return patientsrepository.list(page, size);
 	}
 	
 	@Override
@@ -57,27 +59,27 @@ public class PatientLogicImpl implements IPatientLogic {
 	@Override
 	@Deprecated
 	public void erase(Patient paciente) {
-		repository.erase(paciente);
+		patientsrepository.erase(paciente);
 		
 	}
 
 	@Override
 	public Optional<Patient> findById(int id, boolean includeInactives) {
-		return repository.findById(id, includeInactives);
+		return patientsrepository.findById(id, includeInactives);
 	}
 
 	@Override
 	public List<Patient> list(int page, int size, boolean includeInactives) {
-		return repository.list(page, size, includeInactives);
+		return patientsrepository.list(page, size, includeInactives);
 	}
 
 	@Override
 	public void disable(int id) throws NotFoundException {
-		repository.disable(id);
+		patientsrepository.disable(id);
 	}
 
 	@Override
 	public void enable(int id) throws NotFoundException {
-		repository.enable(id);		
+		patientsrepository.enable(id);		
 	}	
 }

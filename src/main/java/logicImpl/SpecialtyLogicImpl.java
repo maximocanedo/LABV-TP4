@@ -2,30 +2,31 @@ package logicImpl;
 
 import java.util.List;
 
-import dao.ISpecialtyDAO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import daoImpl.SpecialtyDAOImpl;
+import entity.Optional;
 import entity.Specialty;
+import exceptions.NotFoundException;
 import logic.ISpecialtyLogic;
 
-import entity.Optional;
-import exceptions.NotFoundException;
-
+@Component
 public class SpecialtyLogicImpl implements ISpecialtyLogic {
 	
-	private final ISpecialtyDAO repository;
+	@Autowired
+	private SpecialtyDAOImpl specialtiesrepository;
 	
-	public SpecialtyLogicImpl() {
-		repository = new SpecialtyDAOImpl();
-	}
+	public SpecialtyLogicImpl() { }
 		
 	@Override
     public void add(Specialty e) {
-		repository.add(e);
+		specialtiesrepository.add(e);
 	}
 
 	@Override
     public Optional<Specialty> findById(int id) {
-		return repository.findById(id);
+		return specialtiesrepository.findById(id);
 	}
 	
 	@Override
@@ -37,22 +38,22 @@ public class SpecialtyLogicImpl implements ISpecialtyLogic {
         	original.setName(record.getName());
         if(record.getDescription() != null)
         	original.setDescription(record.getDescription());
-		repository.update(original);
+		specialtiesrepository.update(original);
 	}
 	
 	@Override
     public void disable(int id) throws NotFoundException {
-		repository.disable(id);
+		specialtiesrepository.disable(id);
 	}
 	
 	@Override
     public void enable(int id) throws NotFoundException {
-		repository.enable(id);
+		specialtiesrepository.enable(id);
 	}
 	
 	@Override
 	public List<Specialty> list(int page, int size, boolean includeInactiveRecords) {
-		return repository.list(page, size, includeInactiveRecords);
+		return specialtiesrepository.list(page, size, includeInactiveRecords);
 	}
 	
 	@Override

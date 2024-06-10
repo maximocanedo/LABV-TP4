@@ -2,34 +2,35 @@ package logicImpl;
 
 import java.time.LocalDate;
 import java.util.List;
-import entity.Optional;
-import exceptions.NotFoundException;
-import dao.IDoctorDAO;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import daoImpl.DoctorDAOImpl;
 import entity.Doctor;
+import entity.Optional;
+import exceptions.NotFoundException;
 import logic.IDoctorLogic;
 
 public class DoctorLogicImpl implements IDoctorLogic {
+	
+	@Autowired
+    private DoctorDAOImpl doctorsrepository;
 
-    private final IDoctorDAO repository;
-
-    public DoctorLogicImpl() {
-        this.repository = new DoctorDAOImpl();
-    }
+    public DoctorLogicImpl() { }
 
     @Override
     public void add(Doctor medico) {
-        repository.add(medico);
+        doctorsrepository.add(medico);
     }
 
     @Override
     public Optional<Doctor> findById(int id) {
-        return repository.findById(id);
+        return doctorsrepository.findById(id);
     }
 
     @Override
     public List<Doctor> list(int page, int size) {
-        return repository.list(page, size);
+        return doctorsrepository.list(page, size);
     }
 
     @Override
@@ -39,22 +40,22 @@ public class DoctorLogicImpl implements IDoctorLogic {
 
 	@Override
 	public List<Object[]> listOnlyFileNumbersAndNames() {
-		return repository.listOnlyFileNumbersAndNames();
+		return doctorsrepository.listOnlyFileNumbersAndNames();
 	}
 	
 	@Override
     public List<Integer> listOnlyFileNumbers(){
-		return repository.listOnlyFileNumbers();
+		return doctorsrepository.listOnlyFileNumbers();
 	}
 	
 	@Override
     public Doctor findDoctorWithHighestFileNumber() {
-		return repository.findDoctorWithHighestFileNumber();
+		return doctorsrepository.findDoctorWithHighestFileNumber();
 	}
 	
 	@Override
     public List<Doctor> listOrderByFileDescending(int page, int size) {
-		return repository.listOrderByFileDescending(page, size);
+		return doctorsrepository.listOrderByFileDescending(page, size);
 	}
 	
 	@Override
@@ -64,27 +65,27 @@ public class DoctorLogicImpl implements IDoctorLogic {
 	
 	@Override
     public List<Object[]> getAppointmentsByDoctorAndDate(int legajo, LocalDate fecha) {
-        return repository.getAppointmentsByDoctorAndDate(legajo, fecha);
+        return doctorsrepository.getAppointmentsByDoctorAndDate(legajo, fecha);
     }
 	
 	@Override
     public List<Object[]> getAppointmentsByDoctorAndDateRange(int legajo, LocalDate fechaInicio, LocalDate fechaFin) {
-        return repository.getAppointmentsByDoctorAndDateRange(legajo, fechaInicio, fechaFin);
+        return doctorsrepository.getAppointmentsByDoctorAndDateRange(legajo, fechaInicio, fechaFin);
     }
 
 	@Override
 	public Optional<Doctor> findByFile(int file) {
-		return repository.findByFile(file);
+		return doctorsrepository.findByFile(file);
 	}
 
 	@Override
 	public Optional<Doctor> findById(int id, boolean includeInactive) {
-		return repository.findById(id, includeInactive);
+		return doctorsrepository.findById(id, includeInactive);
 	}
 
 	@Override
 	public List<Doctor> list(int page, int size, boolean includeInactive) {
-		return repository.list(page, size, includeInactive);
+		return doctorsrepository.list(page, size, includeInactive);
 	}
 
 	@Override
@@ -102,24 +103,24 @@ public class DoctorLogicImpl implements IDoctorLogic {
         if (medico.getPhone() != null) original.setPhone(medico.getPhone());
         if (medico.getSpecialty() != null) original.setSpecialty(medico.getSpecialty());
         if (medico.getUser() != null) original.setUser(medico.getUser());
-		repository.update(original);
+		doctorsrepository.update(original);
 	}
 
 	@Override
 	@Deprecated
 	public void erase(Doctor medico) {
-		repository.erase(medico);
+		doctorsrepository.erase(medico);
 	}
 
 	@Override
 	public void disable(int id) throws NotFoundException {
-		repository.disable(id);
+		doctorsrepository.disable(id);
 		
 	}
 
 	@Override
 	public void enable(int id) throws NotFoundException {
-		repository.disable(id);
+		doctorsrepository.disable(id);
 	}
     
 }
