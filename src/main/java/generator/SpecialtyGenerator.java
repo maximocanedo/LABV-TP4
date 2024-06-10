@@ -1,16 +1,18 @@
 package generator;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import entity.Specialty;
-import logic.ISpecialtyLogic;
 import logicImpl.SpecialtyLogicImpl;
 
+@Component
 public class SpecialtyGenerator implements IEntityGenerator<Specialty[]> {
-
-    private ISpecialtyLogic specialties;
 	
-	public SpecialtyGenerator() {
-    	specialties = new SpecialtyLogicImpl();		
-	}
+	@Autowired
+    private SpecialtyLogicImpl specialties;
+	
+	public SpecialtyGenerator() { }
 	
 	@Override
 	public Specialty[] generate() {

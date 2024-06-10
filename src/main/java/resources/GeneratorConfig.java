@@ -1,7 +1,11 @@
 package resources;
 
+import java.util.Random;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import com.github.javafaker.Faker;
 
 import generator.AppointmentGenerator;
 import generator.DoctorGenerator;
@@ -12,6 +16,16 @@ import generator.UserGenerator;
 
 @Configuration
 public class GeneratorConfig {
+	
+	@Bean
+	public Faker faker() {
+		return new Faker();
+	}
+	
+	@Bean
+	public Random random() {
+		return new Random();
+	}
 	
 	@Bean 
     public SpecialtyGenerator specialtyGenerator() {

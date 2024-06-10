@@ -5,41 +5,47 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.github.javafaker.Faker;
 
-import daoImpl.DoctorDAOImpl;
 import entity.Appointment;
 import entity.AppointmentStatus;
 import entity.Doctor;
 import entity.Optional;
 import entity.Patient;
 import entity.User;
-import logic.IAppointmentLogic;
 import logicImpl.AppointmentLogicImpl;
+import logicImpl.DoctorLogicImpl;
 
+@Component
 public class AppointmentGenerator implements IEntityGenerator<Appointment> {
-
-    private IAppointmentLogic turnos;
-    private DoctorDAOImpl medicos;
-    private UserGenerator ug;
-    private DoctorGenerator dg;
-    private PatientGenerator pg;
+	
+	@Autowired
+    private AppointmentLogicImpl appointments;
+	
+	@Autowired
+    private DoctorLogicImpl doctors;
+	
+	@Autowired
+    private UserGenerator userGenerator;
+	
+	@Autowired
+    private DoctorGenerator doctorGenerator;
+	
+	@Autowired
+    private PatientGenerator patientGenerator;
+	
+	@Autowired
     private Faker faker;
     
-    public AppointmentGenerator() {
-    	dg = new DoctorGenerator();
-    	pg = new PatientGenerator();
-    	ug = new UserGenerator();
-    	medicos = new DoctorDAOImpl();
-    	turnos = new AppointmentLogicImpl();
-    	faker = new Faker();
-    }
+    public AppointmentGenerator() { }
     
 	@Override
 	public Appointment generate() {
-		Patient p = pg.generate();
-		Doctor m = dg.generate();
+		Patient p = patientGenerator.generate();
+		Doctor m = doctorGenerator.generate();
 		return generate(p, m);
 	}
 	
@@ -56,27 +62,27 @@ public class AppointmentGenerator implements IEntityGenerator<Appointment> {
 	@Override
 	public Appointment save() {
 		Appointment t = generate();
-    	turnos.register(t);
+    	appointments.register(t);
     	return t;
 	}
 	
 	public Appointment save(Patient p, Doctor m) {
 		Appointment t = generate(p, m);
-    	turnos.register(t);
+    	appointments.register(t);
     	return t;
 	}
 
 	public Appointment generateForDoctor1234(Patient paciente) {
         
         // Encontrar el médico con legajo 1234
-        Optional<Doctor> optionalMedico = medicos.findByFile(1234);
+        Optional<Doctor> optionalMedico = doctors.findByFile(1234);
         int attempts = 0;
         while(optionalMedico.isEmpty() && attempts < 4) {
-        	User user = ug.save();
-            Doctor medico = dg.generate(user);
+        	User user = userGenerator.save();
+            Doctor medico = doctorGenerator.generate(user);
             medico.setFile(1234);
-            medicos.add(medico);
-            optionalMedico = medicos.findByFile(1234);
+            doctors.add(medico);
+            optionalMedico = doctors.findByFile(1234);
             attempts++;
         }
         
@@ -100,7 +106,7 @@ public class AppointmentGenerator implements IEntityGenerator<Appointment> {
         Date randomDate = faker.date().between(startDate, endDate);
         turno.setDate(randomDate);
         try {
-        	turnos.register(turno);
+        	appointments.register(turno);
         } catch(ConstraintViolationException e) {
         	// Expected error:
         	// El DNI es generado al azar, y puede a veces coincidir con un DNI ya existente.
@@ -127,7 +133,7 @@ public class AppointmentGenerator implements IEntityGenerator<Appointment> {
     	d2.setMonth(2);
     	d2.setYear(124);
     	t.setDate(faker.date().between(d, d2));
-    	turnos.register(t);
+    	appointments.register(t);
     	return t;
     	
     }
