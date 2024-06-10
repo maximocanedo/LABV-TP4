@@ -1,28 +1,34 @@
 package generator;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import entity.Appointment;
 import entity.Doctor;
 import entity.Patient;
 import entity.User;
 
+@Component
 public class Generator {
 	
 	private static String DELIMITER = "\n**************************\n";
 	
-	private SpecialtyGenerator specialties;
-	private AppointmentGenerator appointments;
-	private DoctorGenerator doctors;
-	private PatientGenerator patients;
-	private UserGenerator users;
+	@Autowired
+    private SpecialtyGenerator specialtyGenerator;
 
-	// TODO Reemplazar por beanss.
-    public Generator() {
-    	specialties = new SpecialtyGenerator();
-    	appointments = new AppointmentGenerator();
-    	doctors = new DoctorGenerator();
-    	patients = new PatientGenerator();
-    	users = new UserGenerator();
-    }
+    @Autowired
+    private AppointmentGenerator appointments;
+
+    @Autowired
+    private DoctorGenerator doctors;
+
+    @Autowired
+    private PatientGenerator patients;
+
+    @Autowired
+    private UserGenerator users;
+
+    public Generator() {}
     
     public void generate(int total) {
     	generate(total, false);
@@ -30,7 +36,7 @@ public class Generator {
     
     public void generate(int total, boolean logEveryRecord) {
 		System.out.println("Se guardarán los objetos Especialidad. ");
-		specialties.save();
+		specialtyGenerator.save();
 		System.out.println("Se generarán y guardarán " + total + " registros. ");
 
 		StringBuilder usersLog = new StringBuilder();
