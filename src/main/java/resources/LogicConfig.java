@@ -15,7 +15,7 @@ public class LogicConfig {
 	}
 	
 	@Bean
-	private PatientLogicImpl patients() {
+	public PatientLogicImpl patients() {
 		return new PatientLogicImpl();
 	}
 	
