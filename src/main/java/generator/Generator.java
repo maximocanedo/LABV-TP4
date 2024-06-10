@@ -1,10 +1,14 @@
 package generator;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import entity.Appointment;
 import entity.Doctor;
 import entity.Patient;
 import entity.User;
 
+@Component
 public class Generator {
 	
 	private static String DELIMITER = "\n**************************\n";
@@ -13,15 +17,17 @@ public class Generator {
 	private AppointmentGenerator appointments;
 	private DoctorGenerator doctors;
 	private PatientGenerator patients;
+	
+	@Autowired
 	private UserGenerator users;
 
-	// TODO Reemplazar por beanss.
+	// TODO Reemplazar por beans.
     public Generator() {
     	specialties = new SpecialtyGenerator();
     	appointments = new AppointmentGenerator();
     	doctors = new DoctorGenerator();
     	patients = new PatientGenerator();
-    	users = new UserGenerator();
+    	// users = new UserGenerator();
     }
     
     public void generate(int total) {

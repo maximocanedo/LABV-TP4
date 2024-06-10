@@ -1,21 +1,24 @@
 package generator;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.github.javafaker.Faker;
 
 import entity.User;
 import logicImpl.UserLogicImpl;
 
+@Component
 public class UserGenerator implements IEntityGenerator<User> {
 
-
+	@Autowired
     private UserLogicImpl users;
+	
+	@Autowired
     private Faker faker;
     
-    public UserGenerator() {
-    	faker = new Faker();
-    	users = new UserLogicImpl();
-    }
+    public UserGenerator() {}
     
 	@Override
 	public User generate() {

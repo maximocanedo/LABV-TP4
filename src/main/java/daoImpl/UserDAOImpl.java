@@ -4,12 +4,14 @@ import java.util.List;
 
 
 import org.hibernate.*;
+import org.springframework.stereotype.Component;
 
 import dao.IUserDAO;
 import entity.Optional;
 import entity.User;
 import exceptions.NotFoundException;
 
+@Component
 public class UserDAOImpl implements IUserDAO {
 	
 	public UserDAOImpl() {}
