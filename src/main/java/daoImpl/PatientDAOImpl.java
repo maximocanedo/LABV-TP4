@@ -4,19 +4,20 @@ import java.util.List;
 
 
 import org.hibernate.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import dao.IPatientDAO;
 import entity.Optional;
 import entity.Patient;
 import exceptions.NotFoundException;
 
+@Component
 public class PatientDAOImpl implements IPatientDAO {
-
+	@Autowired
 	private DataManager dataManager;
 	
-	public PatientDAOImpl() {
-		dataManager = new DataManager();
-	}
+	public PatientDAOImpl() {}
 	
 	@Override
 	public void add(Patient paciente) {

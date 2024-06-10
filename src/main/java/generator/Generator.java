@@ -13,9 +13,13 @@ public class Generator {
 	
 	private static String DELIMITER = "\n**************************\n";
 	
+	//@Autowired
 	private SpecialtyGenerator specialties;
+	//@Autowired
 	private AppointmentGenerator appointments;
+	//@Autowired
 	private DoctorGenerator doctors;
+	@Autowired
 	private PatientGenerator patients;
 	
 	@Autowired
@@ -26,7 +30,7 @@ public class Generator {
     	specialties = new SpecialtyGenerator();
     	appointments = new AppointmentGenerator();
     	doctors = new DoctorGenerator();
-    	patients = new PatientGenerator();
+    	//patients = new PatientGenerator();
     	// users = new UserGenerator();
     }
     
