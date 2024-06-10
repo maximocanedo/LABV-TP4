@@ -45,14 +45,14 @@ public class Generator {
 			Patient paciente = patients.save();
 			Doctor medico = doctors.save(user);
 			Appointment turno = appointments.saveforP6(paciente, medico);
-			Appointment turnoParaPunto3 = appointments.generateForDoctor1234(paciente);
+			// Appointment turnoParaPunto3 = appointments.generateForDoctor1234(paciente);
 			
 			if(logEveryRecord) {
 				usersLog.append(user);
 				patientsLog.append(paciente);
 				doctorsLog.append(medico);
 				appointmentsLog.append(turno);
-				appointmentsLog.append(turnoParaPunto3);
+				// appointmentsLog.append(turnoParaPunto3);
 			}
 		}
 		
