@@ -2,22 +2,30 @@ package main;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import entity.Doctor;
 import entity.Patient;
 import entity.User;
-import logic.IDoctorLogic;
 import logicImpl.DoctorLogicImpl;
 import logicImpl.PatientLogicImpl;
 import logicImpl.UserLogicImpl;
 
 @Deprecated
+@Component
 public class TP4 {
 	
+	@Autowired
     private UserLogicImpl users;
+	
+	@Autowired
+	private DoctorLogicImpl doctors;
+	
+	@Autowired
+	private PatientLogicImpl patients;
     
-    public TP4() {
-		users = new UserLogicImpl();
-	}
+    public TP4() {}
     
 	/**
 	 * Método main usado en el TP4.
@@ -39,14 +47,12 @@ public class TP4 {
     	}
     	
     	// Listar médicos
-    	IDoctorLogic medicos_repo = new DoctorLogicImpl();
-    	List<Doctor> medicos = medicos_repo.list(1, 10);
+    	List<Doctor> medicos = doctors.list(1, 10);
     	for(Doctor medico : medicos) {
     		System.out.println(medico);
     	}
     	
-    	PatientLogicImpl paciente_repo = new PatientLogicImpl();
-    	List<Patient> pacientes = paciente_repo.list(1, 10);
+    	List<Patient> pacientes = patients.list(1, 10);
     	for(Patient paciente : pacientes) {
     		System.out.println(paciente);
     	}

@@ -26,10 +26,10 @@ public class DoctorGenerator implements IEntityGenerator<Doctor> {
     private IDoctorLogic medicos;
 	
 	@Autowired
-	private SpecialtyGenerator sg;
+	private SpecialtyGenerator specialtyGenerator;
 	
 	@Autowired
-	private UserGenerator ug;
+	private UserGenerator userGenerator;
 	
 	@Autowired
 	private Random random;
@@ -43,7 +43,7 @@ public class DoctorGenerator implements IEntityGenerator<Doctor> {
 
 	@Override
 	public Doctor generate() {
-		User user = ug.generate();
+		User user = userGenerator.generate();
 		return generate(user);
 	}
 
@@ -71,7 +71,7 @@ public class DoctorGenerator implements IEntityGenerator<Doctor> {
 	}
 	
 	public Doctor generate(User user) {
-        Specialty[] especialidades = sg.generate();
+        Specialty[] especialidades = specialtyGenerator.generate();
         Specialty ss = especialidades[random.nextInt(especialidades.length)];
         Doctor medico = new Doctor();
         Name nn = faker.name();
