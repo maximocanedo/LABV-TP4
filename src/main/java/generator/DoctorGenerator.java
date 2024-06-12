@@ -90,6 +90,10 @@ public class DoctorGenerator implements IEntityGenerator<Doctor> {
         return medico;
 	}
 
+	public int randomMinutes() {
+		int[] mins = new int[] {0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55};
+		return mins[random.nextInt(mins.length)];
+	}
 
     public Set<Schedule> generateRandomSchedules() {
         Set<Schedule> schedules = new HashSet<>();
@@ -99,7 +103,7 @@ public class DoctorGenerator implements IEntityGenerator<Doctor> {
         
         while (schedules.size() < numberOfSchedules) {
             Day beginDay = Day.values()[random.nextInt(Day.values().length)];
-            LocalTime startTime = LocalTime.of(random.nextInt(24), random.nextInt(60));
+            LocalTime startTime = LocalTime.of(random.nextInt(24), randomMinutes());
             int duration = random.nextInt(12) + 1; // Máximo 12 h
             LocalTime endTime = startTime.plusHours(duration);
 
