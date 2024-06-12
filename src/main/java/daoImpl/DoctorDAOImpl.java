@@ -4,20 +4,18 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.hibernate.Query;
+import org.springframework.stereotype.Component;
 
 import dao.IDoctorDAO;
 import entity.Optional;
 import exceptions.NotFoundException;
 import entity.Doctor;
-
+@Component
 public class DoctorDAOImpl implements IDoctorDAO {
     
 	private DataManager dataManager;
 	
-	public DoctorDAOImpl() {
-		dataManager = new DataManager();
-	}
-	
+	public DoctorDAOImpl() {}	
     @Override
     public void add(Doctor medico) {
     	dataManager.transact(session -> {

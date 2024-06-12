@@ -2,20 +2,23 @@ package logicImpl;
 
 import java.time.LocalDate;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import entity.Optional;
 import exceptions.NotFoundException;
 import dao.IDoctorDAO;
 import daoImpl.DoctorDAOImpl;
 import entity.Doctor;
 import logic.IDoctorLogic;
-
+@Component
 public class DoctorLogicImpl implements IDoctorLogic {
 
-    private final IDoctorDAO repository;
+	@Autowired
+    private IDoctorDAO repository;
 
-    public DoctorLogicImpl() {
-        this.repository = new DoctorDAOImpl();
-    }
+    public DoctorLogicImpl() {}
 
     @Override
     public void add(Doctor medico) {

@@ -7,6 +7,7 @@ import daoImpl.AppointmentDAOImpl;
 import daoImpl.DataManager;
 import daoImpl.PatientDAOImpl;
 import daoImpl.UserDAOImpl;
+import daoImpl.DoctorDAOImpl;
 
 @Configuration
 public class DAOConfig {
@@ -23,6 +24,11 @@ public class DAOConfig {
 	@Bean
 	public UserDAOImpl usersrepository() {
 		return new UserDAOImpl();
+	}
+	
+	@Bean
+	public DoctorDAOImpl doctorrepository() {
+		return new DoctorDAOImpl();
 	}
 	
 	@Bean

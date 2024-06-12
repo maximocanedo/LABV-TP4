@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import logicImpl.AppointmentLogicImpl;
 import logicImpl.PatientLogicImpl;
 import logicImpl.UserLogicImpl;
+import logicImpl.DoctorLogicImpl;
 
 @Configuration
 public class LogicConfig {
@@ -20,8 +21,13 @@ public class LogicConfig {
 	}
 	
 	@Bean
-	private PatientLogicImpl patients() {
+	public PatientLogicImpl patients() {
 		return new PatientLogicImpl();
+	}
+	
+	@Bean
+	public DoctorLogicImpl doctors() {
+		return new DoctorLogicImpl();
 	}
 	
 }
