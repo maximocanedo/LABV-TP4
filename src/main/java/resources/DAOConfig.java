@@ -3,12 +3,17 @@ package resources;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import daoImpl.AppointmentDAOImpl;
 import daoImpl.DataManager;
 import daoImpl.PatientDAOImpl;
 import daoImpl.UserDAOImpl;
 
 @Configuration
 public class DAOConfig {
+	@Bean
+	public AppointmentDAOImpl Appointmentpository() {
+		return new AppointmentDAOImpl();
+	}
 	
 	@Bean
 	public DataManager dataManager() {

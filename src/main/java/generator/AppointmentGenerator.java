@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.github.javafaker.Faker;
 
@@ -17,9 +19,9 @@ import entity.Patient;
 import entity.User;
 import logic.IAppointmentLogic;
 import logicImpl.AppointmentLogicImpl;
-
+@Component
 public class AppointmentGenerator implements IEntityGenerator<Appointment> {
-
+	@Autowired
     private IAppointmentLogic turnos;
     private DoctorDAOImpl medicos;
     private UserGenerator ug;

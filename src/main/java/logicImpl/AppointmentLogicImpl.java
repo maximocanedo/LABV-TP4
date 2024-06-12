@@ -3,15 +3,19 @@ package logicImpl;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import dao.IAppointmentDAO;
 import daoImpl.AppointmentDAOImpl;
 import entity.*;
 import exceptions.NotFoundException;
 import logic.IAppointmentLogic;
-
+@Component
 public class AppointmentLogicImpl implements IAppointmentLogic {
+	@Autowired
 	private IAppointmentDAO repository;
-	
+
 	public AppointmentLogicImpl() {
 		this.repository = new AppointmentDAOImpl();
 	}

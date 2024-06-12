@@ -4,15 +4,17 @@ import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Query;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import dao.IAppointmentDAO;
 import entity.Optional;
 import entity.Appointment;
 import entity.AppointmentStatus;
 import exceptions.NotFoundException;
-
+@Component
 public class AppointmentDAOImpl implements IAppointmentDAO {
-
+	@Autowired
 	private DataManager dataManager;
 	
 	public AppointmentDAOImpl() {

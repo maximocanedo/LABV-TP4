@@ -10,9 +10,14 @@ import com.github.javafaker.Faker;
 import generator.Generator;
 import generator.PatientGenerator;
 import generator.UserGenerator;
+import generator.AppointmentGenerator;
 
 @Configuration
 public class GeneratorConfig {
+	@Bean
+	public AppointmentGenerator AppointmentGeneratorGenerator() {
+		return new AppointmentGenerator();
+	}
 	
 	@Bean
 	public UserGenerator userGenerator() {
@@ -37,5 +42,10 @@ public class GeneratorConfig {
 	@Bean
 	public Random random() {
 		return new Random();
+	}
+	
+	@Bean
+	public AppointmentGenerator AppointmentGenerator() {
+		return new AppointmentGenerator();
 	}
 }
