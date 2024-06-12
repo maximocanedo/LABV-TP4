@@ -5,6 +5,9 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.github.javafaker.Address;
 import com.github.javafaker.Faker;
 import com.github.javafaker.Name;
@@ -16,23 +19,22 @@ import entity.Specialty;
 import entity.User;
 import logic.IDoctorLogic;
 import logicImpl.DoctorLogicImpl;
-
+@Component
 public class DoctorGenerator implements IEntityGenerator<Doctor> {
 
+	@Autowired
     private IDoctorLogic medicos;
-    private SpecialtyGenerator sg;
-    private UserGenerator ug;
-    private Random random;
-    private Faker faker;
-    public static boolean EXISTE_LEGAJO_1234 = false;
+	@Autowired
+	private SpecialtyGenerator sg;
+	@Autowired
+	private UserGenerator ug;
+	@Autowired
+	private Random random;
+	@Autowired
+	private Faker faker;
+	public static boolean EXISTE_LEGAJO_1234 = false;
     
-	public DoctorGenerator() {
-    	medicos = new DoctorLogicImpl();
-    	sg = new SpecialtyGenerator();
-    	ug = new UserGenerator();
-    	random = new Random();
-    	faker = new Faker();
-	}
+	public DoctorGenerator() {}
 
 	@Override
 	public Doctor generate() {

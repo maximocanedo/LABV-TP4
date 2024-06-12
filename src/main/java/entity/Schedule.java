@@ -5,10 +5,12 @@ import java.time.format.DateTimeFormatter;
 
 import javax.persistence.*;
 
+import formatter.Card;
 import jakarta.persistence.Convert;
 import logicImpl.LocalTimeAttributeConverter;
 
 @Entity
+@Card(size = 48)
 @Table(name = "schedules")
 public class Schedule {
 	

@@ -10,6 +10,7 @@ import com.github.javafaker.Faker;
 import generator.Generator;
 import generator.PatientGenerator;
 import generator.UserGenerator;
+import generator.DoctorGenerator;
 
 @Configuration
 public class GeneratorConfig {
@@ -22,6 +23,11 @@ public class GeneratorConfig {
 	@Bean
 	public PatientGenerator patientGenerator() {
 		return new PatientGenerator();		
+	}
+	
+	@Bean
+	public DoctorGenerator DoctorGenerator() {
+		return new DoctorGenerator();		
 	}
 
 	@Bean
