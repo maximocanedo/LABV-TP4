@@ -6,13 +6,14 @@ import org.springframework.context.annotation.Configuration;
 import daoImpl.AppointmentDAOImpl;
 import daoImpl.DataManager;
 import daoImpl.PatientDAOImpl;
+import daoImpl.SpecialtyDAOImpl;
 import daoImpl.UserDAOImpl;
 import daoImpl.DoctorDAOImpl;
 
 @Configuration
 public class DAOConfig {
 	@Bean
-	public AppointmentDAOImpl Appointmentpository() {
+	public AppointmentDAOImpl appointmentsrepository() {
 		return new AppointmentDAOImpl();
 	}
 	
@@ -27,7 +28,7 @@ public class DAOConfig {
 	}
 	
 	@Bean
-	public DoctorDAOImpl doctorrepository() {
+	public DoctorDAOImpl doctorsrepository() {
 		return new DoctorDAOImpl();
 	}
 	
@@ -36,4 +37,9 @@ public class DAOConfig {
 		return new PatientDAOImpl();
 	}
 
+	@Bean
+	public SpecialtyDAOImpl specialtiesrepository() {
+		return new SpecialtyDAOImpl();
+	}
+	
 }

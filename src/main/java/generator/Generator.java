@@ -13,26 +13,23 @@ public class Generator {
 	
 	private static String DELIMITER = "\n**************************\n";
 	
-	//@Autowired
-	private SpecialtyGenerator specialties;
-	//@Autowired
-	private AppointmentGenerator appointments;
-	//@Autowired
-	private DoctorGenerator doctors;
 	@Autowired
-	private PatientGenerator patients;
+	private SpecialtyGenerator specialtyGenerator;
+	
+	@Autowired
+	private AppointmentGenerator appointmentGenerator;
+	
+	@Autowired
+	private DoctorGenerator doctorGenerator;
+	
+	@Autowired
+	private PatientGenerator patientGenerator;
 	
 	@Autowired
 	private UserGenerator userGenerator;
 
 	// TODO Reemplazar por beans.
-    public Generator() {
-    	specialties = new SpecialtyGenerator();
-    	appointments = new AppointmentGenerator();
-    	doctors = new DoctorGenerator();
-    	//patients = new PatientGenerator();
-    	// users = new UserGenerator();
-    }
+    public Generator() {}
     
     public void generate(int total) {
     	generate(total, false);
@@ -40,7 +37,7 @@ public class Generator {
     
     public void generate(int total, boolean logEveryRecord) {
 		System.out.println("Se guardarán los objetos Especialidad. ");
-		specialties.save();
+		specialtyGenerator.save();
 		System.out.println("Se generarán y guardarán " + total + " registros. ");
 
 		StringBuilder usersLog = new StringBuilder();
@@ -52,9 +49,9 @@ public class Generator {
 		for(int i = 0; i < total; i++) {
 			// Generar
 			User user = userGenerator.save();
-			Patient paciente = patients.save();
-			Doctor medico = doctors.save(user);
-			Appointment turno = appointments.saveforP6(paciente, medico);
+			Patient paciente = patientGenerator.save();
+			Doctor medico = doctorGenerator.save(user);
+			Appointment turno = appointmentGenerator.saveforP6(paciente, medico);
 			// Appointment turnoParaPunto3 = appointments.generateForDoctor1234(paciente);
 			
 			if(logEveryRecord) {

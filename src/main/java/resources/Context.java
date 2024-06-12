@@ -7,7 +7,8 @@ public class Context extends AnnotationConfigApplicationContext {
 		super(
 				DAOConfig.class,
 				LogicConfig.class,
-				GeneratorConfig.class
+				GeneratorConfig.class,
+				SpecialtiesDataConfig.class
 			);
 	}
 }

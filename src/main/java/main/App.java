@@ -18,14 +18,7 @@ public class App {
 	 * Función principal. 
 	 */
 	public void main() {
-    	// Carga datos
     	generateFakeRecords(10);
-    	
-    	// Beans
-    	//Doctor doctor = (Doctor) context.getBean("doctor");
-        //System.out.println(doctor.toString());
-        //Patient paciente = (Patient) context.getBean("paciente");
-        //System.out.println(paciente);
 	}
 	
     public static void main( String[] args ) {

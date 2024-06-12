@@ -14,6 +14,7 @@ import exceptions.NotFoundException;
 
 @Component
 public class PatientDAOImpl implements IPatientDAO {
+	
 	@Autowired
 	private DataManager dataManager;
 	

@@ -9,17 +9,16 @@ import com.github.javafaker.Faker;
 
 import generator.Generator;
 import generator.PatientGenerator;
+import generator.SpecialtyGenerator;
 import generator.UserGenerator;
-<<<<<<< HEAD
 import generator.AppointmentGenerator;
-=======
 import generator.DoctorGenerator;
->>>>>>> 253af795fa200d541d7ef1bf1130b0be0aa20edc
 
 @Configuration
 public class GeneratorConfig {
+	
 	@Bean
-	public AppointmentGenerator AppointmentGeneratorGenerator() {
+	public AppointmentGenerator appointmentGenerator() {
 		return new AppointmentGenerator();
 	}
 	
@@ -34,8 +33,13 @@ public class GeneratorConfig {
 	}
 	
 	@Bean
-	public DoctorGenerator DoctorGenerator() {
+	public DoctorGenerator doctorGenerator() {
 		return new DoctorGenerator();		
+	}
+	
+	@Bean
+	public SpecialtyGenerator specialtyGenerator() {
+		return new SpecialtyGenerator();
 	}
 
 	@Bean
@@ -53,8 +57,4 @@ public class GeneratorConfig {
 		return new Random();
 	}
 	
-	@Bean
-	public AppointmentGenerator AppointmentGenerator() {
-		return new AppointmentGenerator();
-	}
 }

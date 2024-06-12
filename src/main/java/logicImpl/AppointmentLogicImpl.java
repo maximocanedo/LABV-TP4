@@ -7,37 +7,36 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import dao.IAppointmentDAO;
-import daoImpl.AppointmentDAOImpl;
 import entity.*;
 import exceptions.NotFoundException;
 import logic.IAppointmentLogic;
+
 @Component
 public class AppointmentLogicImpl implements IAppointmentLogic {
+	
 	@Autowired
-	private IAppointmentDAO repository;
+	private IAppointmentDAO appointmentsrepository;
 
-	public AppointmentLogicImpl() {
-		this.repository = new AppointmentDAOImpl();
-	}
+	public AppointmentLogicImpl() {}
 	
 	@Override
     public void register(Appointment t) {
-		this.repository.add(t);
+		this.appointmentsrepository.add(t);
 	}
 	
 	@Override
     public Optional<Appointment> findById(int id) {
-		return this.repository.findById(id);
+		return this.appointmentsrepository.findById(id);
 	}
 	
 	@Override
     public List<Appointment> list(int page, int size) {
-		return this.repository.list(page, size);
+		return this.appointmentsrepository.list(page, size);
 	}
 	
 	@Override
     public List<Appointment> list() {
-		return this.repository.list();
+		return this.appointmentsrepository.list();
 	}
 
 	@Override
@@ -50,43 +49,43 @@ public class AppointmentLogicImpl implements IAppointmentLogic {
         if (turno.getStatus() != null) original.setStatus(turno.getStatus());
         if (turno.getAssignedDoctor() != null) original.setAssignedDoctor(turno.getAssignedDoctor());
         if (turno.getPatient() != null) original.setPatient(turno.getPatient());
-		this.repository.update(turno);
+		this.appointmentsrepository.update(turno);
 	}
 
 	@Override
 	public int countPresencesBetween(Date d1, Date d2) {
-		return this.repository.countPresencesBetween(d1, d2);
+		return this.appointmentsrepository.countPresencesBetween(d1, d2);
 	}
 
 	@Override
 	public int countAbsencesBetween(Date d1, Date d2) {
-		return this.repository.countAbsencesBetween(d1, d2);
+		return this.appointmentsrepository.countAbsencesBetween(d1, d2);
 	}
 
 	@Override
 	@Deprecated
 	public void erase(Appointment turno) {
-		repository.erase(turno);
+		appointmentsrepository.erase(turno);
 	}
 
 	@Override
 	public void enable(int id) throws NotFoundException {
-		repository.enable(id);
+		appointmentsrepository.enable(id);
 	}
 	
 	@Override
 	public void disable(int id) throws NotFoundException {
-		repository.disable(id);
+		appointmentsrepository.disable(id);
 	}
 
 	@Override
 	public Optional<Appointment> findById(int id, boolean includeInactives) {
-		return repository.findById(id, includeInactives);
+		return appointmentsrepository.findById(id, includeInactives);
 	}
 
 	@Override
 	public List<Appointment> list(int page, int size, boolean includeInactives) {
-		return repository.list(page, size, includeInactives);
+		return appointmentsrepository.list(page, size, includeInactives);
 	}
 	
 }

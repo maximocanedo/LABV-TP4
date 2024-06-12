@@ -17,9 +17,7 @@ public class AppointmentDAOImpl implements IAppointmentDAO {
 	@Autowired
 	private DataManager dataManager;
 	
-	public AppointmentDAOImpl() {
-		dataManager = new DataManager();
-	}
+	public AppointmentDAOImpl() {}
 	
 	@Override
     public void add(Appointment turno) {

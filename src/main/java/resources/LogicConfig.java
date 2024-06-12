@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 
 import logicImpl.AppointmentLogicImpl;
 import logicImpl.PatientLogicImpl;
+import logicImpl.SpecialtyLogicImpl;
 import logicImpl.UserLogicImpl;
 import logicImpl.DoctorLogicImpl;
 
@@ -12,9 +13,10 @@ import logicImpl.DoctorLogicImpl;
 public class LogicConfig {
 
 	@Bean
-	public AppointmentLogicImpl Appointment() {
+	public AppointmentLogicImpl appointments() {
 		return new AppointmentLogicImpl();
 	}
+	
 	@Bean
 	public UserLogicImpl users() {
 		return new UserLogicImpl();
@@ -28,6 +30,11 @@ public class LogicConfig {
 	@Bean
 	public DoctorLogicImpl doctors() {
 		return new DoctorLogicImpl();
+	}
+	
+	@Bean
+	public SpecialtyLogicImpl specialties() {
+		return new SpecialtyLogicImpl();
 	}
 	
 }

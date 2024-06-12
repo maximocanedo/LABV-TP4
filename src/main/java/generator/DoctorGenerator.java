@@ -18,20 +18,25 @@ import entity.Schedule;
 import entity.Specialty;
 import entity.User;
 import logic.IDoctorLogic;
-import logicImpl.DoctorLogicImpl;
+
 @Component
 public class DoctorGenerator implements IEntityGenerator<Doctor> {
 
 	@Autowired
     private IDoctorLogic medicos;
+	
 	@Autowired
 	private SpecialtyGenerator sg;
+	
 	@Autowired
 	private UserGenerator ug;
+	
 	@Autowired
 	private Random random;
+	
 	@Autowired
 	private Faker faker;
+	
 	public static boolean EXISTE_LEGAJO_1234 = false;
     
 	public DoctorGenerator() {}

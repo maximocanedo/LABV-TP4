@@ -3,19 +3,21 @@ package daoImpl;
 import java.util.List;
 
 import org.hibernate.Query;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import dao.ISpecialtyDAO;
 import entity.Optional;
 import exceptions.NotFoundException;
 import entity.Specialty;
 
+@Component
 public class SpecialtyDAOImpl implements ISpecialtyDAO {
 
+	@Autowired
 	private DataManager dataManager;
 	
-	public SpecialtyDAOImpl() {
-		dataManager = new DataManager();
-	}
+	public SpecialtyDAOImpl() {}
 	
     @Override
     public void add(Specialty record) {
