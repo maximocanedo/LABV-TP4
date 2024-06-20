@@ -4,6 +4,7 @@ import java.util.List;
 import entity.Optional;
 
 import entity.User;
+import exceptions.InvalidCredentialsException;
 import exceptions.NotFoundException;
 
 public interface IUserLogic {
@@ -21,6 +22,23 @@ public interface IUserLogic {
 	 * @return Objeto User, si las contraseñas no coinciden devuelve null.
 	 */
 	Optional<User> check(String username, String password);
+	
+	/**
+	 * Inicia sesión y devuelve un token de REFRESCO.
+	 * @param username Nombre de usuario.
+	 * @param password Contraseña.
+	 * @return Token de refresco.
+	 * @throws NotFoundException 
+	 * @throws InvalidCredentialsException 
+	 */
+	String login(String username, String password) throws InvalidCredentialsException, NotFoundException;
+	
+	/**
+	 * Renueva el token de acceso del usuario.
+	 * @param refreshToken Token de refresco.
+	 * @return Token de acceso renovado.
+	 */
+	String renewAccessToken(String refreshToken);
 
 	/**
 	 * Busca un usuario por su nombre de usuario.

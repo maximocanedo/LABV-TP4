@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import daoImpl.UserDAOImpl;
 import entity.User;
+import exceptions.InvalidCredentialsException;
 import exceptions.NotFoundException;
 import logic.IUserLogic;
 
@@ -17,6 +18,9 @@ public class UserLogicImpl implements IUserLogic {
 	
 	@Autowired
 	private UserDAOImpl usersrepository;
+	
+	@Autowired
+	private TicketLogicImpl tickets;
 	
 	public UserLogicImpl() {}
 	
@@ -53,6 +57,10 @@ public class UserLogicImpl implements IUserLogic {
 		}
 		return user;
 	}
+	
+	
+	
+	
 	
 	@Override
     public Optional<User> findByUsername(String username) {
@@ -108,6 +116,21 @@ public class UserLogicImpl implements IUserLogic {
 		if(user.getName() != null) original.setName(user.getName());
 		if(user.getDoctor() != null) original.setDoctor(user.getDoctor());
 		usersrepository.update(user);
+	}
+
+	@Override
+	public String login(String username, String password) throws InvalidCredentialsException, NotFoundException {
+		Optional<User> user = check(username, password);
+		if(user.isEmpty()) {
+			throw new InvalidCredentialsException();
+		}
+		return tickets.startToken(user.get().getUsername(), "Testing device", "Device #001");
+	}
+
+	@Override
+	public String renewAccessToken(String refreshToken) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

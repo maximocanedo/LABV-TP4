@@ -36,7 +36,7 @@ public class UserDAOImpl implements IUserDAO {
     public Optional<User> findByUsername(String username, boolean includeInactives) {
 		final Optional<User> cfUser = new Optional<User>(null);
 		dataManager.run(session -> {
-			String hql = "FROM User WHERE username = :username" + (includeInactives ? "" : " AND active");
+			String hql = "FROM User WHERE username = :username" + (includeInactives ? "" : " AND active = 1");
 	        Query query = session.createQuery(hql);
 	        query.setParameter("username", username);
 	        cfUser.set((User) query.uniqueResult());

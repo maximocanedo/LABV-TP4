@@ -7,6 +7,7 @@ import daoImpl.AppointmentDAOImpl;
 import daoImpl.DataManager;
 import daoImpl.PatientDAOImpl;
 import daoImpl.SpecialtyDAOImpl;
+import daoImpl.TicketDAOImpl;
 import daoImpl.UserDAOImpl;
 import daoImpl.DoctorDAOImpl;
 
@@ -15,6 +16,11 @@ public class DAOConfig {
 	@Bean
 	public AppointmentDAOImpl appointmentsrepository() {
 		return new AppointmentDAOImpl();
+	}
+	
+	@Bean
+	public TicketDAOImpl ticketsrepository() {
+		return new TicketDAOImpl();
 	}
 	
 	@Bean

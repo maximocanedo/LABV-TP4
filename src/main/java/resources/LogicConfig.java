@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import logicImpl.AppointmentLogicImpl;
 import logicImpl.PatientLogicImpl;
 import logicImpl.SpecialtyLogicImpl;
+import logicImpl.TicketLogicImpl;
 import logicImpl.UserLogicImpl;
 import logicImpl.DoctorLogicImpl;
 
@@ -15,6 +16,11 @@ public class LogicConfig {
 	@Bean
 	public AppointmentLogicImpl appointments() {
 		return new AppointmentLogicImpl();
+	}
+	
+	@Bean
+	public TicketLogicImpl tickets() {
+		return new TicketLogicImpl();
 	}
 	
 	@Bean
