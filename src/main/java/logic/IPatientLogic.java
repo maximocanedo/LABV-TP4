@@ -10,12 +10,12 @@ import exceptions.NotAllowedException;
 import exceptions.NotFoundException;
 
 public interface IPatientLogic {
-
+	
 	/**
 	 * Agrega un paciente a la base de datos.
 	 * @param paciente Datos del paciente a agregar. Debe contener la contraseña ya encriptada.
 	 */
-	void add(Patient paciente);
+	void add(Patient paciente, User requirinig);
 
 	/**
 	 * Obtiene un paciente por su id.
@@ -27,6 +27,54 @@ public interface IPatientLogic {
 	 * Obtiene un paciente por su id.
 	 * @param id. Id del paciente.
 	 */
+	Optional<Patient> findById(int id, boolean includeInactives, User requirinig);
+	
+	/**
+	 * Lista todos los pacientes de la base de datos, paginable.
+	 * @param page Número de página (De 1 en adelante)
+	 * @param size Cantidad de elementos.
+	 */
+	List<Patient> list(int page, int size, boolean includeInactives, User requirinig);
+
+	/**
+	 * Lista todos los pacientes de la base de datos, paginable.
+	 * @param page Número de página (De 1 en adelante)
+	 * @param size Cantidad de elementos.
+	 */
+	List<Patient> list(int page, int size, User requirinig);
+
+	/**
+	 * Lista todos los pacientes de la base de datos.
+	 */
+	List<Patient> list(User requirinig);
+
+	/**
+	 * Actualiza un paciente de la base de datos.
+	 * @param paciente Paciente con los datos a actualizar.
+	 */
+	void update(Patient paciente, User requirinig) throws NotFoundException;
+	
+	/**
+	 * Deshabilita un paciente de la base de datos.
+	 */
+	void disable(int id, User requirinig) throws NotFoundException;
+	
+	/**
+	 * Deshabilita un paciente de la base de datos.
+	 */
+	void enable(int id, User requirinig) throws NotFoundException;
+
+	/**
+	 * Agrega un paciente a la base de datos.
+	 * @param paciente Datos del paciente a agregar. Debe contener la contraseña ya encriptada.
+	 */
+	@Deprecated
+	void add(Patient paciente);
+
+	/**
+	 * Obtiene un paciente por su id.
+	 * @param id. Id del paciente.
+	 */
 	@Deprecated
 	Optional<Patient> findById(int id);
 	
@@ -34,6 +82,7 @@ public interface IPatientLogic {
 	 * Obtiene un paciente por su id.
 	 * @param id. Id del paciente.
 	 */
+	@Deprecated
 	Optional<Patient> findById(int id, boolean includeInactives);
 	
 	/**
@@ -41,6 +90,7 @@ public interface IPatientLogic {
 	 * @param page Número de página (De 1 en adelante)
 	 * @param size Cantidad de elementos.
 	 */
+	@Deprecated
 	List<Patient> list(int page, int size, boolean includeInactives);
 
 	/**
@@ -48,17 +98,20 @@ public interface IPatientLogic {
 	 * @param page Número de página (De 1 en adelante)
 	 * @param size Cantidad de elementos.
 	 */
+	@Deprecated
 	List<Patient> list(int page, int size);
 
 	/**
 	 * Lista todos los pacientes de la base de datos.
 	 */
+	@Deprecated
 	List<Patient> list();
 
 	/**
 	 * Actualiza un paciente de la base de datos.
 	 * @param paciente Paciente con los datos a actualizar.
 	 */
+	@Deprecated
 	void update(Patient paciente) throws NotFoundException;
 	
 	/**
@@ -71,11 +124,13 @@ public interface IPatientLogic {
 	/**
 	 * Deshabilita un paciente de la base de datos.
 	 */
+	@Deprecated
 	void disable(int id) throws NotFoundException;
 	
 	/**
 	 * Deshabilita un paciente de la base de datos.
 	 */
+	@Deprecated
 	void enable(int id) throws NotFoundException;
 
 }
