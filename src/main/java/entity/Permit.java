@@ -8,9 +8,10 @@ public enum Permit {
 	DISABLE_SPECIALTY,
 	ENABLE_SPECIALTY,
 	// Paciente
+	// TODO: Funcionalidad y permisos para leer registros eliminados lógicamente.
 	CREATE_PATIENT,
 	READ_PATIENT_PERSONAL_DATA, // Para listados y búsqueda específica.
-	READ_PATIENT_APPOINTMENTS,
+	READ_PATIENT_APPOINTMENTS, // TODO: Crear funcionalidad de listado de turnos por paciente.
 	UPDATE_PATIENT,
 	DISABLE_PATIENT,
 	ENABLE_PATIENT,
@@ -33,6 +34,8 @@ public enum Permit {
 	// User
 	ASSIGN_DOCTOR, // Reconsiderar
 	RESET_PASSWORD,
+	UPDATE_USER_DATA,
+	DELETE_OR_ENABLE_USER,
 	READ_USER_DATA,
 	// Ticket
 	READ_USER_SESSIONS,

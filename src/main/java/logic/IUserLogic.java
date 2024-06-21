@@ -33,55 +33,49 @@ public interface IUserLogic {
 	 */
 	String login(String username, String password) throws InvalidCredentialsException, NotFoundException;
 	
-	/**
-	 * Renueva el token de acceso del usuario.
-	 * @param refreshToken Token de refresco.
-	 * @return Token de acceso renovado.
-	 */
-	String renewAccessToken(String refreshToken);
 
 	/**
 	 * Busca un usuario por su nombre de usuario.
 	 * @param username Nombre de usuario
 	 */
-	Optional<User> findByUsername(String username);
+	Optional<User> findByUsername(String username, User requiring);
 	
 	/**
 	 * Busca un usuario por su nombre de usuario.
 	 * @param username Nombre de usuario
 	 */
-	Optional<User> findByUsername(String username, boolean includeInactives);
+	Optional<User> findByUsername(String username, boolean includeInactives, User requiring);
 
 	/**
 	 * Deshabilita un usuario.
 	 * @param user Usuario a deshabilitar.
 	 */
-	void disable(User user) throws NotFoundException;
+	void disable(User user, User requiring) throws NotFoundException;
 
 	/**
 	 * Habilita un usuario.
 	 * @param user Usuario a habilitar.
 	 */
-	void enable(User user) throws NotFoundException;
+	void enable(User user, User requiring) throws NotFoundException;
 
 	/**
 	 * Lista todos los usuarios de la base de datos.
 	 * @param page Número de página (De 1 en adelante)
 	 * @param size Cantidad de elementos.
 	 */
-	List<User> list(int page, int size, boolean includeInactives);
+	List<User> list(int page, int size, boolean includeInactives, User requiring);
 
 	/**
 	 * Lista todos los usuarios de la base de datos.
 	 * @param page Número de página (De 1 en adelante)
 	 * @param size Cantidad de elementos.
 	 */
-	List<User> list(int page, int size);
+	List<User> list(int page, int size, User requiring);
 
 	/**
 	 * Lista todos los usuarios de la base de datos.
 	 */
-	List<User> list();
+	List<User> list(User requiring);
 
 	/**
 	 * Cambia la contraseña de un usuario sólo si la contraseña ingresada coincide con la actual.
@@ -91,10 +85,80 @@ public interface IUserLogic {
 	 */
 	void changePassword(String username, String currentPassword, String newPassword) throws NotFoundException;
 	
+
+	/**
+	 * Cambia la contraseña de un usuario sólo si la contraseña ingresada coincide con la actual.
+	 * @param username Nombre de usuario.
+	 * @param currentPassword Contraseña actual.
+	 * @param newPassword Nueva contraseña.
+	 */
+	void changePassword(String username, String newPassword, User requiring) throws NotFoundException;
+	
 	/**
 	 * Actualiza los datos (Salvo la contraseña) del usuario.
 	 * @param user Usuario con los datos a actualizar.
 	 */
+	void update(User user, User requiring) throws NotFoundException;
+	
+	
+	
+	/** # Deprecated methods **/
+	
+	/**
+	 * Busca un usuario por su nombre de usuario.
+	 * @param username Nombre de usuario
+	 */
+	@Deprecated
+	Optional<User> findByUsername(String username);
+	
+	/**
+	 * Busca un usuario por su nombre de usuario.
+	 * @param username Nombre de usuario
+	 */
+	@Deprecated
+	Optional<User> findByUsername(String username, boolean includeInactives);
+
+	/**
+	 * Deshabilita un usuario.
+	 * @param user Usuario a deshabilitar.
+	 */
+	@Deprecated
+	void disable(User user) throws NotFoundException;
+
+	/**
+	 * Habilita un usuario.
+	 * @param user Usuario a habilitar.
+	 */
+	@Deprecated
+	void enable(User user) throws NotFoundException;
+
+	/**
+	 * Lista todos los usuarios de la base de datos.
+	 * @param page Número de página (De 1 en adelante)
+	 * @param size Cantidad de elementos.
+	 */
+	@Deprecated
+	List<User> list(int page, int size, boolean includeInactives);
+
+	/**
+	 * Lista todos los usuarios de la base de datos.
+	 * @param page Número de página (De 1 en adelante)
+	 * @param size Cantidad de elementos.
+	 */
+	@Deprecated
+	List<User> list(int page, int size);
+
+	/**
+	 * Lista todos los usuarios de la base de datos.
+	 */
+	@Deprecated
+	List<User> list();
+	
+	/**
+	 * Actualiza los datos (Salvo la contraseña) del usuario.
+	 * @param user Usuario con los datos a actualizar.
+	 */
+	@Deprecated
 	void update(User user) throws NotFoundException;
 
 }
