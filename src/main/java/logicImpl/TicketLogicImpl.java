@@ -15,9 +15,11 @@ import entity.User;
 import exceptions.InvalidTokenException;
 import exceptions.NotFoundException;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 
 @Component
 public class TicketLogicImpl {
@@ -78,43 +80,59 @@ public class TicketLogicImpl {
     
     public String startToken(String username, String deviceAgent, String deviceIdentifier) throws NotFoundException {
     	Ticket ticket = startSession(username, deviceAgent, deviceIdentifier);
+    	//System.out.println("Ticket de startToken: \n" + ticket);
     	return generateToken(ticket);
     }
 
-    public Ticket validateRefreshToken(String token) {
-        Claims claims = Jwts.parser()
-                .verifyWith(this.getSessionKey())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
-
-        Date expiration = claims.getExpiration();
-        int id = claims.get("sessionId", int.class);
-
-        Optional<Ticket> optionalTicket = ticketsrepository.getById(id);
+    public Ticket validateTokenId(int id) {
+    	Optional<Ticket> optionalTicket = ticketsrepository.getById(id);
+    	//System.out.println(optionalTicket.get());
         if(optionalTicket.isEmpty())
             throw new InvalidTokenException("Referenced session info doesn't exist.");
         Ticket ticket = optionalTicket.get();
+        if(!ticket.isActive())
+            throw new InvalidTokenException("Session was closed.");
+        return ticket;
+    }
+    
+    
+    public Ticket validateRefreshToken(String token) {
+    	JwtParser builder = Jwts.parser()
+    			.verifyWith(this.getSessionKey())
+                .build();
+                
+        Claims claims = null;
+        
+	    try {
+	    	claims = builder
+	        		.parseSignedClaims(token)
+	                .getPayload();
+	    } catch (SignatureException e) {
+	    	throw new InvalidTokenException();
+	    }
+
+        Date expiration = claims.getExpiration();
+        int id = claims.get("sessionId", java.lang.Integer.class);
+
+        Ticket ticket = validateTokenId(id);
         User user = ticket.getUser();
 
         if(System.currentTimeMillis() > expiration.getTime())
             throw new InvalidTokenException("Session expired.");
         if(!user.isActive())
             throw new InvalidTokenException("User trying to authenticate does not exist.");
-        if(!ticket.isActive())
-            throw new InvalidTokenException("Session was closed.");
 
         return ticket;
     }
 	
     public String generateAccessToken(String refreshToken) {
-        User user = validateRefreshToken(refreshToken).getUser();
+        Ticket ticket = validateRefreshToken(refreshToken);
         long currentTime = System.currentTimeMillis();
         Date now = new Date(currentTime);
-        long expMillis = currentTime + (5 * 60 * 1000);
+        long expMillis = currentTime + (10 * 60 * 1000);
         Date exp = new Date(expMillis);
         return Jwts.builder()
-                .subject(user.getUsername())
+                .subject(ticket.getId() + "")
                 .issuedAt(now)
                 .expiration(exp)
                 .signWith(this.getSessionKey())
@@ -127,14 +145,15 @@ public class TicketLogicImpl {
                 .build()
                 .parseSignedClaims(accessToken)
                 .getPayload();
-        String username = (claims.getSubject());
-        Optional<User> optionalUser = usersrepository.findByUsername(username);
-        if(optionalUser.isEmpty())
-            throw new InvalidTokenException("User trying to authenticate does not exist.");
+        int id = Integer.parseInt(claims.getSubject());
+        Optional<Ticket> optionalTicket = ticketsrepository.getById(id);
+        if(optionalTicket.isEmpty())
+        	throw new InvalidTokenException("Session was closed.");
+        Ticket ticket = optionalTicket.get();
         Date exp = claims.getExpiration();
         if(System.currentTimeMillis() > exp.getTime())
             throw new InvalidTokenException("Session expired.");
-        return optionalUser.get();
+        return ticket.getUser();
     }
     
 }

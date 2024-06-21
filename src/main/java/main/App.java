@@ -1,9 +1,6 @@
 package main;
 
-import entity.Optional;
 import entity.User;
-import exceptions.InvalidCredentialsException;
-import exceptions.NotFoundException;
 import generator.Generator;
 import logicImpl.TicketLogicImpl;
 import logicImpl.UserLogicImpl;
@@ -33,17 +30,21 @@ public class App {
 		//String n = "GoogleChrome";
 		//String s = "HI32UH42I3U2OP/34";
 		
-		String e = "";
+		String refreshToken = "";
+		String accessToken = "";
 		try {
-			e = users.login(username, password);
-		} catch (InvalidCredentialsException e1) {
-			// TODO Auto-generated catch block
+			//refreshToken = users.login(username, password);
+			accessToken = "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIzIiwiaWF0IjoxNzE4OTY2NDE0LCJleHAiOjE3MTg5NjcwMTR9.SqKSKgHZWIeK2IPWIE-FXsMIwf0F9m5IUaRwUGPbQ9VvFv9bdT7nQNxWFW4wl1PH";
+			//tickets.generateAccessToken(refreshToken);
+			User u = tickets.validateAccessToken(accessToken);
+			System.out.println(u);
+		} catch (Exception e1) {
 			e1.printStackTrace();
-		} catch (NotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}	
-		System.out.println(e);
+		}
+	
+		System.out.println(
+			"Refresh token: " + refreshToken + "\nAccess Token: " + accessToken
+		);
 		
     	//generateFakeRecords(10);
 	}

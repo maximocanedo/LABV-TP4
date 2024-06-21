@@ -5,7 +5,12 @@ import java.util.Objects;
 
 import javax.persistence.*;
 
+import formatter.Card;
+import formatter.Format;
+import formatter.Formatter;
+
 @Entity
+@Card(name = "Sesión", size = 36)
 @Table(name = "tickets")
 public class Ticket {
 
@@ -21,8 +26,9 @@ public class Ticket {
     public Ticket() {}
 
     @Id
+    @Format(label = "ID N.º")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="sessionId")
+    @Column(name="id")
     public int getId() {
         return id;
     }
@@ -31,7 +37,7 @@ public class Ticket {
     }
 
     @ManyToOne
-    @JoinColumn(name="id")
+    @JoinColumn(name="user")
     public User getUser() {
         return user;
     }
@@ -39,6 +45,7 @@ public class Ticket {
         this.user = user;
     }
 
+    @Format(label = "Estado", whenTrue = "Activo", whenFalse = "Inactivo")
     @Column(name="active")
     public boolean isActive() {
         return active;
@@ -47,6 +54,7 @@ public class Ticket {
         this.active = active;
     }
 
+    @Format(label = "Expira")
     @Column(name="expirationDate")
     public Date getExpirationDate() {
         return expirationDate;
@@ -55,6 +63,7 @@ public class Ticket {
         this.expirationDate = expirationDate;
     }
 
+    @Format(label = "ID del dispositivo")
     @Column(name="deviceIdentifier")
     public String getDeviceIdentifier() {
         return deviceIdentifier;
@@ -63,6 +72,7 @@ public class Ticket {
         this.deviceIdentifier = deviceIdentifier;
     }
 
+    @Format(label = "Agente")
     @Column(name="deviceAgent")
     public String getDeviceAgent() {
         return deviceAgent;
@@ -71,6 +81,7 @@ public class Ticket {
         this.deviceAgent = deviceAgent;
     }
 
+    @Format(omitLabel = true, prefix = "Versión ")
     @Column(name="version")
     public int getVersion() {
         return version;
@@ -87,6 +98,11 @@ public class Ticket {
         this.creationDate = creationDate;
     }
 
+    @Override
+    public String toString() {
+    	return Formatter.of(this).toString();
+    }
+    
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
