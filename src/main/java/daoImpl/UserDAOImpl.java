@@ -55,7 +55,7 @@ public class UserDAOImpl implements IUserDAO {
 	public List<User> list(int page, int size, boolean includeInactives) {
 		final Optional<List<User>> cfList = new Optional<List<User>>();
 		dataManager.run(session -> {
-			String sqlQuery = "SELECT username, null as password, name, active FROM users" + (includeInactives ? "" : " AND active");
+			String sqlQuery = "SELECT username, null as password, name, active FROM users" + (includeInactives ? "" : " AND active = 1");
 	        Query q = session.createSQLQuery(sqlQuery).addEntity(User.class);
 			q.setFirstResult((page - 1) * size);
             q.setMaxResults(size);

@@ -213,7 +213,7 @@ public class TicketLogicImpl implements ITicketLogic {
 	public void logout(int id, User requiring) {
     	Ticket ticket = validateTokenId(id);
     	if(ticket.getUser().getUsername() != requiring.getUsername()) 
-    		permits.allow(requiring, Permit.CLOSE_USER_SESSIONS);
+    		permits.require(requiring, Permit.CLOSE_USER_SESSIONS);
     	ticketsrepository.logout(id);
     }
     
@@ -223,7 +223,7 @@ public class TicketLogicImpl implements ITicketLogic {
     @Override
 	public void closeAllSessions(User target, User requiring) {
     	if(target.getUsername() != requiring.getUsername()) 
-    		permits.allow(requiring, Permit.CLOSE_USER_SESSIONS);
+    		permits.require(requiring, Permit.CLOSE_USER_SESSIONS);
     	ticketsrepository.closeAllSessions(target);
     }
     
@@ -233,7 +233,7 @@ public class TicketLogicImpl implements ITicketLogic {
     @Override
 	public void closeAllSessions(String username, User requiring) {
     	if(username != requiring.getUsername()) 
-    		permits.allow(requiring, Permit.CLOSE_USER_SESSIONS);
+    		permits.require(requiring, Permit.CLOSE_USER_SESSIONS);
     	ticketsrepository.closeAllSessions(username);
     }
     

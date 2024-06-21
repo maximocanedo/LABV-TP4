@@ -63,12 +63,13 @@ public class UserLogicImpl implements IUserLogic {
 	@Override
     public Optional<User> check(String username, String password) {
 		Optional<User> user = usersrepository.findByUsername(username);
-		if(user.isEmpty()) return user;
+		if(user.isEmpty()) throw new InvalidCredentialsException();
 		User u = user.get();
 		if(BCrypt.checkpw(password, u.getPassword())) {
 			user.set(hideSensitiveData(u));
+			return user;
 		}
-		return user;
+		throw new InvalidCredentialsException();
 	}
 	
 	@Override
@@ -152,7 +153,7 @@ public class UserLogicImpl implements IUserLogic {
 		Optional<User> user = check(username, password);
 		if(user.isEmpty()) {
 			throw new InvalidCredentialsException();
-		}
+		} 
 		return tickets.startToken(user.get().getUsername(), "Testing device", "Device #001");
 	}
 	
