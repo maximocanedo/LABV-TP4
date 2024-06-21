@@ -9,6 +9,9 @@ import entity.Optional;
 
 import dao.IPatientDAO;
 import entity.Patient;
+import entity.Permit;
+import entity.User;
+import exceptions.NotAllowedException;
 import exceptions.NotFoundException;
 import logic.IPatientLogic;
 
@@ -17,6 +20,9 @@ public class PatientLogicImpl implements IPatientLogic {
 	
 	@Autowired
 	private IPatientDAO patientsrepository;
+	
+	@Autowired
+	private UserPermitLogicImpl permits;
 	
 	public PatientLogicImpl() {}
 	
@@ -27,6 +33,12 @@ public class PatientLogicImpl implements IPatientLogic {
 	
 	@Override
 	public Optional<Patient> findById(int id) {
+		return patientsrepository.findById(id);
+	}
+	
+	@Override
+	public Optional<Patient> findById(int id, User requiring) throws NotAllowedException {
+		permits.require(requiring, Permit.READ_PATIENT_PERSONAL_DATA);
 		return patientsrepository.findById(id);
 	}
 	

@@ -5,6 +5,8 @@ import java.util.List;
 import entity.Optional;
 
 import entity.Patient;
+import entity.User;
+import exceptions.NotAllowedException;
 import exceptions.NotFoundException;
 
 public interface IPatientLogic {
@@ -19,6 +21,13 @@ public interface IPatientLogic {
 	 * Obtiene un paciente por su id.
 	 * @param id. Id del paciente.
 	 */
+	Optional<Patient> findById(int id, User requiring) throws NotAllowedException;
+	
+	/**
+	 * Obtiene un paciente por su id.
+	 * @param id. Id del paciente.
+	 */
+	@Deprecated
 	Optional<Patient> findById(int id);
 	
 	/**

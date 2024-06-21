@@ -2,8 +2,7 @@ package daoImpl;
 
 import java.util.List;
 
-
-import org.hibernate.*;
+import org.hibernate.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -36,7 +35,7 @@ public class PatientDAOImpl implements IPatientDAO {
 	public Optional<Patient> findById(int id, boolean includeInactives) {
 		final Optional<Patient> cfUser = new Optional<Patient>();
 		dataManager.run(session -> {
-			String hql = "FROM Patient WHERE id = :id" + (includeInactives ? "" : " AND active");
+			String hql = "FROM Patient WHERE id = :id" + (includeInactives ? "" : " AND active = 1");
 	        Query query = session.createQuery(hql);
 	        query.setParameter("id", id);
 	        cfUser.set((Patient) query.uniqueResult());
@@ -59,7 +58,7 @@ public class PatientDAOImpl implements IPatientDAO {
 	public List<Patient> list(int page, int size, boolean includeInactives) {
 		final Optional<List<Patient>> cfList = new Optional<List<Patient>>();
 		dataManager.run(session -> {
-			String hql = "FROM Patient" + (includeInactives ? "" : " WHERE active");
+			String hql = "FROM Patient" + (includeInactives ? "" : " WHERE active = 1");
 			Query query = session.createQuery(hql);
             query.setFirstResult((page - 1) * size);
             query.setMaxResults(size);

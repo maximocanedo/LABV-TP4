@@ -48,7 +48,7 @@ public class User {
 		return this.active;
 	}
 
-	@OneToOne(mappedBy="user")
+	@OneToOne(mappedBy="user", optional = true)
 	public Doctor getDoctor() {
 		return doctor;
 	}

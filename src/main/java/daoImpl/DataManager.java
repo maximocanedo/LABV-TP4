@@ -21,9 +21,8 @@ public class DataManager implements IDataManager {
 			configuration.configure();
 			ServiceRegistry serviceRegistry = new ServiceRegistryBuilder().applySettings(configuration.getProperties()).buildServiceRegistry();
 			sessionFactory = configuration.buildSessionFactory(serviceRegistry);
-			
 		} catch(Exception e) {
-			
+			e.printStackTrace();
 		}
 	}
 

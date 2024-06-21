@@ -1,9 +1,14 @@
 package main;
 
+import entity.Optional;
+import entity.Patient;
+import entity.Permit;
 import entity.User;
 import generator.Generator;
+import logicImpl.PatientLogicImpl;
 import logicImpl.TicketLogicImpl;
 import logicImpl.UserLogicImpl;
+import logicImpl.UserPermitLogicImpl;
 import resources.Context;
 
 public class App {
@@ -12,6 +17,8 @@ public class App {
 	private Context context;
 	private TicketLogicImpl tickets;
 	private UserLogicImpl users;
+	private PatientLogicImpl patients;
+	private UserPermitLogicImpl permits;
 	
 	// Constructor, no usar como main. 
 	public App() {
@@ -19,6 +26,8 @@ public class App {
 		generator = context.getBean(Generator.class);
 		tickets = context.getBean(TicketLogicImpl.class);
 		users = context.getBean(UserLogicImpl.class);
+		patients = context.getBean(PatientLogicImpl.class);
+		permits = context.getBean(UserPermitLogicImpl.class);
 	}
 
 	/**
@@ -27,16 +36,17 @@ public class App {
 	public void main() {
 		String username = "abe.bogan";
 		String password = "12345678";
-		//String n = "GoogleChrome";
-		//String s = "HI32UH42I3U2OP/34";
+		permits.reject(username, Permit.READ_PATIENT_PERSONAL_DATA);
 		
 		String refreshToken = "";
 		String accessToken = "";
 		try {
-			//refreshToken = users.login(username, password);
-			accessToken = "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIzIiwiaWF0IjoxNzE4OTY2NDE0LCJleHAiOjE3MTg5NjcwMTR9.SqKSKgHZWIeK2IPWIE-FXsMIwf0F9m5IUaRwUGPbQ9VvFv9bdT7nQNxWFW4wl1PH";
-			//tickets.generateAccessToken(refreshToken);
+			refreshToken = users.login(username, password);
+			//accessToken = "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIzIiwiaWF0IjoxNzE4OTY2NDE0LCJleHAiOjE3MTg5NjcwMTR9.SqKSKgHZWIeK2IPWIE-FXsMIwf0F9m5IUaRwUGPbQ9VvFv9bdT7nQNxWFW4wl1PH";
+			accessToken = tickets.generateAccessToken(refreshToken);
 			User u = tickets.validateAccessToken(accessToken);
+			Optional<Patient> p = patients.findById(1, u);
+			if(p.isPresent()) System.out.println(p.get());
 			System.out.println(u);
 		} catch (Exception e1) {
 			e1.printStackTrace();

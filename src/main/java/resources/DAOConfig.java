@@ -5,14 +5,16 @@ import org.springframework.context.annotation.Configuration;
 
 import daoImpl.AppointmentDAOImpl;
 import daoImpl.DataManager;
+import daoImpl.DoctorDAOImpl;
 import daoImpl.PatientDAOImpl;
 import daoImpl.SpecialtyDAOImpl;
 import daoImpl.TicketDAOImpl;
 import daoImpl.UserDAOImpl;
-import daoImpl.DoctorDAOImpl;
+import daoImpl.UserPermitDAOImpl;
 
 @Configuration
 public class DAOConfig {
+		
 	@Bean
 	public AppointmentDAOImpl appointmentsrepository() {
 		return new AppointmentDAOImpl();
@@ -31,6 +33,11 @@ public class DAOConfig {
 	@Bean
 	public UserDAOImpl usersrepository() {
 		return new UserDAOImpl();
+	}
+	
+	@Bean
+	public UserPermitDAOImpl userpermitsrepository() {
+		return new UserPermitDAOImpl();
 	}
 	
 	@Bean
