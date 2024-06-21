@@ -37,7 +37,7 @@ public class App {
 	public void main() {
 		String username = "abe.bogan";
 		String password = "12345678";
-		permits.reject(username, Permit.READ_PATIENT_PERSONAL_DATA);
+		permits.reject(username, Permit.DISABLE_PATIENT);
 		
 		String refreshToken = "";
 		String accessToken = "";
@@ -46,16 +46,16 @@ public class App {
 			//accessToken = "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIzIiwiaWF0IjoxNzE4OTY2NDE0LCJleHAiOjE3MTg5NjcwMTR9.SqKSKgHZWIeK2IPWIE-FXsMIwf0F9m5IUaRwUGPbQ9VvFv9bdT7nQNxWFW4wl1PH";
 			accessToken = tickets.generateAccessToken(refreshToken);
 			User u = tickets.validateAccessToken(accessToken);
-			Optional<Patient> p = patients.findById(1, u);
-			if(p.isPresent()) System.out.println(p.get());
+			patients.disable(1, u);
+			//if(p.isPresent()) System.out.println(p.get());
 			System.out.println(u);
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
 	
-		System.out.println(
+		/*System.out.println(
 			"Refresh token: " + refreshToken + "\nAccess Token: " + accessToken
-		);
+		);*/
 		
     	//generateFakeRecords(10);
 	}

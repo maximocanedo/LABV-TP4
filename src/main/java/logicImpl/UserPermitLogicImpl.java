@@ -13,6 +13,7 @@ import entity.User;
 import entity.UserPermit;
 import exceptions.NotAllowedException;
 import exceptions.NotFoundException;
+import generator.PermitTemplate;
 import logic.IUserPermitLogic;
 
 @Component
@@ -37,7 +38,7 @@ public class UserPermitLogicImpl implements IUserPermitLogic {
 		Optional<User> us = usersrepository.findByUsername(username);
 		if(us.isEmpty()) throw new NotFoundException("User not found. ");
 		User user = us.get();
-		System.out.println(perm.get());
+		//System.out.println(perm.get());
 		if(perm.isEmpty()) {
 			UserPermit p = new UserPermit();
 			p.setUser(user);
@@ -132,6 +133,31 @@ public class UserPermitLogicImpl implements IUserPermitLogic {
 			throw new NotAllowedException(permit);
 	}
 	
+	public void grant(String username, PermitTemplate template, User requiring) {
+		for(Permit permit : template.getPermits()) {
+			allow(username, permit, requiring);
+		}
+	}
+	
+	public void grant(User user, PermitTemplate template, User requiring) {
+		for(Permit permit : template.getPermits()) {
+			allow(user, permit, requiring);
+		}
+	}
+	
+	public int revokeAll(String username, User requiring) {
+		if(username != requiring.getUsername())
+			require(requiring, Permit.GRANT_PERMISSIONS);
+		return userpermitsrepository.revokeAll(username);
+	}
+	
+
+	public int revokeAll(User target, User requiring) {
+		if(target.getUsername() != requiring.getUsername())
+			require(requiring, Permit.GRANT_PERMISSIONS);
+		return userpermitsrepository.revokeAll(target);
+	}
+	
 	/** # Deprecated methods **/
 	
 	/* (non-Javadoc)
@@ -144,7 +170,7 @@ public class UserPermitLogicImpl implements IUserPermitLogic {
 		Optional<User> us = usersrepository.findByUsername(username);
 		if(us.isEmpty()) throw new NotFoundException("User not found. ");
 		User user = us.get();
-		System.out.println(perm.get());
+		//System.out.println(perm.get());
 		if(perm.isEmpty()) {
 			UserPermit p = new UserPermit();
 			p.setUser(user);

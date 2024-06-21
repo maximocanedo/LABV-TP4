@@ -21,10 +21,11 @@ public class UserDAOImpl implements IUserDAO {
 	public UserDAOImpl() {}
 		
 	@Override
-	public void add(User user) {
+	public User add(User user) {
 		dataManager.transact(session -> {
 			session.save(user);
 		});
+		return user;
     }
 	
 	@Override
@@ -64,10 +65,11 @@ public class UserDAOImpl implements IUserDAO {
     }
 	
 	@Override
-    public void update(User user) {
+    public User update(User user) {
 		dataManager.transact(session -> {
 			session.update(user);
 		});
+		return user;
 	}
 	
 	@Override

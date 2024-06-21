@@ -12,6 +12,7 @@ import daoImpl.UserDAOImpl;
 import entity.User;
 import exceptions.InvalidCredentialsException;
 import exceptions.NotFoundException;
+import generator.PermitTemplate;
 import logic.ITicketLogic;
 import logic.IUserLogic;
 
@@ -34,10 +35,17 @@ public class UserLogicImpl implements IUserLogic {
 	}
 	
 	@Override
-    public void signup(User user) {
+    public User signup(User user) {
 		String clearPassword = user.getPassword();
 		user.setPassword(hash(clearPassword));
-		usersrepository.add(user);
+		return usersrepository.add(user);
+	}
+	
+	@Override
+    public User signup(User user, PermitTemplate template, User requiring) {
+		User newUser = signup(user);
+		permits.grant(user, template, requiring);
+		return newUser;
 	}
 	
 	private User hideSensitiveData(User user) {
@@ -128,7 +136,7 @@ public class UserLogicImpl implements IUserLogic {
 	}
 	
 	@Override
-    public void update(User user, User requiring) throws NotFoundException {
+    public User update(User user, User requiring) throws NotFoundException {
 		if(requiring.getUsername() != user.getUsername())
 			permits.require(requiring, Permit.UPDATE_USER_DATA);
 		Optional<User> search = usersrepository.findByUsername(user.getUsername());
@@ -136,7 +144,7 @@ public class UserLogicImpl implements IUserLogic {
 		User original = search.get();
 		if(user.getName() != null) original.setName(user.getName());
 		if(user.getDoctor() != null) original.setDoctor(user.getDoctor());
-		usersrepository.update(user);
+		return usersrepository.update(user);
 	}
 
 	@Override

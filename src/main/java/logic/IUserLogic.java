@@ -6,14 +6,18 @@ import entity.Optional;
 import entity.User;
 import exceptions.InvalidCredentialsException;
 import exceptions.NotFoundException;
+import generator.PermitTemplate;
 
 public interface IUserLogic {
 
 	/**
 	 * Registra una cuenta de usuario.
 	 * @param user Datos del usuario a agregar.
+	 * @return 
 	 */
-	void signup(User user);
+	User signup(User user);
+	
+	User signup(User user, PermitTemplate template, User requiring);
 
 	/**
 	 * Revisa si existe un usuario con el nombre de usuario indicado y compara su contraseña con la indicada.
@@ -98,7 +102,7 @@ public interface IUserLogic {
 	 * Actualiza los datos (Salvo la contraseña) del usuario.
 	 * @param user Usuario con los datos a actualizar.
 	 */
-	void update(User user, User requiring) throws NotFoundException;
+	User update(User user, User requiring) throws NotFoundException;
 	
 	
 	
@@ -160,5 +164,6 @@ public interface IUserLogic {
 	 */
 	@Deprecated
 	void update(User user) throws NotFoundException;
+
 
 }

@@ -16,12 +16,12 @@ public class NotAllowedException extends CommonException {
 		for(Permit p : permits) {
 			o += "\n · " + p.toString();
 		}
-		this.setMessage("You lack the following permissions: " + o);
+		this.setDescription("You lack the following permissions: " + o);
     }
 	
 	public NotAllowedException(Permit permit) {
 		this();
-		this.setMessage("You lack the " + permit.toString() + " permission. ");
+		this.setDescription("You lack the " + permit.toString() + " permission. ");
     }
 	
     public NotAllowedException(String message) {

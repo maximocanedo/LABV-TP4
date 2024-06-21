@@ -12,7 +12,7 @@ public interface IUserDAO {
 	 * Agrega un usuario a la base de datos.
 	 * @param user Datos del usuario a agregar. Debe contener la contraseña ya encriptada.
 	 */
-	void add(User user);
+	User add(User user);
 
 	/**
 	 * Obtiene un usuario por su nombre de usuario.
@@ -52,8 +52,9 @@ public interface IUserDAO {
 	/**
 	 * Actualiza un usuario de la base de datos.
 	 * @param user Usuario con los datos a actualizar.
+	 * @return 
 	 */
-	void update(User user);
+	User update(User user);
 
 	/**
 	 * Elimina permanentemente un usuario de la base de datos.

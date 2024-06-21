@@ -25,4 +25,8 @@ public interface IUserPermitDAO {
 
 	List<UserPermit> list(User user);
 
+	int revokeAll(String username);
+	
+	int revokeAll(User user);
+
 }

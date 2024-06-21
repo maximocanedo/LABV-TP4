@@ -116,4 +116,24 @@ public class UserPermitDAOImpl implements IUserPermitDAO {
 		return list(user.getUsername());
 	}
 	
+	@Override
+	public int revokeAll(String username) {
+		Optional<Integer> opt = new Optional<Integer>(0);
+	    dataManager.run(session -> {
+	        String hql = "UPDATE UserPermit u SET u.allowed = :allowed WHERE u.user.username = :username";
+	        Query query = session.createQuery(hql);
+	        query.setParameter("allowed", false);
+	        query.setParameter("username", username);
+
+	        opt.set(query.executeUpdate());
+	    });
+	    return opt.get();
+	}
+
+	@Override
+	public int revokeAll(User user) {
+		return revokeAll(user.getUsername());
+	}
+	
+	
 }
