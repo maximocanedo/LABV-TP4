@@ -5,6 +5,7 @@ import entity.Patient;
 import entity.Permit;
 import entity.User;
 import generator.Generator;
+import logic.ITicketLogic;
 import logicImpl.PatientLogicImpl;
 import logicImpl.TicketLogicImpl;
 import logicImpl.UserLogicImpl;
@@ -15,7 +16,7 @@ public class App {
 	
 	private Generator generator;
 	private Context context;
-	private TicketLogicImpl tickets;
+	private ITicketLogic tickets;
 	private UserLogicImpl users;
 	private PatientLogicImpl patients;
 	private UserPermitLogicImpl permits;

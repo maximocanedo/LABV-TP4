@@ -3,6 +3,7 @@ package resources;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import logic.ITicketLogic;
 import logic.IUserPermitLogic;
 import logicImpl.AppointmentLogicImpl;
 import logicImpl.PatientLogicImpl;
@@ -21,7 +22,7 @@ public class LogicConfig {
 	}
 	
 	@Bean
-	public TicketLogicImpl tickets() {
+	public ITicketLogic tickets() {
 		return new TicketLogicImpl();
 	}
 	

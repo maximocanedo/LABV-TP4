@@ -11,6 +11,7 @@ import daoImpl.UserDAOImpl;
 import entity.User;
 import exceptions.InvalidCredentialsException;
 import exceptions.NotFoundException;
+import logic.ITicketLogic;
 import logic.IUserLogic;
 
 @Component
@@ -20,7 +21,7 @@ public class UserLogicImpl implements IUserLogic {
 	private UserDAOImpl usersrepository;
 	
 	@Autowired
-	private TicketLogicImpl tickets;
+	private ITicketLogic tickets;
 	
 	public UserLogicImpl() {}
 	

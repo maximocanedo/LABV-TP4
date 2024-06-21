@@ -10,8 +10,10 @@ import org.springframework.stereotype.Component;
 import daoImpl.TicketDAOImpl;
 import daoImpl.UserDAOImpl;
 import entity.Optional;
+import entity.Permit;
 import entity.Ticket;
 import entity.User;
+import exceptions.CommonException;
 import exceptions.InvalidTokenException;
 import exceptions.NotFoundException;
 import io.jsonwebtoken.Claims;
@@ -20,15 +22,19 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
+import logic.ITicketLogic;
 
 @Component
-public class TicketLogicImpl {
+public class TicketLogicImpl implements ITicketLogic {
 
 	@Autowired
 	private UserDAOImpl usersrepository;
 	
 	@Autowired
 	private TicketDAOImpl ticketsrepository;
+	
+	@Autowired
+	private UserPermitLogicImpl permits;
 	
 	private String secretKey = "Q2xhdmVTZWNyZXRhUXVlRGViZXLDoVNlckFzZWd1cmFkYUFudGVzRGVMYUVudHJlZ2FEZWxUUA==";
 	
@@ -56,7 +62,11 @@ public class TicketLogicImpl {
                 .compact();
     }
     
-    public Ticket startSession(String username, String deviceAgent, String deviceIdentifier) throws NotFoundException {
+    /* (non-Javadoc)
+	 * @see logicImpl.ITicketLogic#startSession(java.lang.String, java.lang.String, java.lang.String)
+	 */
+    @Override
+	public Ticket startSession(String username, String deviceAgent, String deviceIdentifier) throws NotFoundException {
         Optional<User> optionalUser = usersrepository.findByUsername(username);
         if (optionalUser.isEmpty())
             throw new NotFoundException();
@@ -78,13 +88,21 @@ public class TicketLogicImpl {
         return ticketsrepository.add(session);
     }
     
-    public String startToken(String username, String deviceAgent, String deviceIdentifier) throws NotFoundException {
+    /* (non-Javadoc)
+	 * @see logicImpl.ITicketLogic#startToken(java.lang.String, java.lang.String, java.lang.String)
+	 */
+    @Override
+	public String startToken(String username, String deviceAgent, String deviceIdentifier) throws NotFoundException {
     	Ticket ticket = startSession(username, deviceAgent, deviceIdentifier);
     	//System.out.println("Ticket de startToken: \n" + ticket);
     	return generateToken(ticket);
     }
 
-    public Ticket validateTokenId(int id) {
+    /* (non-Javadoc)
+	 * @see logicImpl.ITicketLogic#validateTokenId(int)
+	 */
+    @Override
+	public Ticket validateTokenId(int id) {
     	Optional<Ticket> optionalTicket = ticketsrepository.getById(id);
     	//System.out.println(optionalTicket.get());
         if(optionalTicket.isEmpty())
@@ -94,9 +112,12 @@ public class TicketLogicImpl {
             throw new InvalidTokenException("Session was closed.");
         return ticket;
     }
-    
-    
-    public Ticket validateRefreshToken(String token) {
+        
+    /* (non-Javadoc)
+	 * @see logicImpl.ITicketLogic#validateRefreshToken(java.lang.String)
+	 */
+    @Override
+	public Ticket validateRefreshToken(String token) {
     	JwtParser builder = Jwts.parser()
     			.verifyWith(this.getSessionKey())
                 .build();
@@ -125,7 +146,11 @@ public class TicketLogicImpl {
         return ticket;
     }
 	
-    public String generateAccessToken(String refreshToken) {
+    /* (non-Javadoc)
+	 * @see logicImpl.ITicketLogic#generateAccessToken(java.lang.String)
+	 */
+    @Override
+	public String generateAccessToken(String refreshToken) {
         Ticket ticket = validateRefreshToken(refreshToken);
         long currentTime = System.currentTimeMillis();
         Date now = new Date(currentTime);
@@ -139,7 +164,11 @@ public class TicketLogicImpl {
                 .compact();
     }
     
-    public User validateAccessToken(String accessToken) {
+    /* (non-Javadoc)
+	 * @see logicImpl.ITicketLogic#validateAccessToken(java.lang.String)
+	 */
+    @Override
+	public User validateAccessToken(String accessToken) {
         Claims claims = Jwts.parser()
                 .verifyWith(this.getSessionKey())
                 .build()
@@ -155,5 +184,58 @@ public class TicketLogicImpl {
             throw new InvalidTokenException("Session expired.");
         return ticket.getUser();
     }
+    
+    /* (non-Javadoc)
+	 * @see logicImpl.ITicketLogic#getCurrentUser(java.lang.String, java.lang.String)
+	 */
+    @Override
+	public User getCurrentUser(String accessToken, String refreshToken) {
+    	try {
+    		User u = validateAccessToken(accessToken);
+    		return u;
+    	} catch(InvalidTokenException e) {
+    		accessToken = generateAccessToken(refreshToken);
+    		try {
+    			User u = validateAccessToken(accessToken);
+        		return u;
+    		} catch(CommonException ex) {
+    			throw ex;
+    		}
+    	} catch(CommonException e) {
+    		throw e;
+    	}
+    }
+    
+    /* (non-Javadoc)
+	 * @see logicImpl.ITicketLogic#logout(int, entity.User)
+	 */
+    @Override
+	public void logout(int id, User requiring) {
+    	Ticket ticket = validateTokenId(id);
+    	if(ticket.getUser().getUsername() != requiring.getUsername()) 
+    		permits.allow(requiring, Permit.CLOSE_USER_SESSIONS);
+    	ticketsrepository.logout(id);
+    }
+    
+    /* (non-Javadoc)
+	 * @see logicImpl.ITicketLogic#closeAllSessions(entity.User, entity.User)
+	 */
+    @Override
+	public void closeAllSessions(User target, User requiring) {
+    	if(target.getUsername() != requiring.getUsername()) 
+    		permits.allow(requiring, Permit.CLOSE_USER_SESSIONS);
+    	ticketsrepository.closeAllSessions(target);
+    }
+    
+    /* (non-Javadoc)
+	 * @see logicImpl.ITicketLogic#closeAllSessions(java.lang.String, entity.User)
+	 */
+    @Override
+	public void closeAllSessions(String username, User requiring) {
+    	if(username != requiring.getUsername()) 
+    		permits.allow(requiring, Permit.CLOSE_USER_SESSIONS);
+    	ticketsrepository.closeAllSessions(username);
+    }
+    
     
 }
