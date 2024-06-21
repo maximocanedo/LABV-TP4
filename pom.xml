@@ -6,16 +6,19 @@
     <groupId>utn.frgp</groupId>
     <artifactId>tp4</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>war</packaging> 
+    <packaging>war</packaging> <!-- Cambiado a war -->
 
     <name>TP4_GRUPO3</name>
     <url>http://maven.apache.org</url>
 
     <properties>
+        <java.version>11</java.version> <!-- Asegúrate de usar la versión correcta de Java -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring.boot.version>2.6.3</spring.boot.version> <!-- Añadir esta línea -->
     </properties>
 
     <dependencies>
+        <!-- Dependencias existentes -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-impl</artifactId>
@@ -89,10 +92,10 @@
             <version>6.0.0.Final</version>
         </dependency>
 
-        <!-- Dependencia de Spring Boot Starter Web -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <version>${spring.boot.version}</version> <!-- Usar la propiedad definida -->
         </dependency>
     </dependencies>
 
@@ -101,6 +104,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring.boot.version}</version> <!-- Usar la propiedad definida -->
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

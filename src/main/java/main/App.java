@@ -1,8 +1,4 @@
 package main;
-
-import java.util.List;
-
-import entity.Permit;
 import entity.User;
 import generator.Generator;
 import logic.ITicketLogic;
