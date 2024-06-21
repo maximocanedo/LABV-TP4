@@ -9,14 +9,14 @@ import exceptions.NotAllowedException;
 import exceptions.NotFoundException;
 
 public interface IUserPermitLogic {
+	
+	UserPermit allow(String username, Permit permit, User requiring) throws NotFoundException;
 
-	UserPermit allow(String username, Permit permit) throws NotFoundException;
+	UserPermit allow(User user, Permit permit, User requiring) throws NotFoundException;
 
-	UserPermit allow(User user, Permit permit) throws NotFoundException;
+	UserPermit reject(String username, Permit permit, User requiring) throws NotFoundException;
 
-	UserPermit reject(String username, Permit permit) throws NotFoundException;
-
-	UserPermit reject(User user, Permit permit) throws NotFoundException;
+	UserPermit reject(User user, Permit permit, User requiring) throws NotFoundException;
 
 	boolean check(String username, Permit permit);
 
@@ -29,5 +29,19 @@ public interface IUserPermitLogic {
 	void require(String username, Permit permit) throws NotAllowedException;
 	
 	void require(User user, Permit permit) throws NotAllowedException;
+	
+	/** # Deprecated methods **/
+
+	@Deprecated
+	UserPermit allow(String username, Permit permit) throws NotFoundException;
+
+	@Deprecated
+	UserPermit allow(User user, Permit permit) throws NotFoundException;
+
+	@Deprecated
+	UserPermit reject(String username, Permit permit) throws NotFoundException;
+
+	@Deprecated
+	UserPermit reject(User user, Permit permit) throws NotFoundException;
 
 }
