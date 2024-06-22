@@ -11,7 +11,7 @@ import web.dao.IDoctorDAO;
 import web.entity.Doctor;
 import web.entity.Optional;
 import web.exceptions.NotFoundException;
-@Component
+@Component("doctorsrepository")
 public class DoctorDAOImpl implements IDoctorDAO {
     
 	@Autowired

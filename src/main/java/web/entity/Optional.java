@@ -20,4 +20,9 @@ public class Optional<T> {
 	public boolean isEmpty() {
 		return this.object == null;
 	}
+	
+	@Override
+	public String toString() {
+		return "132";
+	}
 }

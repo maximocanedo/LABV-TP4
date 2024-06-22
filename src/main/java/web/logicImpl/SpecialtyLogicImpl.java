@@ -13,7 +13,7 @@ import web.entity.User;
 import web.exceptions.NotFoundException;
 import web.logic.ISpecialtyLogic;
 
-@Component
+@Component("specialties")
 public class SpecialtyLogicImpl implements ISpecialtyLogic {
 	
 	@Autowired

@@ -1,21 +1,10 @@
 package web.resources;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import web.logic.ITicketLogic;
-import web.logic.IUserPermitLogic;
-import web.logicImpl.AppointmentLogicImpl;
-import web.logicImpl.DoctorLogicImpl;
-import web.logicImpl.PatientLogicImpl;
-import web.logicImpl.SpecialtyLogicImpl;
-import web.logicImpl.TicketLogicImpl;
-import web.logicImpl.UserLogicImpl;
-import web.logicImpl.UserPermitLogicImpl;
 
 @Configuration
 public class LogicConfig {
-
+/*
 	@Bean
 	public AppointmentLogicImpl appointments() {
 		return new AppointmentLogicImpl();
@@ -50,5 +39,5 @@ public class LogicConfig {
 	public SpecialtyLogicImpl specialties() {
 		return new SpecialtyLogicImpl();
 	}
-	
+	*/
 }

@@ -16,7 +16,7 @@ import web.exceptions.NotFoundException;
 import web.generator.PermitTemplate;
 import web.logic.IUserPermitLogic;
 
-@Component
+@Component("userpermits")
 public class UserPermitLogicImpl implements IUserPermitLogic {
 
 	@Autowired

@@ -14,7 +14,7 @@ import web.entity.User;
 import web.exceptions.NotFoundException;
 import web.logic.IDoctorLogic;
 
-@Component
+@Component("doctors")
 public class DoctorLogicImpl implements IDoctorLogic {
 
 	@Autowired

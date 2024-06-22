@@ -12,7 +12,7 @@ import web.entity.Optional;
 import web.entity.User;
 import web.exceptions.NotFoundException;
 
-@Component
+@Component("usersrepository")
 public class UserDAOImpl implements IUserDAO {
 	
 	@Autowired

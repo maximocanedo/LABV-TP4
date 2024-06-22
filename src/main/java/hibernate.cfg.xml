@@ -11,14 +11,14 @@
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
         <property name="hbm2ddl.auto">update</property>
         
-        <mapping class="entity.Schedule" />
-        <mapping class="entity.User" />
-        <mapping class="entity.UserPermit" />
-        <mapping class="entity.Patient" />
-        <mapping class="entity.Doctor" />
-        <mapping class="entity.Specialty" />
-        <mapping class="entity.Appointment" />
-        <mapping class="entity.Ticket" />
+        <mapping class="web.entity.Schedule" />
+        <mapping class="web.entity.User" />
+        <mapping class="web.entity.UserPermit" />
+        <mapping class="web.entity.Patient" />
+        <mapping class="web.entity.Doctor" />
+        <mapping class="web.entity.Specialty" />
+        <mapping class="web.entity.Appointment" />
+        <mapping class="web.entity.Ticket" />
         
     </session-factory>
 </hibernate-configuration>

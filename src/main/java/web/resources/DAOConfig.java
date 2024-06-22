@@ -3,18 +3,17 @@ package web.resources;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import web.daoImpl.AppointmentDAOImpl;
 import web.daoImpl.DataManager;
-import web.daoImpl.DoctorDAOImpl;
-import web.daoImpl.PatientDAOImpl;
-import web.daoImpl.SpecialtyDAOImpl;
-import web.daoImpl.TicketDAOImpl;
-import web.daoImpl.UserDAOImpl;
-import web.daoImpl.UserPermitDAOImpl;
 
 @Configuration
 public class DAOConfig {
 		
+
+	@Bean
+	public DataManager dataManager() {
+		return new DataManager();
+	}
+	/*
 	@Bean
 	public AppointmentDAOImpl appointmentsrepository() {
 		return new AppointmentDAOImpl();
@@ -25,10 +24,6 @@ public class DAOConfig {
 		return new TicketDAOImpl();
 	}
 	
-	@Bean
-	public DataManager dataManager() {
-		return new DataManager();
-	}
 
 	@Bean
 	public UserDAOImpl usersrepository() {
@@ -53,6 +48,6 @@ public class DAOConfig {
 	@Bean
 	public SpecialtyDAOImpl specialtiesrepository() {
 		return new SpecialtyDAOImpl();
-	}
+	}*/
 	
 }

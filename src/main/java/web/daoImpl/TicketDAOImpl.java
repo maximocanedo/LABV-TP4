@@ -12,7 +12,7 @@ import web.entity.Ticket;
 import web.entity.User;
 import web.exceptions.NotFoundException;
 
-@Component
+@Component("ticketsrepository")
 public class TicketDAOImpl implements ITicketDAO {
 	
 	@Autowired

@@ -24,7 +24,7 @@ import web.exceptions.InvalidTokenException;
 import web.exceptions.NotFoundException;
 import web.logic.ITicketLogic;
 
-@Component
+@Component("tickets")
 public class TicketLogicImpl implements ITicketLogic {
 
 	@Autowired

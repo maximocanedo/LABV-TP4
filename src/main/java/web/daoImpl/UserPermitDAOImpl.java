@@ -12,7 +12,7 @@ import web.entity.Permit;
 import web.entity.User;
 import web.entity.UserPermit;
 
-@Component
+@Component("userpermitsrepository")
 public class UserPermitDAOImpl implements IUserPermitDAO {
 
 	@Autowired

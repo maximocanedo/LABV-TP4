@@ -11,7 +11,7 @@ import web.entity.*;
 import web.exceptions.NotFoundException;
 import web.logic.IAppointmentLogic;
 
-@Component
+@Component("appointments")
 public class AppointmentLogicImpl implements IAppointmentLogic {
 	
 	@Autowired

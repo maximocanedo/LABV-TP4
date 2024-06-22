@@ -16,7 +16,7 @@ import web.generator.PermitTemplate;
 import web.logic.ITicketLogic;
 import web.logic.IUserLogic;
 
-@Component
+@Component("users")
 public class UserLogicImpl implements IUserLogic {
 	
 	@Autowired

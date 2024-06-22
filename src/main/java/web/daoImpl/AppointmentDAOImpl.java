@@ -12,7 +12,7 @@ import web.entity.Appointment;
 import web.entity.AppointmentStatus;
 import web.entity.Optional;
 import web.exceptions.NotFoundException;
-@Component
+@Component("appointmentsrepository")
 public class AppointmentDAOImpl implements IAppointmentDAO {
 	@Autowired
 	private DataManager dataManager;

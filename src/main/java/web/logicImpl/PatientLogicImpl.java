@@ -14,7 +14,7 @@ import web.exceptions.NotAllowedException;
 import web.exceptions.NotFoundException;
 import web.logic.IPatientLogic;
 
-@Component
+@Component("patients")
 public class PatientLogicImpl implements IPatientLogic {
 	
 	@Autowired

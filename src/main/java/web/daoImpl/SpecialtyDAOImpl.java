@@ -11,7 +11,7 @@ import web.entity.Optional;
 import web.entity.Specialty;
 import web.exceptions.NotFoundException;
 
-@Component
+@Component("specialtiesrepository")
 public class SpecialtyDAOImpl implements ISpecialtyDAO {
 
 	@Autowired
