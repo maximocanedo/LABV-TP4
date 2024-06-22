@@ -5,7 +5,7 @@
   <groupId>utn.frgp</groupId>
   <artifactId>tp4</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <packaging>jar</packaging>
+  <packaging>war</packaging>
 
   <name>TP4_GRUPO3</name>
   <url>http://maven.apache.org</url>
@@ -102,6 +102,24 @@
 	    <groupId>org.hibernate.orm</groupId>
 	    <artifactId>hibernate-core</artifactId>
 	    <version>6.0.0.Final</version>
+	</dependency>
+	
+	<dependency>
+	    <groupId>org.springframework</groupId>
+	    <artifactId>spring-core</artifactId>
+	    <version>4.2.5.RELEASE</version>
+	</dependency>
+	
+	<dependency>
+	    <groupId>org.springframework</groupId>
+	    <artifactId>spring-webmvc</artifactId>
+	    <version>4.2.5.RELEASE</version>
+	</dependency>
+	
+	<dependency>
+	    <groupId>javax.servlet</groupId>
+	    <artifactId>jstl</artifactId>
+	    <version>1.2</version>
 	</dependency>
 
 	
