@@ -47,16 +47,15 @@ public class UserLogicImpl implements IUserLogic {
 		permits.grant(user, template, requiring);
 		return newUser;
 	}
-	
-	private User hideSensitiveData(User user) {
-		user.setPassword(null);
-		return user;
+
+    public User signup(User user, String templateName, User requiring) {
+		return signup(user, PermitTemplate.getByName(templateName), requiring);
 	}
+
 	
+	@Deprecated
 	private Optional<User> hideSensitiveData(Optional<User> u) {
-		if(u.isPresent()) {
-			u.set(this.hideSensitiveData(u.get()));
-		}
+		
 		return u;
 	}
 	
@@ -66,7 +65,7 @@ public class UserLogicImpl implements IUserLogic {
 		if(user.isEmpty()) throw new InvalidCredentialsException();
 		User u = user.get();
 		if(BCrypt.checkpw(password, u.getPassword())) {
-			user.set(hideSensitiveData(u));
+			user.set((u));
 			return user;
 		}
 		throw new InvalidCredentialsException();
@@ -75,13 +74,25 @@ public class UserLogicImpl implements IUserLogic {
 	@Override
     public Optional<User> findByUsername(String username, User requiring) {
 		permits.require(requiring, Permit.READ_USER_DATA);
-		return hideSensitiveData(usersrepository.findByUsername(username));
+		return (usersrepository.findByUsername(username));
 	}
 	
 	@Override
     public Optional<User> findByUsername(String username, boolean includeInactive, User requiring) {
 		permits.require(requiring, Permit.READ_USER_DATA);
-		return hideSensitiveData(usersrepository.findByUsername(username, includeInactive));
+		return (usersrepository.findByUsername(username, includeInactive));
+	}
+	
+	public User getByUsername(String username, boolean includeInactive, User requiring) {
+		Optional<User> opt = findByUsername(username, includeInactive, requiring);
+		if(opt.isEmpty()) throw new NotFoundException("User not found. ");
+		else return opt.get();
+	}
+	
+	public User getByUsername(String username, User requiring) {
+		Optional<User> opt = findByUsername(username, false, requiring);
+		if(opt.isEmpty()) throw new NotFoundException("User not found. ");
+		else return opt.get();
 	}
 	
 	@Override
@@ -91,11 +102,21 @@ public class UserLogicImpl implements IUserLogic {
 		usersrepository.update(user);
 	}
 	
+	public void disable(String username, User requiring) {
+		User user = getByUsername(username, requiring);
+		disable(user, requiring);
+	}
+	
 	@Override
     public void enable(User user, User requiring) {
 		permits.require(requiring, Permit.DELETE_OR_ENABLE_USER);
 		user.setActive(true);
 		usersrepository.update(user);
+	}
+	
+	public void enable(String username, User requiring) {
+		User user = getByUsername(username, requiring);
+		enable(user, requiring);
 	}
 	
 	@Override
@@ -145,7 +166,7 @@ public class UserLogicImpl implements IUserLogic {
 		User original = search.get();
 		if(user.getName() != null) original.setName(user.getName());
 		if(user.getDoctor() != null) original.setDoctor(user.getDoctor());
-		return usersrepository.update(user);
+		return usersrepository.update(original);
 	}
 
 	@Override

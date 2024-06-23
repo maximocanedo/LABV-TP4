@@ -43,6 +43,7 @@ public class UserPermitLogicImpl implements IUserPermitLogic {
 			UserPermit p = new UserPermit();
 			p.setUser(user);
 			p.setAction(permit);
+			p.setAllowed(true);
 			return userpermitsrepository.save(p);
 		} else {
 			UserPermit p = perm.get();
@@ -56,7 +57,7 @@ public class UserPermitLogicImpl implements IUserPermitLogic {
 	 */
 	@Override
 	public UserPermit allow(User user, Permit permit, User requiring) throws NotFoundException {
-		return allow(user.getUsername(), permit);
+		return allow(user.getUsername(), permit, requiring);
 	}
 	
 	/* (non-Javadoc)
@@ -129,6 +130,7 @@ public class UserPermitLogicImpl implements IUserPermitLogic {
 	}
 	
 	public void require(User user, Permit permit) throws NotAllowedException {
+		//System.out.println("Requiring @" + user.getUsername() + " " + permit.toString() + " permit. ");
 		if(!check(user, permit))
 			throw new NotAllowedException(permit);
 	}

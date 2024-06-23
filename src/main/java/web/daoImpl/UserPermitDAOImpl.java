@@ -72,15 +72,18 @@ public class UserPermitDAOImpl implements IUserPermitDAO {
 	 */
 	@Override
 	public boolean check(String username, Permit permit) {
+		//System.out.println(username + "; " + permit);
 		final Optional<Boolean> optPermit = new Optional<Boolean>(false);
 		dataManager.run(session -> {
-			String hql = "SELECT u.allowed FROM UserPermit u WHERE u.user.username = :username AND u.action = :action";
+			String hql = "SELECT u.allowed FROM UserPermit u WHERE u.user.username = :username AND u.action = :action AND u.allowed = 1";
 	        Query query = session.createQuery(hql);
 	        query.setParameter("action", permit);
 	        query.setParameter("username", username);
 	        optPermit.set((Boolean) query.uniqueResult());
+	        
 		});
 		if(optPermit.isEmpty() || optPermit.get() == null) return false;
+		//System.out.println(username + " " + permit.toString() + ": " + optPermit.get());
 		return optPermit.get().booleanValue();
 	}
 	

@@ -3,8 +3,22 @@ package web.generator;
 import java.util.HashSet;
 
 import web.entity.Permit;
+import web.exceptions.BadRequestException;
 
 public class PermitTemplate {
+	
+	public static PermitTemplate getByName(String name) {
+		switch(name) {
+		case "ROOT": return ROOT;
+		case "DEFAULT": return DEFAULT;
+		case "PATIENT_MANAGER": return PATIENT_MANAGER;
+		case "DOCTOR_MANAGER": return DOCTOR_MANAGER;
+		case "EXTRA_MANAGER": return EXTRA_MANAGER;
+		case "USER_OFFICE": return USER_OFFICE;
+		case "SECURITY_OFFICE": return SECURITY_OFFICE;
+		default: throw new BadRequestException("Permit set does not exist. ");
+		}
+	}
 	
 	/**
 	 * *Usuario Administrador*
@@ -83,6 +97,7 @@ public class PermitTemplate {
 	}
 	
 	public PermitTemplate(Permit[] permits) {
+		this.permits = new HashSet<Permit>();
 		for(Permit p : permits) {
 			this.permits.add(p);
 		}

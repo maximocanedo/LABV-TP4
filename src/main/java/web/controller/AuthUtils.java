@@ -8,6 +8,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
 import web.entity.User;
+import web.exceptions.InvalidTokenException;
 import web.logicImpl.TicketLogicImpl;
 
 @Component("auth")
@@ -25,15 +26,17 @@ public class AuthUtils {
 	 * @return Usuario autenticado.
 	 */
 	public User require(HttpServletRequest req, HttpServletResponse res) {
+		if(req.getHeader("Authorization") == null || req.getHeader("Authorization").split(" ").length != 2) {
+			throw new InvalidTokenException();
+		}
 		String fullToken = req.getHeader("Authorization");
         String tokenType = fullToken.split(" ")[0];
         String token = fullToken.split(" ")[1];
         String accessToken;
-        HttpHeaders headers = new HttpHeaders();
 
         if (tokenType.equals("Refresh")) {
             accessToken = tickets.generateAccessToken(token);
-            headers.add("Authorization", "Bearer " + accessToken);
+            res.setHeader("Authorization", "Bearer " + accessToken);
         } else {
             accessToken = token;
         }
