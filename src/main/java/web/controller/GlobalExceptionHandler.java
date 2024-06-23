@@ -32,14 +32,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CommonException.class)
     @ResponseBody
     public ResponseEntity<AuxException> handleCommonException(CommonException ex) {
-        // Manejar la excepción CommonException aquí
         return ResponseEntity.status(ex.getHttpCode()).body(new AuxException(ex));
     }
 
     @ExceptionHandler(Exception.class)
     @ResponseBody
     public ResponseEntity<AuxException> handleException(Exception ex) {
-        // Manejar cualquier otra excepción no manejada específicamente
+    	ex.printStackTrace();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new AuxException(new ServerException()));
     }
 }

@@ -156,12 +156,14 @@ public class TicketLogicImpl implements ITicketLogic {
         Date now = new Date(currentTime);
         long expMillis = currentTime + (10 * 60 * 1000);
         Date exp = new Date(expMillis);
-        return Jwts.builder()
+        String generated=  Jwts.builder()
                 .subject(ticket.getId() + "")
                 .issuedAt(now)
                 .expiration(exp)
                 .signWith(this.getSessionKey())
                 .compact();
+        System.out.println("G: " + generated);
+        return generated;
     }
     
     /* (non-Javadoc)
@@ -169,6 +171,7 @@ public class TicketLogicImpl implements ITicketLogic {
 	 */
     @Override
 	public User validateAccessToken(String accessToken) {
+    	System.out.println(accessToken);
         Claims claims = Jwts.parser()
                 .verifyWith(this.getSessionKey())
                 .build()
