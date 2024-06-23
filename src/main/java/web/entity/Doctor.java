@@ -2,6 +2,10 @@ package web.entity;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import web.formatter.Card;
 import web.formatter.Format;
 import web.formatter.Formatter;
@@ -38,70 +42,84 @@ public class Doctor {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true)
+	@JsonProperty("id")
     public int getId() {
 		return id;
 	}
 	
 	@Column(name = "file", unique = true)
 	@Format(label="Legajo", prefix="N.º ", order = 1)
+	@JsonProperty("file")
 	public int getFile() {
 		return file;
 	}
 	
 	@Column(name = "name")
+	@JsonProperty("name")
 	public String getName() {
 		return name;
 	}
 	
 	@Column(name = "surname")
+	@JsonProperty("surname")
 	public String getSurname() {
 		return surname;
 	}
 	
 	@Column(name = "sex")
 	@Format(label="Sexo", order = 3)
+	@JsonProperty("sex")
 	public String getSex() {
 		return sex;
 	}
 	
 	@Column(name = "birth")
 	@Format(label="Nació el", order = 4)
+	@JsonProperty("birth")
+    @JsonFormat(pattern = "yyyy-MM-dd")
 	public Date getBirth() {
 		return birth;
 	}
 	
 	@Column(name = "address")
 	@Format(omitLabel = true, align = Alignment.RIGHT, order = 7)
+	@JsonProperty("address")
 	public String getAddress() {
 		return address;
 	}
 	
 	@Column(name = "localty")
+	@JsonProperty("localty")
 	@Format(omitLabel = true, align = Alignment.RIGHT, order = 8)
 	public String getLocalty() {
 		return localty;
 	}
 
 	@Column(name = "email")
+	@JsonProperty("email")
 	@Format(omitLabel = true, order = 6)
 	public String getEmail() {
 		return email;
 	}
 	
 	@Column(name = "phone")
+	@JsonProperty("phone")
 	@Format(omitLabel = true, order = 5)
 	public String getPhone() {
 		return phone;
 	}
 	
 	@ManyToOne
+	@JsonProperty("specialty")
     @JoinColumn(name = "specialty")
 	public Specialty getSpecialty() {
 		return specialty;
 	}
 
 	@OneToOne(cascade = {CascadeType.ALL})
+	@JsonProperty("user")
     @JoinColumn(name ="user")
+	@JsonBackReference
     public User getUser() {
 		return user;
 	}
