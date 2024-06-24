@@ -5,6 +5,8 @@ import org.hibernate.Session;
 
 public interface Searchable {
 	
+	public String getQueryText();
+	
 	public int getPage();
 	
 	public int getSize();

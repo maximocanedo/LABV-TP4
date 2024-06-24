@@ -13,6 +13,7 @@ public class UserQuery implements Searchable {
 		setQueryText(q);
 		setStatus(status);
 	}
+	
 	public UserQuery(String q) {
 		this(q, FilterStatus.ONLY_ACTIVE);
 	}
@@ -57,23 +58,30 @@ public class UserQuery implements Searchable {
 		query.setMaxResults(size);
 		return query;
 	}
+	
+	@Override
 	public String getQueryText() {
 		return q;
 	}
+	
 	private void setQueryText(String q) {
 		this.q = q;
 	}
+	
 	public FilterStatus getStatus() {
 		return status;
 	}
+	
 	private void setStatus(FilterStatus status) {
 		if(status == null) return;
 		this.status = status;
 	}
+	
 	@Override
 	public int getPage() {
 		return this.page;
 	}
+	
 	@Override
 	public int getSize() {
 		return this.size;
