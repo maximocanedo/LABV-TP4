@@ -1,5 +1,7 @@
 package web.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -20,7 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import web.entity.Optional;
 import web.entity.User;
+import web.entity.input.FilterStatus;
 import web.entity.input.UserCredentials;
+import web.entity.input.UserQuery;
 import web.logicImpl.TicketLogicImpl;
 import web.logicImpl.UserLogicImpl;
 
@@ -52,6 +56,18 @@ public class UserController {
 			User requiring = auth.require(req, res);
 			return users.signup(user, role, requiring);
 		} return users.signup(user);
+	}
+	
+	@GetMapping
+	public List<User> search(
+			@RequestParam(required = false, defaultValue = "") String q, 
+			@RequestParam(required = false, defaultValue = "") FilterStatus status,
+			@RequestParam(required = false, defaultValue = "1") int page,
+			@RequestParam(required = false, defaultValue = "15") int size,
+			HttpServletRequest req, HttpServletResponse res
+			) {
+		User requiring = auth.require(req, res);
+		return users.search(new UserQuery(q, status).paginate(page, size), requiring);
 	}
 	
 	/** # Acciones con terceros **/

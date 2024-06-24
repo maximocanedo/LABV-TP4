@@ -10,8 +10,10 @@ import org.springframework.stereotype.Component;
 import web.dao.IUserDAO;
 import web.entity.Optional;
 import web.entity.User;
+import web.entity.input.UserQuery;
 import web.exceptions.NotFoundException;
 
+@SuppressWarnings("unchecked")
 @Component("usersrepository")
 public class UserDAOImpl implements IUserDAO {
 	
@@ -51,7 +53,6 @@ public class UserDAOImpl implements IUserDAO {
     }
 	
 	@Override
-    @SuppressWarnings("unchecked")
 	public List<User> list(int page, int size, boolean includeInactives) {
 		final Optional<List<User>> cfList = new Optional<List<User>>();
 		dataManager.run(session -> {
@@ -63,6 +64,16 @@ public class UserDAOImpl implements IUserDAO {
 		});
 		return cfList.get();
     }
+	
+	
+	public List<User> search(UserQuery q) {
+		final Optional<List<User>> opt = new Optional<List<User>>();
+		dataManager.run(session -> {
+			Query query = q.toQuery(session);
+			opt.set(query.list());
+		});
+		return opt.get();
+	}
 	
 	@Override
     public User update(User user) {
