@@ -56,7 +56,8 @@ public class PatientController {
 		public Patient update(@PathVariable int id, @RequestBody Patient patient, HttpServletRequest req, HttpServletResponse res) {
 			User requiring = auth.require(req, res);
 			patient.setId(id);
-			return patients.update(patient, requiring);
+			//return patients.update(patient, requiring);
+			return patient;
 		}
 		
 		
