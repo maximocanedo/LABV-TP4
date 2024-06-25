@@ -2,8 +2,13 @@ package web.dao;
 
 import java.util.List;
 
+import org.hibernate.Query;
+
 import web.entity.Optional;
 import web.entity.Patient;
+import web.entity.User;
+import web.entity.input.PatientQuery;
+import web.entity.input.UserQuery;
 import web.exceptions.NotFoundException;
 
 public interface IPatientDAO {
@@ -50,6 +55,11 @@ public interface IPatientDAO {
 	 * @param paciente Paciente con los datos a actualizar.
 	 */
 	Patient update(Patient paciente);
+	
+	/**
+	 * Lista
+	 */
+	public List<Patient> search(PatientQuery q);
 
 	/**
 	 * Elimina permanentemente un paciente de la base de datos.

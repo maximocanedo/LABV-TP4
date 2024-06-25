@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 import web.dao.IPatientDAO;
 import web.entity.Optional;
 import web.entity.Patient;
+import web.entity.input.PatientQuery;
+import web.entity.input.UserQuery;
 import web.exceptions.NotFoundException;
 
 @Component("patientsrepository")
@@ -102,6 +104,17 @@ public class PatientDAOImpl implements IPatientDAO {
 	@Override
 	public void enable(int id) throws NotFoundException {
 		updateStatus(id, true);		
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Patient> search(PatientQuery q) {
+		final Optional<List<Patient>> opt = new Optional<List<Patient>>();
+		dataManager.run(session -> {
+			Query query = q.toQuery(session);
+			opt.set(query.list());
+		});
+		return opt.get();
 	}
 	
 }

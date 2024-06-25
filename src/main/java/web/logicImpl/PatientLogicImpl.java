@@ -10,6 +10,8 @@ import web.entity.Optional;
 import web.entity.Patient;
 import web.entity.Permit;
 import web.entity.User;
+import web.entity.input.PatientQuery;
+import web.entity.input.UserQuery;
 import web.exceptions.NotAllowedException;
 import web.exceptions.NotFoundException;
 import web.logic.IPatientLogic;
@@ -24,6 +26,11 @@ public class PatientLogicImpl implements IPatientLogic {
 	private UserPermitLogicImpl permits;
 	
 	public PatientLogicImpl() {}
+	
+	public List<Patient> search(PatientQuery q, User requiring) {
+		permits.require(requiring, Permit.READ_USER_DATA);
+		return patientsrepository.search(q);
+	}
 	
 	@Override
 	public void add(Patient paciente, User requiring) {

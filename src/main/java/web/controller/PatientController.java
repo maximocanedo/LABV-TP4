@@ -12,12 +12,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import web.entity.Optional;
 import web.entity.Patient;
 import web.entity.User;
 import web.entity.input.FilterStatus;
+import web.entity.input.PatientQuery;
 import web.entity.input.UserQuery;
 import web.logicImpl.PatientLogicImpl;
 
@@ -31,7 +33,7 @@ public class PatientController {
 		private AuthUtils auth;
 		
 		// Acciones Generales
-		/*
+		
 		@GetMapping
 		public List<Patient> search(
 				@RequestParam(required = false, defaultValue = "") String q, 
@@ -41,9 +43,9 @@ public class PatientController {
 				HttpServletRequest req, HttpServletResponse res
 				) {
 			User requiring = auth.require(req, res);
-			return patients.list(new UserQuery(q, status).paginate(page, size), requiring);
+			return patients.search(new PatientQuery(q, status).paginate(page, size), requiring);
 		}
-		*/
+		
 		
 		// Acciones con Terceros
 		@GetMapping("/p/{id}")
