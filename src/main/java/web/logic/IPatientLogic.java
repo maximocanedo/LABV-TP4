@@ -51,7 +51,7 @@ public interface IPatientLogic {
 	 * Actualiza un paciente de la base de datos.
 	 * @param paciente Paciente con los datos a actualizar.
 	 */
-	void update(Patient paciente, User requirinig) throws NotFoundException;
+	Patient update(Patient paciente, User requirinig) throws NotFoundException;
 	
 	/**
 	 * Deshabilita un paciente de la base de datos.

@@ -49,7 +49,7 @@ public interface IPatientDAO {
 	 * Actualiza un paciente de la base de datos.
 	 * @param paciente Paciente con los datos a actualizar.
 	 */
-	void update(Patient paciente);
+	Patient update(Patient paciente);
 
 	/**
 	 * Elimina permanentemente un paciente de la base de datos.

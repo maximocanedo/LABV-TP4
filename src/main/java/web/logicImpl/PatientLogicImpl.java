@@ -38,7 +38,7 @@ public class PatientLogicImpl implements IPatientLogic {
 	}
 	
 	@Override
-    public void update(Patient paciente, User requiring) throws NotFoundException {
+    public Patient update(Patient paciente, User requiring) throws NotFoundException {
 		permits.require(requiring, Permit.UPDATE_PATIENT);
 		Optional<Patient> search = findById(paciente.getId(), requiring);
 		if(search.isEmpty()) throw new NotFoundException();
@@ -52,7 +52,7 @@ public class PatientLogicImpl implements IPatientLogic {
         if (paciente.getProvince() != null) original.setProvince(paciente.getProvince());
         if (paciente.getBirth() != null) original.setBirth(paciente.getBirth());
         if (paciente.getEmail() != null) original.setEmail(paciente.getEmail());
-        patientsrepository.update(paciente);
+        return patientsrepository.update(paciente);
 	}
 
 	@Override

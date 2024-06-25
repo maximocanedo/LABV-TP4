@@ -68,10 +68,11 @@ public class PatientDAOImpl implements IPatientDAO {
     }
 	
 	@Override
-	public void update(Patient paciente) {
+	public Patient update(Patient paciente) {
 		dataManager.transact(session -> {
 			session.update(paciente);
 		});
+		return paciente;
 	}
 	
 	@Override
