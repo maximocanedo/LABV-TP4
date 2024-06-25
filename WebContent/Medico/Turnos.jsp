@@ -50,7 +50,7 @@
 </style>
 </head>
 <body>
-<i class="bi bi-person-circle"> Juan Martin</i><br><br>
+<i class="bi bi-person-circle" style="font-size: 30px"> Juan Martin</i><br><br>
 <div>
 <label >Ingrese fecha</label>
 <input type="text" >
