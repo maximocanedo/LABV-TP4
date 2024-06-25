@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import web.entity.User;
 import web.entity.input.FilterStatus;
+import web.entity.input.SignUpRequest;
 import web.entity.input.UserCredentials;
 import web.entity.input.UserQuery;
 import web.logicImpl.UserLogicImpl;
@@ -48,7 +49,13 @@ public class UserController {
 	}
 	
 	@PostMapping
-	public User signup(@RequestBody User user, @RequestParam(required = false) String role, HttpServletRequest req, HttpServletResponse res) {
+	public User signup(@RequestBody SignUpRequest signUpRequest, @RequestParam(required = false) String role, HttpServletRequest req, HttpServletResponse res) {
+		User user = new User();
+		user.setName(signUpRequest.getName());
+		user.setUsername(signUpRequest.getUsername());
+		user.setDoctor(signUpRequest.getDoctor());
+		user.setPassword(signUpRequest.getPassword());
+		user.setActive(true);
 		if(role != null) {
 			User requiring = auth.require(req, res);
 			return users.signup(user, role, requiring);

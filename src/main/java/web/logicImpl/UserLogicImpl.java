@@ -65,11 +65,11 @@ public class UserLogicImpl implements IUserLogic {
 		Optional<User> user = usersrepository.findByUsername(username);
 		if(user.isEmpty()) throw new InvalidCredentialsException();
 		User u = user.get();
-		if(BCrypt.checkpw(password, u.getPassword())) {
+		boolean ok = BCrypt.checkpw(password, u.getPassword());
+		if(ok) {
 			user.set((u));
 			return user;
-		}
-		throw new InvalidCredentialsException();
+		} else throw new InvalidCredentialsException();
 	}
 	
 	@Override
@@ -179,6 +179,7 @@ public class UserLogicImpl implements IUserLogic {
 	public String login(String username, String password) throws InvalidCredentialsException, NotFoundException {
 		Optional<User> user = check(username, password);
 		if(user.isEmpty()) {
+			System.out.println("No hay usuario");
 			throw new InvalidCredentialsException();
 		} 
 		return tickets.startToken(user.get().getUsername(), "Testing device", "Device #001");
