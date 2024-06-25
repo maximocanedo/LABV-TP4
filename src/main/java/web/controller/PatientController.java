@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -52,12 +53,11 @@ public class PatientController {
 		}
 		
 		
-		@PutMapping("/p/{id}")
+		@PatchMapping("/p/{id}")
 		public Patient update(@PathVariable int id, @RequestBody Patient patient, HttpServletRequest req, HttpServletResponse res) {
 			User requiring = auth.require(req, res);
 			patient.setId(id);
-			//return patients.update(patient, requiring);
-			return patient;
+			return patients.update(patient, requiring);
 		}
 		
 		
