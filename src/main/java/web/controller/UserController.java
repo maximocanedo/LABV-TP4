@@ -24,6 +24,7 @@ import web.entity.input.FilterStatus;
 import web.entity.input.SignUpRequest;
 import web.entity.input.UserCredentials;
 import web.entity.input.UserQuery;
+import web.entity.output.ResponseContainer;
 import web.logicImpl.UserLogicImpl;
 
 @RestController
@@ -77,16 +78,16 @@ public class UserController {
 	/** # Acciones con terceros **/
 		
 	@GetMapping("/u/{username:.+}")
-    public User findUser(@PathVariable String username, HttpServletRequest req, HttpServletResponse res) {
+    public ResponseContainer<User> findUser(@PathVariable String username, HttpServletRequest req, HttpServletResponse res) {
 		User requiring = auth.require(req, res);
-        return users.getByUsername(username, requiring);
+        return ResponseContainer.of(users.getByUsername(username, requiring));
     }
 	
 	@PutMapping("/u/{username:.+}")
-	public User update(@PathVariable String username, @RequestBody User user, HttpServletRequest req, HttpServletResponse res) {
+	public ResponseContainer<User> update(@PathVariable String username, @RequestBody User user, HttpServletRequest req, HttpServletResponse res) {
 		User requiring = auth.require(req, res);
 		user.setUsername(username);
-		return users.update(user, requiring);
+		return ResponseContainer.of(users.update(user, requiring));
 	}
 	
 	@PostMapping("/u/{username:.+}/reset-password")
@@ -106,15 +107,15 @@ public class UserController {
 	/** # Acciones con el usuario actual **/
 	
 	@GetMapping("/me")
-    public User getCurrentUser(HttpServletRequest req, HttpServletResponse res) {
-		return auth.require(req, res);
+    public ResponseContainer<User> getCurrentUser(HttpServletRequest req, HttpServletResponse res) {
+		return ResponseContainer.of(auth.require(req, res));
     }
 	
 	@PutMapping("/me")
-	public User updateCurrentUser(@RequestBody User user, HttpServletRequest req, HttpServletResponse res) {
+	public ResponseContainer<User> updateCurrentUser(@RequestBody User user, HttpServletRequest req, HttpServletResponse res) {
 		User requiring = auth.require(req, res);
 		user.setUsername(requiring.getUsername());
-		return users.update(user, requiring);
+		return ResponseContainer.of(users.update(user, requiring));
 	}
 	
 	@PostMapping("/me/reset-password")

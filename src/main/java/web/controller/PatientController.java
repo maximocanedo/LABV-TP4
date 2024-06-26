@@ -23,6 +23,7 @@ import web.entity.User;
 import web.entity.input.FilterStatus;
 import web.entity.input.PatientQuery;
 import web.entity.input.UserQuery;
+import web.entity.output.ResponseContainer;
 import web.logicImpl.PatientLogicImpl;
 
 @RestController
@@ -37,7 +38,7 @@ public class PatientController {
 		// Acciones Generales
 		
 		@GetMapping
-		public List<Patient> search(
+		public ResponseContainer<List<Patient>> search(
 				@RequestParam(required = false, defaultValue = "") String q, 
 				@RequestParam(required = false, defaultValue = "") FilterStatus status,
 				@RequestParam(required = false, defaultValue = "1") int page,
@@ -45,29 +46,34 @@ public class PatientController {
 				HttpServletRequest req, HttpServletResponse res
 				) {
 			User requiring = auth.require(req, res);
-			return patients.search(new PatientQuery(q, status).paginate(page, size), requiring);
+			return ResponseContainer.of(
+					patients.search(
+							new PatientQuery(q, status)
+									.paginate(page, size)
+							, requiring)
+					);
 		}
 		
 		
 		// Acciones con Terceros
 		@GetMapping("/p/{id}")
-		public Optional<Patient> findById(@PathVariable int id, HttpServletRequest req, HttpServletResponse res) {
+		public ResponseContainer<Patient> findById(@PathVariable int id, HttpServletRequest req, HttpServletResponse res) {
 			User requiring = auth.require(req, res);
-	        return patients.findById(id, requiring);
+	        return ResponseContainer.of(patients.getById(id, requiring));
 		}
 		
 		
 		@PatchMapping("/p/{id}")
-		public Patient update(@PathVariable int id, @RequestBody Patient patient, HttpServletRequest req, HttpServletResponse res) {
+		public ResponseContainer<Patient> update(@PathVariable int id, @RequestBody Patient patient, HttpServletRequest req, HttpServletResponse res) {
 			User requiring = auth.require(req, res);
 			patient.setId(id);
-			return patients.update(patient, requiring);
+			return ResponseContainer.of(patients.update(patient, requiring));
 		}
 		
 		@DeleteMapping("/p/{id}")
 		public ResponseEntity<?> disable(@PathVariable int id, HttpServletRequest req, HttpServletResponse res) {
 			User requiring = auth.require(req, res);
-			patients.disable(id, requiring);;
+			patients.disable(id, requiring);
 			return ResponseEntity.status(200).build();
 		}
 

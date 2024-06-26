@@ -44,6 +44,12 @@ public class PatientLogicImpl implements IPatientLogic {
 		return patientsrepository.findById(id);
 	}
 	
+	public Patient getById(int id, User requiring) throws NotAllowedException, NotFoundException {
+		Optional<Patient> opt = findById(id, requiring);
+		if(opt.isEmpty()) throw new NotFoundException("Patient not found. ");
+		return opt.get();
+	}
+	
 	@Override
     public Patient update(Patient paciente, User requiring) throws NotFoundException {
 		permits.require(requiring, Permit.UPDATE_PATIENT);

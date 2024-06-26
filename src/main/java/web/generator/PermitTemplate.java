@@ -7,7 +7,7 @@ import web.exceptions.BadRequestException;
 
 public class PermitTemplate {
 	
-	public static PermitTemplate getByName(String name) {
+	public static PermitTemplate getByName(String name) throws BadRequestException {
 		switch(name) {
 		case "ROOT": return ROOT;
 		case "DEFAULT": return DEFAULT;

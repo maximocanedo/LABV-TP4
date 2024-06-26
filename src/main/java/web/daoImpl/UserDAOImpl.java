@@ -47,6 +47,18 @@ public class UserDAOImpl implements IUserDAO {
 		return cfUser;
 	}
 	
+	public boolean checkUsernameAvailability(String username) {
+		final Optional<Boolean> cfUser = new Optional<Boolean>(false);
+		dataManager.run(session -> {
+			String hql = "SELECT COUNT(u) FROM User WHERE username = :username";
+	        Query query = session.createQuery(hql);
+	        query.setParameter("username", username);
+	        int c = (Integer) query.uniqueResult();
+	        cfUser.set(c == 0);
+		});
+		return cfUser.get().booleanValue();
+	}
+	
 	@Override
     public List<User> list() {
 		return list(1, 15);

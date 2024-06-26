@@ -72,6 +72,10 @@ public class UserLogicImpl implements IUserLogic {
 		} else throw new InvalidCredentialsException();
 	}
 	
+	public boolean checkUsernameAvailability(String username) {
+		return usersrepository.checkUsernameAvailability(username);
+	}
+	
 	@Override
     public Optional<User> findByUsername(String username, User requiring) {
 		permits.require(requiring, Permit.READ_USER_DATA);

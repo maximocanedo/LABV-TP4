@@ -37,11 +37,12 @@ public class PatientQuery implements Searchable {
 	@Override
 	public Query toQuery(Session session) {
 		StringBuilder hql = new StringBuilder("SELECT p FROM Patient p ");
+		hql.append(" WHERE (p.name LIKE :q OR p.surname LIKE :q) ");
 		if(getStatus() != FilterStatus.BOTH) {
-			hql.append("WHERE p.active = :status");
+			hql.append(" AND p.active = :status ");
 		}
 		Query query = session.createQuery(hql.toString());
-		//query.setParameter("id", "%" + getQueryText() + "%");
+		query.setParameter("q", "%" + getQueryText() + "%");
 		switch(getStatus()) {
 		case ONLY_ACTIVE: 
 			query.setParameter("status", true);
