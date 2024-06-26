@@ -7,6 +7,9 @@ public enum Permit {
 	READ_DISABLED_SPECIALTY_RECORDS,
 	DISABLE_SPECIALTY,
 	ENABLE_SPECIALTY,
+	READ_SPECIALTY,
+	SEARCH_SPECIALTY,
+	
 	// Paciente
 	// TODO: Funcionalidad y permisos para leer registros eliminados lógicamente.
 	CREATE_PATIENT,

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import web.dao.ISpecialtyDAO;
 import web.entity.Optional;
 import web.entity.Specialty;
+import web.entity.input.SpecialtyQuery;
 import web.exceptions.NotFoundException;
 
 @Component("specialtiesrepository")
@@ -99,5 +100,11 @@ public class SpecialtyDAOImpl implements ISpecialtyDAO {
             optional.set(((List<Specialty>) query.list()));
         });
         return optional.get();
+	}
+
+	@Override
+	public List<Specialty> search(SpecialtyQuery query) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
