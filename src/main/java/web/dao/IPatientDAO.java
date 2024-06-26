@@ -17,7 +17,7 @@ public interface IPatientDAO {
 	 * Agrega un paciente a la base de datos.
 	 * @param paciente Datos del paciente a agregar.
 	 */
-	void add(Patient paciente);
+	Patient add(Patient paciente);
 
 	/**
 	 * Obtiene un paciente por su id.

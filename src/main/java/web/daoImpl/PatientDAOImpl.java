@@ -22,10 +22,11 @@ public class PatientDAOImpl implements IPatientDAO {
 	public PatientDAOImpl() {}
 	
 	@Override
-	public void add(Patient paciente) {
+	public Patient add(Patient paciente) {
 		dataManager.transact(session -> {
 			session.save(paciente);
 		});
+		return paciente;
     }
 	
 	@Override

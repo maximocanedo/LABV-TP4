@@ -33,9 +33,9 @@ public class PatientLogicImpl implements IPatientLogic {
 	}
 	
 	@Override
-	public void add(Patient paciente, User requiring) {
+	public Patient add(Patient paciente, User requiring) {
 		permits.require(requiring, Permit.CREATE_PATIENT);
-		patientsrepository.add(paciente);
+		return patientsrepository.add(paciente);
 	}
 		
 	@Override
@@ -65,7 +65,7 @@ public class PatientLogicImpl implements IPatientLogic {
         if (paciente.getProvince() != null) original.setProvince(paciente.getProvince());
         if (paciente.getBirth() != null) original.setBirth(paciente.getBirth());
         if (paciente.getEmail() != null) original.setEmail(paciente.getEmail());
-        return patientsrepository.update(paciente);
+        return patientsrepository.update(original);
 	}
 
 	@Override

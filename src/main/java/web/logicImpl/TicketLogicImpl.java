@@ -162,7 +162,6 @@ public class TicketLogicImpl implements ITicketLogic {
                 .expiration(exp)
                 .signWith(this.getSessionKey())
                 .compact();
-        System.out.println("G: " + generated);
         return generated;
     }
     

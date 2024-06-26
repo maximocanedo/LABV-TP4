@@ -13,8 +13,9 @@ public interface IPatientLogic {
 	/**
 	 * Agrega un paciente a la base de datos.
 	 * @param paciente Datos del paciente a agregar. Debe contener la contraseña ya encriptada.
+	 * @return 
 	 */
-	void add(Patient paciente, User requirinig);
+	Patient add(Patient paciente, User requirinig);
 
 	/**
 	 * Obtiene un paciente por su id.
