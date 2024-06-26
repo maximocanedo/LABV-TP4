@@ -97,7 +97,7 @@ public class Patient {
 	@Column(name = "birth")
 	@Format(label = "Nació el", order = 5)
 	@JsonProperty("birth")
-	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern="yyyy-MM-dd")
 	public Date getBirth() {
 		return birth;
 	}

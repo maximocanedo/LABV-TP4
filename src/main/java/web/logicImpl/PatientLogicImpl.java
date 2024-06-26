@@ -35,6 +35,7 @@ public class PatientLogicImpl implements IPatientLogic {
 	@Override
 	public Patient add(Patient paciente, User requiring) {
 		permits.require(requiring, Permit.CREATE_PATIENT);
+		paciente.setActive(true);
 		return patientsrepository.add(paciente);
 	}
 		
