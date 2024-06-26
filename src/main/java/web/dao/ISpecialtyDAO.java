@@ -4,6 +4,7 @@ import java.util.List;
 
 import web.entity.Optional;
 import web.entity.Specialty;
+import web.entity.input.SpecialtyQuery;
 import web.exceptions.NotFoundException;
 
 public interface ISpecialtyDAO {
@@ -62,5 +63,7 @@ public interface ISpecialtyDAO {
     void enable(int id) throws NotFoundException;
 
 	Optional<Specialty> findById(int id, boolean includeInactives);
+
+	List<Specialty> search(SpecialtyQuery query);
 
 }
