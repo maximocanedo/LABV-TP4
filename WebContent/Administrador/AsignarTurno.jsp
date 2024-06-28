@@ -66,6 +66,6 @@
         <div class="col-3"></div>
       </div>
     </div>
-	<!--<jsp:include page="../Templates/CommonFooter"></jsp:include>-->
+<!--<jsp:include page="../Templates/CommonFooter"></jsp:include>-->
 </body>
 </html>

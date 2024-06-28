@@ -1,173 +1,80 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
-<!DOCTYPE html>
+	pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta charset="ISO-8859-1">
-<title>Medico</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-<style>
- table {
-      width: 100%;
-    }
-    th, td {
-      text-align: center;
-      padding: 8px;
-      border-bottom: 1px solid #ddd;
-    }
-    
-
-.btn {
-  display: inline-block;
-  padding: 5px 10px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  text-align: center;
-  text-decoration: none;
-  outline: none;
-  
-}
-
-.btn-rojo {
-  background-color: #ff4d4d;
-  color: white;
-}
-
-.btn-verde {
-  background-color: #4CAF50;
-  color: white;
-}
-
-.btn-Azul {
-  background-color: #0000FF ;
-  color: white;
-}
-
-.btn:hover {
-  background-color: #e6e6e6;
-}
-</style>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Medicos</title>
+<!--<jsp:include page="../Templates/CommonHeader"></jsp:include>-->
 </head>
 <body>
-<i class="bi bi-person-circle" style="font-size: 30px"> Juan Martin</i><br><br>
-<div>
-<label >Ingrese fecha</label>
-<input type="text" >
-<label >Ingrese hora</label>
-<input type="text">
-<input type="submit" value="Filtar" class="btn btn-Azul bi bi-check-circle">
-<input type="submit" value="Filtar por fecha actual" class="btn btn-Azul bi bi-check-circle">
-</div>
-<div>
-<table class="table table-striped">
-  <thead>
-    <tr style="border-bottom: 2px solid #fff;" >
-      <th>Id Turno</th>
-      <th>Fecha y hora</th>
-      <th>Nombre y Apellido</th>
-      <th>Dni</th>
-      <th>Fecha de nacimiento</th>
-      <th>Telefono</th>
-      <th>Correo Electronico</th>
-      <th>Status</th>
-      <th>observación</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr style="border:none;border-bottom: 2px solid #fff;"   >
-      <td>Dato 1</td>
-      <td>Dato 2</td>
-      <td>Dato 3</td>
-      <td>Dato 4</td>
-      <td>Dato 5</td>
-      <td>Dato 6</td>
-      <td>Dato 7</td>
-      <td>
-      <input type="submit" value="PRESENTE" class="btn btn-verde bi bi-check-circle">
-      <input type="submit" value="AUSENTE"  class="btn btn-rojo bi bi-x-circle">
-      </td>
-     <td> <input type="submit" value="+ OBSERVACIÒN" class="btn btn-Azul bi bi-check-circle"></td>
-    </tr>
-    <tr style="border:none;border-bottom: 2px solid #fff;"   >
-      <td>Dato 1</td>
-      <td>Dato 2</td>
-      <td>Dato 3</td>
-      <td>Dato 4</td>
-      <td>Dato 5</td>
-      <td>Dato 6</td>
-      <td>Dato 7</td>
-      <td>
-      <input type="submit" value="PRESENTE" class="btn btn-verde bi bi-check-circle">
-      <input type="submit" value="AUSENTE"  class="btn btn-rojo bi bi-x-circle">
-      </td>
-      <td> <input type="submit" value="+ OBSERVACIÒN" class="btn btn-Azul bi bi-check-circle"></td>
-    </tr>
-   <tr style="border:none;border-bottom: 2px solid #fff;"   >
-      <td>Dato 1</td>
-      <td>Dato 2</td>
-      <td>Dato 3</td>
-      <td>Dato 4</td>
-      <td>Dato 5</td>
-      <td>Dato 6</td>
-      <td>Dato 7</td>
-      <td> PRESENTE </td>
-      <td> Fiebre con dolor de garganta. se le dio 72hs de reposo</td>
-    <tr style="border:none;border-bottom: 2px solid #fff;"   >
-      <td>Dato 1</td>
-      <td>Dato 2</td>
-      <td>Dato 3</td>
-      <td>Dato 4</td>
-      <td>Dato 5</td>
-      <td>Dato 6</td>
-      <td>Dato 7</td>
-      <td>
-      <input type="submit" value="PRESENTE" class="btn btn-verde bi bi-check-circle">
-      <input type="submit" value="AUSENTE"  class="btn btn-rojo bi bi-x-circle">
-      </td>
-      <td> <input type="submit" value="+ OBSERVACIÒN" class="btn btn-Azul bi bi-check-circle"></td>
-    </tr>
-   <tr style="border:none;border-bottom: 2px solid #fff;"   >
-      <td>Dato 1</td>
-      <td>Dato 2</td>
-      <td>Dato 3</td>
-      <td>Dato 4</td>
-      <td>Dato 5</td>
-      <td>Dato 6</td>
-      <td>Dato 7</td>
-      <td>
-      <input type="submit" value="PRESENTE" class="btn btn-verde bi bi-check-circle">
-      <input type="submit" value="AUSENTE"  class="btn btn-rojo bi bi-x-circle">
-      </td>
-      <td> <input type="submit" value="+ OBSERVACIÒN" class="btn btn-Azul bi bi-check-circle"></td>
-    </tr>
-    <tr style="border:none;border-bottom: 2px solid #fff;"   >
-      <td>Dato 1</td>
-      <td>Dato 2</td>
-      <td>Dato 3</td>
-      <td>Dato 4</td>
-      <td>Dato 5</td>
-      <td>Dato 6</td>
-      <td>Dato 7</td>
-      <td>AUSENTE</td>
-      <td>AUSENTE</td>
-    </tr>
-    <tr style="border:none;border-bottom: 2px solid #fff;"   >
-      <td>Dato 1</td>
-      <td>Dato 2</td>
-      <td>Dato 3</td>
-      <td>Dato 4</td>
-      <td>Dato 5</td>
-      <td>Dato 6</td>
-      <td>Dato 7</td>
-      <td>
-      <input type="submit" value="PRESENTE" class="btn btn-verde bi bi-check-circle">
-      <input type="submit" value="AUSENTE"  class="btn btn-rojo bi bi-x-circle">
-      </td>
-      <td> <input type="submit" value="+ OBSERVACIÒN" class="btn btn-Azul bi bi-check-circle"></td>
-    </tr>
-  </tbody>
-</table>
-</div>
+<jsp:include page="Navbar.html"></jsp:include>
+	<div class="container-md my-3">
+        <h2>Turnos</h2>
+        <table id="example" class="table table-striped" style="width:100%">
+          <thead>
+              <tr>
+                  <th>Id</th>
+                  <th>Nombre Paciente</th>
+                  <th>Apellido Paciente</th>
+                  <th>DNI Paciente</th>
+                  <th>Estado</th>
+                  <th>Nombre Doctor</th>
+                  <th>Apellido Doctor</th>
+                  <th>Notas</th>
+                  <th></th>
+              </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>Juan</td>
+              <td>Pérez</td>
+              <td>12345678</td>
+              <td>Pendiente</td>
+              <td>Pedro</td>
+              <td>Rivas</td>
+              <td>Llevar estudios correspondientes</td>
+              <td><button type="button" class="btn btn-primary">Detalle</button></td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>María</td>
+            <td>González</td>
+            <td>87654321</td>
+            <td>Ausente</td>
+            <td>Laura</td>
+            <td>Sánchez</td>
+            <td>Revisión completa</td>
+            <td><button type="button" class="btn btn-primary">Detalle</button></td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>Carlos</td>
+            <td>Rodríguez</td>
+            <td>23456789</td>
+            <td>Ausente</td>
+            <td>Martín</td>
+            <td>Díaz</td>
+            <td>Requiere estudio de sangre</td>
+            <td><button type="button" class="btn btn-primary">Detalle</button></td>
+        </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+                <th>Id</th>
+                <th>Nombre Paciente</th>
+                <th>Apellido Paciente</th>
+                <th>DNI Paciente</th>
+                <th>Estado</th>
+                <th>Nombre Doctor</th>
+                <th>Apellido Doctor</th>
+                <th>Notas</th>
+                <th></th>
+            </tr>
+          </tfoot>
+      </table>
+      </div>
+	<!--<jsp:include page="../Templates/CommonFooter"></jsp:include>-->
 </body>
 </html>
