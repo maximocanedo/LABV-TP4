@@ -32,7 +32,7 @@
                 >Fecha Turno</label
               >
               <input
-                type="date"
+                type="datetime-local"
                 class="form-control"
                 id="appointmentDate"
                 aria-describedby="appointmentHelp"
