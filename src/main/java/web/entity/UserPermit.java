@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class UserPermit implements Serializable {
 
@@ -29,6 +31,7 @@ public class UserPermit implements Serializable {
 	@Id
 	@ManyToOne
 	@JoinColumn(name = "user")
+	@JsonIgnore
 	public User getUser() {
 		return user;
 	}

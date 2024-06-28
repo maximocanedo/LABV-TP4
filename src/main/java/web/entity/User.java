@@ -1,7 +1,12 @@
 package web.entity;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.*;
+
+import org.hibernate.annotations.Where;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -22,6 +27,7 @@ public class User {
 	private String password;
 	private boolean active = true;
 	private Doctor doctor;
+	private List<UserPermit> allowedPermits;
 	
 	public User() {}
 	
@@ -63,6 +69,40 @@ public class User {
 		return doctor;
 	}
 
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Where(clause = "allowed")
+	@JsonIgnore
+    public List<UserPermit> getAllowedPermits() {
+        return allowedPermits;
+    }
+	
+	@Transient
+	@JsonIgnore
+	public boolean loadedPermissions() {
+		return allowedPermits != null;
+	}
+	
+	@Transient
+    @JsonProperty("access")
+	public Permit[] getPermits() {
+		if(this.getAllowedPermits() == null) return new Permit[0];
+		List<Permit> permits = new ArrayList<Permit>();
+		for(UserPermit p : getAllowedPermits()) {
+			permits.add(p.getAction());
+		}
+		return (Permit[]) permits.toArray(new Permit[0]);	
+	}
+	
+	@Transient
+	@JsonIgnore
+	public boolean can(Permit action) {
+		for(Permit allowed : getPermits())
+			if(allowed.equals(action)) 
+				return true;
+		return false;
+	}
+	
+	
 	/* # Setters */
 	
 	public void setUsername(String username) {
@@ -84,6 +124,10 @@ public class User {
 	public void setDoctor(Doctor medico) {
 		this.doctor = medico;
 	}
+	
+	public void setAllowedPermits(List<UserPermit> allowedPermits) {
+        this.allowedPermits = allowedPermits;
+    }
 	
 	/* # Otros métodos */
 	

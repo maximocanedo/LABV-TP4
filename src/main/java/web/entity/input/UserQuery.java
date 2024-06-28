@@ -3,6 +3,8 @@ package web.entity.input;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
+import web.entity.Specialty;
+
 public class UserQuery implements Searchable {
 	private String q;
 	private FilterStatus status = FilterStatus.ONLY_ACTIVE;
@@ -36,7 +38,7 @@ public class UserQuery implements Searchable {
 	
 	@Override
 	public Query toQuery(Session session) {
-		StringBuilder hql = new StringBuilder("SELECT u FROM User u ");
+		StringBuilder hql = new StringBuilder("SELECT u FROM UserView u ");
 		hql.append("WHERE u.username LIKE :username ");
 		hql.append("AND u.name LIKE :name ");
 		if(getStatus() != FilterStatus.BOTH) {

@@ -11,6 +11,7 @@ import web.dao.IUserDAO;
 import web.entity.Optional;
 import web.entity.User;
 import web.entity.input.UserQuery;
+import web.entity.view.UserView;
 import web.exceptions.NotFoundException;
 
 @SuppressWarnings("unchecked")
@@ -42,7 +43,24 @@ public class UserDAOImpl implements IUserDAO {
 			String hql = "FROM User WHERE username = :username" + (includeInactives ? "" : " AND active = 1");
 	        Query query = session.createQuery(hql);
 	        query.setParameter("username", username);
-	        cfUser.set((User) query.uniqueResult());
+	        User x = (User) query.uniqueResult();
+	        if(x != null) {
+	        	Hibernate.initialize(x.getAllowedPermits());
+	        }
+	        cfUser.set(x);
+		});
+		return cfUser;
+	}
+
+
+    public Optional<UserView> findByUsername_limited(String username, boolean includeInactives) {
+		final Optional<UserView> cfUser = new Optional<UserView>(null);
+		dataManager.run(session -> {
+			String hql = "FROM UserView WHERE username = :username" + (includeInactives ? "" : " AND active = 1");
+	        Query query = session.createQuery(hql);
+	        query.setParameter("username", username);
+	        UserView x = (UserView) query.uniqueResult();
+	        cfUser.set(x);
 		});
 		return cfUser;
 	}
@@ -78,8 +96,8 @@ public class UserDAOImpl implements IUserDAO {
     }
 	
 	
-	public List<User> search(UserQuery q) {
-		final Optional<List<User>> opt = new Optional<List<User>>();
+	public List<UserView> search(UserQuery q) {
+		final Optional<List<UserView>> opt = new Optional<List<UserView>>();
 		dataManager.run(session -> {
 			Query query = q.toQuery(session);
 			opt.set(query.list());

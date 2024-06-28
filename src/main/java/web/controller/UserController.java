@@ -25,6 +25,7 @@ import web.entity.input.SignUpRequest;
 import web.entity.input.UserCredentials;
 import web.entity.input.UserQuery;
 import web.entity.output.ResponseContainer;
+import web.entity.view.UserView;
 import web.logicImpl.UserLogicImpl;
 
 @RestController
@@ -64,7 +65,7 @@ public class UserController {
 	}
 	
 	@GetMapping
-	public List<User> search(
+	public List<UserView> search(
 			@RequestParam(required = false, defaultValue = "") String q, 
 			@RequestParam(required = false, defaultValue = "") FilterStatus status,
 			@RequestParam(required = false, defaultValue = "1") int page,

@@ -11,6 +11,7 @@ import web.entity.Optional;
 import web.entity.Permit;
 import web.entity.User;
 import web.entity.input.UserQuery;
+import web.entity.view.UserView;
 import web.exceptions.InvalidCredentialsException;
 import web.exceptions.NotFoundException;
 import web.generator.PermitTemplate;
@@ -124,7 +125,7 @@ public class UserLogicImpl implements IUserLogic {
 		enable(user, requiring);
 	}
 	
-	public List<User> search(UserQuery q, User requiring) {
+	public List<UserView> search(UserQuery q, User requiring) {
 		permits.require(requiring, Permit.READ_USER_DATA);
 		return usersrepository.search(q);
 	}

@@ -1,5 +1,6 @@
 package web.logicImpl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import web.entity.User;
 import web.entity.UserPermit;
 import web.exceptions.NotAllowedException;
 import web.exceptions.NotFoundException;
+import web.exceptions.ServerException;
 import web.generator.PermitTemplate;
 import web.logic.IUserPermitLogic;
 
@@ -26,6 +28,36 @@ public class UserPermitLogicImpl implements IUserPermitLogic {
 	private UserDAOImpl usersrepository;
 	
 	public UserPermitLogicImpl() {}
+	
+	@Override
+	public User require(User requiring, Permit... permits) throws ServerException, NotFoundException {
+		if(requiring == null) throw new ServerException();
+		if(!requiring.loadedPermissions()) {
+			Optional<User> _u = usersrepository.findByUsername(requiring.getUsername());
+			if(_u.isEmpty()) throw new NotFoundException("User not found. ");
+			requiring = _u.get();
+		}
+		for(Permit action : permits) {
+			if(requiring.can(action)) return requiring;		
+		}
+		throw new NotAllowedException(permits);
+	}
+
+	@Override
+	public User requireAll(User requiring, Permit... permits) throws ServerException, NotFoundException {
+		if(requiring == null) throw new ServerException();
+		if(!requiring.loadedPermissions()) {
+			Optional<User> _u = usersrepository.findByUsername(requiring.getUsername());
+			if(_u.isEmpty()) throw new NotFoundException("User not found. ");
+			requiring = _u.get();
+		}
+		List<Permit> notAllowed = new ArrayList<Permit>();
+		for(Permit action : permits) {
+			if(!requiring.can(action)) notAllowed.add(action);
+		}
+		if(notAllowed.size() == permits.length) return requiring;
+		throw new NotAllowedException((Permit[]) notAllowed.toArray());
+	}
 	
 	/* (non-Javadoc)
 	 * @see logic.IUserPermitLogic#allow(java.lang.String, entity.Permit)
@@ -123,7 +155,7 @@ public class UserPermitLogicImpl implements IUserPermitLogic {
 	public List<UserPermit> list(User user) {
 		return userpermitsrepository.list(user);
 	}
-	
+	/*
 	public void require(String username, Permit permit) throws NotAllowedException {
 		if(!check(username, permit))
 			throw new NotAllowedException(permit);
@@ -133,7 +165,7 @@ public class UserPermitLogicImpl implements IUserPermitLogic {
 		//System.out.println("Requiring @" + user.getUsername() + " " + permit.toString() + " permit. ");
 		if(!check(user, permit))
 			throw new NotAllowedException(permit);
-	}
+	} */
 	
 	public void grant(String username, PermitTemplate template, User requiring) {
 		for(Permit permit : template.getPermits()) {

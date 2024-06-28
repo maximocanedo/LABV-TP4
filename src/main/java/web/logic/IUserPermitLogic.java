@@ -7,6 +7,7 @@ import web.entity.User;
 import web.entity.UserPermit;
 import web.exceptions.NotAllowedException;
 import web.exceptions.NotFoundException;
+import web.exceptions.ServerException;
 
 public interface IUserPermitLogic {
 	
@@ -26,9 +27,13 @@ public interface IUserPermitLogic {
 
 	List<UserPermit> list(User user);
 	
-	void require(String username, Permit permit) throws NotAllowedException;
+	//void require(String username, Permit permit) throws NotAllowedException;
 	
-	void require(User user, Permit permit) throws NotAllowedException;
+	public User require(User requiring, Permit... permits) throws ServerException, NotFoundException;
+	
+	public User requireAll(User requiring, Permit... permits) throws ServerException, NotFoundException;
+	
+	//void require(User user, Permit permit) throws NotAllowedException;
 	
 	/** # Deprecated methods **/
 
