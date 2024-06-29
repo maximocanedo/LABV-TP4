@@ -27,6 +27,7 @@ public class PatientLogicImpl implements IPatientLogic {
 	
 	public PatientLogicImpl() {}
 	
+	@Override
 	public List<Patient> search(PatientQuery q, User requiring) {
 		permits.require(requiring, Permit.READ_USER_DATA);
 		return patientsrepository.search(q);
@@ -70,12 +71,14 @@ public class PatientLogicImpl implements IPatientLogic {
 	}
 
 	@Override
+	@Deprecated
 	public List<Patient> list(int page, int size, User requiring) {
 		permits.require(requiring, Permit.READ_PATIENT_PERSONAL_DATA);
 		return patientsrepository.list(page, size);
 	}
 	
 	@Override
+	@Deprecated
     public List<Patient> list(User requiring) {
 		permits.require(requiring, Permit.READ_PATIENT_PERSONAL_DATA);
 		return list(1, 15);
@@ -88,6 +91,7 @@ public class PatientLogicImpl implements IPatientLogic {
 	}
 
 	@Override
+	@Deprecated
 	public List<Patient> list(int page, int size, boolean includeInactives, User requiring) {
 		permits.require(requiring, Permit.READ_PATIENT_PERSONAL_DATA);
 		return patientsrepository.list(page, size, includeInactives);

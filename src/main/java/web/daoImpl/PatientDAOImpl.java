@@ -47,16 +47,19 @@ public class PatientDAOImpl implements IPatientDAO {
 	}
 		
 	@Override
+	@Deprecated
 	public List<Patient> list() {
 		return list(1, 15);
     }
 	
 	@Override
+	@Deprecated
 	public List<Patient> list(int page, int size) {
 		return list(page, size, false);
     }
 	
 	@Override
+	@Deprecated
 	@SuppressWarnings("unchecked")
 	public List<Patient> list(int page, int size, boolean includeInactives) {
 		final Optional<List<Patient>> cfList = new Optional<List<Patient>>();

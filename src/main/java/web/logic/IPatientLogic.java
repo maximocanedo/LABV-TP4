@@ -5,6 +5,7 @@ import java.util.List;
 import web.entity.Optional;
 import web.entity.Patient;
 import web.entity.User;
+import web.entity.input.PatientQuery;
 import web.exceptions.NotAllowedException;
 import web.exceptions.NotFoundException;
 
@@ -33,20 +34,31 @@ public interface IPatientLogic {
 	 * Lista todos los pacientes de la base de datos, paginable.
 	 * @param page Número de página (De 1 en adelante)
 	 * @param size Cantidad de elementos.
+	 * @deprecated use {@link #search(PatientQuery, User)} instead
 	 */
+	@Deprecated
 	List<Patient> list(int page, int size, boolean includeInactives, User requirinig);
 
 	/**
 	 * Lista todos los pacientes de la base de datos, paginable.
 	 * @param page Número de página (De 1 en adelante)
 	 * @param size Cantidad de elementos.
+	 * @deprecated use {@link #search(PatientQuery, User)} instead
 	 */
+	@Deprecated
 	List<Patient> list(int page, int size, User requirinig);
 
 	/**
 	 * Lista todos los pacientes de la base de datos.
+	 * @deprecated use {@link #search(PatientQuery, User)} instead
 	 */
+	@Deprecated
 	List<Patient> list(User requirinig);
+	
+	/**
+	 * Busca pacientes.
+	 */
+	List<Patient> search(PatientQuery query, User requiring);
 
 	/**
 	 * Actualiza un paciente de la base de datos.

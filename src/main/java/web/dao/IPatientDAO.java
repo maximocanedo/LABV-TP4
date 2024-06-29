@@ -33,21 +33,27 @@ public interface IPatientDAO {
 
 	/**
 	 * Lista todos los pacientes de la base de datos.
+	 * @deprecated use {@link #search(PatientQuery)} instead
 	 */
+	@Deprecated
 	List<Patient> list();
 
 	/**
 	 * Lista todos los pacientes de la base de datos, paginable.
 	 * @param page Número de página (De 1 en adelante)
 	 * @param size Cantidad de elementos.
+	 * @deprecated use {@link #search(PatientQuery)} instead
 	 */
+	@Deprecated
 	List<Patient> list(int page, int size);
 	
 	/**
 	 * Lista todos los pacientes de la base de datos, paginable.
 	 * @param page Número de página (De 1 en adelante)
 	 * @param size Cantidad de elementos.
+	 * @deprecated use {@link #search(PatientQuery)} instead
 	 */
+	@Deprecated
 	List<Patient> list(int page, int size, boolean includeInactives);
 
 	/**
@@ -57,7 +63,7 @@ public interface IPatientDAO {
 	Patient update(Patient paciente);
 	
 	/**
-	 * Lista
+	 * Busca pacientes.
 	 */
 	public List<Patient> search(PatientQuery q);
 
