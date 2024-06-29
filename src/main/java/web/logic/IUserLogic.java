@@ -2,9 +2,13 @@ package web.logic;
 
 import java.util.List;
 
+import web.entity.IUser;
 import web.entity.Optional;
 import web.entity.User;
+import web.entity.input.UserQuery;
+import web.entity.view.UserView;
 import web.exceptions.InvalidCredentialsException;
+import web.exceptions.NotAllowedException;
 import web.exceptions.NotFoundException;
 import web.generator.PermitTemplate;
 
@@ -17,7 +21,23 @@ public interface IUserLogic {
 	 */
 	User signup(User user);
 	
+	/**
+	 * Registra una cuenta de usuario, con un set de permisos preestablecidos.
+	 * @param user Datos del usuario.
+	 * @param template Plantilla de permisos.
+	 * @param requiring Usuario que solicita el registro.
+	 * @return Usuario creado.
+	 */
 	User signup(User user, PermitTemplate template, User requiring);
+	
+	/**
+	 * Registra una cuenta de usuario, con un set de permisos preestablecidos.
+	 * @param user Datos del usuario.
+	 * @param templateName Nombre de la plantilla de permisos.
+	 * @param requiring Usuario que solicita el registro.
+	 * @return Usuario creado.
+	 */
+	User signup(User user, String templateName, User requiring);
 
 	/**
 	 * Revisa si existe un usuario con el nombre de usuario indicado y compara su contraseña con la indicada.
@@ -37,7 +57,11 @@ public interface IUserLogic {
 	 */
 	String login(String username, String password) throws InvalidCredentialsException, NotFoundException;
 	
-
+	/**
+	 * Verifica la disponibilidad de un nombre de usuario.
+	 */
+	boolean checkUsernameAvailability(String username);
+	
 	/**
 	 * Busca un usuario por su nombre de usuario.
 	 * @param username Nombre de usuario
@@ -49,6 +73,35 @@ public interface IUserLogic {
 	 * @param username Nombre de usuario
 	 */
 	Optional<User> findByUsername(String username, boolean includeInactives, User requiring);
+	
+	/**
+	 * Busca un usuario por su nombre de usuario.
+	 * @param username Nombre de usuario.
+	 * @param requiring Usuario que realiza la petición.
+	 * @return Usuario solicitado.
+	 * @throws NotFoundException Si el usuario no existe.
+	 * @throws NotAllowedException Si el usuario que realiza la petición no tiene los suficientes permisos.
+	 */
+	User getByUsername(String username, User requiring) throws NotFoundException, NotAllowedException;
+	
+	/**
+	 * Busca un usuario por su nombre de usuario.
+	 * @param username Nombre de usuario.
+	 * @param includeInactives Incluir usuarios deshabilitados.
+	 * @param requiring Usuario que realiza la petición.
+	 * @return Usuario solicitado.
+	 * @throws NotFoundException Si el usuario no existe.
+	 * @throws NotAllowedException Si el usuario que realiza la petición no tiene los suficientes permisos.
+	 */
+	IUser getByUsername(String username, boolean includeInactives, User requiring) throws NotFoundException, NotAllowedException;
+	
+	/**
+	 * Busca usuarios.
+	 * @param q Filtros y paginación a aplicar.
+	 * @param requiring Usuario que solicita la búsqueda.
+	 * @return Lista de usuarios.
+	 */
+	List<UserView> search(UserQuery q, User requiring);
 
 	/**
 	 * Deshabilita un usuario.
@@ -61,25 +114,16 @@ public interface IUserLogic {
 	 * @param user Usuario a habilitar.
 	 */
 	void enable(User user, User requiring) throws NotFoundException;
+	
+	/**
+	 * Deshabilita un usuario.
+	 */
+	void disable(String username, User requiring) throws NotFoundException;
 
 	/**
-	 * Lista todos los usuarios de la base de datos.
-	 * @param page Número de página (De 1 en adelante)
-	 * @param size Cantidad de elementos.
+	 * Habilita un usuario.
 	 */
-	List<User> list(int page, int size, boolean includeInactives, User requiring);
-
-	/**
-	 * Lista todos los usuarios de la base de datos.
-	 * @param page Número de página (De 1 en adelante)
-	 * @param size Cantidad de elementos.
-	 */
-	List<User> list(int page, int size, User requiring);
-
-	/**
-	 * Lista todos los usuarios de la base de datos.
-	 */
-	List<User> list(User requiring);
+	void enable(String username, User requiring) throws NotFoundException;
 
 	/**
 	 * Cambia la contraseña de un usuario sólo si la contraseña ingresada coincide con la actual.
@@ -89,7 +133,6 @@ public interface IUserLogic {
 	 */
 	void changePassword(String username, String currentPassword, String newPassword) throws NotFoundException;
 	
-
 	/**
 	 * Cambia la contraseña de un usuario sólo si la contraseña ingresada coincide con la actual.
 	 * @param username Nombre de usuario.
@@ -164,6 +207,28 @@ public interface IUserLogic {
 	 */
 	@Deprecated
 	void update(User user) throws NotFoundException;
+
+	/**
+	 * Lista todos los usuarios de la base de datos.
+	 * @param page Número de página (De 1 en adelante)
+	 * @param size Cantidad de elementos.
+	 */
+	@Deprecated
+	List<User> list(int page, int size, boolean includeInactives, User requiring);
+
+	/**
+	 * Lista todos los usuarios de la base de datos.
+	 * @param page Número de página (De 1 en adelante)
+	 * @param size Cantidad de elementos.
+	 */
+	@Deprecated
+	List<User> list(int page, int size, User requiring);
+
+	/**
+	 * Lista todos los usuarios de la base de datos.
+	 */
+	@Deprecated
+	List<User> list(User requiring);
 
 
 }

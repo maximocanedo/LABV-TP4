@@ -32,11 +32,6 @@ public class UserDAOImpl implements IUserDAO {
     }
 	
 	@Override
-    public Optional<User> findByUsername(String username) {
-		return findByUsername(username, false);
-	}
-	
-	@Override
     public Optional<User> findByUsername(String username, boolean includeInactives) {
 		final Optional<User> cfUser = new Optional<User>(null);
 		dataManager.run(session -> {
@@ -51,9 +46,31 @@ public class UserDAOImpl implements IUserDAO {
 		});
 		return cfUser;
 	}
+	
+	@Override
+    public Optional<User> findByUsername(String username) {
+		return findByUsername(username, false);
+	}
+	
+	public User getByUsername(String username, boolean includeInactives) {
+		return findByUsername(username, includeInactives).get();
+	}
+	
+	public User getByUsername(String username) {
+		return findByUsername(username).get();
+	}
+	
+	public UserView getBasicByUsername(String username, boolean includeInactives) {
+		return findBasicByUsername(username, includeInactives).get();
+	}
+	
+	public UserView getBasicByUsername(String username) {
+		return findBasicByUsername(username, false).get();
+	}
 
 
-    public Optional<UserView> findByUsername_limited(String username, boolean includeInactives) {
+	@Override
+    public Optional<UserView> findBasicByUsername(String username, boolean includeInactives) {
 		final Optional<UserView> cfUser = new Optional<UserView>(null);
 		dataManager.run(session -> {
 			String hql = "FROM UserView WHERE username = :username" + (includeInactives ? "" : " AND active = 1");
@@ -64,7 +81,8 @@ public class UserDAOImpl implements IUserDAO {
 		});
 		return cfUser;
 	}
-	
+
+	@Override
 	public boolean checkUsernameAvailability(String username) {
 		final Optional<Boolean> cfUser = new Optional<Boolean>(false);
 		dataManager.run(session -> {
@@ -78,11 +96,13 @@ public class UserDAOImpl implements IUserDAO {
 	}
 	
 	@Override
+	@Deprecated
     public List<User> list() {
 		return list(1, 15);
     }
 	
 	@Override
+	@Deprecated
 	public List<User> list(int page, int size, boolean includeInactives) {
 		final Optional<List<User>> cfList = new Optional<List<User>>();
 		dataManager.run(session -> {
@@ -95,7 +115,8 @@ public class UserDAOImpl implements IUserDAO {
 		return cfList.get();
     }
 	
-	
+
+	@Override
 	public List<UserView> search(UserQuery q) {
 		final Optional<List<UserView>> opt = new Optional<List<UserView>>();
 		dataManager.run(session -> {
@@ -122,6 +143,7 @@ public class UserDAOImpl implements IUserDAO {
 	}
 
 	@Override
+	@Deprecated
 	public List<User> list(int page, int size) {
 		return list(page, size, false);
 	}

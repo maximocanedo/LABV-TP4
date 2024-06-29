@@ -20,6 +20,7 @@ public enum Permit {
 	ENABLE_PATIENT,
 	// Doctor
 	CREATE_DOCTOR,
+	// Leer datos personales del doctor. No se necesitan permisos para leer un doctor.
 	READ_DOCTOR,
 	READ_DOCTOR_APPOINTMENTS,
 	UPDATE_DOCTOR_PERSONAL_DATA,

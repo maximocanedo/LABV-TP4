@@ -20,7 +20,7 @@ import web.formatter.Formatter;
 @Entity
 @Card(name="Usuario", size=24)
 @Table(name="users")
-public class User {
+public class User implements IUser {
 	
 	private String username;
 	private String name;
@@ -34,6 +34,7 @@ public class User {
 	/* # Getters */
 	
 	@Id
+	@Override
 	@Column(name="username", unique=true, nullable=false)
 	@Format(omitLabel=true, prefix="@")
 	@JsonProperty("username")
@@ -41,6 +42,7 @@ public class User {
 		return this.username;
 	}
 
+	@Override
 	@Column(name="name")
 	@Format(label="Nombre")
 	@JsonProperty("name")
@@ -55,6 +57,7 @@ public class User {
 		return this.password;
 	}
 
+	@Override
 	@Column(name="active")
 	@Format(omitLabel = true, whenTrue = "", whenFalse = "(!) Usuario deshabilitado. ")
 	@JsonProperty("active")
@@ -87,6 +90,7 @@ public class User {
 	public Permit[] getPermits() {
 		if(this.getAllowedPermits() == null) return new Permit[0];
 		List<Permit> permits = new ArrayList<Permit>();
+		permits.size();
 		for(UserPermit p : getAllowedPermits()) {
 			permits.add(p.getAction());
 		}
@@ -104,11 +108,13 @@ public class User {
 	
 	
 	/* # Setters */
-	
+
+	@Override
 	public void setUsername(String username) {
 		this.username = username;
 	}
 
+	@Override
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -117,6 +123,7 @@ public class User {
 		this.password = password;
 	}
 
+	@Override
 	public void setActive(boolean status) {
 		this.active = status;
 	}

@@ -33,7 +33,7 @@ public class DoctorLogicImpl implements IDoctorLogic {
 
     @Override
     public Optional<Doctor> findById(int id, User requiring) {
-    	permits.require(requiring, Permit.READ_DOCTOR);
+    	requiring = permits.require(requiring, Permit.READ_APPOINTMENT, Permit.READ_DOCTOR);
         return doctorsrepository.findById(id);
     }
 

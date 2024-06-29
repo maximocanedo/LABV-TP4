@@ -8,6 +8,7 @@ import org.hibernate.annotations.Immutable;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import web.entity.IUser;
 import web.formatter.Card;
 import web.formatter.Format;
 import web.formatter.Formatter;
@@ -17,7 +18,7 @@ import web.formatter.Formatter;
 @Immutable
 @Card(name="Usuario", size=24)
 @Table(name="users")
-public class UserView {
+public class UserView implements IUser {
 	
 	private String username;
 	private String name;
@@ -29,20 +30,23 @@ public class UserView {
 	/* # Getters */
 	
 	@Id
-	@Column(name="username", unique=true, nullable=false)
-	@Format(omitLabel=true, prefix="@")
+	@Override
 	@JsonProperty("username")
+	@Format(omitLabel=true, prefix="@")
+	@Column(name="username", unique=true, nullable=false)
 	public String getUsername() {
 		return this.username;
 	}
 
+	@Override
 	@Column(name="name")
-	@Format(label="Nombre")
 	@JsonProperty("name")
+	@Format(label="Nombre")
 	public String getName() {
 		return name;
 	}
 
+	@Override
 	@Column(name="active")
 	@Format(omitLabel = true, whenTrue = "", whenFalse = "(!) Usuario deshabilitado. ")
 	@JsonProperty("active")
@@ -58,15 +62,18 @@ public class UserView {
 	}
 
 	/* # Setters */
-	
+
+	@Override
 	public void setUsername(String username) {
 		this.username = username;
 	}
 
+	@Override
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	@Override
 	public void setActive(boolean status) {
 		this.active = status;
 	}

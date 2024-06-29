@@ -32,11 +32,11 @@ public class UserPermitLogicImpl implements IUserPermitLogic {
 	@Override
 	public User require(User requiring, Permit... permits) throws ServerException, NotFoundException {
 		if(requiring == null) throw new ServerException();
-		if(!requiring.loadedPermissions()) {
+		//if(requiring.getAllowedPermits() == null) {
 			Optional<User> _u = usersrepository.findByUsername(requiring.getUsername());
 			if(_u.isEmpty()) throw new NotFoundException("User not found. ");
 			requiring = _u.get();
-		}
+		//}
 		for(Permit action : permits) {
 			if(requiring.can(action)) return requiring;		
 		}

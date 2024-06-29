@@ -7,12 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import web.daoImpl.UserDAOImpl;
+import web.entity.IUser;
 import web.entity.Optional;
 import web.entity.Permit;
 import web.entity.User;
 import web.entity.input.UserQuery;
 import web.entity.view.UserView;
 import web.exceptions.InvalidCredentialsException;
+import web.exceptions.NotAllowedException;
 import web.exceptions.NotFoundException;
 import web.generator.PermitTemplate;
 import web.logic.ITicketLogic;
@@ -50,15 +52,9 @@ public class UserLogicImpl implements IUserLogic {
 		return newUser;
 	}
 
+	@Override
     public User signup(User user, String templateName, User requiring) {
 		return signup(user, PermitTemplate.getByName(templateName), requiring);
-	}
-
-	
-	@Deprecated
-	private Optional<User> hideSensitiveData(Optional<User> u) {
-		
-		return u;
 	}
 	
 	@Override
@@ -73,6 +69,7 @@ public class UserLogicImpl implements IUserLogic {
 		} else throw new InvalidCredentialsException();
 	}
 	
+	@Override
 	public boolean checkUsernameAvailability(String username) {
 		return usersrepository.checkUsernameAvailability(username);
 	}
@@ -89,16 +86,28 @@ public class UserLogicImpl implements IUserLogic {
 		return (usersrepository.findByUsername(username, includeInactive));
 	}
 	
-	public User getByUsername(String username, boolean includeInactive, User requiring) {
-		Optional<User> opt = findByUsername(username, includeInactive, requiring);
-		if(opt.isEmpty()) throw new NotFoundException("User not found. ");
-		else return opt.get();
+	@Override
+	public IUser getByUsername(String username, boolean includeInactive, User requiring) throws NotFoundException, NotAllowedException {
+		requiring = permits.require(requiring, Permit.READ_USER_DATA);
+		IUser opt = null;
+		if(requiring.can(Permit.READ_DOCTOR)) {
+			opt = usersrepository.getByUsername(username, includeInactive);
+		} else opt = usersrepository.getBasicByUsername(username, includeInactive);
+		if(opt == null) throw new NotFoundException("User not found. ");
+		return opt;
 	}
 	
-	public User getByUsername(String username, User requiring) {
+	@Override
+	public User getByUsername(String username, User requiring) throws NotFoundException, NotAllowedException {
 		Optional<User> opt = findByUsername(username, false, requiring);
 		if(opt.isEmpty()) throw new NotFoundException("User not found. ");
 		else return opt.get();
+	}
+
+	@Override
+	public List<UserView> search(UserQuery q, User requiring) {
+		permits.require(requiring, Permit.READ_USER_DATA);
+		return usersrepository.search(q);
 	}
 	
 	@Override
@@ -108,6 +117,7 @@ public class UserLogicImpl implements IUserLogic {
 		usersrepository.update(user);
 	}
 	
+	@Override
 	public void disable(String username, User requiring) {
 		User user = getByUsername(username, requiring);
 		disable(user, requiring);
@@ -119,32 +129,11 @@ public class UserLogicImpl implements IUserLogic {
 		user.setActive(true);
 		usersrepository.update(user);
 	}
-	
+
+	@Override
 	public void enable(String username, User requiring) {
 		User user = getByUsername(username, requiring);
 		enable(user, requiring);
-	}
-	
-	public List<UserView> search(UserQuery q, User requiring) {
-		permits.require(requiring, Permit.READ_USER_DATA);
-		return usersrepository.search(q);
-	}
-	
-	@Override
-    public List<User> list(int page, int size, User requiring) {
-		permits.require(requiring, Permit.READ_USER_DATA);
-		return usersrepository.list(page, size);
-	}
-	
-	@Override
-    public List<User> list(int page, int size, boolean includeInactives, User requiring) {
-		permits.require(requiring, Permit.READ_USER_DATA);
-		return usersrepository.list(page, size, includeInactives);
-	}
-	
-	@Override
-    public List<User> list(User requiring) {
-		return list(1, 15, requiring);
 	}
 	
 	@Override
@@ -156,7 +145,6 @@ public class UserLogicImpl implements IUserLogic {
 		usersrepository.update(original);
 	}
 	
-
 	@Override
     public void changePassword(String username, String newPassword, User requiring) throws NotFoundException {
 		if(username != requiring.getUsername())
@@ -190,10 +178,13 @@ public class UserLogicImpl implements IUserLogic {
 		return tickets.startToken(user.get().getUsername(), "Testing device", "Device #001");
 	}
 	
-	
-	
-	
+		
 	/** # Deprecated methods **/
+	
+	@Deprecated
+	private Optional<User> hideSensitiveData(Optional<User> u) {
+		return u;
+	}
 	
 	@Override
 	@Deprecated
@@ -250,5 +241,24 @@ public class UserLogicImpl implements IUserLogic {
 		usersrepository.update(user);
 	}
 	
+	@Override
+	@Deprecated
+    public List<User> list(int page, int size, User requiring) {
+		permits.require(requiring, Permit.READ_USER_DATA);
+		return usersrepository.list(page, size);
+	}
+	
+	@Override
+	@Deprecated
+    public List<User> list(int page, int size, boolean includeInactives, User requiring) {
+		permits.require(requiring, Permit.READ_USER_DATA);
+		return usersrepository.list(page, size, includeInactives);
+	}
+	
+	@Override
+	@Deprecated
+    public List<User> list(User requiring) {
+		return list(1, 15, requiring);
+	}
 	
 }

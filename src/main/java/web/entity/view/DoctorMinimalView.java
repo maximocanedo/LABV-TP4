@@ -20,8 +20,10 @@ import javax.persistence.Transient;
 import org.hibernate.annotations.Immutable;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import web.entity.IDoctor;
 import web.entity.Schedule;
 import web.entity.Specialty;
 import web.formatter.Card;
@@ -32,7 +34,7 @@ import web.formatter.Formatter;
 @Immutable
 @Card(name = "Médico", size = 48)
 @Table(name = "doctors")
-public class DoctorMinimalView {
+public class DoctorMinimalView implements IDoctor {
     
     private int id;
     private int file;
@@ -49,32 +51,37 @@ public class DoctorMinimalView {
 	/* # Getters */
 	
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true)
+	@Override
 	@JsonProperty("id")
+    @Column(name = "id", unique = true)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int getId() {
 		return id;
 	}
-	
+
+	@Override
 	@Column(name = "file", unique = true)
 	@Format(label="Legajo", prefix="N.º ", order = 1)
 	@JsonProperty("file")
 	public int getFile() {
 		return file;
 	}
-	
+
+	@Override
 	@Column(name = "name")
 	@JsonProperty("name")
 	public String getName() {
 		return name;
 	}
-	
+
+	@Override
 	@Column(name = "surname")
 	@JsonProperty("surname")
 	public String getSurname() {
 		return surname;
 	}
-	
+
+	@Override
 	@ManyToOne
 	@JsonProperty("specialty")
     @JoinColumn(name = "specialty")
@@ -90,24 +97,31 @@ public class DoctorMinimalView {
 		return user;
 	}
 
+	@Override
 	@Transient
+	@JsonIgnore
 	@Format(omitLabel = true, order = 0)
 	public String getFullName() {
 		return this.getSurname() + ", " + this.getName();
 	}
 
+	@Override
 	@Transient
+	@JsonIgnore
 	@Format(omitLabel = true, prefix = "@", order = 9)
 	public String getUsername() {
 		return getUser().getUsername();
 	}
 
+	@Override
 	@Transient
+	@JsonIgnore
 	@Format(label = "Esp.", order = 2)
 	public String getSpecialtyName() {
 		return specialty.getName();
 	}
-	
+
+	@Override
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
         name = "doctor_schedules",
@@ -117,14 +131,17 @@ public class DoctorMinimalView {
 	public Set<Schedule> getSchedules() {
 		return this.schedules;
 	}
-	
+
+	@Override
 	@Column(name = "active")
 	@Format(omitLabel = true, whenTrue = "", whenFalse = "(!) Médico deshabilitado")
 	public boolean isActive() {
 		return active;
 	}
-	
+
+	@Override
 	@Transient
+	@JsonIgnore
 	@Format(label = "Horarios")
 	public String listSchedules() {
 		String schedules = "";
@@ -135,23 +152,28 @@ public class DoctorMinimalView {
 	}
 	
 	/* # Setters */
-	
+
+	@Override
 	public void setId(int id) {
 		this.id = id;
 	}
 
+	@Override
 	public void setFile(int file) {
 		this.file = file;
 	}
 
+	@Override
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	@Override
 	public void setSurname(String surname) {
 		this.surname = surname;
 	}
 
+	@Override
 	public void setSpecialty(Specialty specialty) {
 		this.specialty = specialty;
 	}
@@ -159,11 +181,13 @@ public class DoctorMinimalView {
 	public void setUser(UserView user) {
 		this.user = user;
 	}
-	
+
+	@Override
 	public void setSchedules(Set<Schedule> schedules) {
 		this.schedules = schedules;
 	}
 
+	@Override
 	public void setActive(boolean active) {
 		this.active = active;
 	}

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import web.entity.IUser;
 import web.entity.User;
 import web.entity.input.FilterStatus;
 import web.entity.input.SignUpRequest;
@@ -79,9 +80,9 @@ public class UserController {
 	/** # Acciones con terceros **/
 		
 	@GetMapping("/u/{username:.+}")
-    public ResponseContainer<User> findUser(@PathVariable String username, HttpServletRequest req, HttpServletResponse res) {
+    public ResponseContainer<IUser> findUser(@PathVariable String username, HttpServletRequest req, HttpServletResponse res) {
 		User requiring = auth.require(req, res);
-        return ResponseContainer.of(users.getByUsername(username, requiring));
+        return ResponseContainer.of(users.getByUsername(username, false, requiring));
     }
 	
 	@PutMapping("/u/{username:.+}")
