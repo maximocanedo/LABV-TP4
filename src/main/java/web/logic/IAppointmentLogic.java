@@ -6,6 +6,7 @@ import java.util.List;
 import web.entity.Appointment;
 import web.entity.Optional;
 import web.entity.User;
+import web.entity.input.AppointmentQuery;
 import web.exceptions.NotFoundException;
 
 public interface IAppointmentLogic {
@@ -45,11 +46,14 @@ public interface IAppointmentLogic {
 	 */
 	Optional<Appointment> findById(int id, boolean includeInactives, User requiring);
 
+	List<Appointment> search(AppointmentQuery q, User requiring);
+	
 	/**
 	 * Devuelve una lista de turnos.
 	 * @param page Número de página (Comienza en 1)
 	 * @param size Tamaño de página
 	 */
+	@Deprecated
 	List<Appointment> list(int page, int size, boolean includeInactives, User requiring);
 	
 	/**
@@ -57,11 +61,13 @@ public interface IAppointmentLogic {
 	 * @param page Número de página (Comienza en 1)
 	 * @param size Tamaño de página
 	 */
+	@Deprecated
 	List<Appointment> list(int page, int size, User requiring);
 
 	/**
 	 * Devuelve una lista de turnos.
 	 */
+	@Deprecated
 	List<Appointment> list(User requiring);
 
 	/**

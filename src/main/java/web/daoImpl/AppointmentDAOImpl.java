@@ -11,6 +11,7 @@ import web.dao.IAppointmentDAO;
 import web.entity.Appointment;
 import web.entity.AppointmentStatus;
 import web.entity.Optional;
+import web.entity.input.AppointmentQuery;
 import web.exceptions.NotFoundException;
 @Component("appointmentsrepository")
 public class AppointmentDAOImpl implements IAppointmentDAO {
@@ -44,16 +45,19 @@ public class AppointmentDAOImpl implements IAppointmentDAO {
 	}
 
 	@Override
+	@Deprecated
     public List<Appointment> list() {
 		return list(1, 15);
 	}
 	
 	@Override
+	@Deprecated
     public List<Appointment> list(int page, int size) {
 		return list(page, size, false);
 	}
 
 	@Override
+	@Deprecated
     @SuppressWarnings("unchecked")
 	public List<Appointment> list(int page, int size, boolean includeInactives) {
 		final Optional<List<Appointment>> optional = new Optional<>();
@@ -66,6 +70,7 @@ public class AppointmentDAOImpl implements IAppointmentDAO {
 		});
 		return optional.get();
 	}
+	
 
 	@Override
     public void update(Appointment turno) {
@@ -130,5 +135,16 @@ public class AppointmentDAOImpl implements IAppointmentDAO {
 			r.set(l.intValue());
 		});
 		return r.get();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Appointment> search(AppointmentQuery q) {
+		final Optional<List<Appointment>> opt = new Optional<List<Appointment>>();
+		dataManager.run(session -> {
+			Query query = q.toQuery(session);
+			opt.set((List<Appointment>) query.list()); 
+		});
+		return opt.get();
 	}
 }

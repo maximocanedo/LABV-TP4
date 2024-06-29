@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import web.dao.IAppointmentDAO;
 import web.entity.*;
+import web.entity.input.AppointmentQuery;
 import web.exceptions.NotFoundException;
 import web.logic.IAppointmentLogic;
 
@@ -178,6 +179,12 @@ public class AppointmentLogicImpl implements IAppointmentLogic {
 	@Deprecated
 	public List<Appointment> list(int page, int size, boolean includeInactives) {
 		return appointmentsrepository.list(page, size, includeInactives);
+	}
+
+	@Override
+	public List<Appointment> search(AppointmentQuery q, User requiring) {
+		permits.require(requiring, Permit.READ_APPOINTMENT);
+		return appointmentsrepository.search(q);
 	}
 	
 }
