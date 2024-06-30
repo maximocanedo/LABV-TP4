@@ -7,6 +7,7 @@ import web.entity.Appointment;
 import web.entity.Optional;
 import web.entity.User;
 import web.entity.input.AppointmentQuery;
+import web.entity.input.PatientQuery;
 import web.exceptions.NotFoundException;
 
 public interface IAppointmentLogic {
@@ -171,5 +172,6 @@ public interface IAppointmentLogic {
 	 */
 	@Deprecated
 	int countAbsencesBetween(Date startDate, Date endDate);
+
 
 }

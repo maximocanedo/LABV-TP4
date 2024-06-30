@@ -13,8 +13,9 @@ public interface IAppointmentDAO {
 	/**
 	 * Registra un turno
 	 * @param turno Datos del turno.
+	 * @return 
 	 */
-	void add(Appointment turno);
+	Appointment add(Appointment turno);
 
 	/**
 	 * Busca un Turno en la base de datos.

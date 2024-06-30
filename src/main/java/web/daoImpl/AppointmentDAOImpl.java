@@ -11,7 +11,9 @@ import web.dao.IAppointmentDAO;
 import web.entity.Appointment;
 import web.entity.AppointmentStatus;
 import web.entity.Optional;
+import web.entity.User;
 import web.entity.input.AppointmentQuery;
+import web.entity.input.PatientQuery;
 import web.exceptions.NotFoundException;
 @Component("appointmentsrepository")
 public class AppointmentDAOImpl implements IAppointmentDAO {
@@ -147,4 +149,5 @@ public class AppointmentDAOImpl implements IAppointmentDAO {
 		});
 		return opt.get();
 	}
+
 }

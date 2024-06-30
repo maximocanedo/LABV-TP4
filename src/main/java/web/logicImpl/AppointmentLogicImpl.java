@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 import web.dao.IAppointmentDAO;
 import web.entity.*;
 import web.entity.input.AppointmentQuery;
+import web.entity.input.PatientQuery;
+import web.exceptions.NotAllowedException;
 import web.exceptions.NotFoundException;
 import web.logic.IAppointmentLogic;
 
@@ -182,9 +184,22 @@ public class AppointmentLogicImpl implements IAppointmentLogic {
 	}
 
 	@Override
-	public List<Appointment> search(AppointmentQuery q, User requiring) {
+	public List<Appointment> search(AppointmentQuery patientQuery, User requiring) {
 		permits.require(requiring, Permit.READ_APPOINTMENT);
-		return appointmentsrepository.search(q);
+		return appointmentsrepository.search(patientQuery);
 	}
+	
+	public Appointment add(Appointment Appointment, User requiring) {
+		permits.require(requiring, Permit.CREATE_PATIENT);
+		Appointment.setActive(true);
+		return appointmentsrepository.add(Appointment);
+	}
+
+	public Appointment getById(int id, User requiring) throws NotAllowedException, NotFoundException {
+		Optional<Appointment> opt = findById(id, requiring);
+		if(opt.isEmpty()) throw new NotFoundException("Patient not found. ");
+		return opt.get();
+	}
+	
 	
 }
