@@ -8,7 +8,7 @@
 <!--<jsp:include page="../Templates/CommonHeader"></jsp:include>-->
 </head>
 <body>
-	<jsp:include page="Navbar.html"></jsp:include>
+	<!--<jsp:include page="Navbar.html"></jsp:include>-->
 	<div class="container-md my-3">
       <div class="row">
         <div class="col-3"></div>
