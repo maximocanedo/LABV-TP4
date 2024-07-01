@@ -40,7 +40,7 @@ public class DoctorLogicImpl implements IDoctorLogic {
     }
     
     public List<DoctorMinimalView> search(DoctorQuery query, User requiring) {
-    	permits.require(requiring, Permit.READ_DOCTOR);
+    	permits.require(requiring, Permit.READ_DOCTOR, Permit.CREATE_APPOINTMENT, Permit.READ_APPOINTMENT, Permit.UPDATE_APPOINTMENT);
     	return doctorsrepository.search(query);
     }
 
