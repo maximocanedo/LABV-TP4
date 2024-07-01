@@ -5,6 +5,7 @@ import java.util.List;
 import web.entity.Optional;
 import web.entity.Specialty;
 import web.entity.User;
+import web.entity.input.SpecialtyQuery;
 import web.exceptions.NotFoundException;
 
 public interface ISpecialtyLogic {
@@ -12,8 +13,9 @@ public interface ISpecialtyLogic {
 	/**
      * Agrega una especialidad a la base de datos.
      * @param specialty Datos de la especialidad a agregar.
+	 * @return 
      */
-	void add(Specialty specialty, User requiring);
+	Specialty add(Specialty specialty, User requiring);
 
 	/**
      * Busca una especialidad por su id.
@@ -22,11 +24,13 @@ public interface ISpecialtyLogic {
      */
 	Optional<Specialty> findById(int id);
 
+	List<Specialty> search(SpecialtyQuery query, User requiring);
+	
 	/**
      * Actualiza una especialidad en la base de datos.
      * @param specialty Especialidad con los datos a actualizar.
      */
-	void update(Specialty specialty, User requiring) throws NotFoundException;
+	Specialty update(Specialty specialty, User requiring) throws NotFoundException;
 
 	/**
      * Deshabilita una especialidad de la base de datos.
@@ -53,6 +57,7 @@ public interface ISpecialtyLogic {
      * @param size Cantidad de elementos por pagina.
      * @param includeInactiveRecords Si se deben incluir registros deshabilitados en la lista.
      */
+	@Deprecated
 	List<Specialty> list(int page, int size, boolean includeInactiveRecords, User requiring);
 
 	/**
@@ -60,17 +65,20 @@ public interface ISpecialtyLogic {
      * @param page Numero de pagina (De 1 en adelante)
      * @param size Cantidad de elementos por pagina.
      */
+	@Deprecated
 	List<Specialty> list(int page, int size);
 	
 	/**
      * Lista todas las especialidades de la base de datos.
      * @param includeInactiveRecords Si se deben incluir registros deshabilitados en la lista.
      */
+	@Deprecated
 	List<Specialty> list(boolean includeInactiveRecords, User requiring);
 
 	/**
     * Lista todas las especialidades de la base de datos.
     */
+	@Deprecated
 	List<Specialty> list();
 	
 	

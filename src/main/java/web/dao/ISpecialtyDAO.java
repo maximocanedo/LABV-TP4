@@ -13,7 +13,7 @@ public interface ISpecialtyDAO {
      * Agrega una especialidad a la base de datos.
      * @param especialidad Datos de la especialidad a agregar.
      */
-    void add(Specialty especialidad);
+    Specialty add(Specialty especialidad);
 
     /**
      * Busca una especialidad por su id.
@@ -25,6 +25,7 @@ public interface ISpecialtyDAO {
     /**
      * Lista todas las especialidades de la base de datos.
      */
+	@Deprecated
     List<Specialty> list();
 
     /**
@@ -32,23 +33,26 @@ public interface ISpecialtyDAO {
      * @param page Numero de pagina (De 1 en adelante)
      * @param size Cantidad de elementos por pagina.
      */
+	@Deprecated
     List<Specialty> list(int page, int size);
     
     /**
      * Lista las especialidades, permite incluir registros inactivos.
      */
+	@Deprecated
     List<Specialty> list(boolean showInactiveRecords);
     
     /**
      * Lista las especialidades, permite incluir registros inactivos, paginable.
      */
+	@Deprecated
     List<Specialty> list(int page, int size, boolean showInactiveRecords);
 
     /**
      * Actualiza una especialidad en la base de datos.
      * @param especialidad Especialidad con los datos a actualizar.
      */
-    void update(Specialty especialidad);
+    Specialty update(Specialty especialidad);
 
     /**
      * Deshabilita una especialidad de la base de datos.

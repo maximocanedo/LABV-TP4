@@ -6,14 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import web.dao.ISpecialtyDAO;
-import web.entity.Specialty;
-import web.entity.User;
-import web.entity.Doctor;
 import web.entity.Optional;
 import web.entity.Permit;
+import web.entity.Specialty;
+import web.entity.User;
+import web.entity.input.SpecialtyQuery;
 import web.exceptions.NotFoundException;
 import web.logic.ISpecialtyLogic;
-import web.entity.input.SpecialtyQuery;
 
 @Component("specialties")
 public class SpecialtyLogicImpl implements ISpecialtyLogic {
@@ -27,18 +26,18 @@ public class SpecialtyLogicImpl implements ISpecialtyLogic {
 	public SpecialtyLogicImpl() {}
 	
 	@Override
-    public void add(Specialty e, User requiring) {
+    public Specialty add(Specialty e, User requiring) {
 		permits.require(requiring, Permit.CREATE_SPECIALTY);
-		specialtiesRepository.add(e);
+		return specialtiesRepository.add(e);
 	}
 
 	public Optional<Specialty> findById(int id, boolean includeInactive, User requiring) {
-    	permits.require(requiring, Permit.READ_SPECIALTY);
+    	//permits.require(requiring, Permit.READ_SPECIALTY); //
 		return specialtiesRepository.findById(id, includeInactive);
 	}
 	
 	@Override
-    public void update(Specialty record, User requiring) throws NotFoundException {
+    public Specialty update(Specialty record, User requiring) throws NotFoundException {
 		permits.require(requiring, Permit.UPDATE_SPECIALTY);
     	Optional<Specialty> file = findById(record.getId(), false, requiring);
     	if(file.isEmpty()) throw new NotFoundException("Specialty not found");
@@ -47,7 +46,7 @@ public class SpecialtyLogicImpl implements ISpecialtyLogic {
         	original.setName(record.getName());
         if(record.getDescription() != null)
         	original.setDescription(record.getDescription());
-		specialtiesRepository.update(original);
+		return specialtiesRepository.update(original);
 	}
 	
 	@Override
@@ -66,80 +65,82 @@ public class SpecialtyLogicImpl implements ISpecialtyLogic {
 		specialtiesRepository.enable(id);
 	}
 	
+	@Override
 	public List<Specialty> search(SpecialtyQuery query, User requiring) {
-		permits.require(requiring, Permit.SEARCH_SPECIALTY);
+		// permits.require(requiring, Permit.SEARCH_SPECIALTY); //
 		return specialtiesRepository.search(query);
 	}
 	
 	@Override
+	@Deprecated
 	public List<Specialty> list(int page, int size, boolean includeInactiveRecords, User requiring) {
 		permits.require(requiring, Permit.READ_DISABLED_SPECIALTY_RECORDS);
 		return specialtiesRepository.list(page, size, includeInactiveRecords);
 	}
 
 	@Override
+	@Deprecated
 	public Optional<Specialty> findById(int id) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
+	@Deprecated
 	public void permanentlyDelete(Specialty specialty) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
+	@Deprecated
 	public List<Specialty> list(int page, int size) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
+	@Deprecated
 	public List<Specialty> list(boolean includeInactiveRecords, User requiring) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
+	@Deprecated
 	public List<Specialty> list() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
+	@Deprecated
 	public void add(Specialty specialty) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
+	@Deprecated
 	public void update(Specialty specialty) throws NotFoundException {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
+	@Deprecated
 	public void disable(int id) throws NotFoundException {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
+	@Deprecated
 	public void enable(int id) throws NotFoundException {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
+	@Deprecated
 	public List<Specialty> list(int page, int size, boolean includeInactiveRecords) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
+	@Deprecated
 	public List<Specialty> list(boolean includeInactiveRecords) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 }

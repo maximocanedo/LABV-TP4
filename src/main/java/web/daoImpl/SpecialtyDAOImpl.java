@@ -21,10 +21,11 @@ public class SpecialtyDAOImpl implements ISpecialtyDAO {
 	public SpecialtyDAOImpl() {}
 	
     @Override
-    public void add(Specialty record) {
+    public Specialty add(Specialty record) {
     	dataManager.transact(session -> {
             session.save(record);
         });
+    	return record;
     }
 
     @Override
@@ -45,20 +46,23 @@ public class SpecialtyDAOImpl implements ISpecialtyDAO {
     }
 
     @Override
+	@Deprecated
     public List<Specialty> list() {
         return list(1, 15);
     }
 
     @Override
+	@Deprecated
     public List<Specialty> list(int page, int size) {
         return this.list(page, size, false);
     }
 
     @Override
-    public void update(Specialty record) {
+    public Specialty update(Specialty record) {
     	dataManager.transact(session -> {
             session.update(record);
         });
+    	return record;
     }
 
     @Override
@@ -84,12 +88,14 @@ public class SpecialtyDAOImpl implements ISpecialtyDAO {
     }
 
 	@Override
+	@Deprecated
 	public List<Specialty> list(boolean showInactiveRecords) {
 		return this.list(1, 10, showInactiveRecords);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
+	@Deprecated
 	public List<Specialty> list(int page, int size, boolean showInactiveRecords) {
 		final Optional<List<Specialty>> optional = new Optional<>();
 		dataManager.run(session -> {
@@ -102,9 +108,14 @@ public class SpecialtyDAOImpl implements ISpecialtyDAO {
         return optional.get();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Specialty> search(SpecialtyQuery query) {
-		// TODO Auto-generated method stub
-		return null;
+		final Optional<List<Specialty>> optional = new Optional<>();
+		dataManager.run(session -> {
+			Query q = query.toQuery(session);
+			optional.set(q.list());
+		});
+		return optional.get();
 	}
 }
