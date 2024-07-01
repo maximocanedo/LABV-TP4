@@ -61,7 +61,7 @@ public interface IAppointmentDAO {
 	 * Actualiza la información de un turno en la base de datos.
 	 * @param turno Datos del turno a actualizar.
 	 */
-	void update(Appointment turno);
+	Appointment update(Appointment turno);
 	
 	/**
 	 * Elimina un turno de la base de datos.

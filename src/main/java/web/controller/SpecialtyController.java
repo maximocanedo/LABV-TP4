@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,7 +23,6 @@ import web.entity.User;
 import web.entity.input.FilterStatus;
 import web.entity.input.SpecialtyQuery;
 import web.logicImpl.SpecialtyLogicImpl;
-import web.controller.AuthUtils;
 
 @RestController
 @RequestMapping("/specialties")
@@ -61,7 +59,7 @@ public class SpecialtyController {
     
     @GetMapping("/s/{id}")
     public Optional<Specialty> findById(@PathVariable int id, HttpServletRequest req, HttpServletResponse res) {
-        User requiring = auth.require(req, res);
+        auth.require(req, res);
         return specialties.findById(id);
     }
     

@@ -7,7 +7,6 @@ import web.entity.Appointment;
 import web.entity.Optional;
 import web.entity.User;
 import web.entity.input.AppointmentQuery;
-import web.entity.input.PatientQuery;
 import web.exceptions.NotFoundException;
 
 public interface IAppointmentLogic {
@@ -16,7 +15,7 @@ public interface IAppointmentLogic {
 	 * Registra un turno
 	 * @param turno Datos del turno.
 	 */
-	void register(Appointment turno, User requiring);
+	Appointment register(Appointment turno, User requiring);
 
 	/**
 	 * Elimina permanentemente un turno.
@@ -75,7 +74,7 @@ public interface IAppointmentLogic {
 	 * Actualiza la información de un turno en la base de datos.
 	 * @param turno Datos del turno a actualizar.
 	 */
-	void update(Appointment turno, User requiring) throws NotFoundException;
+	Appointment update(Appointment turno, User requiring) throws NotFoundException;
 	
 	/**
 	 * Cuenta la cantidad de turnos marcados como presentes dentro del rango de fechas indicado.

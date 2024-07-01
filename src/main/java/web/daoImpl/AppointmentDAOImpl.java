@@ -11,10 +11,9 @@ import web.dao.IAppointmentDAO;
 import web.entity.Appointment;
 import web.entity.AppointmentStatus;
 import web.entity.Optional;
-import web.entity.User;
 import web.entity.input.AppointmentQuery;
-import web.entity.input.PatientQuery;
 import web.exceptions.NotFoundException;
+
 @Component("appointmentsrepository")
 public class AppointmentDAOImpl implements IAppointmentDAO {
 	@Autowired
@@ -23,10 +22,11 @@ public class AppointmentDAOImpl implements IAppointmentDAO {
 	public AppointmentDAOImpl() {}
 	
 	@Override
-    public void add(Appointment turno) {
+    public Appointment add(Appointment turno) {
 		dataManager.transact(session -> {
 			session.save(turno);
 		});
+		return turno;
 	}
 
 	@Override
@@ -75,10 +75,11 @@ public class AppointmentDAOImpl implements IAppointmentDAO {
 	
 
 	@Override
-    public void update(Appointment turno) {
+    public Appointment update(Appointment turno) {
 		dataManager.transact(session -> {
 			session.update(turno);
 		});
+		return turno;
 	}
 
 	@Override

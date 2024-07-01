@@ -7,9 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import web.dao.IAppointmentDAO;
-import web.entity.*;
+import web.entity.Appointment;
+import web.entity.Optional;
+import web.entity.Permit;
+import web.entity.User;
 import web.entity.input.AppointmentQuery;
-import web.entity.input.PatientQuery;
 import web.exceptions.NotAllowedException;
 import web.exceptions.NotFoundException;
 import web.logic.IAppointmentLogic;
@@ -26,9 +28,9 @@ public class AppointmentLogicImpl implements IAppointmentLogic {
 	public AppointmentLogicImpl() {}
 
 	@Override
-    public void register(Appointment t, User requiring) {
+    public Appointment register(Appointment t, User requiring) {
 		permits.require(requiring, Permit.CREATE_APPOINTMENT);
-		this.appointmentsrepository.add(t);
+		return this.appointmentsrepository.add(t);
 	}
 	
 	@Override
@@ -38,19 +40,21 @@ public class AppointmentLogicImpl implements IAppointmentLogic {
 	}
 	
 	@Override
+	@Deprecated
     public List<Appointment> list(int page, int size, User requiring) {
 		permits.require(requiring, Permit.READ_APPOINTMENT);
 		return this.appointmentsrepository.list(page, size);
 	}
 	
 	@Override
+	@Deprecated
     public List<Appointment> list(User requiring) {
 		permits.require(requiring, Permit.READ_APPOINTMENT);
 		return this.appointmentsrepository.list();
 	}
 
 	@Override
-    public void update(Appointment turno, User requiring) throws NotFoundException {
+    public Appointment update(Appointment turno, User requiring) throws NotFoundException {
 		permits.require(requiring, Permit.UPDATE_APPOINTMENT);
 		Optional<Appointment> search = findById(turno.getId());
 		if(search.isEmpty()) throw new NotFoundException();
@@ -60,7 +64,7 @@ public class AppointmentLogicImpl implements IAppointmentLogic {
         if (turno.getStatus() != null) original.setStatus(turno.getStatus());
         if (turno.getAssignedDoctor() != null) original.setAssignedDoctor(turno.getAssignedDoctor());
         if (turno.getPatient() != null) original.setPatient(turno.getPatient());
-		this.appointmentsrepository.update(turno);
+		return this.appointmentsrepository.update(turno);
 	}
 
 	@Override
@@ -100,6 +104,7 @@ public class AppointmentLogicImpl implements IAppointmentLogic {
 	}
 
 	@Override
+	@Deprecated
 	public List<Appointment> list(int page, int size, boolean includeInactives, User requiring) {
 		permits.require(requiring, Permit.READ_APPOINTMENT);
 		return appointmentsrepository.list(page, size, includeInactives);
@@ -189,15 +194,10 @@ public class AppointmentLogicImpl implements IAppointmentLogic {
 		return appointmentsrepository.search(patientQuery);
 	}
 	
-	public Appointment add(Appointment Appointment, User requiring) {
-		permits.require(requiring, Permit.CREATE_PATIENT);
-		Appointment.setActive(true);
-		return appointmentsrepository.add(Appointment);
-	}
 
 	public Appointment getById(int id, User requiring) throws NotAllowedException, NotFoundException {
 		Optional<Appointment> opt = findById(id, requiring);
-		if(opt.isEmpty()) throw new NotFoundException("Patient not found. ");
+		if(opt.isEmpty()) throw new NotFoundException("Appointment not found. ");
 		return opt.get();
 	}
 	
