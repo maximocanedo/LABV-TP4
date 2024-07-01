@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 import web.dao.IDoctorDAO;
 import web.entity.Doctor;
 import web.entity.Optional;
+import web.entity.input.DoctorQuery;
+import web.entity.view.DoctorMinimalView;
 import web.exceptions.NotFoundException;
 @Component("doctorsrepository")
 public class DoctorDAOImpl implements IDoctorDAO {
@@ -20,10 +22,11 @@ public class DoctorDAOImpl implements IDoctorDAO {
 	public DoctorDAOImpl() {}	
 	
     @Override
-    public void add(Doctor medico) {
+    public Doctor add(Doctor medico) {
     	dataManager.transact(session -> {
             session.save(medico);
         });
+    	return medico;
     }
     
     @Override
@@ -39,11 +42,13 @@ public class DoctorDAOImpl implements IDoctorDAO {
     }
     
     @Override
+    @Deprecated
     public List<Doctor> list() {
         return list(1, 15);
     }
     
     @Override
+    @Deprecated
     public List<Doctor> list(int page, int size) {
         return list(page, size, false);
     }
@@ -51,6 +56,7 @@ public class DoctorDAOImpl implements IDoctorDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
+    @Deprecated
 	public List<Doctor> list(int page, int size, boolean includeInactiveRecords) {
 		 final Optional<List<Doctor>> optionalList = new Optional<>();
 		 dataManager.run(session -> {
@@ -64,10 +70,11 @@ public class DoctorDAOImpl implements IDoctorDAO {
 	}
     
     @Override
-    public void update(Doctor medico) {
+    public Doctor update(Doctor medico) {
     	dataManager.transact(session -> {
             session.update(medico);
         });
+    	return medico;
     }
     
     @Override
@@ -195,5 +202,16 @@ public class DoctorDAOImpl implements IDoctorDAO {
 	@Override
 	public void enable(int id) throws NotFoundException {
 		updateStatus(id, true);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<DoctorMinimalView> search(DoctorQuery query) {
+		final Optional<List<DoctorMinimalView>> doctors = new Optional<List<DoctorMinimalView>>();
+		dataManager.run(session -> {
+			Query q = query.toQuery(session);
+			doctors.set(q.list());
+		});
+		return doctors.get();
 	}
 }

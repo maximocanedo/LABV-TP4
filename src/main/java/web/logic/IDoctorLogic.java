@@ -14,7 +14,7 @@ public interface IDoctorLogic {
      * Agrega un medico a la base de datos.
      * @param medico datos del medico a agregar.
      */
-    void add(Doctor medico, User requiring);
+    Doctor add(Doctor medico, User requiring);
 
     /**
      * Busca un médico por su ID.
@@ -39,6 +39,7 @@ public interface IDoctorLogic {
      * @param page Numero de pagina (De 1 en adelante)
      * @param size Cantidad de elementos por pagina.
      */
+    @Deprecated
     List<Doctor> list(int page, int size, boolean includeInactive, User requiring);
     
     /**
@@ -46,11 +47,13 @@ public interface IDoctorLogic {
      * @param page Numero de pagina (De 1 en adelante)
      * @param size Cantidad de elementos por pagina.
      */
+    @Deprecated
     List<Doctor> list(int page, int size, User requiring);
 
     /**
      * Lista todos los medicos de la base de datos.
      */
+    @Deprecated
     List<Doctor> list(User requiring);
     
     /**
@@ -99,7 +102,7 @@ public interface IDoctorLogic {
 	/**
 	 * Actualiza un médico de la base de datos.
 	 */
-	void update(Doctor medico, User requiring) throws NotFoundException;
+	Doctor update(Doctor medico, User requiring) throws NotFoundException;
 	
 	/**
 	 * Elimina permanentemente un médico de la base de datos.

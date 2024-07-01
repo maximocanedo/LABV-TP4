@@ -11,6 +11,8 @@ import web.entity.Doctor;
 import web.entity.Optional;
 import web.entity.Permit;
 import web.entity.User;
+import web.entity.input.DoctorQuery;
+import web.entity.view.DoctorMinimalView;
 import web.exceptions.NotFoundException;
 import web.logic.IDoctorLogic;
 
@@ -26,9 +28,9 @@ public class DoctorLogicImpl implements IDoctorLogic {
     public DoctorLogicImpl() {}
 
     @Override
-    public void add(Doctor medico, User requiring) {
+    public Doctor add(Doctor medico, User requiring) {
     	permits.require(requiring, Permit.CREATE_DOCTOR);
-        doctorsrepository.add(medico);
+        return doctorsrepository.add(medico);
     }
 
     @Override
@@ -36,14 +38,21 @@ public class DoctorLogicImpl implements IDoctorLogic {
     	requiring = permits.require(requiring, Permit.READ_APPOINTMENT, Permit.READ_DOCTOR);
         return doctorsrepository.findById(id);
     }
+    
+    public List<DoctorMinimalView> search(DoctorQuery query, User requiring) {
+    	permits.require(requiring, Permit.READ_DOCTOR);
+    	return doctorsrepository.search(query);
+    }
 
     @Override
+    @Deprecated
     public List<Doctor> list(int page, int size, User requiring) {
     	permits.require(requiring, Permit.READ_DOCTOR);
         return doctorsrepository.list(page, size);
     }
 
     @Override
+    @Deprecated
     public List<Doctor> list(User requiring) {
     	permits.require(requiring, Permit.READ_DOCTOR);
         return list(1, 15);
@@ -104,13 +113,14 @@ public class DoctorLogicImpl implements IDoctorLogic {
 	}
 
 	@Override
+    @Deprecated
 	public List<Doctor> list(int page, int size, boolean includeInactive, User requiring) {
     	permits.require(requiring, Permit.READ_DOCTOR);
 		return doctorsrepository.list(page, size, includeInactive);
 	}
 
 	@Override
-	public void update(Doctor medico, User requiring) throws NotFoundException {
+	public Doctor update(Doctor medico, User requiring) throws NotFoundException {
     	permits.require(requiring, Permit.UPDATE_DOCTOR_PERSONAL_DATA);
     	Optional<Doctor> search = findById(medico.getId());
     	if(search.isEmpty()) throw new NotFoundException();
@@ -125,7 +135,7 @@ public class DoctorLogicImpl implements IDoctorLogic {
         if (medico.getPhone() != null) original.setPhone(medico.getPhone());
         if (medico.getSpecialty() != null) original.setSpecialty(medico.getSpecialty());
         if (medico.getUser() != null) original.setUser(medico.getUser());
-		doctorsrepository.update(original);
+		return doctorsrepository.update(original);
 	}
 
 	@Override

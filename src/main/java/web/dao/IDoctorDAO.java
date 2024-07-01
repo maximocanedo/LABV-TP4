@@ -5,6 +5,8 @@ import java.util.List;
 
 import web.entity.Doctor;
 import web.entity.Optional;
+import web.entity.input.DoctorQuery;
+import web.entity.view.DoctorMinimalView;
 import web.exceptions.NotFoundException;
 
 public interface IDoctorDAO {
@@ -13,7 +15,7 @@ public interface IDoctorDAO {
      * Agrega un medico a la base de datos.
      * @param medico datos del medico a agregar.
      */
-    void add(Doctor medico);
+    Doctor add(Doctor medico);
 
     /**
      * Busca un médico por su ID.
@@ -37,7 +39,14 @@ public interface IDoctorDAO {
     /**
      * Lista todos los medicos de la base de datos.
      */
+    @Deprecated
     List<Doctor> list();
+    
+    /**
+     * Busca médicos en la base de datos.
+     * @param query Filtros a aplicar.
+     */
+    List<DoctorMinimalView> search(DoctorQuery query);
     
     /**
      * Lista los legajos de los medicos de la base de datos.
@@ -54,6 +63,7 @@ public interface IDoctorDAO {
      * @param page Numero de pagina (De 1 en adelante)
      * @param size Cantidad de elementos por pagina.
      */
+    @Deprecated
     List<Doctor> list(int page, int size);
     
     /**
@@ -62,6 +72,7 @@ public interface IDoctorDAO {
      * @param size Cantidad de elementos por pagina.
      * @param includeInactiveRecords Incluir registros inactivos.
      */
+    @Deprecated
     List<Doctor> list(int page, int size, boolean includeInactiveRecords);
     
     /**
@@ -79,8 +90,9 @@ public interface IDoctorDAO {
     /**
      * Actualiza un medico en la base de datos.
      * @param medico Medico con los datos a actualizar.
+     * @return 
      */
-    void update(Doctor medico);
+    Doctor update(Doctor medico);
 
     /**
      * Elimina permanentemente un medico de la base de datos.
