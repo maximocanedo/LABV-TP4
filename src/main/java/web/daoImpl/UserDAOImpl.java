@@ -35,14 +35,20 @@ public class UserDAOImpl implements IUserDAO {
     public Optional<User> findByUsername(String username, boolean includeInactives) {
 		final Optional<User> cfUser = new Optional<User>(null);
 		dataManager.run(session -> {
+			session.clear();
+			
 			String hql = "FROM User WHERE username = :username" + (includeInactives ? "" : " AND active = 1");
 	        Query query = session.createQuery(hql);
-	        query.setParameter("username", username);
+	        query
+	        	.setParameter("username", username)
+	        	.setCacheable(false)
+	        	.setCacheMode(CacheMode.IGNORE);
 	        User x = (User) query.uniqueResult();
 	        if(x != null) {
 	        	Hibernate.initialize(x.getAllowedPermits());
 	        }
 	        cfUser.set(x);
+        	session.evict(x);
 		});
 		return cfUser;
 	}

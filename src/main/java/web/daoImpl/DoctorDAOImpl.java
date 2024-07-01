@@ -33,10 +33,21 @@ public class DoctorDAOImpl implements IDoctorDAO {
     public Optional<Doctor> findById(int id, boolean searchDisabled) {
         final Optional<Doctor> cfMedico = new Optional<>(null);
         dataManager.run(session -> {
-            String hql = "FROM Doctor WHERE id = :id" + (searchDisabled ? "" : " AND active");
+            String hql = "FROM Doctor WHERE id = :id" + (searchDisabled ? "" : " AND active = 1");
             Query query = session.createQuery(hql);
             query.setParameter("id", id);
             cfMedico.set((Doctor) query.uniqueResult());
+        });
+        return cfMedico;
+    }
+
+    public Optional<DoctorMinimalView> findMinById(int id, boolean searchDisabled) {
+        final Optional<DoctorMinimalView> cfMedico = new Optional<>(null);
+        dataManager.run(session -> {
+            String hql = "FROM DoctorMinimalView WHERE id = :id" + (searchDisabled ? "" : " AND active = 1");
+            Query query = session.createQuery(hql);
+            query.setParameter("id", id);
+            cfMedico.set((DoctorMinimalView) query.uniqueResult());
         });
         return cfMedico;
     }
@@ -175,6 +186,17 @@ public class DoctorDAOImpl implements IDoctorDAO {
 			Query query = session.createQuery(hql);
 			query.setParameter("legajo", file);
 			optional.set((Doctor) query.uniqueResult()); 
+		});
+		return optional;
+	}
+	
+	public Optional<DoctorMinimalView> findMinByFile(int file) {
+		final Optional<DoctorMinimalView> optional = new Optional<>();
+		dataManager.run(session -> {
+			String hql = "SELECT m FROM DoctorMinimalView m WHERE m.file = :legajo";
+			Query query = session.createQuery(hql);
+			query.setParameter("legajo", file);
+			optional.set((DoctorMinimalView) query.uniqueResult()); 
 		});
 		return optional;
 	}

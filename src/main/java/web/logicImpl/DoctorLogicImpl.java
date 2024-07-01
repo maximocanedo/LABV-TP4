@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import web.dao.IDoctorDAO;
+import web.daoImpl.DoctorDAOImpl;
 import web.entity.Doctor;
+import web.entity.IDoctor;
 import web.entity.Optional;
 import web.entity.Permit;
 import web.entity.User;
@@ -20,7 +22,7 @@ import web.logic.IDoctorLogic;
 public class DoctorLogicImpl implements IDoctorLogic {
 
 	@Autowired
-    private IDoctorDAO doctorsrepository;
+    private DoctorDAOImpl doctorsrepository;
 	
 	@Autowired
 	private UserPermitLogicImpl permits;
@@ -39,6 +41,27 @@ public class DoctorLogicImpl implements IDoctorLogic {
         return doctorsrepository.findById(id);
     }
     
+    public IDoctor getById(int id, User requiring) {
+    	requiring = permits.require(requiring, Permit.READ_DOCTOR, Permit.READ_APPOINTMENT);
+    	IDoctor x = null;
+    	if(!requiring.can(Permit.READ_DOCTOR)) {
+    		x = doctorsrepository.findMinById(id, false).get();
+    	} else x = doctorsrepository.findById(id).get();
+		if(x == null) throw new NotFoundException("Doctor not found. ");
+		return x;
+    }
+    
+    public IDoctor getByFile(int file, User requiring) {
+    	requiring = permits.require(requiring, Permit.READ_DOCTOR, Permit.READ_APPOINTMENT);
+    	IDoctor x = null;
+    	if(!requiring.can(Permit.READ_DOCTOR)) {
+    		x = doctorsrepository.findMinByFile(file).get();
+    	} else x = doctorsrepository.findByFile(file).get();
+		if(x == null) throw new NotFoundException("Doctor not found. ");
+		return x;
+    }
+    
+    @Override
     public List<DoctorMinimalView> search(DoctorQuery query, User requiring) {
     	permits.require(requiring, Permit.READ_DOCTOR, Permit.CREATE_APPOINTMENT, Permit.READ_APPOINTMENT, Permit.UPDATE_APPOINTMENT);
     	return doctorsrepository.search(query);
@@ -123,6 +146,7 @@ public class DoctorLogicImpl implements IDoctorLogic {
 	public Doctor update(Doctor medico, User requiring) throws NotFoundException {
     	permits.require(requiring, Permit.UPDATE_DOCTOR_PERSONAL_DATA);
     	Optional<Doctor> search = findById(medico.getId());
+    	if(search.isEmpty()) search = findByFile(medico.getFile());
     	if(search.isEmpty()) throw new NotFoundException();
     	Doctor original = search.get();
     	if (medico.getName() != null) original.setName(medico.getName());
@@ -157,7 +181,7 @@ public class DoctorLogicImpl implements IDoctorLogic {
 		doctorsrepository.disable(id);
 	}
 	
-	/** # Deprecated methods **/
+	/* # Deprecated methods */
     
     @Override
     @Deprecated

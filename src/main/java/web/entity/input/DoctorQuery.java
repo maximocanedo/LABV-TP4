@@ -79,7 +79,7 @@ public class DoctorQuery implements Searchable {
 	        }
 	        
 	        if(getDay() != null) {
-	        	hql.append("AND EXISTS (SELECT s FROM d.schedules s WHERE s.day = :day) ");
+	        	hql.append("AND EXISTS (SELECT s FROM d.schedules s WHERE s.beginDay = :day OR s.finishDay = :day) ");
 	        }
 	        
 	        if(getSpecialty() != -1) {
@@ -93,7 +93,7 @@ public class DoctorQuery implements Searchable {
 	        }
 	        
 	        if(getDay() != null) {
-	        	query.setParameter("day", getDay().toString());
+	        	query.setParameter("day", getDay());
 	        }
 	        
 	        if(getSpecialty() != -1) {

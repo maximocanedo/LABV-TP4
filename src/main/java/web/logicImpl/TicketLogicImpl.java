@@ -170,7 +170,6 @@ public class TicketLogicImpl implements ITicketLogic {
 	 */
     @Override
 	public User validateAccessToken(String accessToken) {
-    	System.out.println(accessToken);
         Claims claims = Jwts.parser()
                 .verifyWith(this.getSessionKey())
                 .build()
