@@ -1,5 +1,6 @@
 package web.resources;
 
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -7,6 +8,7 @@ import web.daoImpl.DataManager;
 
 @Configuration
 public class DAOConfig {
+	
 		
 
 	@Bean

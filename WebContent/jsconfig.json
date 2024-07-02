@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+        "target": "es2022",
+        "lib": ["ES2023", "DOM"],
+        "checkJs": true,
+        "baseUrl": "./api/",
+        "paths": {
+            "*": ["types/entities.js"]
+        }
+    }
+}

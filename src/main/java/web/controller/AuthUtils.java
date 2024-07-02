@@ -17,6 +17,20 @@ public class AuthUtils {
 	private TicketLogicImpl tickets;
 	
 	public AuthUtils() {}
+	
+	public void preHandle(HttpServletRequest req, HttpServletResponse res) {
+		res.setHeader("Access-Control-Allow-Origin", "*");
+		res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, HEAD, DELETE, OPTIONS");
+		res.setHeader("Access-Control-Allow-Headers", "*");
+
+        // Permitir el método OPTIONS (preflight requests) para CORS
+        if ("OPTIONS".equalsIgnoreCase(req.getMethod())) {
+    		res.setHeader("Access-Control-Allow-Origin", "*");
+    		res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, HEAD, DELETE, OPTIONS");
+    		res.setHeader("Access-Control-Allow-Headers", "*");
+        	res.setStatus(HttpServletResponse.SC_OK);
+        }
+	}
 
 	/**
 	 * Requerir autenticación del usuario.
@@ -25,6 +39,7 @@ public class AuthUtils {
 	 * @return Usuario autenticado.
 	 */
 	public User require(HttpServletRequest req, HttpServletResponse res) {
+			
 		if(req.getHeader("Authorization") == null || req.getHeader("Authorization").split(" ").length != 2) {
 			throw new InvalidTokenException();
 		}
@@ -39,7 +54,10 @@ public class AuthUtils {
         } else {
             accessToken = token;
         }
-        
+
+		res.setHeader("Access-Control-Allow-Origin", "*");
+		res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, HEAD, DELETE, OPTIONS");
+		res.setHeader("Access-Control-Allow-Headers", "*");
         return tickets.validateAccessToken(accessToken);
 	}
 	

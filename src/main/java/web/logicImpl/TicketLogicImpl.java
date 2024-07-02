@@ -170,20 +170,25 @@ public class TicketLogicImpl implements ITicketLogic {
 	 */
     @Override
 	public User validateAccessToken(String accessToken) {
-        Claims claims = Jwts.parser()
-                .verifyWith(this.getSessionKey())
-                .build()
-                .parseSignedClaims(accessToken)
-                .getPayload();
-        int id = Integer.parseInt(claims.getSubject());
-        Optional<Ticket> optionalTicket = ticketsrepository.getById(id);
-        if(optionalTicket.isEmpty())
-        	throw new InvalidTokenException("Session was closed.");
-        Ticket ticket = optionalTicket.get();
-        Date exp = claims.getExpiration();
-        if(System.currentTimeMillis() > exp.getTime())
-            throw new InvalidTokenException("Session expired.");
-        return ticket.getUser();
+	    try {
+	    	Claims claims = Jwts.parser()
+	                .verifyWith(this.getSessionKey())
+	                .build()
+	                .parseSignedClaims(accessToken)
+	                .getPayload();
+	        int id = Integer.parseInt(claims.getSubject());
+	        Optional<Ticket> optionalTicket = ticketsrepository.getById(id);
+	        if(optionalTicket.isEmpty())
+	        	throw new InvalidTokenException("Session was closed. ");
+	        Ticket ticket = optionalTicket.get();
+	        Date exp = claims.getExpiration();
+	        if(System.currentTimeMillis() > exp.getTime())
+	            throw new InvalidTokenException("Session expired. ");
+	        return ticket.getUser();
+	    }
+        catch ( io.jsonwebtoken.ExpiredJwtException exception ) {
+        	throw new InvalidTokenException("Token expired. ");
+        }
     }
     
     /* (non-Javadoc)

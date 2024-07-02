@@ -9,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -27,12 +29,12 @@ import web.entity.input.FilterStatus;
 import web.entity.input.SignUpRequest;
 import web.entity.input.UserCredentials;
 import web.entity.input.UserQuery;
-import web.entity.output.ResponseContainer;
 import web.entity.view.UserView;
 import web.generator.PermitTemplate;
 import web.logicImpl.UserLogicImpl;
 import web.logicImpl.UserPermitLogicImpl;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*", exposedHeaders = { "Authorization", "Content-Length" })
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -48,6 +50,10 @@ public class UserController {
 	
 	/** # Acciones generales **/
 	
+	@InitBinder
+    public void initBinder(HttpServletRequest req, HttpServletResponse res) {
+        auth.preHandle(req, res);
+    }
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody UserCredentials credentials) {
 		String refreshToken = users.login(credentials.getUsername(), credentials.getPassword());
@@ -87,16 +93,16 @@ public class UserController {
 	/** # Acciones con terceros **/
 		
 	@GetMapping("/u/{username:.+}")
-    public ResponseContainer<IUser> findUser(@PathVariable String username, HttpServletRequest req, HttpServletResponse res) {
+    public IUser findUser(@PathVariable String username, HttpServletRequest req, HttpServletResponse res) {
 		User requiring = auth.require(req, res);
-        return ResponseContainer.of(users.getByUsername(username, false, requiring));
+        return users.getByUsername(username, false, requiring);
     }
 	
 	@PutMapping("/u/{username:.+}")
-	public ResponseContainer<User> update(@PathVariable String username, @RequestBody User user, HttpServletRequest req, HttpServletResponse res) {
+	public User update(@PathVariable String username, @RequestBody User user, HttpServletRequest req, HttpServletResponse res) {
 		User requiring = auth.require(req, res);
 		user.setUsername(username);
-		return ResponseContainer.of(users.update(user, requiring));
+		return (users.update(user, requiring));
 	}
 	
 	@PostMapping("/u/{username:.+}/reset-password")
@@ -116,15 +122,15 @@ public class UserController {
 	/** # Acciones con el usuario actual **/
 	
 	@GetMapping("/me")
-    public ResponseContainer<User> getCurrentUser(HttpServletRequest req, HttpServletResponse res) {
-		return ResponseContainer.of(auth.require(req, res));
+    public User getCurrentUser(HttpServletRequest req, HttpServletResponse res) {
+		return (auth.require(req, res));
     }
 	
 	@PutMapping("/me")
-	public ResponseContainer<User> updateCurrentUser(@RequestBody User user, HttpServletRequest req, HttpServletResponse res) {
+	public User updateCurrentUser(@RequestBody User user, HttpServletRequest req, HttpServletResponse res) {
 		User requiring = auth.require(req, res);
 		user.setUsername(requiring.getUsername());
-		return ResponseContainer.of(users.update(user, requiring));
+		return (users.update(user, requiring));
 	}
 	
 	@PostMapping("/me/reset-password")
@@ -143,14 +149,14 @@ public class UserController {
 	/** Permisos **/
 	
 	@PostMapping("/u/{username:.+}/grant/p/{permit}")
-	public ResponseContainer<UserPermit> grantOne(@PathVariable String username, @PathVariable Permit permit, HttpServletRequest req, HttpServletResponse res) {
+	public UserPermit grantOne(@PathVariable String username, @PathVariable Permit permit, HttpServletRequest req, HttpServletResponse res) {
 		User requiring = auth.require(req, res);
-		return ResponseContainer.of(userpermits.allow(username, permit, requiring));
+		return (userpermits.allow(username, permit, requiring));
 	}
 	@PostMapping("/u/{username:.+}/deny/p/{permit}")
-	public ResponseContainer<UserPermit> denyOne(@PathVariable String username, @PathVariable Permit permit, HttpServletRequest req, HttpServletResponse res) {
+	public UserPermit denyOne(@PathVariable String username, @PathVariable Permit permit, HttpServletRequest req, HttpServletResponse res) {
 		User requiring = auth.require(req, res);
-		return ResponseContainer.of(userpermits.reject(username, permit, requiring));		
+		return (userpermits.reject(username, permit, requiring));		
 	}
 	@PostMapping("/u/{username:.+}/grant/all")
 	public void grantAll(@PathVariable String username, HttpServletRequest req, HttpServletResponse res) {

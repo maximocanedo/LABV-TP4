@@ -5,7 +5,7 @@ export const updateRefreshToken = (refreshToken) => {
 };
 
 export const updateAccessToken = (accessToken) => {
-    localStorage.setIte("_aT", accessToken);
+    localStorage.setItem("_aT", accessToken);
 };
 
 export const updateSessionToken = (token) => {
@@ -25,7 +25,7 @@ const parseJwt = (token) => {
         }).join(''));
         return JSON.parse(jsonPayload); 
     } catch (error) {
-        console.error('Error decodificando JWT:', error);
+        console.error('Error decodificando JWT: ', error);
         return null;
     }
 };
@@ -39,19 +39,13 @@ const isTokenExpired = (token) => {
     return payload.exp < currentTime;
 };
 
-// Ejemplo de uso
-const token = 'tu-jwt-aqui';  // Tu JWT
-if (isTokenExpired(token)) {
-    console.log('El token ha expirado');
-} else {
-    console.log('El token es válido');
-}
-
-
 export const getRefreshToken = () => localStorage.getItem("_rT");
 export const getAccessToken = () => localStorage.getItem("_aT");
 export const getToken = () => {
-    if(getAccessToken() == null || isTokenExpired(getAccessToken())) 
+    if(getAccessToken() == null || isTokenExpired(getAccessToken())) {
+        console.warn("Token de ACCESO expirado: Se autenticará con el token de REFRESCO disponible. ");
         return getRefreshToken();
+    }
+    console.log("Autenticando solicitud con token de ACCESO.");
     return getAccessToken();
 };
