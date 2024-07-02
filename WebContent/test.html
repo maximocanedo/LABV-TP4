@@ -5,11 +5,44 @@
     <title>Document</title>
 </head>
 <body>
-    <button id="___rTClick">Tokens en memoria</button><br /><br />
-    <button id="___uTClick">Imprimir usuarios</button><br /><br />
-    <button id="_ab">Buscar @alicia.schimmel</button><br /><br />
-    <button id="_abc">Cambiarle el nombre a @alicia.schimmel</button><br /><br />
-    <button id="___login">Iniciar sesión</button>
+    <style>
+        body {
+            padding: 0px;
+            margin: 0px;
+        }
+        * {
+            font-family: Arial, Helvetica, sans-serif;
+            box-sizing: border-box;
+        }
+        h3 {
+            text-align: left;
+            padding-left: 10px;
+            margin-top: 24px;
+        }
+        a, a:visited {
+            color: cornflowerblue;
+        }
+        .test-options {
+            width: 100%;
+            display: inline-block;
+            .option {
+                padding: 10px 10px;
+                width: 100%;
+                line-height: 24px;
+                p {
+                    margin: 0px;
+                }
+            }
+            .option:not(:last-child) {
+                border-bottom: 1px solid #f0f0f0;
+
+            }
+        }
+
+    </style>
+    <h3>Usuarios</h3>
+    <div class="test-options">
+    </div>
     <script type="module" src="./api/index.js"></script>
 </body>
 </html>

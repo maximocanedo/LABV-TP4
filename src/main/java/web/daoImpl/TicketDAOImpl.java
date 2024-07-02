@@ -2,6 +2,7 @@ package web.daoImpl;
 
 import java.util.List;
 
+import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -35,7 +36,11 @@ public class TicketDAOImpl implements ITicketDAO {
 			String hql = "FROM Ticket WHERE id = :id AND active = 1";
 	        Query query = session.createQuery(hql);
 	        query.setParameter("id", id);
-	        cfUser.set((Ticket) query.uniqueResult());
+	        Ticket t = (Ticket) query.uniqueResult();
+	        if(t != null) {
+	        	Hibernate.initialize(t.getUser().getAllowedPermits());
+		        cfUser.set(t);
+	        }
 		});
 		return cfUser;
 	}

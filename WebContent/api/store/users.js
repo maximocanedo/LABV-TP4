@@ -41,11 +41,6 @@ export const update = async (user) => {
         const transaction = db.transaction(STORE_NAME, "readwrite");
         const store = transaction.objectStore(STORE_NAME);
         const updatedUser = {...legacyUser, ...user};
-        console.log({
-          legacyUser,
-          user,
-          updatedUser
-        });
         const request = store.put(updatedUser);
         request.onsuccess = () => {
             //console.log(request);
@@ -67,19 +62,18 @@ export const getByUsername = async (username) => {
     const db = await open();
   
     return new Promise((resolve, reject) => {
+      /** @type {IDBTransaction} */
       const transaction = db.transaction(STORE_NAME, "readonly");
+      /** @type {IDBObjectStore} */
       const store = transaction.objectStore(STORE_NAME);
-  
+      /** @type {IDBIndex} */
       const index = store.index('username');
+      /** @type {IDBRequest<IUser>} */
       const getRequest = index.get(username);
   
       getRequest.onsuccess = () => {
         const user = getRequest.result;
-        if (user) {
-          resolve(user);
-        } else {
-          resolve(null);
-        }
+        resolve(user ? user : null);
       };
   
       getRequest.onerror = (event) => {
@@ -88,16 +82,20 @@ export const getByUsername = async (username) => {
     });
   };
   
-  
+/**
+ * Devuelve todos los usuarios guardados localmente, sin ningún tipo de filtro ni paginación.
+ * @returns {Promise<IUser[]>}
+ */
 export const getAll = async () => {
     const db = await open();
     return new Promise((resolve, reject) => {
+        /** @type {IDBTransaction} */
         const transaction = db.transaction(STORE_NAME, "read");
         const store = transaction.objectStore(STORE_NAME);
+        /** @type {IDBRequest<IUser[]>} */
         const request = store.getAll();
-        console.warn(request.result);
 
-        request.onsucces = (event) => {
+        request.onsuccess = (event) => {
             resolve(event);
         };
 
@@ -106,4 +104,36 @@ export const getAll = async () => {
         };
 
     });
-}
+};
+
+export const getUsers = async (page = 1, size = 15) => {
+  const db = await open();
+
+  return new Promise((resolve, reject) => {
+      const transaction = db.transaction(STORE_NAME, "readonly");
+      const store = transaction.objectStore(STORE_NAME);
+
+      const results = [];
+      let counter = 0;
+      const start = (page - 1) * size;
+
+      store.openCursor().onsuccess = (event) => {
+          /** @type {IDBCursorWithValue} */
+          const cursor = event.target.result;
+
+          if (cursor) {
+              if (counter >= start && results.length < size) {
+                  results.push(cursor.value);
+              }
+              counter++;
+              cursor.continue();
+          } else {
+              resolve(results);
+          }
+      };
+
+      transaction.onerror = (event) => {
+          reject("Error al obtener los usuarios");
+      };
+  });
+};
