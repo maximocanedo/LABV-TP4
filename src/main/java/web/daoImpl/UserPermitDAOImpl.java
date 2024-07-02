@@ -122,7 +122,7 @@ public class UserPermitDAOImpl implements IUserPermitDAO {
 	@Override
 	public int revokeAll(String username) {
 		Optional<Integer> opt = new Optional<Integer>(0);
-	    dataManager.run(session -> {
+	    dataManager.transact(session -> {
 	        String hql = "UPDATE UserPermit u SET u.allowed = :allowed WHERE u.user.username = :username";
 	        Query query = session.createQuery(hql);
 	        query.setParameter("allowed", false);
@@ -130,6 +130,7 @@ public class UserPermitDAOImpl implements IUserPermitDAO {
 
 	        opt.set(query.executeUpdate());
 	    });
+	    System.out.println("DENY ALL: " + opt.get() + " permisos. ");
 	    return opt.get();
 	}
 
