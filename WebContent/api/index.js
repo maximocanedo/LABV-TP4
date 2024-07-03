@@ -5,7 +5,7 @@ import { domTesterElement } from "./test.js";
 
 (async () => {
 
-    const PRINCIPAL_USER = "abe.bogan";
+    const PRINCIPAL_USER = "alicia.schimmel";
     const SECONDARY_USER = "alicia.schimmel";
     const CREATED_USER = "hector.silva";
 
@@ -15,7 +15,7 @@ import { domTesterElement } from "./test.js";
     });
 
     const loginTest = domTesterElement("Iniciar sesión", `Usa las credenciales del usuario @${PRINCIPAL_USER}. `, async (e) => {
-        const xe = await login("root", "01234567");
+        const xe = await login(PRINCIPAL_USER, "12345678");
         console.log(xe);
     });
 
@@ -91,7 +91,7 @@ import { domTesterElement } from "./test.js";
             console.log(`${bool?"T":"No t"}e deshabilitaste ${bool&&"exitosamente"}. `);
         }
     );
-    
+
 
 
     document.addEventListener('onConnectionFailure', (event) => {
