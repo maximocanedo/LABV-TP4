@@ -3,11 +3,14 @@
  * @property {number} [_lastOfflineSaved] - Última vez actualizado en la base de datos local.
  */
 /**
+ * @typedef {Object} IdentifiableUser
+ * @property {string} username Nombre de usuario.
+ */
+/**
  * @typedef {Object} IUserBasicProperties
- * @property {string} username - Nombre de usuario.
  * @property {string} name - Nombre.
  * @property {boolean} active - Estado lógico del usuario.
- * @typedef {IUserBasicProperties & SaveableEntity} IUser
+ * @typedef {IdentifiableUser & IUserBasicProperties & SaveableEntity} IUser
  */
 /**
  * @typedef {IUser} User
@@ -27,11 +30,15 @@
  * @property {boolean} active - Estado del horario.
  */
 /**
- * @typedef {Object} Specialty
- * @property {number} id - El ID de la especialidad.
+ * @typedef {Object} Identifiable
+ * @property {number} id Identificador único
+ */
+/**
+ * @typedef {Object} SpecialtyProps
  * @property {string} name - Nombre de la especialidad.
  * @property {boolean} active - Estado de la especialidad.
  * @property {string} description - Descripción de la especialidad.
+ * @typedef {SpecialtyProps & Identifiable} Specialty
  */
 /**
  * @typedef {Object} IDoctorBasicProperties
@@ -48,14 +55,30 @@
  * @typedef {IDoctor} DoctorMinimalView
  */
 /**
+ * @typedef {'M' | 'F'} Sex Sexo
+ */
+/**
  * @typedef {Object} DoctorAdditionalProperties
- * @property {'M' | 'F'} sex - El sexo del doctor.
+ * @property {Sex} sex - El sexo del doctor.
  * @property {Date | string} birth - Fecha de nacimiento del doctor.
  * @property {string} address - Dirección del doctor.
  * @property {string} localty - Localidad del doctor.
  * @property {string} email - Correo electrónico del doctor.
  * @property {string} phone - Número de teléfono del doctor.
  * @typedef {IDoctor & DoctorAdditionalProperties} Doctor
+ */
+/**
+ * @typedef {Object} DoctorUpdateRequest
+ * @property {string} [name] Nombre
+ * @property {string} [surname] Apellido
+ * @property {Sex} [sex] Sexo
+ * @property {Date | string} [birth] Fecha de nacimiento
+ * @property {String} [address] Dirección
+ * @property {String} [localty] Localidad
+ * @property {String} [email] Dirección de correo electrónico
+ * @property {String} [phone] Número de teléfono
+ * @property {Identifiable} [specialty] Especialidad
+ * @property {IdentifiableUser} [user] Usuario asignado
  */
 /**
  * @typedef {Object} CommonException
