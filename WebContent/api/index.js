@@ -6,6 +6,7 @@ import { domTesterElement, domSection } from "./test.js";
 
 const usersSection = domSection("Usuarios");
 const doctorsSection = domSection("Médicos");
+const patientsSection = domSection("Pacientes");
 
 (async (section) => {
 
@@ -105,6 +106,7 @@ const doctorsSection = domSection("Médicos");
 (async (section) => {
     const USER = 'arnette.abbott';
     const SAMPLE_FILE = 418;
+    const SAMPLE_ID= 275;
     const createDoctor = domTesterElement("Crear un doctor", `Asignado al usuario @${USER}. `, async (e) => {
         const doctor = await doctors.create({
             file: SAMPLE_FILE,
@@ -127,4 +129,29 @@ const doctorsSection = domSection("Médicos");
         const doctor = await doctors.findByFile(SAMPLE_FILE);
         console.log(doctor);
     }, section);
+
+    const findIdDoctor = domTesterElement("Buscar un doctor (Por ID)", `Busca el doctor con ID ${SAMPLE_ID}. `, async (e) => {
+        const doctor = await doctors.findById(SAMPLE_ID);
+        console.log(doctor);
+    }, section);
+
+    const updateDoctor = domTesterElement("Actualizar datos de un doctor. ", "Ahora vive en Tierra del Fuego. ", async (e) => {
+        const updatedDoctor = await doctors.update(SAMPLE_ID, {
+            address: "Felipe Varela 65",
+            localty: "Río Grande",
+            sex: "F"
+        });
+        console.log(updatedDoctor);
+    }, section);
+
+    const disableDoctor = domTesterElement("Dar de baja al doctor", "", async (e) => {
+        const ok = await doctors.disable(SAMPLE_ID);
+        console.log("La operación " + (ok ? "se realizó" : "falló") + " exitosamente. ");
+    }, section);
+
+    const enableDoctor = domTesterElement("Rehabilitar al doctor", "", async (e) => {
+        const ok = await doctors.enable(SAMPLE_ID);
+        console.log("La operación " + (ok ? "se realizó" : "falló") + " exitosamente. ");
+    }, section);
+
 })(doctorsSection);

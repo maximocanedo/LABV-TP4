@@ -13,7 +13,7 @@ import { FilterStatus } from './users.js';
  * @returns {Promise<Doctor>} Copia del registro.
  */
 export const create = async (data) => {
-    return u.post("/doctors", data)
+    return u.post("doctors", data)
         .then(response => response.json())
         .catch(err => {
             throw err;
@@ -39,7 +39,7 @@ export const findById = async (id) => {
  * @returns {Promise<IDoctor>} Registro
  */
 export const findByFile = async (file) => {
-    return u.get("/doctors/file/" + file)
+    return u.get("doctors/file/" + file)
         .then(response => response.json())
         .catch(err => {
             throw err;
@@ -53,7 +53,7 @@ export const findByFile = async (file) => {
  * @returns Registro actualizado.
  */
 export const update = async (id, data) => {
-    return u.put("/doctors/id/" + id, data)
+    return u.patch("doctors/id/" + id, data)
         .then(response => response.json())
         .catch(err => {
             throw err;
@@ -66,7 +66,7 @@ export const update = async (id, data) => {
  * @returns {Promise<boolean>} Resultado de la operación.
  */
 export const disable = async (id) => {
-    const response = await u.del("/doctors/id/" + id);
+    const response = await u.del("doctors/id/" + id);
     return response.ok;
 };
 
@@ -76,7 +76,7 @@ export const disable = async (id) => {
  * @returns {Promise<boolean>} Resultado de la operación.
  */
 export const enable = async (id) => {
-    const response = await u.post("/doctors/id/" + id);
+    const response = await u.post("doctors/id/" + id);
     return response.ok;
 };
 
@@ -121,7 +121,7 @@ export class Query {
      * Efectiviza la búsqueda.
      */
     async search() {
-        return u.get("/doctors", {
+        return u.get("doctors", {
             q: this.#q,
             status: this.#status,
             day: this.#day,

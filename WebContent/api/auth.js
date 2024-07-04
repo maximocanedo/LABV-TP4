@@ -36,8 +36,7 @@ const resolveURLParams = (url, params) => {
     const urlObj = new URL(url, BASE_URL); 
     const searchParams = new URLSearchParams(params);
     urlObj.search = searchParams.toString();
-    console.log({urlObj});
-    return BASE_URL + urlObj.pathname;
+    return urlObj.toString();
 };
 
 
