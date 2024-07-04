@@ -36,7 +36,7 @@ public class DoctorController {
 	private AuthUtils auth;
 	
 	@GetMapping
-	public ResponseContainer<List<DoctorMinimalView>> search(
+	public List<DoctorMinimalView> search(
 			@RequestParam(required = false, defaultValue = "") String q, 
 			@RequestParam(required = false, defaultValue = "") FilterStatus status,
 			@RequestParam(required = false, defaultValue = "") String day,
@@ -46,7 +46,7 @@ public class DoctorController {
 			HttpServletRequest req, HttpServletResponse res
 			) {
 		User requiring = auth.require(req, res);
-		return ResponseContainer.of(
+		return (
 				doctors.search(
 						new DoctorQuery(q, status)
 								.filterByDay(day)
@@ -61,38 +61,38 @@ public class DoctorController {
 	 * TODO: Validar entrada de información.
 	 */
 	@PostMapping
-	public ResponseContainer<Doctor> create(
+	public Doctor create(
 				@RequestBody Doctor doctor,
 				HttpServletRequest req, HttpServletResponse res
 			) {
 		User requiring = auth.require(req, res);
-		return ResponseContainer.of(doctors.add(doctor, requiring));
+		return (doctors.add(doctor, requiring));
 	}
 	
 	@GetMapping("/id/{id}")
-	public ResponseContainer<IDoctor> findbyId(@PathVariable int id, HttpServletRequest req, HttpServletResponse res) {
+	public IDoctor findbyId(@PathVariable int id, HttpServletRequest req, HttpServletResponse res) {
 		User requiring = auth.require(req, res);
-		return ResponseContainer.of(doctors.getById(id, requiring));
+		return (doctors.getById(id, requiring));
 	}
 	
 	@GetMapping("/file/{file}")
-	public ResponseContainer<IDoctor> findbyFile(@PathVariable int file, HttpServletRequest req, HttpServletResponse res) {
+	public IDoctor findbyFile(@PathVariable int file, HttpServletRequest req, HttpServletResponse res) {
 		User requiring = auth.require(req, res);
-		return ResponseContainer.of(doctors.getByFile(file, requiring));
+		return (doctors.getByFile(file, requiring));
 	}
 	
 	@PatchMapping("/id/{id}")
-	public ResponseContainer<Doctor> updateById(@PathVariable int id, @RequestBody Doctor doctor, HttpServletRequest req, HttpServletResponse res) {
+	public Doctor updateById(@PathVariable int id, @RequestBody Doctor doctor, HttpServletRequest req, HttpServletResponse res) {
 		User requiring = auth.require(req, res);
 		doctor.setId(id);
-		return ResponseContainer.of(doctors.update(doctor, requiring));
+		return (doctors.update(doctor, requiring));
 	}
 	
 	@PatchMapping("/file/{file}")
-	public ResponseContainer<Doctor> updateByFile(@PathVariable int file, @RequestBody Doctor doctor, HttpServletRequest req, HttpServletResponse res) {
+	public Doctor updateByFile(@PathVariable int file, @RequestBody Doctor doctor, HttpServletRequest req, HttpServletResponse res) {
 		User requiring = auth.require(req, res);
 		doctor.setFile(file);
-		return ResponseContainer.of(doctors.update(doctor, requiring));
+		return (doctors.update(doctor, requiring));
 	}
 
 	@DeleteMapping("/id/{id}")
