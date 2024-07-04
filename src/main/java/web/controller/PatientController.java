@@ -36,7 +36,7 @@ public class PatientController {
 		// Acciones Generales
 		
 		@GetMapping
-		public ResponseContainer<List<Patient>> search(
+		public List<Patient> search(
 				@RequestParam(required = false, defaultValue = "") String q, 
 				@RequestParam(required = false, defaultValue = "") FilterStatus status,
 				@RequestParam(required = false, defaultValue = "1") int page,
@@ -44,34 +44,32 @@ public class PatientController {
 				HttpServletRequest req, HttpServletResponse res
 				) {
 			User requiring = auth.require(req, res);
-			return ResponseContainer.of(
-					patients.search(
+			return patients.search(
 							new PatientQuery(q, status)
 									.paginate(page, size)
-							, requiring)
-					);
+							, requiring);
 		}
 		
 		@PostMapping
-		public ResponseContainer<Patient> create(@RequestBody Patient patient, HttpServletRequest req, HttpServletResponse res) {
+		public Patient create(@RequestBody Patient patient, HttpServletRequest req, HttpServletResponse res) {
 			User requiring = auth.require(req, res);
-			return ResponseContainer.of(patients.add(patient, requiring));
+			return patients.add(patient, requiring);
 		}
 		
 		
 		// Acciones con Terceros
 		@GetMapping("/id/{id}")
-		public ResponseContainer<Patient> findById(@PathVariable int id, HttpServletRequest req, HttpServletResponse res) {
+		public Patient findById(@PathVariable int id, HttpServletRequest req, HttpServletResponse res) {
 			User requiring = auth.require(req, res);
-	        return ResponseContainer.of(patients.getById(id, requiring));
+	        return patients.getById(id, requiring);
 		}
 		
 		
 		@PatchMapping("/id/{id}")
-		public ResponseContainer<Patient> update(@PathVariable int id, @RequestBody Patient patient, HttpServletRequest req, HttpServletResponse res) {
+		public Patient update(@PathVariable int id, @RequestBody Patient patient, HttpServletRequest req, HttpServletResponse res) {
 			User requiring = auth.require(req, res);
 			patient.setId(id);
-			return ResponseContainer.of(patients.update(patient, requiring));
+			return patients.update(patient, requiring);
 		}
 		
 		@DeleteMapping("/id/{id}")
