@@ -6,8 +6,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,6 +27,7 @@ import web.entity.output.ResponseContainer;
 import web.entity.view.DoctorMinimalView;
 import web.logicImpl.DoctorLogicImpl;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*", exposedHeaders = { "Authorization", "Content-Length" })
 @RestController
 @RequestMapping("/doctors")
 public class DoctorController {
@@ -34,6 +37,13 @@ public class DoctorController {
 	
 	@Autowired
 	private AuthUtils auth;
+	
+
+	@InitBinder
+    public void initBinder(HttpServletRequest req, HttpServletResponse res) {
+        auth.preHandle(req, res);
+    }
+	
 	
 	@GetMapping
 	public List<DoctorMinimalView> search(
@@ -106,6 +116,5 @@ public class DoctorController {
 		User requiring = auth.require(req, res);
 		doctors.enable(id, requiring);
 	}
-	
-	
+
 }

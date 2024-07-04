@@ -143,7 +143,15 @@ export const disable = async (username) => {
  */
 export const myself = async () => {
     return u.get("users/me")
-        .then(response => response.json())
+        .then(response => {
+            if(!response.ok) {
+                response.json().then(x => {
+                    throw x;
+                });
+                return null;
+            }
+            return response.json();
+        })
         .then(user => db.update(user))
         .catch(err => {
             console.error(err);

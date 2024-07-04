@@ -22,12 +22,12 @@
  */
 /**
  * @typedef {Object} Schedule
- * @property {number} id - El ID del horario.
+ * @property {number} [id] - El ID del horario.
  * @property {string} beginDay - Día de inicio.
  * @property {string} finishDay - Día de finalización.
  * @property {[number, number]} startTime - Hora de inicio [hora, minuto].
  * @property {[number, number]} endTime - Hora de finalización [hora, minuto].
- * @property {boolean} active - Estado del horario.
+ * @property {boolean} [active] - Estado del horario.
  */
 /**
  * @typedef {Object} Identifiable
@@ -79,6 +79,12 @@
  * @property {String} [phone] Número de teléfono
  * @property {Identifiable} [specialty] Especialidad
  * @property {IdentifiableUser} [user] Usuario asignado
+ */
+/**
+ * @typedef {Object} DoctorCreateRequestAdditionalProperties
+ * @property {number} file Legajo.
+ * @property {Schedule[]} schedules Horarios.
+ * @typedef {DoctorCreateRequestAdditionalProperties & DoctorUpdateRequest} DoctorRegistrationRequest
  */
 /**
  * @typedef {Object} CommonException
