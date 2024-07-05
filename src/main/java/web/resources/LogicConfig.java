@@ -7,6 +7,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+import web.logicImpl.*;
+
 @Configuration
 public class LogicConfig {
 	
@@ -28,7 +30,7 @@ public class LogicConfig {
 	}
 	
 	@Bean
-	public ITicketLogic tickets() {
+	public TicketLogicImpl tickets() {
 		return new TicketLogicImpl();
 	}
 	
@@ -56,5 +58,5 @@ public class LogicConfig {
 	public SpecialtyLogicImpl specialties() {
 		return new SpecialtyLogicImpl();
 	}
-	*/
+	//*/
 }

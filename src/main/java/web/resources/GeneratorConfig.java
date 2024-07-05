@@ -7,12 +7,7 @@ import org.springframework.context.annotation.Configuration;
 
 import com.github.javafaker.Faker;
 
-import web.generator.AppointmentGenerator;
-import web.generator.DoctorGenerator;
-import web.generator.Generator;
-import web.generator.PatientGenerator;
-import web.generator.SpecialtyGenerator;
-import web.generator.UserGenerator;
+import web.generator.*;
 
 @Configuration
 public class GeneratorConfig {

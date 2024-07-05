@@ -4,7 +4,7 @@ package web.resources;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import web.daoImpl.DataManager;
+import web.daoImpl.*;
 
 @Configuration
 public class DAOConfig {
@@ -15,7 +15,7 @@ public class DAOConfig {
 	public DataManager dataManager() {
 		return new DataManager();
 	}
-	/*
+	/* 
 	@Bean
 	public AppointmentDAOImpl appointmentsrepository() {
 		return new AppointmentDAOImpl();
@@ -50,6 +50,6 @@ public class DAOConfig {
 	@Bean
 	public SpecialtyDAOImpl specialtiesrepository() {
 		return new SpecialtyDAOImpl();
-	}*/
+	}//*/
 	
 }
