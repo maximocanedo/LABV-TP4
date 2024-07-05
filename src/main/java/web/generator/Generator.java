@@ -3,8 +3,8 @@ package web.generator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import web.entity.Appointment;
 import web.entity.Doctor;
+import web.entity.IAppointment;
 import web.entity.Patient;
 import web.entity.User;
 
@@ -50,7 +50,7 @@ public class Generator {
 			User user = userGenerator.save(requiring);
 			Patient paciente = patientGenerator.save(requiring);
 			Doctor medico = doctorGenerator.save(user);
-			Appointment turno = appointmentGenerator.saveforP6(paciente, medico, requiring);
+			IAppointment turno = appointmentGenerator.saveforP6(paciente, medico, requiring);
 			// Appointment turnoParaPunto3 = appointments.generateForDoctor1234(paciente);
 			
 			if(logEveryRecord) {

@@ -12,6 +12,7 @@ import web.entity.Optional;
 import web.entity.Permit;
 import web.entity.User;
 import web.entity.input.AppointmentQuery;
+import web.entity.view.AppointmentMinimalView;
 import web.exceptions.NotAllowedException;
 import web.exceptions.NotFoundException;
 import web.logic.IAppointmentLogic;
@@ -85,7 +86,7 @@ public class AppointmentLogicImpl implements IAppointmentLogic {
 	
 
 	@Override
-	public List<Appointment> search(AppointmentQuery patientQuery, User requiring) {
+	public List<AppointmentMinimalView> search(AppointmentQuery patientQuery, User requiring) {
 		permits.require(requiring, Permit.READ_APPOINTMENT);
 		return appointmentsrepository.search(patientQuery);
 	}

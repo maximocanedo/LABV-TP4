@@ -4,9 +4,11 @@ import java.util.Date;
 import java.util.List;
 
 import web.entity.Appointment;
+import web.entity.IAppointment;
 import web.entity.Optional;
 import web.entity.User;
 import web.entity.input.AppointmentQuery;
+import web.entity.view.AppointmentMinimalView;
 import web.exceptions.NotFoundException;
 
 public interface IAppointmentLogic {
@@ -15,7 +17,7 @@ public interface IAppointmentLogic {
 	 * Registra un turno
 	 * @param turno Datos del turno.
 	 */
-	Appointment register(Appointment turno, User requiring);
+	IAppointment register(Appointment turno, User requiring);
 	
 	/**
 	 * Deshabilita un turno.
@@ -39,13 +41,13 @@ public interface IAppointmentLogic {
 	 */
 	Optional<Appointment> findById(int id, boolean includeInactives, User requiring);
 
-	List<Appointment> search(AppointmentQuery q, User requiring);
+	List<AppointmentMinimalView> search(AppointmentQuery q, User requiring);
 
 	/**
 	 * Actualiza la información de un turno en la base de datos.
 	 * @param turno Datos del turno a actualizar.
 	 */
-	Appointment update(Appointment turno, User requiring) throws NotFoundException;
+	IAppointment update(Appointment turno, User requiring) throws NotFoundException;
 	
 	/**
 	 * Cuenta la cantidad de turnos marcados como presentes dentro del rango de fechas indicado.

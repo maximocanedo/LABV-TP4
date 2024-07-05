@@ -12,6 +12,8 @@ import web.entity.Appointment;
 import web.entity.AppointmentStatus;
 import web.entity.Optional;
 import web.entity.input.AppointmentQuery;
+import web.entity.view.AppointmentCommunicationView;
+import web.entity.view.AppointmentMinimalView;
 import web.exceptions.NotFoundException;
 
 @Component("appointmentsrepository")
@@ -35,6 +37,16 @@ public class AppointmentDAOImpl implements IAppointmentDAO {
 	}
 	
 	@Override
+    public Optional<AppointmentCommunicationView> findComById(int id) {
+		return findComById(id, false);
+	}
+	
+	@Override
+    public Optional<AppointmentMinimalView> findMinById(int id) {
+		return findMinById(id, false);
+	}
+	
+	@Override
     public Optional<Appointment> findById(int id, boolean includeInactives) {
 		final Optional<Appointment> turno = new Optional<>();
 		dataManager.run(session -> {
@@ -42,6 +54,30 @@ public class AppointmentDAOImpl implements IAppointmentDAO {
 			Query query = session.createQuery(hql);
 			query.setParameter("id", id);
 			turno.set((Appointment) query.uniqueResult());
+		});
+		return turno;
+	}
+	
+	@Override
+    public Optional<AppointmentCommunicationView> findComById(int id, boolean includeInactives) {
+		final Optional<AppointmentCommunicationView> turno = new Optional<>();
+		dataManager.run(session -> {
+			String hql = "FROM AppointmentCommunicationView WHERE id = :id" + (includeInactives ? "" : " AND active");
+			Query query = session.createQuery(hql);
+			query.setParameter("id", id);
+			turno.set((AppointmentCommunicationView) query.uniqueResult());
+		});
+		return turno;
+	}
+	
+	@Override
+    public Optional<AppointmentMinimalView> findMinById(int id, boolean includeInactives) {
+		final Optional<AppointmentMinimalView> turno = new Optional<>();
+		dataManager.run(session -> {
+			String hql = "FROM AppointmentMinimalView WHERE id = :id" + (includeInactives ? "" : " AND active");
+			Query query = session.createQuery(hql);
+			query.setParameter("id", id);
+			turno.set((AppointmentMinimalView) query.uniqueResult());
 		});
 		return turno;
 	}
@@ -107,11 +143,11 @@ public class AppointmentDAOImpl implements IAppointmentDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Appointment> search(AppointmentQuery q) {
-		final Optional<List<Appointment>> opt = new Optional<List<Appointment>>();
+	public List<AppointmentMinimalView> search(AppointmentQuery q) {
+		final Optional<List<AppointmentMinimalView>> opt = new Optional<List<AppointmentMinimalView>>();
 		dataManager.run(session -> {
 			Query query = q.toQuery(session);
-			opt.set((List<Appointment>) query.list()); 
+			opt.set((List<AppointmentMinimalView>) query.list()); 
 		});
 		return opt.get();
 	}

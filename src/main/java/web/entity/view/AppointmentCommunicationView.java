@@ -1,4 +1,4 @@
-package web.entity;
+package web.entity.view;
 
 import java.util.Date;
 
@@ -15,25 +15,29 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.Immutable;
+
 import web.entity.AppointmentStatus;
+import web.entity.IAppointment;
 import web.formatter.Card;
 import web.formatter.Format;
 import web.formatter.Formatter;
 
 @Entity
 @Card(size = 64)
+@Immutable
 @Table(name = "appointments")
-public class Appointment implements IAppointment {
+public class AppointmentCommunicationView implements IAppointment {
 	
     private int id;
 	private Date date;
 	private String remarks;
 	private AppointmentStatus status;
-	private Doctor assignedDoctor;
-	private Patient patient;
+	private DoctorMinimalView assignedDoctor;
+	private PatientCommunicationView patient;
     private boolean active = true;
 
-	public Appointment() {}
+	public AppointmentCommunicationView() {}
 	
 	/* # Getters */
 	
@@ -82,14 +86,14 @@ public class Appointment implements IAppointment {
 	@ManyToOne(cascade= {CascadeType.ALL})
 	@JoinColumn(name="doctor") // Old: id_medico
 	@Format(label = "Médico asignado", prefix = "\n", order = 3)
-	public Doctor getAssignedDoctor() {
+	public DoctorMinimalView getAssignedDoctor() {
 		return assignedDoctor;
 	}
 	
 	@ManyToOne(cascade = {CascadeType.ALL})
 	@JoinColumn(name = "patient") // Old: id_paciente
 	@Format(label = "Paciente", prefix = "\n", order = 4)
-	public Patient getPatient() {
+	public PatientCommunicationView getPatient() {
 		return patient;
 	}
 
@@ -147,11 +151,11 @@ public class Appointment implements IAppointment {
 		this.status = estado;
 	}
 
-	public void setAssignedDoctor(Doctor medico) {
+	public void setAssignedDoctor(DoctorMinimalView medico) {
 		this.assignedDoctor = medico;
 	}
 	
-	public void setPatient(Patient paciente) {
+	public void setPatient(PatientCommunicationView paciente) {
 		this.patient = paciente;
 	}
 

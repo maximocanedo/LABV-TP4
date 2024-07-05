@@ -14,6 +14,7 @@ import com.github.javafaker.Faker;
 import web.entity.Appointment;
 import web.entity.AppointmentStatus;
 import web.entity.Doctor;
+import web.entity.IAppointment;
 import web.entity.Optional;
 import web.entity.Patient;
 import web.entity.User;
@@ -67,13 +68,13 @@ public class AppointmentGenerator implements IEntityGenerator<Appointment> {
     	return t;
 	}
 	
-	public Appointment save(Patient p, Doctor m, User requiring) {
+	public IAppointment save(Patient p, Doctor m, User requiring) {
 		Appointment t = generate(p, m);
     	appointments.register(t, requiring);
     	return t;
 	}
 
-	public Appointment generateForDoctor1234(Patient paciente, User requiring) {
+	public IAppointment generateForDoctor1234(Patient paciente, User requiring) {
         
         // Encontrar el médico con legajo 1234
         Optional<Doctor> optionalMedico = doctors.findByFile(1234, requiring);
@@ -117,7 +118,7 @@ public class AppointmentGenerator implements IEntityGenerator<Appointment> {
     }
     
 	
-	public Appointment saveforP6(Patient p, Doctor m, User requiring) {
+	public IAppointment saveforP6(Patient p, Doctor m, User requiring) {
     	Appointment t = new Appointment();
     	t.setAssignedDoctor(m);
     	t.setPatient(p);

@@ -151,7 +151,7 @@ public class AppointmentQuery implements Searchable {
 
 	@Override
 	public Query toQuery(Session session) {
-		StringBuilder hql = new StringBuilder("SELECT a FROM Appointment a ");
+		StringBuilder hql = new StringBuilder("SELECT a FROM AppointmentMinimalView a ");
 		hql.append(" WHERE (");
 		hql.append(" CONCAT(a.patient.name, ' ', a.patient.surname) LIKE :q OR CONCAT(a.patient.surname, ' ', a.patient.name) LIKE :q ");
 		hql.append(" OR CONCAT(a.assignedDoctor.name, ' ', a.assignedDoctor.surname) LIKE :q OR CONCAT(a.assignedDoctor.surname, ' ', a.assignedDoctor.name) LIKE :q ");

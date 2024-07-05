@@ -6,6 +6,8 @@ import java.util.List;
 import web.entity.Appointment;
 import web.entity.Optional;
 import web.entity.input.AppointmentQuery;
+import web.entity.view.AppointmentCommunicationView;
+import web.entity.view.AppointmentMinimalView;
 import web.exceptions.NotFoundException;
 
 public interface IAppointmentDAO {
@@ -22,6 +24,10 @@ public interface IAppointmentDAO {
 	 * @param id ID del turno.
 	 */
 	Optional<Appointment> findById(int id);
+
+	Optional<AppointmentMinimalView> findMinById(int id);
+
+	Optional<AppointmentCommunicationView> findComById(int id);
 	
 	/**
 	 * Busca un Turno en la base de datos.
@@ -29,11 +35,15 @@ public interface IAppointmentDAO {
 	 */
 	Optional<Appointment> findById(int id, boolean includeInactives);
 
+	Optional<AppointmentMinimalView> findMinById(int id, boolean includeInactives);
+
+	Optional<AppointmentCommunicationView> findComById(int id, boolean includeInactives);
+
 	/**
 	 * Busca turnos.
 	 * @param q Filtros a aplicar.
 	 */
-	List<Appointment> search(AppointmentQuery q);
+	List<AppointmentMinimalView> search(AppointmentQuery q);
 
 	/**
 	 * Actualiza la información de un turno en la base de datos.
