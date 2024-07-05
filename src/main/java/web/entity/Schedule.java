@@ -1,9 +1,13 @@
 package web.entity;
 
+import java.sql.Time;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Convert;
 import web.formatter.Card;
@@ -31,27 +35,44 @@ public class Schedule {
 	public int getId() {
 		return id;
 	}
-	
+
+	@Enumerated(EnumType.STRING)
 	@Column(name = "beginDay")
 	public Day getBeginDay() {
 		return beginDay;
 	}
-	
+
+
+	@Enumerated(EnumType.STRING)
 	@Column(name = "finishDay")
 	public Day getFinishDay() {
 		return finishDay;
 	}
-	
-	@Column(name = "startTime")
+
+	@JsonProperty("startTime")
+	@Transient
     @Convert(converter = LocalTimeAttributeConverter.class)
-	public LocalTime getStartTime() {
+	public LocalTime getStartTimeLT() {
 		return startTime;
 	}
 
-	@Column(name = "endTime")
+	@JsonProperty("endTime")
+	@Transient
     @Convert(converter = LocalTimeAttributeConverter.class)
-	public LocalTime getEndTime() {
+	public LocalTime getEndTimeLT() {
 		return endTime;
+	}
+
+	@JsonIgnore
+	@Column(name = "startTime")
+	public Time getStartTime() {
+	    return startTime != null ? Time.valueOf(startTime) : null;
+	}
+
+	@JsonIgnore
+	@Column(name = "endTime")
+	public Time getEndTime() {
+	    return endTime != null ? Time.valueOf(endTime) : null;
 	}
 	
 	@Column(name = "active")
@@ -114,8 +135,8 @@ public class Schedule {
 		boolean sameDay = this.getBeginDay() == this.getFinishDay();
 		String startDayName = this.getWeekDaySpanishName(this.getBeginDay());
 		String endDayName = sameDay ? "" : " " + this.getWeekDaySpanishName(this.getFinishDay());
-        String startTime = this.getStartTime().format(formatter);
-        String endTime = this.getEndTime().format(formatter);
+        String startTime = this.getStartTimeLT().format(formatter);
+        String endTime = this.getEndTimeLT().format(formatter);
         
 		return startDayName + " " + startTime + " -" + endDayName + " " + endTime;
 	}

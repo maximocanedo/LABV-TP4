@@ -113,14 +113,14 @@ public class DoctorLogicImpl implements IDoctorLogic {
 
 	@Override
 	public Optional<Doctor> findByFile(int file, User requiring) {
-    	permits.require(requiring, Permit.READ_DOCTOR);
+		requiring = permits.require(requiring, Permit.READ_DOCTOR);
     	boolean includeInactives = requiring.can(Permit.ENABLE_DOCTOR);
 		return doctorsrepository.findByFile(file, includeInactives);
 	}
 
 	@Override
 	public Optional<Doctor> findById(int id, boolean includeInactive, User requiring) {
-    	permits.require(requiring, Permit.READ_DOCTOR);
+		requiring = permits.require(requiring, Permit.READ_DOCTOR);
     	boolean includeInactives = includeInactive && requiring.can(Permit.ENABLE_DOCTOR);
 		return doctorsrepository.findById(id, includeInactives);
 	}
