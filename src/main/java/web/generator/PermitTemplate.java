@@ -5,6 +5,7 @@ import java.util.HashSet;
 import web.entity.Permit;
 import web.exceptions.BadRequestException;
 
+
 public class PermitTemplate {
 	
 	public static PermitTemplate getByName(String name) throws BadRequestException {
