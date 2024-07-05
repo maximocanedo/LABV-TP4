@@ -51,8 +51,8 @@
 			<div class="col d-flex align-items-center">
 				<form action="" method="post" id="formLogin" class="flex-fill needs-validation">
 					<div class="input-group input-group-sm mb-3">
-						<label class="input-group-text" id="login-input-group" for="txtUsername">Nombre de
-							Usuario:</label>
+						<span class="input-group-text" id="login-input-group" for="txtUsername">Nombre de
+							Usuario:</span>
 						<input type="text" class="form-control" aria-label="Username input"
 							aria-describedby="login-input-group" id="txtUsername" name="txtUsername"
 							pattern="^[a-z]+\.[a-z]+$" placeholder="alice.manhattan" title="El nombre de usuario no debe contener espacios" required>
@@ -61,7 +61,7 @@
 						</div>
 					</div>
 					<div class="input-group input-group-sm mb-3">
-						<label class="input-group-text" id="login-input-group" for="txtPassword">Password</label>
+						<span class="input-group-text" id="login-input-group" for="txtPassword">Password</span>
 						<input type="password" class="form-control" aria-label="Password input"
 							aria-describedby="login-input-group" id="txtPassword" name="txtPassword" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
 							placeholder="verySecurePassword" required>
@@ -69,7 +69,7 @@
 							Invalido. La contrasenia debe contener como minimo 8 caracteres, 1 minuscula, 1 Mayuscula, 1 digito y un numero.
 						</div>
 					</div>
-					<div class="align-items-rigth">
+					<div class="justify-content-end">
 						<button class="btn btn-primary" type="submit" id="btnLogin">Ingresar</button>
 					</div>
 				</form>

@@ -118,7 +118,7 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="txtDireccion" class="form-label">Direccion</label>
-                            <input type="text" class="form-control" id="txtDireccion" required>
+                            <input type="text" class="form-control" id="txtDireccion" required placeholder="Example Address 854">
                             <div class="invalid-feedback">
                                 Invalido.
                             </div>
@@ -126,8 +126,9 @@
                         <div class="col-md-6">
                             <label for="txtLocalty" class="form-label">Provincia</label>
                             <select class="form-select" id="txtLocalty" required>
-                                <option selected value="">Choose...</option>
-                                <option>...</option>
+                                <option selected value="">Buenos Aires</option>
+                                <option>CABA</option>
+                                <option>Mendoza</option>
                             </select>
                             <div class="invalid-feedback">
                                 Invalido.
@@ -136,6 +137,7 @@
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-6">
+                            <label for="txtDireccion" class="form-label">Telefono</label>
                             <div class="input-group">
                                 <span class="input-group-text" id="phone-input" for="txtPhone">+54 11</span>
                                 <input type="text" class="form-control" aria-label="Phone input"
