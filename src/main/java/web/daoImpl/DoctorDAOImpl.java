@@ -165,6 +165,30 @@ public class DoctorDAOImpl implements IDoctorDAO {
 		return optional;
 	}
 
+
+	@Override
+	public Optional<Doctor> findByFile(int file, boolean includeInactives) {
+		final Optional<Doctor> optional = new Optional<>();
+		dataManager.run(session -> {
+			String hql = "SELECT m FROM Doctor m WHERE m.file = :legajo"  + (includeInactives ? "" : " AND active = 1");
+			Query query = session.createQuery(hql);
+			query.setParameter("legajo", file);
+			optional.set((Doctor) query.uniqueResult()); 
+		});
+		return optional;
+	}
+	
+	public Optional<DoctorMinimalView> findMinByFile(int file, boolean includeInactives) {
+		final Optional<DoctorMinimalView> optional = new Optional<>();
+		dataManager.run(session -> {
+			String hql = "SELECT m FROM DoctorMinimalView m WHERE m.file = :legajo"  + (includeInactives ? "" : " AND active = 1");
+			Query query = session.createQuery(hql);
+			query.setParameter("legajo", file);
+			optional.set((DoctorMinimalView) query.uniqueResult()); 
+		});
+		return optional;
+	}
+
 	@Override
 	public Optional<Doctor> findById(int id) {
 		return findById(id, false);

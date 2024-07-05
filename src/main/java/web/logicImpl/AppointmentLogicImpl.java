@@ -39,14 +39,15 @@ public class AppointmentLogicImpl implements IAppointmentLogic {
 	
 	@Override
     public Optional<Appointment> findById(int id, User requiring) {
-		permits.require(requiring, Permit.READ_APPOINTMENT);
-		return this.appointmentsrepository.findById(id);
+		requiring = permits.require(requiring, Permit.READ_APPOINTMENT);
+		boolean includeInactives = requiring.can(Permit.ENABLE_APPOINTMENT);
+		return this.appointmentsrepository.findById(id, includeInactives);
 	}
 
 	@Override
     public Appointment update(Appointment turno, User requiring) throws NotFoundException {
 		permits.require(requiring, Permit.UPDATE_APPOINTMENT);
-		Optional<Appointment> search = appointmentsrepository.findById(turno.getId());
+		Optional<Appointment> search = appointmentsrepository.findById(turno.getId(), false);
 		if(search.isEmpty()) throw new NotFoundException();
 		Appointment original = search.get();
 		if (turno.getDate() != null) original.setDate(turno.getDate());
@@ -84,7 +85,8 @@ public class AppointmentLogicImpl implements IAppointmentLogic {
 	@Override
 	public Optional<Appointment> findById(int id, boolean includeInactives, User requiring) {
 		permits.require(requiring, Permit.READ_APPOINTMENT);
-		return appointmentsrepository.findById(id, includeInactives);
+		boolean i = includeInactives && requiring.can(Permit.ENABLE_APPOINTMENT);
+		return appointmentsrepository.findById(id, i);
 	}
 	
 

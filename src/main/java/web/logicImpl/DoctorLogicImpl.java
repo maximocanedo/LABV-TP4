@@ -37,15 +37,17 @@ public class DoctorLogicImpl implements IDoctorLogic {
     @Override
     public Optional<Doctor> findById(int id, User requiring) {
     	requiring = permits.require(requiring, Permit.READ_APPOINTMENT, Permit.READ_DOCTOR);
-        return doctorsrepository.findById(id);
+    	boolean includeInactives = requiring.can(Permit.ENABLE_DOCTOR);
+        return doctorsrepository.findById(id, includeInactives);
     }
     
     public IDoctor getById(int id, User requiring) {
     	requiring = permits.require(requiring, Permit.READ_DOCTOR, Permit.READ_APPOINTMENT);
     	IDoctor x = null;
+    	boolean includeInactives = requiring.can(Permit.ENABLE_DOCTOR);
     	if(!requiring.can(Permit.READ_DOCTOR)) {
-    		x = doctorsrepository.findMinById(id, false).get();
-    	} else x = doctorsrepository.findById(id).get();
+    		x = doctorsrepository.findMinById(id, includeInactives).get();
+    	} else x = doctorsrepository.findById(id, includeInactives).get();
 		if(x == null) throw new NotFoundException("Doctor not found. ");
 		return x;
     }
@@ -53,9 +55,10 @@ public class DoctorLogicImpl implements IDoctorLogic {
     public IDoctor getByFile(int file, User requiring) {
     	requiring = permits.require(requiring, Permit.READ_DOCTOR, Permit.READ_APPOINTMENT);
     	IDoctor x = null;
+    	boolean includeInactives = requiring.can(Permit.ENABLE_DOCTOR);
     	if(!requiring.can(Permit.READ_DOCTOR)) {
-    		x = doctorsrepository.findMinByFile(file).get();
-    	} else x = doctorsrepository.findByFile(file).get();
+    		x = doctorsrepository.findMinByFile(file, includeInactives).get();
+    	} else x = doctorsrepository.findByFile(file, includeInactives).get();
 		if(x == null) throw new NotFoundException("Doctor not found. ");
 		return x;
     }
@@ -111,13 +114,15 @@ public class DoctorLogicImpl implements IDoctorLogic {
 	@Override
 	public Optional<Doctor> findByFile(int file, User requiring) {
     	permits.require(requiring, Permit.READ_DOCTOR);
-		return doctorsrepository.findByFile(file);
+    	boolean includeInactives = requiring.can(Permit.ENABLE_DOCTOR);
+		return doctorsrepository.findByFile(file, includeInactives);
 	}
 
 	@Override
 	public Optional<Doctor> findById(int id, boolean includeInactive, User requiring) {
     	permits.require(requiring, Permit.READ_DOCTOR);
-		return doctorsrepository.findById(id, includeInactive);
+    	boolean includeInactives = includeInactive && requiring.can(Permit.ENABLE_DOCTOR);
+		return doctorsrepository.findById(id, includeInactives);
 	}
 
 	@Override

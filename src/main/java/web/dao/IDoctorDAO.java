@@ -28,6 +28,7 @@ public interface IDoctorDAO {
      * @param file Legajo
      */
     Optional<Doctor> findByFile(int file);
+    Optional<Doctor> findByFile(int file, boolean includeInactives);
     
     /**
      * Busca un médico por su ID.

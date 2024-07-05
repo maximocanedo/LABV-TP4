@@ -43,19 +43,21 @@ public class PatientLogicImpl implements IPatientLogic {
 		
 	@Override
 	public Optional<Patient> findById(int id, User requiring) throws NotAllowedException {
-		permits.require(requiring, Permit.READ_PATIENT_PERSONAL_DATA);
-		return patientsrepository.findById(id);
+		requiring = permits.require(requiring, Permit.READ_PATIENT_PERSONAL_DATA);
+		boolean includeInactives = requiring.can(Permit.ENABLE_PATIENT);
+		return patientsrepository.findById(id, includeInactives);
 	}
 	
 	@Override
 	public IPatient getById(int id, boolean includeInactives, User requiring) throws NotAllowedException, NotFoundException {
 		requiring = permits.require(requiring, Permit.READ_PATIENT_PERSONAL_DATA, Permit.READ_USER_DATA);
+		boolean f = includeInactives && requiring.can(Permit.ENABLE_PATIENT);
 		if(!requiring.can(Permit.READ_PATIENT_PERSONAL_DATA)) {
-			Optional<PatientCommunicationView> x = patientsrepository.findComViewById(id, false);
+			Optional<PatientCommunicationView> x = patientsrepository.findComViewById(id, f);
 			if(x.isEmpty()) throw new NotFoundException("Patient not found. ");
 			return x.get();
 		}
-		Optional<Patient> x = patientsrepository.findById(id, includeInactives);
+		Optional<Patient> x = patientsrepository.findById(id, f);
 		if(x.isEmpty()) throw new NotFoundException("Patient not found. ");
 		return x.get();
 	}
@@ -64,12 +66,13 @@ public class PatientLogicImpl implements IPatientLogic {
 	@Override
 	public IPatient getById(int id, User requiring) throws NotAllowedException, NotFoundException {
 		requiring = permits.require(requiring, Permit.READ_PATIENT_PERSONAL_DATA, Permit.READ_USER_DATA);
+		boolean includeInactives = requiring.can(Permit.ENABLE_PATIENT);
 		if(!requiring.can(Permit.READ_PATIENT_PERSONAL_DATA)) {
-			Optional<PatientCommunicationView> x = patientsrepository.findComViewById(id, false);
+			Optional<PatientCommunicationView> x = patientsrepository.findComViewById(id, includeInactives);
 			if(x.isEmpty()) throw new NotFoundException("Patient not found. ");
 			return x.get();
 		}
-		Optional<Patient> x = patientsrepository.findById(id);
+		Optional<Patient> x = patientsrepository.findById(id, includeInactives);
 		if(x.isEmpty()) throw new NotFoundException("Patient not found. ");
 		return x.get();
 	}
@@ -94,7 +97,8 @@ public class PatientLogicImpl implements IPatientLogic {
 	@Override
 	public Optional<Patient> findById(int id, boolean includeInactives, User requiring) {
 		permits.require(requiring, Permit.READ_PATIENT_PERSONAL_DATA);
-		return patientsrepository.findById(id, includeInactives);
+		boolean f = includeInactives && requiring.can(Permit.ENABLE_PATIENT);
+		return patientsrepository.findById(id, f);
 	}
 
 	@Override

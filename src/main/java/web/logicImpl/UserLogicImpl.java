@@ -47,6 +47,7 @@ public class UserLogicImpl implements IUserLogic {
 	
 	@Override
     public User signup(User user, PermitTemplate template, User requiring) {
+		requiring = permits.require(requiring, Permit.GRANT_PERMISSIONS);
 		User newUser = signup(user);
 		permits.grant(user, template, requiring);
 		return newUser;
@@ -76,13 +77,15 @@ public class UserLogicImpl implements IUserLogic {
 	
 	@Override
     public Optional<User> findByUsername(String username, User requiring) {
-		permits.require(requiring, Permit.READ_USER_DATA);
+		requiring = permits.require(requiring, Permit.READ_USER_DATA);
+		
 		return (usersrepository.findByUsername(username));
 	}
 	
 	@Override
     public Optional<User> findByUsername(String username, boolean includeInactive, User requiring) {
-		permits.require(requiring, Permit.READ_USER_DATA);
+		requiring = permits.require(requiring, Permit.READ_USER_DATA);
+		includeInactive = includeInactive && requiring.can(Permit.DELETE_OR_ENABLE_USER);
 		return (usersrepository.findByUsername(username, includeInactive));
 	}
 	
@@ -90,6 +93,7 @@ public class UserLogicImpl implements IUserLogic {
 	public IUser getByUsername(String username, boolean includeInactive, User requiring) throws NotFoundException, NotAllowedException {
 		requiring = permits.require(requiring, Permit.READ_USER_DATA);
 		IUser opt = null;
+		includeInactive = includeInactive && requiring.can(Permit.DELETE_OR_ENABLE_USER);
 		if(requiring.can(Permit.READ_DOCTOR)) {
 			opt = usersrepository.getByUsername(username, includeInactive);
 		} else opt = usersrepository.getBasicByUsername(username, includeInactive);

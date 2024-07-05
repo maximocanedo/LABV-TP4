@@ -32,7 +32,9 @@ public class SpecialtyLogicImpl implements ISpecialtyLogic {
 	}
 
 	public Optional<Specialty> findById(int id, boolean includeInactive, User requiring) {
-    	//permits.require(requiring, Permit.READ_SPECIALTY); //
+		if(includeInactive) {
+			includeInactive = permits.check(requiring, Permit.ENABLE_SPECIALTY);
+		}
 		return specialtiesRepository.findById(id, includeInactive);
 	}
 	
@@ -67,14 +69,13 @@ public class SpecialtyLogicImpl implements ISpecialtyLogic {
 	
 	@Override
 	public List<Specialty> search(SpecialtyQuery query, User requiring) {
-		// permits.require(requiring, Permit.SEARCH_SPECIALTY); //
 		return specialtiesRepository.search(query);
 	}
 	
 
 	@Override
 	public Optional<Specialty> findById(int id) {
-		return null;
+		return findById(id, false, null);
 	}
 
 }

@@ -64,7 +64,7 @@ public class UserPermitLogicImpl implements IUserPermitLogic {
 	 */
 	@Override
 	public UserPermit allow(String username, Permit permit, User requiring) throws NotFoundException {
-		if(requiring.getUsername() != username)
+		if(requiring.getUsername() != "root")
 			require(requiring, Permit.GRANT_PERMISSIONS);
 		Optional<UserPermit> perm = userpermitsrepository.getPermit(username, permit);
 		Optional<User> us = usersrepository.findByUsername(username);
