@@ -3,8 +3,6 @@ package web.entity.input;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
-import web.entity.Specialty;
-
 public class UserQuery implements Searchable {
 	private String q;
 	private FilterStatus status = FilterStatus.ONLY_ACTIVE;

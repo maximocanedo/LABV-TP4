@@ -23,7 +23,6 @@ import web.entity.IDoctor;
 import web.entity.User;
 import web.entity.input.DoctorQuery;
 import web.entity.input.FilterStatus;
-import web.entity.output.ResponseContainer;
 import web.entity.view.DoctorMinimalView;
 import web.logicImpl.DoctorLogicImpl;
 

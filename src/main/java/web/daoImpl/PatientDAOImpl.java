@@ -10,7 +10,6 @@ import web.dao.IPatientDAO;
 import web.entity.Optional;
 import web.entity.Patient;
 import web.entity.input.PatientQuery;
-import web.entity.input.UserQuery;
 import web.entity.view.PatientCommunicationView;
 import web.exceptions.NotFoundException;
 
@@ -59,33 +58,6 @@ public class PatientDAOImpl implements IPatientDAO {
 		});
 		return cfUser;
 	}
-		
-	@Override
-	@Deprecated
-	public List<Patient> list() {
-		return list(1, 15);
-    }
-	
-	@Override
-	@Deprecated
-	public List<Patient> list(int page, int size) {
-		return list(page, size, false);
-    }
-	
-	@Override
-	@Deprecated
-	@SuppressWarnings("unchecked")
-	public List<Patient> list(int page, int size, boolean includeInactives) {
-		final Optional<List<Patient>> cfList = new Optional<List<Patient>>();
-		dataManager.run(session -> {
-			String hql = "FROM Patient" + (includeInactives ? "" : " WHERE active = 1");
-			Query query = session.createQuery(hql);
-            query.setFirstResult((page - 1) * size);
-            query.setMaxResults(size);
-            cfList.set(((List<Patient>) query.list()));
-		});
-		return cfList.get();
-    }
 	
 	@Override
 	public Patient update(Patient paciente) {
@@ -93,14 +65,6 @@ public class PatientDAOImpl implements IPatientDAO {
 			session.update(paciente);
 		});
 		return paciente;
-	}
-	
-	@Override
-	@Deprecated
-	public void erase(Patient paciente) {
-		dataManager.transact(session -> {
-			session.delete(paciente);
-		});
 	}
 	
 	private void updateStatus(int id, boolean newStatus) throws NotFoundException {

@@ -2,13 +2,9 @@ package web.dao;
 
 import java.util.List;
 
-import org.hibernate.Query;
-
 import web.entity.Optional;
 import web.entity.Patient;
-import web.entity.User;
 import web.entity.input.PatientQuery;
-import web.entity.input.UserQuery;
 import web.entity.view.PatientCommunicationView;
 import web.exceptions.NotFoundException;
 
@@ -34,31 +30,6 @@ public interface IPatientDAO {
 	Optional<PatientCommunicationView> findComViewById(int id, boolean includeInactives);
 
 	/**
-	 * Lista todos los pacientes de la base de datos.
-	 * @deprecated use {@link #search(PatientQuery)} instead
-	 */
-	@Deprecated
-	List<Patient> list();
-
-	/**
-	 * Lista todos los pacientes de la base de datos, paginable.
-	 * @param page Número de página (De 1 en adelante)
-	 * @param size Cantidad de elementos.
-	 * @deprecated use {@link #search(PatientQuery)} instead
-	 */
-	@Deprecated
-	List<Patient> list(int page, int size);
-	
-	/**
-	 * Lista todos los pacientes de la base de datos, paginable.
-	 * @param page Número de página (De 1 en adelante)
-	 * @param size Cantidad de elementos.
-	 * @deprecated use {@link #search(PatientQuery)} instead
-	 */
-	@Deprecated
-	List<Patient> list(int page, int size, boolean includeInactives);
-
-	/**
 	 * Actualiza un paciente de la base de datos.
 	 * @param paciente Paciente con los datos a actualizar.
 	 */
@@ -68,13 +39,6 @@ public interface IPatientDAO {
 	 * Busca pacientes.
 	 */
 	public List<PatientCommunicationView> search(PatientQuery q);
-
-	/**
-	 * Elimina permanentemente un paciente de la base de datos.
-	 * @param paciente Paciente a eliminar.
-	 */
-	@Deprecated
-	void erase(Patient paciente);
 	
 	/**
      * Deshabilita un paciente de la base de datos.

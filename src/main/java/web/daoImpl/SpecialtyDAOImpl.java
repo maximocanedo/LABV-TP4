@@ -46,18 +46,6 @@ public class SpecialtyDAOImpl implements ISpecialtyDAO {
     }
 
     @Override
-	@Deprecated
-    public List<Specialty> list() {
-        return list(1, 15);
-    }
-
-    @Override
-	@Deprecated
-    public List<Specialty> list(int page, int size) {
-        return this.list(page, size, false);
-    }
-
-    @Override
     public Specialty update(Specialty record) {
     	dataManager.transact(session -> {
             session.update(record);
@@ -86,27 +74,6 @@ public class SpecialtyDAOImpl implements ISpecialtyDAO {
             session.update(original);
         });
     }
-
-	@Override
-	@Deprecated
-	public List<Specialty> list(boolean showInactiveRecords) {
-		return this.list(1, 10, showInactiveRecords);
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	@Deprecated
-	public List<Specialty> list(int page, int size, boolean showInactiveRecords) {
-		final Optional<List<Specialty>> optional = new Optional<>();
-		dataManager.run(session -> {
-            String hql = "SELECT e FROM Especialidad e" + (showInactiveRecords ? "" : " WHERE e.active");
-            Query query = session.createQuery(hql);
-            query.setFirstResult((page - 1) * size);
-            query.setMaxResults(size);
-            optional.set(((List<Specialty>) query.list()));
-        });
-        return optional.get();
-	}
 
 	@SuppressWarnings("unchecked")
 	@Override

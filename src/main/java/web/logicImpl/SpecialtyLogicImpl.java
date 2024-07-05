@@ -71,76 +71,10 @@ public class SpecialtyLogicImpl implements ISpecialtyLogic {
 		return specialtiesRepository.search(query);
 	}
 	
-	@Override
-	@Deprecated
-	public List<Specialty> list(int page, int size, boolean includeInactiveRecords, User requiring) {
-		permits.require(requiring, Permit.READ_DISABLED_SPECIALTY_RECORDS);
-		return specialtiesRepository.list(page, size, includeInactiveRecords);
-	}
 
 	@Override
-	@Deprecated
 	public Optional<Specialty> findById(int id) {
 		return null;
 	}
 
-	@Override
-	@Deprecated
-	public void permanentlyDelete(Specialty specialty) {
-		
-	}
-
-	@Override
-	@Deprecated
-	public List<Specialty> list(int page, int size) {
-		return null;
-	}
-
-	@Override
-	@Deprecated
-	public List<Specialty> list(boolean includeInactiveRecords, User requiring) {
-		return null;
-	}
-
-	@Override
-	@Deprecated
-	public List<Specialty> list() {
-		return null;
-	}
-
-	@Override
-	@Deprecated
-	public void add(Specialty specialty) {
-		
-	}
-
-	@Override
-	@Deprecated
-	public void update(Specialty specialty) throws NotFoundException {
-		
-	}
-
-	@Override
-	@Deprecated
-	public void disable(int id) throws NotFoundException {
-		
-	}
-
-	@Override
-	@Deprecated
-	public void enable(int id) throws NotFoundException {
-		
-	}
-
-	@Override
-	@Deprecated
-	public List<Specialty> list(int page, int size, boolean includeInactiveRecords) {
-		return null;
-	}
-
-	@Override
-	@Deprecated
-	public List<Specialty> list(boolean includeInactiveRecords) {
-		return null;
-	}
 }

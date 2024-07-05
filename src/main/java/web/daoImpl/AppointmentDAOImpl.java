@@ -45,33 +45,6 @@ public class AppointmentDAOImpl implements IAppointmentDAO {
 		});
 		return turno;
 	}
-
-	@Override
-	@Deprecated
-    public List<Appointment> list() {
-		return list(1, 15);
-	}
-	
-	@Override
-	@Deprecated
-    public List<Appointment> list(int page, int size) {
-		return list(page, size, false);
-	}
-
-	@Override
-	@Deprecated
-    @SuppressWarnings("unchecked")
-	public List<Appointment> list(int page, int size, boolean includeInactives) {
-		final Optional<List<Appointment>> optional = new Optional<>();
-		dataManager.run(session -> {
-			String hql = "FROM Appointment" + (includeInactives ? "" : " WHERE active");
-			Query query = session.createQuery(hql);
-			query.setFirstResult((page - 1) * size);
-			query.setMaxResults(size);
-			optional.set(query.list());
-		});
-		return optional.get();
-	}
 	
 
 	@Override
@@ -80,14 +53,6 @@ public class AppointmentDAOImpl implements IAppointmentDAO {
 			session.update(turno);
 		});
 		return turno;
-	}
-
-	@Override
-	@Deprecated
-    public void erase(Appointment turno) {
-		dataManager.transact(session -> {
-			session.delete(turno);
-		});
 	}
 	
 	private void updateStatus(int id, boolean newStatus) throws NotFoundException {

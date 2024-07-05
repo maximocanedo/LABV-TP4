@@ -168,6 +168,9 @@ public class UserLogicImpl implements IUserLogic {
 		return usersrepository.update(original);
 	}
 
+	/**
+	 * TODO: Implementar dispositivo e ID.
+	 */
 	@Override
 	public String login(String username, String password) throws InvalidCredentialsException, NotFoundException {
 		Optional<User> user = check(username, password);
@@ -177,88 +180,4 @@ public class UserLogicImpl implements IUserLogic {
 		} 
 		return tickets.startToken(user.get().getUsername(), "Testing device", "Device #001");
 	}
-	
-		
-	/** # Deprecated methods **/
-	
-	@Deprecated
-	private Optional<User> hideSensitiveData(Optional<User> u) {
-		return u;
-	}
-	
-	@Override
-	@Deprecated
-    public Optional<User> findByUsername(String username) {
-		return hideSensitiveData(usersrepository.findByUsername(username));
-	}
-	
-	@Override
-	@Deprecated
-    public Optional<User> findByUsername(String username, boolean includeInactive) {
-		return hideSensitiveData(usersrepository.findByUsername(username, includeInactive));
-	}
-	
-	@Override
-	@Deprecated
-    public void disable(User user) {
-		user.setActive(false);
-		usersrepository.update(user);
-	}
-	
-	@Override
-	@Deprecated
-    public void enable(User user) {
-		user.setActive(true);
-		usersrepository.update(user);
-	}
-	
-	@Override
-	@Deprecated
-    public List<User> list(int page, int size) {
-		return usersrepository.list(page, size);
-	}
-	
-	@Override
-	@Deprecated
-    public List<User> list(int page, int size, boolean includeInactives) {
-		return usersrepository.list(page, size, includeInactives);
-	}
-	
-	@Override
-	@Deprecated
-    public List<User> list() {
-		return list(1, 15);
-	}
-	
-	@Override
-	@Deprecated
-    public void update(User user) throws NotFoundException {
-		Optional<User> search = usersrepository.findByUsername(user.getUsername());
-		if(search.isEmpty()) throw new NotFoundException();
-		User original = search.get();
-		if(user.getName() != null) original.setName(user.getName());
-		if(user.getDoctor() != null) original.setDoctor(user.getDoctor());
-		usersrepository.update(user);
-	}
-	
-	@Override
-	@Deprecated
-    public List<User> list(int page, int size, User requiring) {
-		permits.require(requiring, Permit.READ_USER_DATA);
-		return usersrepository.list(page, size);
-	}
-	
-	@Override
-	@Deprecated
-    public List<User> list(int page, int size, boolean includeInactives, User requiring) {
-		permits.require(requiring, Permit.READ_USER_DATA);
-		return usersrepository.list(page, size, includeInactives);
-	}
-	
-	@Override
-	@Deprecated
-    public List<User> list(User requiring) {
-		return list(1, 15, requiring);
-	}
-	
 }

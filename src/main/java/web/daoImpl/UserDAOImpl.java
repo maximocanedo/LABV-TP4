@@ -2,8 +2,9 @@ package web.daoImpl;
 
 import java.util.List;
 
-
-import org.hibernate.*;
+import org.hibernate.CacheMode;
+import org.hibernate.Hibernate;
+import org.hibernate.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -101,26 +102,6 @@ public class UserDAOImpl implements IUserDAO {
 		return cfUser.get().booleanValue();
 	}
 	
-	@Override
-	@Deprecated
-    public List<User> list() {
-		return list(1, 15);
-    }
-	
-	@Override
-	@Deprecated
-	public List<User> list(int page, int size, boolean includeInactives) {
-		final Optional<List<User>> cfList = new Optional<List<User>>();
-		dataManager.run(session -> {
-			String sqlQuery = "SELECT username, null as password, name, active FROM users" + (includeInactives ? "" : " AND active = 1");
-	        Query q = session.createSQLQuery(sqlQuery).addEntity(User.class);
-			q.setFirstResult((page - 1) * size);
-            q.setMaxResults(size);
-			cfList.set(q.list());
-		});
-		return cfList.get();
-    }
-	
 
 	@Override
 	public List<UserView> search(UserQuery q) {
@@ -138,20 +119,6 @@ public class UserDAOImpl implements IUserDAO {
 			session.update(user);
 		});
 		return user;
-	}
-	
-	@Override
-	@Deprecated
-    public void erase(User user) {
-		dataManager.transact(session -> {
-			session.delete(user);
-		});
-	}
-
-	@Override
-	@Deprecated
-	public List<User> list(int page, int size) {
-		return list(page, size, false);
 	}
 
 	private void updateStatus(String username, boolean newStatus) throws NotFoundException {

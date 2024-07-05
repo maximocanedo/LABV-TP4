@@ -121,7 +121,7 @@ public class UserPermitLogicImpl implements IUserPermitLogic {
 	 */
 	@Override
 	public UserPermit reject(User user, Permit permit, User requiring) throws NotFoundException {
-		return reject(user.getUsername(), permit);
+		return reject(user.getUsername(), permit, requiring);
 	}
 
 	/* (non-Javadoc)
@@ -155,17 +155,6 @@ public class UserPermitLogicImpl implements IUserPermitLogic {
 	public List<UserPermit> list(User user) {
 		return userpermitsrepository.list(user);
 	}
-	/*
-	public void require(String username, Permit permit) throws NotAllowedException {
-		if(!check(username, permit))
-			throw new NotAllowedException(permit);
-	}
-	
-	public void require(User user, Permit permit) throws NotAllowedException {
-		//System.out.println("Requiring @" + user.getUsername() + " " + permit.toString() + " permit. ");
-		if(!check(user, permit))
-			throw new NotAllowedException(permit);
-	} */
 	
 	public void grant(String username, PermitTemplate template, User requiring) {
 		for(Permit permit : template.getPermits()) {
@@ -191,72 +180,5 @@ public class UserPermitLogicImpl implements IUserPermitLogic {
 			require(requiring, Permit.GRANT_PERMISSIONS);
 		return userpermitsrepository.revokeAll(target);
 	}
-	
-	/** # Deprecated methods **/
-	
-	/* (non-Javadoc)
-	 * @see logic.IUserPermitLogic#allow(java.lang.String, entity.Permit)
-	 */
-	@Override
-	@Deprecated
-	public UserPermit allow(String username, Permit permit) throws NotFoundException {
-		Optional<UserPermit> perm = userpermitsrepository.getPermit(username, permit);
-		Optional<User> us = usersrepository.findByUsername(username);
-		if(us.isEmpty()) throw new NotFoundException("User not found. ");
-		User user = us.get();
-		//System.out.println(perm.get());
-		if(perm.isEmpty()) {
-			UserPermit p = new UserPermit();
-			p.setUser(user);
-			p.setAction(permit);
-			return userpermitsrepository.save(p);
-		} else {
-			UserPermit p = perm.get();
-			p.setAllowed(true);
-			return userpermitsrepository.update(p);
-		}
-	}
-	
-	/* (non-Javadoc)
-	 * @see logic.IUserPermitLogic#allow(entity.User, entity.Permit)
-	 */
-	@Override
-	@Deprecated
-	public UserPermit allow(User user, Permit permit) throws NotFoundException {
-		return allow(user.getUsername(), permit);
-	}
-	
-	/* (non-Javadoc)
-	 * @see logic.IUserPermitLogic#reject(java.lang.String, entity.Permit)
-	 */
-	@Override
-	@Deprecated
-	public UserPermit reject(String username, Permit permit) throws NotFoundException {
-		Optional<UserPermit> perm = userpermitsrepository.getPermit(username, permit);
-		Optional<User> us = usersrepository.findByUsername(username);
-		if(us.isEmpty()) throw new NotFoundException("User not found. ");
-		User user = us.get();
-		if(perm.isEmpty()) {
-			UserPermit p = new UserPermit();
-			p.setUser(user);
-			p.setAction(permit);
-			p.setAllowed(false);
-			return userpermitsrepository.save(p);
-		} else {
-			UserPermit p = perm.get();
-			p.setAllowed(false);
-			return userpermitsrepository.update(p);
-		}
-	}
-	
-	/* (non-Javadoc)
-	 * @see logic.IUserPermitLogic#reject(entity.User, entity.Permit)
-	 */
-	@Override
-	@Deprecated
-	public UserPermit reject(User user, Permit permit) throws NotFoundException {
-		return reject(user.getUsername(), permit);
-	}
-
 	
 }

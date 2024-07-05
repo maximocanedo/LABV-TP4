@@ -65,36 +65,5 @@ public interface IUserDAO {
 	 * Rehabilita un usuario.
 	 */
 	void enable(String username) throws NotFoundException;
-	
-	/** # Métodos obsoletos **/
-
-	/**
-	 * Lista todos los usuarios de la base de datos.
-	 */
-	@Deprecated
-	List<User> list();
-
-	/**
-	 * Lista todos los usuarios de la base de datos, paginable.
-	 * @param page Número de página (De 1 en adelante)
-	 * @param size Cantidad de elementos.
-	 */
-	@Deprecated
-	List<User> list(int page, int size);
-	
-	/**
-	 * Lista todos los usuarios de la base de datos, paginable.
-	 * @param page Número de página (De 1 en adelante)
-	 * @param size Cantidad de elementos.
-	 */
-	@Deprecated
-	List<User> list(int page, int size, boolean includeInactives);
-	
-	/**
-	 * Elimina permanentemente un usuario de la base de datos.
-	 * @param user Usuario a eliminar.
-	 */
-	@Deprecated
-	void erase(User user);
 
 }

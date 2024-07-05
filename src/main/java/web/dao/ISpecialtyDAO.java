@@ -23,32 +23,6 @@ public interface ISpecialtyDAO {
     Optional<Specialty> findById(int id);
 
     /**
-     * Lista todas las especialidades de la base de datos.
-     */
-	@Deprecated
-    List<Specialty> list();
-
-    /**
-     * Lista todas las especialidades de la base de datos, paginable.
-     * @param page Numero de pagina (De 1 en adelante)
-     * @param size Cantidad de elementos por pagina.
-     */
-	@Deprecated
-    List<Specialty> list(int page, int size);
-    
-    /**
-     * Lista las especialidades, permite incluir registros inactivos.
-     */
-	@Deprecated
-    List<Specialty> list(boolean showInactiveRecords);
-    
-    /**
-     * Lista las especialidades, permite incluir registros inactivos, paginable.
-     */
-	@Deprecated
-    List<Specialty> list(int page, int size, boolean showInactiveRecords);
-
-    /**
      * Actualiza una especialidad en la base de datos.
      * @param especialidad Especialidad con los datos a actualizar.
      */

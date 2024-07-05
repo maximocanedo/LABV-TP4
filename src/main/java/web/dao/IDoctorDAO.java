@@ -35,12 +35,6 @@ public interface IDoctorDAO {
      * @param searchDisabled Si se buscan registros deshabilitados.
      */
     Optional<Doctor> findById(int id, boolean searchDisabled);
-
-    /**
-     * Lista todos los medicos de la base de datos.
-     */
-    @Deprecated
-    List<Doctor> list();
     
     /**
      * Busca médicos en la base de datos.
@@ -57,23 +51,6 @@ public interface IDoctorDAO {
      * Obtiene el medico con el legajo de mayor valor de la base de datos.
      */
     Doctor findDoctorWithHighestFileNumber();
-
-    /**
-     * Lista todos los medicos de la base de datos, paginable.
-     * @param page Numero de pagina (De 1 en adelante)
-     * @param size Cantidad de elementos por pagina.
-     */
-    @Deprecated
-    List<Doctor> list(int page, int size);
-    
-    /**
-     * Lista todos los medicos de la base de datos, paginable.
-     * @param page Numero de pagina (De 1 en adelante)
-     * @param size Cantidad de elementos por pagina.
-     * @param includeInactiveRecords Incluir registros inactivos.
-     */
-    @Deprecated
-    List<Doctor> list(int page, int size, boolean includeInactiveRecords);
     
     /**
      * Lista todos los médicos de la base de datos, paginable.
@@ -93,13 +70,6 @@ public interface IDoctorDAO {
      * @return 
      */
     Doctor update(Doctor medico);
-
-    /**
-     * Elimina permanentemente un medico de la base de datos.
-     * @param medico Medico a eliminar.
-     */
-    @Deprecated
-    void erase(Doctor medico);
     
     /**
      * Deshabilita un médico de la base de datos.

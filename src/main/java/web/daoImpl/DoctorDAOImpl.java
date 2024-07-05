@@ -53,47 +53,11 @@ public class DoctorDAOImpl implements IDoctorDAO {
     }
     
     @Override
-    @Deprecated
-    public List<Doctor> list() {
-        return list(1, 15);
-    }
-    
-    @Override
-    @Deprecated
-    public List<Doctor> list(int page, int size) {
-        return list(page, size, false);
-    }
-    
-
-	@SuppressWarnings("unchecked")
-	@Override
-    @Deprecated
-	public List<Doctor> list(int page, int size, boolean includeInactiveRecords) {
-		 final Optional<List<Doctor>> optionalList = new Optional<>();
-		 dataManager.run(session -> {
-	            String hql = "FROM Doctor" + (includeInactiveRecords ? "" : " WHERE active");
-	            Query query = session.createQuery(hql);
-	            query.setFirstResult((page - 1) * size);
-	            query.setMaxResults(size);
-	            optionalList.set(query.list());
-	        });
-	        return optionalList.get();
-	}
-    
-    @Override
     public Doctor update(Doctor medico) {
     	dataManager.transact(session -> {
             session.update(medico);
         });
     	return medico;
-    }
-    
-    @Override
-    @Deprecated
-    public void erase(Doctor medico) {
-    	dataManager.transact(session -> {
-            session.delete(medico);
-        });
     }
 
 	@SuppressWarnings("unchecked")

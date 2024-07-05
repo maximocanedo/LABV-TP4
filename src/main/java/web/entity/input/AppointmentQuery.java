@@ -38,14 +38,9 @@ public class AppointmentQuery implements Searchable {
 		this(q, FilterStatus.ONLY_ACTIVE);
 	}
 	
-	public AppointmentQuery filterByPatient(String dniString, String idString) {
+	public AppointmentQuery filterByPatient(String dni, String idString) {
 		Patient p = new Patient();
-		try {
-			if(dniString.trim() != "") {
-				int dni = Integer.parseInt(dniString);
-				p.setDni(dni);
-			}
-		} catch(NumberFormatException expected) { }
+		p.setDni(dni);
 		try {
 			if(idString.trim() != "") {
 				int id = Integer.parseInt(idString);

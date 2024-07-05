@@ -34,41 +34,12 @@ public interface IAppointmentDAO {
 	 * @param q Filtros a aplicar.
 	 */
 	List<Appointment> search(AppointmentQuery q);
-	
-	/**
-	 * Devuelve una lista de turnos.
-	 */
-	@Deprecated
-	List<Appointment> list();
-
-	/**
-	 * Devuelve una lista de turnos.
-	 * @param page Número de página (Comienza en 1)
-	 * @param size Tamaño de página
-	 */
-	@Deprecated
-	List<Appointment> list(int page, int size);
-	
-	/**
-	 * Devuelve una lista de turnos.
-	 * @param page Número de página (Comienza en 1)
-	 * @param size Tamaño de página
-	 */
-	@Deprecated
-	List<Appointment> list(int page, int size, boolean includeInactives);
 
 	/**
 	 * Actualiza la información de un turno en la base de datos.
 	 * @param turno Datos del turno a actualizar.
 	 */
 	Appointment update(Appointment turno);
-	
-	/**
-	 * Elimina un turno de la base de datos.
-	 * @param turno Turno a eliminar.
-	 */
-	@Deprecated
-	void erase(Appointment turno);
 	
 	/**
      * Deshabilita un turno de la base de datos.

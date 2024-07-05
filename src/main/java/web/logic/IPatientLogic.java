@@ -36,31 +36,6 @@ public interface IPatientLogic {
 	IPatient getById(int id, User requiring) throws NotAllowedException;
 	
 	/**
-	 * Lista todos los pacientes de la base de datos, paginable.
-	 * @param page Número de página (De 1 en adelante)
-	 * @param size Cantidad de elementos.
-	 * @deprecated use {@link #search(PatientQuery, User)} instead
-	 */
-	@Deprecated
-	List<Patient> list(int page, int size, boolean includeInactives, User requirinig);
-
-	/**
-	 * Lista todos los pacientes de la base de datos, paginable.
-	 * @param page Número de página (De 1 en adelante)
-	 * @param size Cantidad de elementos.
-	 * @deprecated use {@link #search(PatientQuery, User)} instead
-	 */
-	@Deprecated
-	List<Patient> list(int page, int size, User requirinig);
-
-	/**
-	 * Lista todos los pacientes de la base de datos.
-	 * @deprecated use {@link #search(PatientQuery, User)} instead
-	 */
-	@Deprecated
-	List<Patient> list(User requirinig);
-	
-	/**
 	 * Busca pacientes.
 	 */
 	List<PatientCommunicationView> search(PatientQuery query, User requiring);
@@ -79,75 +54,5 @@ public interface IPatientLogic {
 	/**
 	 * Deshabilita un paciente de la base de datos.
 	 */
-	void enable(int id, User requirinig) throws NotFoundException;
-
-	/**
-	 * Agrega un paciente a la base de datos.
-	 * @param paciente Datos del paciente a agregar. Debe contener la contraseña ya encriptada.
-	 */
-	@Deprecated
-	void add(Patient paciente);
-
-	/**
-	 * Obtiene un paciente por su id.
-	 * @param id. Id del paciente.
-	 */
-	@Deprecated
-	Optional<Patient> findById(int id);
-	
-	/**
-	 * Obtiene un paciente por su id.
-	 * @param id. Id del paciente.
-	 */
-	@Deprecated
-	Optional<Patient> findById(int id, boolean includeInactives);
-	
-	/**
-	 * Lista todos los pacientes de la base de datos, paginable.
-	 * @param page Número de página (De 1 en adelante)
-	 * @param size Cantidad de elementos.
-	 */
-	@Deprecated
-	List<Patient> list(int page, int size, boolean includeInactives);
-
-	/**
-	 * Lista todos los pacientes de la base de datos, paginable.
-	 * @param page Número de página (De 1 en adelante)
-	 * @param size Cantidad de elementos.
-	 */
-	@Deprecated
-	List<Patient> list(int page, int size);
-
-	/**
-	 * Lista todos los pacientes de la base de datos.
-	 */
-	@Deprecated
-	List<Patient> list();
-
-	/**
-	 * Actualiza un paciente de la base de datos.
-	 * @param paciente Paciente con los datos a actualizar.
-	 */
-	@Deprecated
-	void update(Patient paciente) throws NotFoundException;
-	
-	/**
-	 * Elimina permanentemente un paciente de la base de datos.
-	 * @param paciente Paciente a eliminar.
-	 */
-	@Deprecated
-	void erase(Patient paciente);
-	
-	/**
-	 * Deshabilita un paciente de la base de datos.
-	 */
-	@Deprecated
-	void disable(int id) throws NotFoundException;
-	
-	/**
-	 * Deshabilita un paciente de la base de datos.
-	 */
-	@Deprecated
-	void enable(int id) throws NotFoundException;
 
 }
