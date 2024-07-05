@@ -2,10 +2,8 @@ package web.main;
 import web.entity.User;
 import web.generator.Generator;
 import web.logic.ITicketLogic;
-import web.logicImpl.PatientLogicImpl;
 import web.logicImpl.TicketLogicImpl;
 import web.logicImpl.UserLogicImpl;
-import web.logicImpl.UserPermitLogicImpl;
 import web.resources.Context;
 
 public class App {
@@ -14,8 +12,6 @@ public class App {
 	private Context context;
 	private ITicketLogic tickets;
 	private UserLogicImpl users;
-	private PatientLogicImpl patients;
-	private UserPermitLogicImpl permits;
 	
 	// Constructor, no usar como main. 
 	public App() {
@@ -23,8 +19,6 @@ public class App {
 		generator = context.getBean(Generator.class);
 		tickets = context.getBean(TicketLogicImpl.class);
 		users = context.getBean(UserLogicImpl.class);
-		patients = context.getBean(PatientLogicImpl.class);
-		permits = context.getBean(UserPermitLogicImpl.class);
 	}
 
 	/**
@@ -53,8 +47,8 @@ public class App {
     }
     
    
-	public void generateFakeRecords(int total) {
-		generator.generate(total, true);
+	public void generateFakeRecords(int total, User requiring) {
+		generator.generate(total, true, requiring);
 	}
 	
 	

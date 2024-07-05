@@ -48,25 +48,25 @@ public class DoctorGenerator implements IEntityGenerator<Doctor> {
 	}
 
 	@Override
-	public Doctor save() {
-		boolean exists = EXISTE_LEGAJO_1234 || medicos.findByFile(1234).isPresent();
+	public Doctor save(User requiring) {
+		boolean exists = EXISTE_LEGAJO_1234 || medicos.findByFile(1234, requiring).isPresent();
 	    Doctor medico = generate();
 	    if(!exists) medico.setFile(1234);
 	    else EXISTE_LEGAJO_1234 = exists;
 	
 	    medico.setSchedules(generateRandomSchedules());
-	    medicos.add(medico);
+	    medicos.add(medico, requiring);
 	    return medico;
 	}
 	
-	public Doctor save(User user) {
-		boolean exists = EXISTE_LEGAJO_1234 || medicos.findByFile(1234).isPresent();
+	public Doctor save(User user, User requiring) {
+		boolean exists = EXISTE_LEGAJO_1234 || medicos.findByFile(1234, requiring).isPresent();
 	    Doctor medico = generate(user);
 	    if(!exists) medico.setFile(1234);
 	    else EXISTE_LEGAJO_1234 = exists;
 	
 	    medico.setSchedules(generateRandomSchedules());
-	    medicos.add(medico);
+	    medicos.add(medico, requiring);
 	    return medico;
 	}
 	

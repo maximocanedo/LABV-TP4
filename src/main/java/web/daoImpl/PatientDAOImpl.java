@@ -11,6 +11,7 @@ import web.entity.Optional;
 import web.entity.Patient;
 import web.entity.input.PatientQuery;
 import web.entity.input.UserQuery;
+import web.entity.view.PatientCommunicationView;
 import web.exceptions.NotFoundException;
 
 @Component("patientsrepository")
@@ -42,6 +43,19 @@ public class PatientDAOImpl implements IPatientDAO {
 	        Query query = session.createQuery(hql);
 	        query.setParameter("id", id);
 	        cfUser.set((Patient) query.uniqueResult());
+		});
+		return cfUser;
+	}
+	
+
+	@Override
+	public Optional<PatientCommunicationView> findComViewById(int id, boolean includeInactives) {
+		final Optional<PatientCommunicationView> cfUser = new Optional<PatientCommunicationView>();
+		dataManager.run(session -> {
+			String hql = "FROM PatientCommunicationView WHERE id = :id" + (includeInactives ? "" : " AND active = 1");
+	        Query query = session.createQuery(hql);
+	        query.setParameter("id", id);
+	        cfUser.set((PatientCommunicationView) query.uniqueResult());
 		});
 		return cfUser;
 	}
@@ -112,8 +126,8 @@ public class PatientDAOImpl implements IPatientDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Patient> search(PatientQuery q) {
-		final Optional<List<Patient>> opt = new Optional<List<Patient>>();
+	public List<PatientCommunicationView> search(PatientQuery q) {
+		final Optional<List<PatientCommunicationView>> opt = new Optional<List<PatientCommunicationView>>();
 		dataManager.run(session -> {
 			Query query = q.toQuery(session);
 			opt.set(query.list());

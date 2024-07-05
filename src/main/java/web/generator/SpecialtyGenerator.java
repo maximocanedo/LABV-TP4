@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import web.entity.Specialty;
+import web.entity.User;
 import web.logicImpl.SpecialtyLogicImpl;
 
 @Component
@@ -55,10 +56,10 @@ public class SpecialtyGenerator implements IEntityGenerator<Specialty[]> {
 	}
 
 	@Override
-	public Specialty[] save() {
+	public Specialty[] save(User requiring) {
         Specialty[] especialidades = generate();
         for (Specialty especialidad : especialidades) {
-            specialties.add(especialidad);
+            specialties.add(especialidad, requiring);
         }
         return especialidades;
 	}

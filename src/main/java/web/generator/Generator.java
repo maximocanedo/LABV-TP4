@@ -28,16 +28,15 @@ public class Generator {
 	@Autowired
 	private UserGenerator userGenerator;
 
-	// TODO Reemplazar por beans.
     public Generator() {}
     
-    public void generate(int total) {
-    	generate(total, false);
+    public void generate(int total, User requiring) {
+    	generate(total, false, requiring);
     }
     
-    public void generate(int total, boolean logEveryRecord) {
+    public void generate(int total, boolean logEveryRecord, User requiring) {
 		System.out.println("Se guardarán los objetos Especialidad. ");
-		specialtyGenerator.save();
+		specialtyGenerator.save(requiring);
 		System.out.println("Se generarán y guardarán " + total + " registros. ");
 
 		StringBuilder usersLog = new StringBuilder();
@@ -48,10 +47,10 @@ public class Generator {
 		
 		for(int i = 0; i < total; i++) {
 			// Generar
-			User user = userGenerator.save();
-			Patient paciente = patientGenerator.save();
+			User user = userGenerator.save(requiring);
+			Patient paciente = patientGenerator.save(requiring);
 			Doctor medico = doctorGenerator.save(user);
-			Appointment turno = appointmentGenerator.saveforP6(paciente, medico);
+			Appointment turno = appointmentGenerator.saveforP6(paciente, medico, requiring);
 			// Appointment turnoParaPunto3 = appointments.generateForDoctor1234(paciente);
 			
 			if(logEveryRecord) {

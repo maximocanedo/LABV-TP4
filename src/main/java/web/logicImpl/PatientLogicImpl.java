@@ -6,12 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import web.dao.IPatientDAO;
+import web.entity.IPatient;
 import web.entity.Optional;
 import web.entity.Patient;
 import web.entity.Permit;
 import web.entity.User;
 import web.entity.input.PatientQuery;
-import web.entity.input.UserQuery;
+import web.entity.view.PatientCommunicationView;
 import web.exceptions.NotAllowedException;
 import web.exceptions.NotFoundException;
 import web.logic.IPatientLogic;
@@ -28,7 +29,7 @@ public class PatientLogicImpl implements IPatientLogic {
 	public PatientLogicImpl() {}
 	
 	@Override
-	public List<Patient> search(PatientQuery q, User requiring) {
+	public List<PatientCommunicationView> search(PatientQuery q, User requiring) {
 		permits.require(requiring, Permit.READ_USER_DATA);
 		return patientsrepository.search(q);
 	}
@@ -46,10 +47,31 @@ public class PatientLogicImpl implements IPatientLogic {
 		return patientsrepository.findById(id);
 	}
 	
-	public Patient getById(int id, User requiring) throws NotAllowedException, NotFoundException {
-		Optional<Patient> opt = findById(id, requiring);
-		if(opt.isEmpty()) throw new NotFoundException("Patient not found. ");
-		return opt.get();
+	@Override
+	public IPatient getById(int id, boolean includeInactives, User requiring) throws NotAllowedException, NotFoundException {
+		requiring = permits.require(requiring, Permit.READ_PATIENT_PERSONAL_DATA, Permit.READ_USER_DATA);
+		if(!requiring.can(Permit.READ_PATIENT_PERSONAL_DATA)) {
+			Optional<PatientCommunicationView> x = patientsrepository.findComViewById(id, false);
+			if(x.isEmpty()) throw new NotFoundException("Patient not found. ");
+			return x.get();
+		}
+		Optional<Patient> x = patientsrepository.findById(id, includeInactives);
+		if(x.isEmpty()) throw new NotFoundException("Patient not found. ");
+		return x.get();
+	}
+	
+	
+	@Override
+	public IPatient getById(int id, User requiring) throws NotAllowedException, NotFoundException {
+		requiring = permits.require(requiring, Permit.READ_PATIENT_PERSONAL_DATA, Permit.READ_USER_DATA);
+		if(!requiring.can(Permit.READ_PATIENT_PERSONAL_DATA)) {
+			Optional<PatientCommunicationView> x = patientsrepository.findComViewById(id, false);
+			if(x.isEmpty()) throw new NotFoundException("Patient not found. ");
+			return x.get();
+		}
+		Optional<Patient> x = patientsrepository.findById(id);
+		if(x.isEmpty()) throw new NotFoundException("Patient not found. ");
+		return x.get();
 	}
 	
 	@Override
@@ -60,7 +82,7 @@ public class PatientLogicImpl implements IPatientLogic {
 		Patient original = search.get();
 		if (paciente.getName() != null) original.setName(paciente.getName());
         if (paciente.getSurname() != null) original.setSurname(paciente.getSurname());
-        if (paciente.getDni() != 0) original.setDni(paciente.getDni());
+        if (paciente.getDni() != null) original.setDni(paciente.getDni());
         if (paciente.getPhone() != null) original.setPhone(paciente.getPhone());
         if (paciente.getAddress() != null) original.setAddress(paciente.getAddress());
         if (paciente.getLocalty() != null) original.setLocalty(paciente.getLocalty());
@@ -131,7 +153,7 @@ public class PatientLogicImpl implements IPatientLogic {
 		Patient original = search.get();
 		if (paciente.getName() != null) original.setName(paciente.getName());
         if (paciente.getSurname() != null) original.setSurname(paciente.getSurname());
-        if (paciente.getDni() != 0) original.setDni(paciente.getDni());
+        if (paciente.getDni() != "") original.setDni(paciente.getDni());
         if (paciente.getPhone() != null) original.setPhone(paciente.getPhone());
         if (paciente.getAddress() != null) original.setAddress(paciente.getAddress());
         if (paciente.getLocalty() != null) original.setLocalty(paciente.getLocalty());

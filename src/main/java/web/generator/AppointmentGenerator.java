@@ -1,6 +1,7 @@
 package web.generator;
 
 import java.util.Calendar;
+import java.util.Calendar.Builder;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -60,29 +61,29 @@ public class AppointmentGenerator implements IEntityGenerator<Appointment> {
 	}
 
 	@Override
-	public Appointment save() {
+	public Appointment save(User requiring) {
 		Appointment t = generate();
-    	appointments.register(t);
+    	appointments.register(t, requiring);
     	return t;
 	}
 	
-	public Appointment save(Patient p, Doctor m) {
+	public Appointment save(Patient p, Doctor m, User requiring) {
 		Appointment t = generate(p, m);
-    	appointments.register(t);
+    	appointments.register(t, requiring);
     	return t;
 	}
 
-	public Appointment generateForDoctor1234(Patient paciente) {
+	public Appointment generateForDoctor1234(Patient paciente, User requiring) {
         
         // Encontrar el médico con legajo 1234
-        Optional<Doctor> optionalMedico = doctors.findByFile(1234);
+        Optional<Doctor> optionalMedico = doctors.findByFile(1234, requiring);
         int attempts = 0;
         while(optionalMedico.isEmpty() && attempts < 4) {
-        	User user = userGenerator.save();
+        	User user = userGenerator.save(requiring);
             Doctor medico = doctorGenerator.generate(user);
             medico.setFile(1234);
-            doctors.add(medico);
-            optionalMedico = doctors.findByFile(1234);
+            doctors.add(medico, requiring);
+            optionalMedico = doctors.findByFile(1234, requiring);
             attempts++;
         }
         
@@ -106,7 +107,7 @@ public class AppointmentGenerator implements IEntityGenerator<Appointment> {
         Date randomDate = faker.date().between(startDate, endDate);
         turno.setDate(randomDate);
         try {
-        	appointments.register(turno);
+        	appointments.register(turno, requiring);
         } catch(ConstraintViolationException e) {
         	// Expected error:
         	// El DNI es generado al azar, y puede a veces coincidir con un DNI ya existente.
@@ -116,24 +117,17 @@ public class AppointmentGenerator implements IEntityGenerator<Appointment> {
     }
     
 	
-	@SuppressWarnings("deprecation")
-	public Appointment saveforP6(Patient p, Doctor m) {
+	public Appointment saveforP6(Patient p, Doctor m, User requiring) {
     	Appointment t = new Appointment();
     	t.setAssignedDoctor(m);
     	t.setPatient(p);
     	t.setRemarks("");
     	boolean presente = faker.bool().bool();
     	t.setStatus(presente ? AppointmentStatus.PRESENT : AppointmentStatus.ABSENT);
-    	Date d = new Date();
-    	d.setDate(1);
-    	d.setMonth(0);
-    	d.setYear(124);
-    	Date d2 = new Date();
-    	d2.setDate(1);
-    	d2.setMonth(2);
-    	d2.setYear(124);
+    	Date d = new Builder().setDate(2024, 0, 1).build().getTime();
+    	Date d2 = new Builder().setDate(2024, 2, 2).build().getTime();
     	t.setDate(faker.date().between(d, d2));
-    	appointments.register(t);
+    	appointments.register(t, requiring);
     	return t;
     	
     }

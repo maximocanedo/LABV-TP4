@@ -2,10 +2,12 @@ package web.logic;
 
 import java.util.List;
 
+import web.entity.IPatient;
 import web.entity.Optional;
 import web.entity.Patient;
 import web.entity.User;
 import web.entity.input.PatientQuery;
+import web.entity.view.PatientCommunicationView;
 import web.exceptions.NotAllowedException;
 import web.exceptions.NotFoundException;
 
@@ -29,6 +31,9 @@ public interface IPatientLogic {
 	 * @param id. Id del paciente.
 	 */
 	Optional<Patient> findById(int id, boolean includeInactives, User requirinig);
+	
+	IPatient getById(int id, boolean includeInactives, User requiring) throws NotAllowedException;
+	IPatient getById(int id, User requiring) throws NotAllowedException;
 	
 	/**
 	 * Lista todos los pacientes de la base de datos, paginable.
@@ -58,7 +63,7 @@ public interface IPatientLogic {
 	/**
 	 * Busca pacientes.
 	 */
-	List<Patient> search(PatientQuery query, User requiring);
+	List<PatientCommunicationView> search(PatientQuery query, User requiring);
 
 	/**
 	 * Actualiza un paciente de la base de datos.

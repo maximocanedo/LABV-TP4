@@ -9,6 +9,7 @@ import web.entity.Patient;
 import web.entity.User;
 import web.entity.input.PatientQuery;
 import web.entity.input.UserQuery;
+import web.entity.view.PatientCommunicationView;
 import web.exceptions.NotFoundException;
 
 public interface IPatientDAO {
@@ -30,6 +31,7 @@ public interface IPatientDAO {
 	 * @param id. Id del paciente.
 	 */
 	Optional<Patient> findById(int id, boolean includeInactives);
+	Optional<PatientCommunicationView> findComViewById(int id, boolean includeInactives);
 
 	/**
 	 * Lista todos los pacientes de la base de datos.
@@ -65,7 +67,7 @@ public interface IPatientDAO {
 	/**
 	 * Busca pacientes.
 	 */
-	public List<Patient> search(PatientQuery q);
+	public List<PatientCommunicationView> search(PatientQuery q);
 
 	/**
 	 * Elimina permanentemente un paciente de la base de datos.

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import com.github.javafaker.Faker;
 
 import web.entity.Patient;
+import web.entity.User;
 import web.logicImpl.PatientLogicImpl;
 
 @Component
@@ -30,7 +31,7 @@ public class PatientGenerator implements IEntityGenerator<Patient> {
         paciente.setName(faker.name().firstName());
         paciente.setSurname(faker.name().lastName());
         int dni = random.nextInt(90000000) + 10000000 + random.nextInt(500);
-        paciente.setDni(dni);
+        paciente.setDni(dni + "");
         paciente.setPhone(faker.phoneNumber().cellPhone());
         paciente.setAddress(faker.address().streetAddress());
         paciente.setLocalty(faker.address().city());
@@ -41,9 +42,9 @@ public class PatientGenerator implements IEntityGenerator<Patient> {
 	}
 
 	@Override
-	public Patient save() {
+	public Patient save(User requiring) {
 		Patient p = generate();
-		patients.add(p);
+		patients.add(p, requiring);
 		return p;
 	}
 

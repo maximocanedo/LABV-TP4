@@ -1,6 +1,4 @@
-package web.entity;
-
-import java.util.Date;
+package web.entity.view;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,33 +8,31 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import org.hibernate.annotations.Immutable;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import web.entity.IPatient;
 import web.formatter.Card;
 import web.formatter.Format;
 import web.formatter.Formatter;
-import web.formatter.TextBlock.Alignment;
 
 @Entity
+@Immutable
 @Card(size = 48)
 @Table(name="patients")
-public class Patient implements IPatient {
+public class PatientCommunicationView implements IPatient {
 	
 	private int id;
 	private String name;
 	private String surname;
 	private String dni; // TODO: Comprobar si se puede cambiar a String.
 	private String phone;
-	private String address;
-	private String localty;
-	private String province;
-	private Date birth;
 	private String email;
     private boolean active = true;
 	
-	public Patient() {}
+	public PatientCommunicationView() {}
 	
 	@Id
 	@Override
@@ -76,34 +72,6 @@ public class Patient implements IPatient {
 		return phone;
 	}
 
-	@Column(name = "address")
-	@Format(omitLabel = true, align = Alignment.RIGHT, order = 6)
-	@JsonProperty("address")
-	public String getAddress() {
-		return address;
-	}
-
-	@Column(name = "localty")
-	@Format(omitLabel = true, align = Alignment.RIGHT, order = 7)
-	@JsonProperty("localty")
-	public String getLocalty() {
-		return localty;
-	}
-
-	@Column(name = "province")
-	@Format(omitLabel = true, align = Alignment.RIGHT, order = 8)
-	@JsonProperty("province")
-	public String getProvince() {
-		return province;
-	}
-
-	@Column(name = "birth")
-	@Format(label = "Nació el", order = 5)
-	@JsonProperty("birth")
-	@JsonFormat(pattern="yyyy-MM-dd")
-	public Date getBirth() {
-		return birth;
-	}
 
 	@Column(name = "email")
 	@Format(omitLabel = true, order = 4)
@@ -149,22 +117,6 @@ public class Patient implements IPatient {
 	
 	public void setPhone(String telefono) {
 		this.phone = telefono;
-	}
-
-	public void setAddress(String direccion) {
-		this.address = direccion;
-	}
-
-	public void setLocalty(String localidad) {
-		this.localty = localidad;
-	}
-
-	public void setProvince(String provincia) {
-		this.province = provincia;
-	}
-
-	public void setBirth(Date fechaNacimiento) {
-		this.birth = fechaNacimiento;
 	}
 
 	public void setEmail(String correo) {

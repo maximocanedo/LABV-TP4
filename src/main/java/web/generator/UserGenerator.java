@@ -31,7 +31,7 @@ public class UserGenerator implements IEntityGenerator<User> {
 	}
 
 	@Override
-	public User save() {
+	public User save(User requiring) {
 		User random = generate();
         users.signup(random);
         return random;

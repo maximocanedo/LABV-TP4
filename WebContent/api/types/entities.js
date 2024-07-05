@@ -105,3 +105,8 @@
  * @property {IUser} [user] Usuario dueño del permiso.
  * @property {boolean} allowed Concedida o denegada.
  */
+
+
+/**
+ * 
+ */
