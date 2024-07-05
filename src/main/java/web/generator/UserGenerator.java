@@ -9,7 +9,7 @@ import com.github.javafaker.Faker;
 import web.entity.User;
 import web.logicImpl.UserLogicImpl;
 
-@Component
+@Component("userGenerator")
 public class UserGenerator implements IEntityGenerator<User> {
 
 	@Autowired

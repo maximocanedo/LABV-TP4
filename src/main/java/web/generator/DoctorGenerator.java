@@ -14,12 +14,13 @@ import com.github.javafaker.Name;
 
 import web.entity.Day;
 import web.entity.Doctor;
+import web.entity.Permit;
 import web.entity.Schedule;
 import web.entity.Specialty;
 import web.entity.User;
 import web.logic.IDoctorLogic;
 
-@Component
+@Component("doctorGenerator")
 public class DoctorGenerator implements IEntityGenerator<Doctor> {
 
 	@Autowired
@@ -132,20 +133,20 @@ public class DoctorGenerator implements IEntityGenerator<Doctor> {
         for (Schedule existingSchedule : schedules) {
             if (newSchedule.getBeginDay() == existingSchedule.getBeginDay()) {
                 // Horarios en el mismo día
-                if (newSchedule.getEndTime().isAfter(existingSchedule.getStartTime()) &&
-                    newSchedule.getStartTime().isBefore(existingSchedule.getEndTime())) {
+                if (newSchedule.getEndTimeLT().isAfter(existingSchedule.getStartTimeLT()) &&
+                    newSchedule.getStartTimeLT().isBefore(existingSchedule.getEndTimeLT())) {
                     return false;
                 }
             } else if (newSchedule.getFinishDay() == existingSchedule.getBeginDay()) {
                 // Horario termina al otro día
-                if (newSchedule.getEndTime().isAfter(existingSchedule.getStartTime()) &&
-                    newSchedule.getEndTime().isBefore(existingSchedule.getEndTime())) {
+                if (newSchedule.getEndTimeLT().isAfter(existingSchedule.getStartTimeLT()) &&
+                    newSchedule.getEndTimeLT().isBefore(existingSchedule.getEndTimeLT())) {
                     return false;
                 }
             } else if (newSchedule.getBeginDay() == existingSchedule.getFinishDay()) {
                 // Horario comienza al final del día anterior
-                if (newSchedule.getStartTime().isBefore(existingSchedule.getEndTime()) &&
-                    newSchedule.getStartTime().isAfter(existingSchedule.getStartTime())) {
+                if (newSchedule.getStartTimeLT().isBefore(existingSchedule.getEndTimeLT()) &&
+                    newSchedule.getStartTimeLT().isAfter(existingSchedule.getStartTimeLT())) {
                     return false;
                 }
             }

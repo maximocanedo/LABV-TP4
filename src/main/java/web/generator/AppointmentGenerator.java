@@ -21,7 +21,7 @@ import web.entity.User;
 import web.logicImpl.AppointmentLogicImpl;
 import web.logicImpl.DoctorLogicImpl;
 
-@Component
+@Component("appointmentGenerator")
 public class AppointmentGenerator implements IEntityGenerator<Appointment> {
 	
 	@Autowired

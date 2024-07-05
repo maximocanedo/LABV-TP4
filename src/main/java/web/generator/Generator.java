@@ -8,7 +8,7 @@ import web.entity.IAppointment;
 import web.entity.Patient;
 import web.entity.User;
 
-@Component
+@Component("generator")
 public class Generator {
 	
 	private static String DELIMITER = "\n**************************\n";
@@ -49,7 +49,7 @@ public class Generator {
 			// Generar
 			User user = userGenerator.save(requiring);
 			Patient paciente = patientGenerator.save(requiring);
-			Doctor medico = doctorGenerator.save(user);
+			Doctor medico = doctorGenerator.save(user, requiring);
 			IAppointment turno = appointmentGenerator.saveforP6(paciente, medico, requiring);
 			// Appointment turnoParaPunto3 = appointments.generateForDoctor1234(paciente);
 			

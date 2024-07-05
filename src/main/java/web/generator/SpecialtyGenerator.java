@@ -7,7 +7,7 @@ import web.entity.Specialty;
 import web.entity.User;
 import web.logicImpl.SpecialtyLogicImpl;
 
-@Component
+@Component("specialtyGenerator")
 public class SpecialtyGenerator implements IEntityGenerator<Specialty[]> {
 
     @Autowired
@@ -58,9 +58,9 @@ public class SpecialtyGenerator implements IEntityGenerator<Specialty[]> {
 	@Override
 	public Specialty[] save(User requiring) {
         Specialty[] especialidades = generate();
-        for (Specialty especialidad : especialidades) {
-            specialties.add(especialidad, requiring);
-        }
+        //for (Specialty especialidad : especialidades) {
+       //     specialties.add(especialidad, requiring);
+        //}
         return especialidades;
 	}
 

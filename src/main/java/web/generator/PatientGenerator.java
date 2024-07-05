@@ -11,7 +11,7 @@ import web.entity.Patient;
 import web.entity.User;
 import web.logicImpl.PatientLogicImpl;
 
-@Component
+@Component("patientGenerator")
 public class PatientGenerator implements IEntityGenerator<Patient> {
 
 	@Autowired
