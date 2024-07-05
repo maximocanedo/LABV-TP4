@@ -16,10 +16,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import web.entity.Appointment;
+import web.entity.IAppointment;
 import web.entity.User;
 import web.entity.input.AppointmentQuery;
 import web.entity.input.FilterStatus;
-import web.entity.output.ResponseContainer;
+import web.entity.view.AppointmentMinimalView;
 import web.logicImpl.AppointmentLogicImpl;
 
 
@@ -30,7 +31,7 @@ public class AppointmentController {
 	@Autowired 
 	private AuthUtils auth;
 	
-	public ResponseContainer<List<Appointment>> search(
+	public List<AppointmentMinimalView> search(
 			@RequestParam(required = false, defaultValue = "") String q, 
 			@RequestParam(required = false, defaultValue = "") FilterStatus status,
 			@RequestParam(required = false, defaultValue = "") String appointmentStatus,
@@ -45,36 +46,34 @@ public class AppointmentController {
 			HttpServletRequest req, HttpServletResponse res
 			) {
 		User requiring = auth.require(req, res);
-		return ResponseContainer.of(
-				appointments.search(
+		return appointments.search(
 						new AppointmentQuery(q, status)
 								.paginate(page, size)
 								.filterByStatus(appointmentStatus)
 								.filterByDate(date, limit)
 								.filterByDoctor(doctorFile, doctorId)
 								.filterByPatient(patientDni, patientId)
-						, requiring)
-				);
+						, requiring);
 	}
 	
 	@PostMapping
-	public ResponseContainer<Appointment> create(@RequestBody Appointment Appointment, HttpServletRequest req, HttpServletResponse res) {
+	public Appointment create(@RequestBody Appointment Appointment, HttpServletRequest req, HttpServletResponse res) {
 		User requiring = auth.require(req, res);
-		return ResponseContainer.of(appointments.register(Appointment, requiring));
+		return appointments.register(Appointment, requiring);
 	}
 	
 	// Acciones con Terceros
 	@GetMapping("/id/{id}")
-	public ResponseContainer<Appointment> findById(@PathVariable int id, HttpServletRequest req, HttpServletResponse res) {
+	public IAppointment findById(@PathVariable int id, HttpServletRequest req, HttpServletResponse res) {
 		User requiring = auth.require(req, res);
-        return ResponseContainer.of(appointments.getById(id, requiring));
+        return appointments.getById(id, requiring);
 	}
 
 	@PatchMapping("/id/{id}")
-	public ResponseContainer<Appointment> update(@PathVariable int id, @RequestBody Appointment Appointment, HttpServletRequest req, HttpServletResponse res) {
+	public Appointment update(@PathVariable int id, @RequestBody Appointment Appointment, HttpServletRequest req, HttpServletResponse res) {
 		User requiring = auth.require(req, res);
 		Appointment.setId(id);
-		return ResponseContainer.of(appointments.update(Appointment, requiring));
+		return appointments.update(Appointment, requiring);
 	}	
 	
 	@DeleteMapping("/id/{id}")
