@@ -10,7 +10,7 @@ import jakarta.persistence.Converter;
 public class LocalTimeAttributeConverter implements AttributeConverter<LocalTime, String> {
     
     /**/
-	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("HH:mm:ss");
+	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
 
     @Override
     public String convertToDatabaseColumn(LocalTime locTime) {
