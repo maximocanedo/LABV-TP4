@@ -49,11 +49,11 @@
         <div class="row h-75">
             <div class="col-3"></div>
             <div class="col d-flex align-items-center">
-                <form class="g-3 needs-validation" novalidate>
+                <form class="g-3 needs-validation" id="formRegister" action="" method="post">
                     <div class="row mb-3">
                         <div class="col-md-4">
                             <label for="txtName" class="form-label">Nombre</label>
-                            <input type="text" class="form-control" id="txtName" placeholder="Alice" pattern="" title=""
+                            <input type="text" class="form-control" id="txtName" placeholder="Alice" pattern="^[A-Za-z]+$" title="Solo puede contener texto"
                                 required>
                             <div class="invalid-feedback">
                                 Invalido.
@@ -61,8 +61,8 @@
                         </div>
                         <div class="col-md-4">
                             <label for="txtSurname" class="form-label">Apellido</label>
-                            <input type="text" class="form-control" id="txtSurname" placeholder="Manhattan" pattern=""
-                                title="" required>
+                            <input type="text" class="form-control" id="txtSurname" placeholder="Manhattan" pattern="^[A-Za-z]+$" title="Solo puede contener texto" 
+                            required>
                             <div class="invalid-feedback">
                                 Invalido.
                             </div>
@@ -85,12 +85,12 @@
                         <div class="col">
                             <div class="input-group">
                                 <span class="input-group-text" id="login-input-group" for="txtEmail">Email</span>
-                                <input type="text" class="form-control" aria-label="Email input"
-                                    aria-describedby="phone-input" id="txtEmail" name="txtEmail"
-                                    pattern="" placeholder="alice.manhattan@example.com"
+                                <input type="email" class="form-control" aria-label="Email input"
+                                    aria-describedby="email-input" id="txtEmail" name="txtEmail"
+                                    pattern="[^@\s]+@[^@\s]+\.[^@\s]+" placeholder="alice.manhattan@example.com"
                                     title="El email debe cumplir con el formato" required>
                                 <div class="invalid-feedback">
-                                    Invalido. El email debe cumplir con el formato
+                                    Invalido. El email debe cumplir con el formato example@example.com
                                 </div>
                             </div>
                         </div>
@@ -100,7 +100,7 @@
                             <label for="txtBirthDate" class="form-label">Fecha Nacimiento</label>
                             <input type="date" class="form-control" id="txtBirthDate" required>
                             <div class="invalid-feedback">
-                                Invalido.
+                                Invalido. No hay fecha seleccionada
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -118,9 +118,9 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="txtDireccion" class="form-label">Direccion</label>
-                            <input type="text" class="form-control" id="txtDireccion" required placeholder="Example Address 854">
+                            <input type="text" class="form-control" id="txtDireccion" placeholder="Example Address 854" required pattern="^[A-Za-záéíóúÁÉÍÓÚñÑ\s]+ \d+$" title="Direccion incorrecta">
                             <div class="invalid-feedback">
-                                Invalido.
+                                Invalido. Ingrese una direccion de correo valida Example Address 854
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -137,12 +137,12 @@
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label for="txtDireccion" class="form-label">Telefono</label>
+                            <label for="txtPhone" class="form-label">Telefono</label>
                             <div class="input-group">
                                 <span class="input-group-text" id="phone-input" for="txtPhone">+54 11</span>
                                 <input type="text" class="form-control" aria-label="Phone input"
                                     aria-describedby="phone-input" id="txtPhone" name="txtPhone"
-                                    pattern="" placeholder="56369594"
+                                    pattern="^\d{8}$" title="El formato es incorrecto solo deben tener 8 caracteres y sin espacios" placeholder="56369594"
                                     title="El telefono debe cumplir con el formato " required>
                                 <div class="invalid-feedback">
                                     Invalido. El telefono debe cumplir con el formato 
@@ -166,7 +166,7 @@
         crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
-    <script type="module" src="./Register.js"></script>
+    <script type="module" src="./register.js"></script>
 </body>
 
 </html>
