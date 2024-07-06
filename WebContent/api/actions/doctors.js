@@ -1,155 +1,155 @@
 'use strict';
 import * as u from './../auth.js';
-import { FilterStatus } from './users.js';
+import { updateAccessToken } from './../security.js';
+import * as db from "./../store/doctors.js";
+import { Permit, PermitTemplate } from './../types/models.js';
 /// <reference path="../types/entities.js" />
 
 /**
- * TODO: Integrar base de datos local.
- */
-
-/**
- * Registra un doctor.
- * @param {DoctorRegistrationRequest} data Datos del doctor.
- * @returns {Promise<Doctor>} Copia del registro.
+ * Crea un nuevo doctor.
+ * @param {Object} data Datos del doctor a crear.
+ * @returns {Promise<Object>} Promesa con la respuesta del servidor.
  */
 export const create = async (data) => {
-    return u.post("doctors", data)
+    return u.post("http://localhost:81/TP4_GRUPO3/doctors", data)
         .then(response => response.json())
+        .then(doctor => db.update(doctor)) // Actualiza el almacenamiento local
         .catch(err => {
             throw err;
         });
 };
 
 /**
- * Buscar doctor por ID.
- * @param {number} id ID del doctor
- * @returns {Promise<IDoctor>} Registro
+ * Busca todos los doctores.
+ * @returns {Promise<Object[]>} Promesa con un array de doctores.
+ */
+export const findAll = async () => {
+    return u.get("http://localhost:81/TP4_GRUPO3/doctors")
+        .then(response => response.json())
+        .then(doctors => {
+            const updatePromises = doctors.map(doctor => db.update(doctor)); // Actualiza el almacenamiento local
+            return Promise.all(updatePromises);
+        })
+        .catch(err => {
+            throw err;
+        });
+};
+
+/**
+ * Busca un doctor por su ID.
+ * @param {number} id ID del doctor a buscar.
+ * @returns {Promise<Object>} Promesa con los datos del doctor encontrado.
  */
 export const findById = async (id) => {
-    return u.get("doctors/id/" + id)
+    return u.get(`http://localhost:81/TP4_GRUPO3/doctors/id/${id}`)
         .then(response => response.json())
+        .then(doctor => db.update(doctor)) // Actualiza el almacenamiento local
         .catch(err => {
             throw err;
         });
 };
 
 /**
- * Buscar doctor por número de legajo.
- * @param {number} file Número de legajo del doctor
- * @returns {Promise<IDoctor>} Registro
- */
-export const findByFile = async (file) => {
-    return u.get("doctors/file/" + file)
-        .then(response => response.json())
-        .catch(err => {
-            throw err;
-        });
-};
-
-/**
- * Actualiza un registro de un doctor.
- * @param {number} id ID del doctor
- * @param {DoctorUpdateRequest} data Datos a actualizar. 
- * @returns Registro actualizado.
+ * Actualiza los datos de un doctor.
+ * @param {number} id ID del doctor a actualizar.
+ * @param {Object} data Nuevos datos del doctor.
+ * @returns {Promise<Object>} Promesa con los datos actualizados del doctor.
  */
 export const update = async (id, data) => {
-    return u.patch("doctors/id/" + id, data)
+    return u.patch(`http://localhost:81/TP4_GRUPO3/doctors/id/${id}`, data)
         .then(response => response.json())
+        .then(updatedDoctor => db.update(updatedDoctor)) // Actualiza el almacenamiento local
         .catch(err => {
             throw err;
         });
 };
 
 /**
- * Deshabilita un doctor.
- * @param {number} id ID del doctor.
- * @returns {Promise<boolean>} Resultado de la operación.
+ * Deshabilita a un doctor por su ID.
+ * @param {number} id ID del doctor a deshabilitar.
+ * @returns {Promise<boolean>} Promesa con un booleano indicando si se deshabilitó correctamente.
  */
 export const disable = async (id) => {
-    const response = await u.del("doctors/id/" + id);
-    return response.ok;
+    const response = await u.del(`http://localhost:81/TP4_GRUPO3/doctors/id/${id}`);
+    if (response.ok) {
+        return db.disable(id); // Deshabilita en el almacenamiento local
+    }
+    return false;
 };
 
 /**
- * Rehabilita un doctor.
- * @param {number} id ID del doctor.
- * @returns {Promise<boolean>} Resultado de la operación.
+ * Habilita a un doctor por su ID.
+ * @param {number} id ID del doctor a habilitar.
+ * @returns {Promise<boolean>} Promesa con un booleano indicando si se habilitó correctamente.
  */
 export const enable = async (id) => {
-    const response = await u.post("doctors/id/" + id);
-    return response.ok;
+    const response = await u.post(`http://localhost:81/TP4_GRUPO3/doctors/id/${id}`);
+    if (response.ok) {
+        return db.enable(id); // Habilita en el almacenamiento local
+    }
+    return false;
 };
 
 /**
- * @class Query
- * Permite crear y realizar consultas.
+ * Clase para construir y ejecutar consultas de búsqueda de doctores.
  */
 export class Query {
-
-    /**
-     * @type {string}
-     */
     #q;
-
-    /**
-     * @type {FilterStatus}
-     */
     #status = "";
-
-    /**
-     * @type {string}
-     */
     #day = "";
-
-    /**
-     * @type {number}
-     */
     #specialty = null;
-
     #page = 1;
-
     #size = 10;
 
     /**
-     * @constructor
+     * Crea una nueva instancia de Query.
+     * @param {string} q Texto de búsqueda.
      */
     constructor(q = "") {
         this.#q = q;
     }
 
     /**
-     * Efectiviza la búsqueda.
+     * Ejecuta la búsqueda de doctores según los parámetros configurados.
+     * @returns {Promise<Object[]>} Promesa con un array de doctores encontrados.
      */
     async search() {
-        return u.get("doctors", {
+        const params = {
             q: this.#q,
             status: this.#status,
             day: this.#day,
             specialty: this.#specialty,
             page: this.#page,
             size: this.#size
-        }).then(response => response.json())
-        .catch(err => {
-            throw err;
-        });
+        };
+
+        return u.get("http://localhost:81/TP4_GRUPO3/doctors", params)
+            .then(response => response.json())
+            .then(doctors => {
+                const updatePromises = doctors.map(doctor => db.update(doctor)); // Actualiza el almacenamiento local
+                return Promise.all(updatePromises);
+            })
+            .catch(err => {
+                throw err;
+            });
     }
 
     /**
-     * Pagina la búsqueda.
-     * @param {number} page Número de página
-     * @param {number} size Tamaño de página
-     * @returns {Query} Este objeto.
+     * Configura la paginación para la búsqueda.
+     * @param {number} page Número de página.
+     * @param {number} size Tamaño de la página.
+     * @returns {Query} Instancia actual de Query.
      */
     paginate(page, size) {
-        if(page != null && page > 0) this.#page = page;
-        if(size != null && size > 0) this.#size = size;
+        if (page != null && page > 0) this.#page = page;
+        if (size != null && size > 0) this.#size = size;
         return this;
     }
 
     /**
-     * Filtra por estado.
-     * @param {FilterStatus} status Estado
-     * @returns {Query} Este objeto.
+     * Filtra los doctores por estado.
+     * @param {string} status Estado por el cual filtrar.
+     * @returns {Query} Instancia actual de Query.
      */
     filterByStatus(status) {
         this.#status = status;
@@ -157,9 +157,9 @@ export class Query {
     }
 
     /**
-     * Filtra por día de semana.
-     * @param {string} day Día de semana
-     * @returns {Query} Este objeto.
+     * Filtra los doctores por día disponible.
+     * @param {string} day Día por el cual filtrar.
+     * @returns {Query} Instancia actual de Query.
      */
     filterByDay(day) {
         this.#day = day;
@@ -167,13 +167,12 @@ export class Query {
     }
 
     /**
-     * Filtrar por especialidad.
-     * @param {number} specialty ID de especialidad
-     * @returns {Query} Este objeto.
+     * Filtra los doctores por especialidad.
+     * @param {string} specialty Especialidad por la cual filtrar.
+     * @returns {Query} Instancia actual de Query.
      */
     filterBySpecialty(specialty) {
         this.#specialty = specialty;
         return this;
     }
-
 };
