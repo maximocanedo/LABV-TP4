@@ -1,7 +1,5 @@
 package web.main;
-import web.entity.Permit;
 import web.entity.User;
-import web.entity.UserPermit;
 import web.generator.Generator;
 import web.logic.ITicketLogic;
 import web.logicImpl.TicketLogicImpl;
