@@ -1,144 +1,101 @@
 'use strict';
-/// <reference path="../types/entities.js" />
+import * as u from '../../../api/auth.js';
+import { FilterStatus } from '../../../api/actions/users.js';
 
-const DB_NAME = "doctorDB";
-const STORE_NAME = "doctors";
-
-const open = () => {
-    return new Promise((resolve, reject) => {
-        const request = indexedDB.open(DB_NAME, 1);
-  
-        request.onerror = (event) => {
-          reject("Error al abrir la base de datos");
-        };
-  
-        request.onsuccess = (event) => {
-          resolve(event.target.result);
-        };
-  
-        request.onupgradeneeded = (event) => {
-          const db = event.target.result;
-          if (!db.objectStoreNames.contains(STORE_NAME)) {
-            const objectStore = db.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
-            objectStore.createIndex("name", "name", { unique: false });
-            objectStore.createIndex("specialty", "specialty", { unique: false });
-          }
-        };
-    });
+export const create = async (data) => {
+    return u.post("http://localhost:81/TP4_GRUPO3/doctors", data)
+        .then(response => response.json())
+        .catch(err => {
+            throw err;
+        });
 };
 
-/**
- * Actualiza un doctor en la base de datos local y devuelve una copia.
- * @param {Doctor} doctor Doctor con información actualizada
- * @returns {Promise<Doctor>} Copia del doctor almacenado en la base de datos.
- */
-export const update = async (doctor) => {
-    const db = await open();
-    const legacyDoctor = await getById(doctor.id);
-
-    return new Promise((resolve, reject) => {
-        doctor._lastOfflineSaved = Date.now();
-        const transaction = db.transaction(STORE_NAME, "readwrite");
-        const store = transaction.objectStore(STORE_NAME);
-        const updatedDoctor = {...legacyDoctor, ...doctor};
-        const request = store.put(updatedDoctor);
-        request.onsuccess = () => {
-            resolve(updatedDoctor);
-        };
-        request.onerror = (event) => {
-            reject("Error al actualizar el doctor");
-        };
-    });
+export const findAll = async () => {
+    return u.get("http://localhost:81/TP4_GRUPO3/doctors")
+        .then(response => response.json())
+        .catch(err => {
+            throw err;
+        });
 };
 
-/**
- * Busca un doctor en la base de datos local por su ID.
- * @param {number} id ID del doctor
- * @returns {Promise<Doctor>} Doctor encontrado.
- */
-export const getById = async (id) => {
-    const db = await open();
-  
-    return new Promise((resolve, reject) => {
-      const transaction = db.transaction(STORE_NAME, "readonly");
-      const store = transaction.objectStore(STORE_NAME);
-      const getRequest = store.get(id);
-  
-      getRequest.onsuccess = () => {
-        const doctor = getRequest.result;
-        resolve(doctor ? doctor : null);
-      };
-  
-      getRequest.onerror = (event) => {
-        reject("Error al buscar el doctor por ID");
-      };
-    });
+export const findById = async (id) => {
+    return u.get("http://localhost:81/TP4_GRUPO3/doctors/id/" + id)
+        .then(response => response.json())
+        .catch(err => {
+            throw err;
+        });
 };
 
-/**
- * Devuelve todos los doctores guardados localmente, sin ningún tipo de filtro ni paginación.
- * @returns {Promise<Doctor[]>}
- */
-export const getAll = async () => {
-    const db = await open();
-    return new Promise((resolve, reject) => {
-        const transaction = db.transaction(STORE_NAME, "readonly");
-        const store = transaction.objectStore(STORE_NAME);
-        const request = store.getAll();
-
-        request.onsuccess = (event) => {
-            resolve(event.target.result);
-        };
-
-        request.onerror = (event) => {
-            reject("Error al obtener los doctores");
-        };
-    });
+export const findByFile = async (file) => {
+    return u.get("http://localhost:81/TP4_GRUPO3/doctors/file/" + file)
+        .then(response => response.json())
+        .catch(err => {
+            throw err;
+        });
 };
 
-/**
- * Crea un nuevo doctor en la base de datos local.
- * @param {Doctor} doctor Doctor a crear
- * @returns {Promise<Doctor>} Doctor creado.
- */
-export const create = async (doctor) => {
-    const db = await open();
-
-    return new Promise((resolve, reject) => {
-        const transaction = db.transaction(STORE_NAME, "readwrite");
-        const store = transaction.objectStore(STORE_NAME);
-        const request = store.add(doctor);
-
-        request.onsuccess = (event) => {
-            resolve(doctor);
-        };
-
-        request.onerror = (event) => {
-            reject("Error al añadir el doctor");
-        };
-    });
+export const update = async (id, data) => {
+    return u.patch("http://localhost:81/TP4_GRUPO3/doctors/id/" + id, data)
+        .then(response => response.json())
+        .catch(err => {
+            throw err;
+        });
 };
 
-/**
- * Función de ejemplo para buscar un doctor por nombre.
- * @param {string} name Nombre del doctor a buscar
- * @returns {Promise<Doctor[]>} Array de doctores encontrados.
- */
-export const findByName = async (name) => {
-    const db = await open();
+export const disable = async (id) => {
+    const response = await u.del("http://localhost:81/TP4_GRUPO3/doctors/id/" + id);
+    return response.ok;
+};
 
-    return new Promise((resolve, reject) => {
-        const transaction = db.transaction(STORE_NAME, "readonly");
-        const store = transaction.objectStore(STORE_NAME);
-        const index = store.index('name');
-        const getRequest = index.getAll(name);
+export const enable = async (id) => {
+    const response = await u.post("http://localhost:81/TP4_GRUPO3/doctors/id/" + id);
+    return response.ok;
+};
 
-        getRequest.onsuccess = () => {
-            resolve(getRequest.result);
-        };
+export class Query {
+    #q;
+    #status = "";
+    #day = "";
+    #specialty = null;
+    #page = 1;
+    #size = 10;
 
-        getRequest.onerror = (event) => {
-            reject("Error al buscar doctores por nombre");
-        };
-    });
+    constructor(q = "") {
+        this.#q = q;
+    }
+
+    async search() {
+        return u.get("http://localhost:81/TP4_GRUPO3/doctors", {
+            q: this.#q,
+            status: this.#status,
+            day: this.#day,
+            specialty: this.#specialty,
+            page: this.#page,
+            size: this.#size
+        }).then(response => response.json())
+        .catch(err => {
+            throw err;
+        });
+    }
+
+    paginate(page, size) {
+        if(page != null && page > 0) this.#page = page;
+        if(size != null && size > 0) this.#size = size;
+        return this;
+    }
+
+    filterByStatus(status) {
+        this.#status = status;
+        return this;
+    }
+
+    filterByDay(day) {
+        this.#day = day;
+        return this;
+    }
+
+    filterBySpecialty(specialty) {
+        this.#specialty = specialty;
+        return this;
+    }
 };
