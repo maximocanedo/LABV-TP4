@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     registerForm.addEventListener('submit', async (event) => {
         event.preventDefault();
 
-        const form = event.target; // Asignar el target del evento a una constante
+        const form = event.target; 
         if (!(form instanceof HTMLFormElement)) {
             throw new Error('Unexpected event target');
         }
