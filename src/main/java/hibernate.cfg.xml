@@ -22,6 +22,7 @@
         <mapping class="web.entity.Ticket" />
         <mapping class="web.entity.view.DoctorMinimalView" />
         <mapping class="web.entity.view.UserView" />
+        <mapping class="web.entity.view.AppointmentMinimalView" />
         
     </session-factory>
 </hibernate-configuration>
