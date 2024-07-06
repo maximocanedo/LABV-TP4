@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import web.entity.Appointment;
 import web.entity.IAppointment;
@@ -23,7 +25,8 @@ import web.entity.input.FilterStatus;
 import web.entity.view.AppointmentMinimalView;
 import web.logicImpl.AppointmentLogicImpl;
 
-
+@RestController
+@RequestMapping("/appointments")
 public class AppointmentController {
 	@Autowired
 	private AppointmentLogicImpl appointments;
@@ -82,6 +85,12 @@ public class AppointmentController {
 		appointments.disable(id, requiring);
 		return ResponseEntity.status(200).build();
 	}
-
+	
+	@PostMapping("/id/{id}")
+	public ResponseEntity<?> enable(@PathVariable int id, HttpServletRequest req, HttpServletResponse res) {
+		User requiring = auth.require(req, res);
+		appointments.enable(id, requiring);
+		return ResponseEntity.status(200).build();
+	}
 	
 }
