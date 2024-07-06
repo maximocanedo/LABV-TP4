@@ -10,6 +10,7 @@
  * @typedef {Object} IUserBasicProperties
  * @property {string} name - Nombre.
  * @property {boolean} active - Estado lógico del usuario.
+ * @property {IDoctor} [doctor] - Doctor asignado.
  * @typedef {IdentifiableUser & IUserBasicProperties & SaveableEntity} IUser
  */
 /**

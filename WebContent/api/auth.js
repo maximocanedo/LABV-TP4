@@ -32,7 +32,7 @@ const resolveBody = (body) => {
     return JSON.stringify(body);
 };
 
-const resolveURLParams = (url, params) => {
+export const resolveURLParams = (url, params) => {
     const urlObj = new URL(url, BASE_URL); 
     const searchParams = new URLSearchParams(params);
     urlObj.search = searchParams.toString();

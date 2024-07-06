@@ -1,8 +1,9 @@
 'use strict';
 import { getAccessToken, getRefreshToken } from "./security.js";
-import { login, getUsers, getUser, update, signup, resetPassword, disable, myself, updateMe, resetMyPassword, disableMe } from "./actions/users.js";
+import { login, getUsers, getUser, update, signup, resetPassword, disable, myself, updateMe, resetMyPassword, disableMe, FilterStatus } from "./actions/users.js";
 import * as doctors from './actions/doctors.js';
 import { domTesterElement, domSection } from "./test.js";
+import { resolveURLParams } from "./auth.js";
 
 const usersSection = domSection("Usuarios");
 const doctorsSection = domSection("Médicos");
@@ -31,9 +32,9 @@ const patientsSection = domSection("Pacientes");
 
     let listUsers__page = 1;
     const listUsers = domTesterElement("Buscar usuarios", "Cargar de a diez usuarios e imprimir en consola. ", async (e) => {
-        const xe = await getUsers("", listUsers__page, 10);
+        const xe = await getUsers("Silva", listUsers__page, 10, FilterStatus.ONLY_INACTIVE);
         listUsers__page++;
-        console.log(xe);
+        console.log(xe, { listUsers__page });
     }, section);
 
     const updateTest = domTesterElement("Actualizar un usuario", `Busca el usuario @${SECONDARY_USER}, y luego se intenta cambiar su nombre. `, async (e) => {
@@ -130,9 +131,19 @@ const patientsSection = domSection("Pacientes");
         console.log(doctor);
     }, section);
 
+
     const findIdDoctor = domTesterElement("Buscar un doctor (Por ID)", `Busca el doctor con ID ${SAMPLE_ID}. `, async (e) => {
         const doctor = await doctors.findById(SAMPLE_ID);
         console.log(doctor);
+    }, section);
+
+    let page = 1;
+
+    const searchDoctor = domTesterElement("Buscar", `Busca doctores. `, async (e) => {
+        const query = new doctors.Query("").paginate(page, 15);
+        const list = await query.search();
+        console.log(list);
+        page++;
     }, section);
 
     const updateDoctor = domTesterElement("Actualizar datos de un doctor. ", "Ahora vive en Tierra del Fuego. ", async (e) => {
