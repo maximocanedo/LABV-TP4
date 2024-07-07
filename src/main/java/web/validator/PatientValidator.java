@@ -59,7 +59,7 @@ public class PatientValidator {
 		try {
 			phone = formatPhoneNumber(phone, null);
 		} catch (NumberParseException e) {
-			throw new ValidationException("Invalid phone number. ", "Ingrese un número de teléfono válido. ")
+			throw new ValidationException("Invalid phone number. ", "Ingrese un número de teléfono válido. ");
 		}
 		return phone;
 	}
