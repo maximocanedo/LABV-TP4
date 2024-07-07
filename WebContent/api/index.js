@@ -2,6 +2,7 @@
 import { getAccessToken, getRefreshToken } from "./security.js";
 import { login, getUsers, getUser, update, signup, resetPassword, disable, myself, updateMe, resetMyPassword, disableMe, FilterStatus } from "./actions/users.js";
 import * as doctors from './actions/doctors.js';
+import * as patients from "./actions/patients.js";
 import { domTesterElement, domSection } from "./test.js";
 import { resolveURLParams } from "./auth.js";
 
@@ -166,3 +167,21 @@ const patientsSection = domSection("Pacientes");
     }, section);
 
 })(doctorsSection);
+
+(async (section) => {
+    const createPatient = domTesterElement("Crear un nuevo paciente", "En la base de datos. ", async (e) => {
+        const patient = await patients.create({
+            name: "Alejandro",
+            surname: "Vera",
+            dni: "45678099",
+            phone: "+541109988789",
+            address: "Martín Coronado 1778",
+            localty: "Gerli",
+            province: "Buenos Aires",
+            birth: "1978-11-11",
+            email: "vera.alejandro@fake.org",
+            active: true
+        });
+        console.log(patient);
+    }, patientsSection);
+})(patientsSection);

@@ -7,8 +7,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,12 +29,18 @@ import web.logicImpl.AppointmentLogicImpl;
 
 @RestController
 @RequestMapping("/appointments")
+@CrossOrigin(origins = "*", allowedHeaders = "*", exposedHeaders = { "Authorization", "Content-Length" })
 public class AppointmentController {
 	@Autowired
 	private AppointmentLogicImpl appointments;
 	
 	@Autowired 
 	private AuthUtils auth;
+
+	@InitBinder
+    public void initBinder(HttpServletRequest req, HttpServletResponse res) {
+        auth.preHandle(req, res);
+    }
 	
 	public List<AppointmentMinimalView> search(
 			@RequestParam(required = false, defaultValue = "") String q, 

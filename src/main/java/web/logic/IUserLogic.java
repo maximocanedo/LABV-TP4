@@ -146,5 +146,7 @@ public interface IUserLogic {
 	 * @param user Usuario con los datos a actualizar.
 	 */
 	User update(User user, User requiring) throws NotFoundException;
+
+	boolean checkUsernameAvailability(String username, User requiring);
 	
 }

@@ -53,6 +53,7 @@ public class UserDAOImpl implements IUserDAO {
 		});
 		return cfUser;
 	}
+
 	
 	@Override
     public Optional<User> findByUsername(String username) {

@@ -54,6 +54,7 @@ public class UserController {
     public void initBinder(HttpServletRequest req, HttpServletResponse res) {
         auth.preHandle(req, res);
     }
+	
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody UserCredentials credentials) {
 		String refreshToken = users.login(credentials.getUsername(), credentials.getPassword());

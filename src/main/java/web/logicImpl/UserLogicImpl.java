@@ -107,6 +107,11 @@ public class UserLogicImpl implements IUserLogic {
 		if(opt.isEmpty()) throw new NotFoundException("User not found. ");
 		else return opt.get();
 	}
+	
+	@Override
+	public boolean checkUsernameAvailability(String username, User requiring) {
+		return usersrepository.checkUsernameAvailability(username);
+	}
 
 	@Override
 	public List<UserView> search(UserQuery q, User requiring) {

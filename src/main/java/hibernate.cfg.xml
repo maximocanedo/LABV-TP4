@@ -20,9 +20,13 @@
         <mapping class="web.entity.Specialty" />
         <mapping class="web.entity.Appointment" />
         <mapping class="web.entity.Ticket" />
+        
         <mapping class="web.entity.view.DoctorMinimalView" />
         <mapping class="web.entity.view.UserView" />
         <mapping class="web.entity.view.AppointmentMinimalView" />
+        <mapping class="web.entity.view.AppointmentCommunicationView" />
+        <mapping class="web.entity.view.PatientCommunicationView" />
+        <mapping class="web.entity.view.PatientMinimalView" />
         
     </session-factory>
 </hibernate-configuration>
