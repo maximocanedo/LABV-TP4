@@ -7,5 +7,9 @@ public enum Day {
 	WEDNESDAY,
 	THURSDAY,
 	FRIDAY,
-	SATURDAY
+	SATURDAY;
+	
+	public Day next() {
+        return values()[(this.ordinal() + 1) % values().length];
+    }
 }
