@@ -14,7 +14,10 @@ addEventListener("DOMContentLoaded", async (event) => {
             { data: 'dni', title: 'Dni' },
             { data: 'email', title: 'Email'},
             { data: 'phone', title: 'Telefono' },
-            { data: 'active', title:'Activo' }
+            { data: 'active', title:'Activo'},
+            { data: '', render: function ( data, type, row ) {
+                return '<button type="button" class="btn btn-primary">Example Button</button>';
+            }}
         ],
         data: pacientes,
     });

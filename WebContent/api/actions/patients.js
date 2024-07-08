@@ -15,6 +15,14 @@ export const create = async (data) => {
         })
 };
 
+export const findAll = async () => {
+    return u.get("patients/")
+        .then(response => response.json())
+        .catch(err => {
+            throw err;
+        });
+};
+
 export const findById = async (id) => {
     return u.get("patients/id/" + id)
         .then(response => response.json())
