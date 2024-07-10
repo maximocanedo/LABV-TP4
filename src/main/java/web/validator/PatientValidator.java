@@ -7,13 +7,12 @@ import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import web.daoImpl.PatientDAOImpl;
-import web.entity.Day;
-import web.entity.Schedule;
-import web.exceptions.ValidationException;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
+
+import web.daoImpl.PatientDAOImpl;
+import web.exceptions.ValidationException;
 
 @Component("patientValidator")
 public class PatientValidator {
@@ -101,5 +100,10 @@ public class PatientValidator {
         	throw new ValidationException("Invalid phone number. ", "Ingrese un número de teléfono válido. ");
         }
     }
+	
+	
+	
+	
+	
 	
 }
