@@ -1,5 +1,5 @@
-import { findAll } from './api/actions/patients.js';
-import { login } from "./api/actions/users.js";
+import { findAll } from '../api/actions/patients.js';
+import { login } from "../api/actions/users.js";
 
 addEventListener("DOMContentLoaded", async (event) => {
     const user = await login("alicia.schimmel", "12345678");
