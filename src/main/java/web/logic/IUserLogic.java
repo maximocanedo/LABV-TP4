@@ -148,5 +148,8 @@ public interface IUserLogic {
 	User update(User user, User requiring) throws NotFoundException;
 
 	boolean checkUsernameAvailability(String username, User requiring);
+
+	String login(String username, String password, String deviceName, String deviceId)
+			throws InvalidCredentialsException, NotFoundException;
 	
 }

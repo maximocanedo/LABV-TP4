@@ -60,6 +60,18 @@ public class DoctorDAOImpl implements IDoctorDAO {
     	return medico;
     }
 
+    public boolean existsByFile(int file) {
+		final Optional<Boolean> cfUser = new Optional<Boolean>();
+		dataManager.run(session -> {
+			String hql = "SELECT COUNT(p) FROM DoctorMinimalView p WHERE p.file = :file";
+	        Query query = session.createQuery(hql);
+	        query.setParameter("file", file);
+	        Long d = (Long) query.uniqueResult();
+	        cfUser.set(d > 0);
+		});
+		return cfUser.get().booleanValue();
+	}
+    
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Object[]> listOnlyFileNumbersAndNames() {

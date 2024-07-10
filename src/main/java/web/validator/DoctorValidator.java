@@ -36,6 +36,12 @@ public class DoctorValidator {
 	
 	public char MALE = 'M';
 	
+	public int file(int file) throws ValidationException {
+		if(doctorsrepository.existsByFile(file))
+			throw new ValidationException("Doctor already in system. ", "El legajo introducido corresponde a un médico ya registrado. ");
+		return file;
+	}
+	
 	public String sex(String sex) throws ValidationException {
 		sex = sex.toUpperCase();
 		char s = sex.charAt(0);

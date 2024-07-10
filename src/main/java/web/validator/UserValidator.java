@@ -50,21 +50,21 @@ public class UserValidator {
 		return name;
 	}
 	
-	public String password(String password, String name, String surname) throws ValidationException {
+	public String password(String password, String name, String username) throws ValidationException {
 		Pattern pattern = Pattern.compile(PASS_PATTERN);
 		Matcher matcher = pattern.matcher(password);
 		if(!matcher.matches())
 			throw new ValidationException("Invalid password. ", "La contraseña, de al menos ocho caracteres, debe contener al menos una mayúscula, una minúscula, un dígito y un caracter especial. ");
-		ValidationException e = new ValidationException("Invalid password. ", "No " + name + ", tu contraseña no puede tener tu nombre ni tu apellido. ");
+		ValidationException e = new ValidationException("Invalid password. ", "No " + name + ", tu contraseña no puede tener tu nombre, ni tu nombre de usuario. ");
 		if(password.toUpperCase().contains(name.toUpperCase()) 
-				|| password.toUpperCase().contains(surname.toUpperCase()) 
+				|| password.toUpperCase().contains(username.toUpperCase()) 
 				|| password.equalsIgnoreCase(name) 
-				|| password.equalsIgnoreCase(surname))
+				|| password.equalsIgnoreCase(username))
 			throw e;
 		for(String word : name.toUpperCase().split(" ")) {
 			if(password.toUpperCase().contains(word)) throw e;
 		}
-		for(String word : surname.toUpperCase().split(" ")) {
+		for(String word : username.toUpperCase().split(" ")) {
 			if(password.toUpperCase().contains(word)) throw e;
 		}
 		return password;

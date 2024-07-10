@@ -62,7 +62,7 @@ public class PatientDAOImpl implements IPatientDAO {
 	public boolean existsDNI(String dni) {
 		final Optional<Boolean> cfUser = new Optional<Boolean>();
 		dataManager.run(session -> {
-			String hql = "SELECT COUNT(p) FROM Patient p WHERE dni = :dni";
+			String hql = "SELECT COUNT(p) FROM Patient p WHERE p.dni = :dni";
 	        Query query = session.createQuery(hql);
 	        query.setParameter("dni", dni);
 	        Long d = (Long) query.uniqueResult();

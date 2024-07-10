@@ -19,12 +19,16 @@ import web.exceptions.NotFoundException;
 import web.generator.PermitTemplate;
 import web.logic.ITicketLogic;
 import web.logic.IUserLogic;
+import web.validator.UserValidator;
 
 @Component("users")
 public class UserLogicImpl implements IUserLogic {
 	
 	@Autowired
 	private UserDAOImpl usersrepository;
+	
+	@Autowired
+	private UserValidator userValidator;
 	
 	@Autowired
 	private UserPermitLogicImpl permits;
@@ -40,7 +44,12 @@ public class UserLogicImpl implements IUserLogic {
 	
 	@Override
     public User signup(User user) {
-		String clearPassword = user.getPassword();
+		user.setName(userValidator.name(user.getName()));
+		user.setUsername(userValidator.username(user.getUsername()));
+		if(user.getDoctor() != null) {
+			user.setDoctor(userValidator.doctor(user.getDoctor()));
+		}
+		String clearPassword = userValidator.password(user.getPassword(), user.getName(), user.getUsername());
 		user.setPassword(hash(clearPassword));
 		return usersrepository.add(user);
 	}
@@ -150,6 +159,7 @@ public class UserLogicImpl implements IUserLogic {
 		Optional<User> search = check(username, currentPassword);
 		if(search.isEmpty()) throw new NotFoundException();
 		User original = search.get();
+		newPassword = userValidator.password(newPassword, original.getName(), original.getUsername());
 		original.setPassword(hash(newPassword));
 		usersrepository.update(original);
 	}
@@ -161,6 +171,7 @@ public class UserLogicImpl implements IUserLogic {
 		Optional<User> search = findByUsername(username, requiring);
 		if(search.isEmpty()) throw new NotFoundException();
 		User original = search.get();
+		newPassword = userValidator.password(newPassword, original.getName(), original.getUsername());
 		original.setPassword(hash(newPassword));
 		usersrepository.update(original);
 	}
@@ -172,8 +183,10 @@ public class UserLogicImpl implements IUserLogic {
 		Optional<User> search = usersrepository.findByUsername(user.getUsername());
 		if(search.isEmpty()) throw new NotFoundException();
 		User original = search.get();
-		if(user.getName() != null) original.setName(user.getName());
-		if(user.getDoctor() != null) original.setDoctor(user.getDoctor());
+		if(user.getName() != null) 
+			original.setName(userValidator.name(user.getName()));
+		if(user.getDoctor() != null) 
+			original.setDoctor(userValidator.doctor(user.getDoctor()));
 		return usersrepository.update(original);
 	}
 
@@ -182,11 +195,15 @@ public class UserLogicImpl implements IUserLogic {
 	 */
 	@Override
 	public String login(String username, String password) throws InvalidCredentialsException, NotFoundException {
+		return login(username, password, "Testing device", "Device #001");
+	}
+	
+	@Override
+	public String login(String username, String password, String deviceName, String deviceId) throws InvalidCredentialsException, NotFoundException {
 		Optional<User> user = check(username, password);
 		if(user.isEmpty()) {
-			System.out.println("No hay usuario");
 			throw new InvalidCredentialsException();
 		} 
-		return tickets.startToken(user.get().getUsername(), "Testing device", "Device #001");
+		return tickets.startToken(user.get().getUsername(), deviceName, deviceId);
 	}
 }
