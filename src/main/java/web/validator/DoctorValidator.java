@@ -2,6 +2,7 @@ package web.validator;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -10,8 +11,10 @@ import web.daoImpl.DoctorDAOImpl;
 import web.daoImpl.SpecialtyDAOImpl;
 import web.daoImpl.UserDAOImpl;
 import web.entity.Optional;
+import web.entity.Schedule;
 import web.entity.Specialty;
 import web.entity.User;
+import web.exceptions.CommonException;
 import web.exceptions.ValidationException;
 
 @Component("doctorValidator")
@@ -35,7 +38,8 @@ public class DoctorValidator {
 	
 	public String sex(String sex) throws ValidationException {
 		sex = sex.toUpperCase();
-		if(!sex.equals(FEMALE) && !sex.equals(MALE)) {
+		char s = sex.charAt(0);
+		if(s != FEMALE && s != MALE) {
 			throw new ValidationException("Invalid sex", "El valor para 'sexo' sólo puede ser F para femenino y M para masculino. ");
 		}
 		return sex;
@@ -94,6 +98,31 @@ public class DoctorValidator {
 		return user;
 	}
 	
+	public Set<Schedule> nonOverlapping(Set<Schedule> newSchedules, Set<Schedule> legacy) throws ValidationException {
+		for(Schedule candidate : newSchedules) 
+			legacy.add(nonOverlapping(candidate, legacy));
+		return legacy;
+	}
+	
+	private Schedule nonOverlapping(Schedule newSchedule, Set<Schedule> schedules) throws ValidationException {
+		CommonException ve = new ValidationException("Overlapping schedules. ", "Uno o varios de los horarios a introducir se superpone con uno existente. ");
+        for (Schedule existingSchedule : schedules) {
+            if (newSchedule.getBeginDay() == existingSchedule.getBeginDay()) {
+                if (newSchedule.getEndTimeLT().isAfter(existingSchedule.getStartTimeLT()) &&
+                    newSchedule.getStartTimeLT().isBefore(existingSchedule.getEndTimeLT()))
+                    throw ve;
+            } else if (newSchedule.getFinishDay() == existingSchedule.getBeginDay()) {
+                if (newSchedule.getEndTimeLT().isAfter(existingSchedule.getStartTimeLT()) &&
+                    newSchedule.getEndTimeLT().isBefore(existingSchedule.getEndTimeLT()))
+                    throw ve;
+            } else if (newSchedule.getBeginDay() == existingSchedule.getFinishDay()) {
+                if (newSchedule.getStartTimeLT().isBefore(existingSchedule.getEndTimeLT()) &&
+                    newSchedule.getStartTimeLT().isAfter(existingSchedule.getStartTimeLT()))
+                    throw ve;
+            }
+        }
+        return newSchedule;
+    }
 	
 	
 }
