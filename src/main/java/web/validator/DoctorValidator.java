@@ -42,6 +42,14 @@ public class DoctorValidator {
 		return file;
 	}
 	
+	public String name(String name) throws ValidationException {
+		return patientValidator.name(name);
+	}
+	
+	public String surname(String name) throws ValidationException {
+		return patientValidator.surname(name);
+	}
+	
 	public String sex(String sex) throws ValidationException {
 		sex = sex.toUpperCase();
 		char s = sex.charAt(0);

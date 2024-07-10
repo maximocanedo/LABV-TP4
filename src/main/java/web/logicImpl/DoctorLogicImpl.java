@@ -1,6 +1,7 @@
 package web.logicImpl;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +12,13 @@ import web.entity.Doctor;
 import web.entity.IDoctor;
 import web.entity.Optional;
 import web.entity.Permit;
+import web.entity.Schedule;
 import web.entity.User;
 import web.entity.input.DoctorQuery;
 import web.entity.view.DoctorMinimalView;
 import web.exceptions.NotFoundException;
 import web.logic.IDoctorLogic;
+import web.validator.DoctorValidator;
 
 @Component("doctors")
 public class DoctorLogicImpl implements IDoctorLogic {
@@ -25,13 +28,29 @@ public class DoctorLogicImpl implements IDoctorLogic {
 	
 	@Autowired
 	private UserPermitLogicImpl permits;
+	
+	@Autowired
+	private DoctorValidator doctorValidator;
 
     public DoctorLogicImpl() {}
 
     @Override
-    public Doctor add(Doctor medico, User requiring) {
+    public Doctor add(Doctor d, User requiring) {
     	permits.require(requiring, Permit.CREATE_DOCTOR);
-        return doctorsrepository.add(medico);
+    	d.setFile(doctorValidator.file(d.getFile()));
+    	d.setName(doctorValidator.name(d.getName()));
+    	d.setSurname(doctorValidator.surname(d.getSurname()));
+    	d.setSex(doctorValidator.sex(d.getSex()));
+    	d.setBirth(doctorValidator.birth(d.getBirth()));
+    	d.setAddress(doctorValidator.address(d.getAddress()));
+    	d.setLocalty(doctorValidator.localty(d.getLocalty()));
+    	d.setEmail(doctorValidator.email(d.getEmail()));
+    	d.setPhone(doctorValidator.phone(d.getPhone()));
+    	d.setSpecialty(doctorValidator.specialty(d.getSpecialty()));
+    	d.setUser(doctorValidator.user(d.getUser()));
+    	// TODO: Verificar si valida bien los horarios dados, en lugar de compararlos con los nuevos.
+    	d.setSchedules(doctorValidator.nonOverlapping(d.getSchedules(), new HashSet<Schedule>()));
+        return doctorsrepository.add(d);
     }
 
     @Override
@@ -132,16 +151,26 @@ public class DoctorLogicImpl implements IDoctorLogic {
     	if(search.isEmpty()) search = doctorsrepository.findByFile(medico.getFile());
     	if(search.isEmpty()) throw new NotFoundException();
     	Doctor original = search.get();
-    	if (medico.getName() != null) original.setName(medico.getName());
-        if (medico.getSurname() != null) original.setSurname(medico.getSurname());
-        if (medico.getSex() != null) original.setSex(medico.getSex());
-        if (medico.getBirth() != null) original.setBirth(medico.getBirth());
-        if (medico.getAddress() != null) original.setAddress(medico.getAddress());
-        if (medico.getLocalty() != null) original.setLocalty(medico.getLocalty());
-        if (medico.getEmail() != null) original.setEmail(medico.getEmail());
-        if (medico.getPhone() != null) original.setPhone(medico.getPhone());
-        if (medico.getSpecialty() != null) original.setSpecialty(medico.getSpecialty());
-        if (medico.getUser() != null) original.setUser(medico.getUser());
+    	if (medico.getName() != null) 
+    		original.setName(doctorValidator.name(medico.getName()));
+        if (medico.getSurname() != null)
+        	original.setSurname(doctorValidator.surname(medico.getSurname()));
+        if (medico.getSex() != null) 
+        	original.setSex(doctorValidator.sex(medico.getSex()));
+        if (medico.getBirth() != null) 
+        	original.setBirth(doctorValidator.birth(medico.getBirth()));
+        if (medico.getAddress() != null) 
+        	original.setAddress(doctorValidator.address(medico.getAddress()));
+        if (medico.getLocalty() != null) 
+        	original.setLocalty(doctorValidator.localty(medico.getLocalty()));
+        if (medico.getEmail() != null) 
+        	original.setEmail(doctorValidator.email(medico.getEmail()));
+        if (medico.getPhone() != null) 
+        	original.setPhone(doctorValidator.phone(medico.getPhone()));
+        if (medico.getSpecialty() != null) 
+        	original.setSpecialty(doctorValidator.specialty(medico.getSpecialty()));
+        if (medico.getUser() != null) 
+        	original.setUser(doctorValidator.user(medico.getUser()));
 		return doctorsrepository.update(original);
 	}
 
