@@ -27,6 +27,7 @@ public class PatientMinimalView implements IPatient {
 	private int id;
 	private String name;
 	private String surname;
+	private String dni;
     private boolean active = true;
 	
 	public PatientMinimalView() {}
@@ -53,6 +54,13 @@ public class PatientMinimalView implements IPatient {
 	@Override
 	public String getSurname() {
 		return surname;
+	}
+	
+	@Column(name = "dni")
+	@JsonProperty("dni")
+	@Override
+	public String getDni() {
+		return dni;
 	}
 
 	@Column(name = "active")
@@ -84,6 +92,11 @@ public class PatientMinimalView implements IPatient {
 	@Override
 	public void setSurname(String apellido) {
 		this.surname = apellido;
+	}
+	
+	@Override
+	public void setDni(String dni) {
+		this.dni = dni;
 	}
 	
 	public void setActive(boolean active) {
