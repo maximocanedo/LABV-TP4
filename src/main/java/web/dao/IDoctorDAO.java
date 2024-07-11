@@ -1,6 +1,9 @@
 package web.dao;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import web.entity.Doctor;
@@ -22,6 +25,13 @@ public interface IDoctorDAO {
      * @param id ID del medico.
      */
     Optional<Doctor> findById(int id);
+    
+    /**
+     * Devuelve una lista con los espacios libres del horario de un doctor en un día especificado.
+     * @param file Legajo del doctor.
+     * @param date Fecha de consulta.
+     */
+    List<LocalTime> getFreeTimeForDoctor(int file, Date date);
     
     /**
      * Busca un médico por su legajo.
@@ -106,4 +116,20 @@ public interface IDoctorDAO {
      * @param endDate Segunda fecha límite.
      */
     List<Object[]> getAppointmentsByDoctorAndDateRange(int fileNumber, LocalDate startDate, LocalDate endDate);
+
+    /**
+     * Devuelve una lista con los días laborables de un doctor, a partir del día indicado hasta el final del mes.
+     * @param file Legajo del doctor.
+     * @param startDate Fecha inicio de rango. El final de rango es el último día del mes indicado.
+     * @return Lista de fechas.
+     */
+	List<Date> getScheduleForDoctor(int file, Date startDate);
+
+	/**
+     * Devuelve una lista con los días laborables de un doctor, a partir del día indicado hasta el final del mes.
+     * @param file Legajo del doctor.
+     * @param startDate Fecha inicio de rango. El final de rango es el último día del mes indicado.
+     * @return Lista de fechas.
+     */
+	List<Date> getScheduleForDoctor(int file, Calendar startDate);
 }

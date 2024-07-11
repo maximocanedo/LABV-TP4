@@ -21,7 +21,7 @@ BEGIN
         SELECT s.beginDay, s.startTime, s.endTime, s.finishDay FROM schedules s
         INNER JOIN bdmedicos.doctor_schedules ds ON s.id = ds.schedule
         INNER JOIN bdmedicos.doctors d ON ds.doctor = d.id
-        WHERE d.id = doctor_file AND s.active = 1
+        WHERE d.file = doctor_file AND s.active = 1
           AND (s.beginDay = UPPER(DAYNAME(date_required)) OR s.finishDay = UPPER(DAYNAME(date_required)));
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
     SET i = 0;
@@ -55,7 +55,8 @@ BEGIN
             END IF;
             mw: WHILE mm < lmm DO
                     SELECT COUNT(*) INTO hayTurno FROM appointments
-                        WHERE doctor = doctor_file
+                        INNER JOIN doctors d ON d.id = appointments.doctor
+                        WHERE d.file = doctor_file
                             AND appointments.active = 1
                             AND appointments.status = 'PENDING'
                             AND DATE(date) = DATE(date_required)
@@ -77,5 +78,5 @@ BEGIN
 END //
 DELIMITER ;
 
-CALL getFreeTimesForDoctor(200, '2024-01-15');
+CALL getFreeTimesForDoctor(3739, '2024-01-15');
 

@@ -1,6 +1,11 @@
 package web.daoImpl;
 
+import java.sql.Time;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -13,6 +18,7 @@ import web.entity.Optional;
 import web.entity.input.DoctorQuery;
 import web.entity.view.DoctorMinimalView;
 import web.exceptions.NotFoundException;
+
 @Component("doctorsrepository")
 public class DoctorDAOImpl implements IDoctorDAO {
     
@@ -235,5 +241,42 @@ public class DoctorDAOImpl implements IDoctorDAO {
 			doctors.set(q.list());
 		});
 		return doctors.get();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<LocalTime> getFreeTimeForDoctor(int file, Date date) {
+		final List<LocalTime> times = new ArrayList<LocalTime>();
+		dataManager.run(session -> {
+			Query q = session.createSQLQuery("CALL getFreeTimesForDoctor(:file, :date)");
+			q.setParameter("file", file);
+			q.setParameter("date", date);
+			List<Object> result = q.list();
+			for(Object x : result) {
+				times.add(((Time) x).toLocalTime());
+			}
+		});
+		return times;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Date> getScheduleForDoctor(int file, Date startDate) {
+		final List<Date> schedules = new ArrayList<Date>();
+		dataManager.run(session -> {
+			Query q = session.createSQLQuery("CALL getSchedulesForDoctor(:file, :startDate)");
+			q.setParameter("file", file);
+			q.setDate("startDate", startDate);
+			List<Object> result = q.list();
+			for(Object x : result)
+				schedules.add(((Date) x));
+		});
+		return schedules;
+	}
+	
+	@Override
+	public List<Date> getScheduleForDoctor(int file, Calendar startDate) {
+		Date start = startDate.getTime();
+		return getScheduleForDoctor(file, start);
 	}
 }

@@ -1,45 +1,49 @@
 package web.main;
+import java.time.LocalTime;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import web.daoImpl.DoctorDAOImpl;
 import web.entity.User;
 import web.generator.Generator;
-import web.logic.ITicketLogic;
-import web.logicImpl.TicketLogicImpl;
-import web.logicImpl.UserLogicImpl;
 import web.resources.Context;
 
 public class App {
 	
 	private Generator generator;
 	private Context context;
-	private ITicketLogic tickets;
-	private UserLogicImpl users;
+	private DoctorDAOImpl doctorsrepository;
 	
 	// Constructor, no usar como main. 
 	public App() {
 		context = new Context(); // Los beans se cargan en este punto.
 		generator = context.getBean(Generator.class);
-		tickets = context.getBean(TicketLogicImpl.class);
-		users = context.getBean(UserLogicImpl.class);
+		doctorsrepository = context.getBean(DoctorDAOImpl.class);
 	}
 
 	/**
 	 * Función principal. 
 	 */
 	public void main() {
-		String username = "alfonso.walker";
-		String password = "12345678";
+		//String username = "alfonso.walker";
+		//String password = "12345678";
 		
-		String refreshToken = "";
-		String accessToken = "";
+		//String refreshToken = "";
+		//String accessToken = "";
 		try {
-			refreshToken = users.login(username, password);
-			accessToken = tickets.generateAccessToken(refreshToken);
-			User me = tickets.validateAccessToken(accessToken);
-			//userpermit.allow(me, Permit.READ_DOCTOR, me);
-			System.out.println(me);
+			Calendar c = new Calendar.Builder().setDate(2024, 0, 15).build();
+			Calendar c2 = new Calendar.Builder().setDate(2024, 0, 10).build();
 			
-			//for(UserPermit p : me.getAllowedPermits())
-			//	System.out.println(" # " + p.getAction() + ": " + (p.isAllowed() ? "PERMITIDO" : "DENEGADO"));
-			generator.generate(10, me);
+			List<LocalTime> l = doctorsrepository.getFreeTimeForDoctor(3739, c.getTime());
+			List<Date> d = doctorsrepository.getScheduleForDoctor(3739, c2);
+			
+			for(LocalTime t : l ) {
+				System.out.println("DISPONIBLE: " + t);
+			}
+			
+			for(Date dt : d) 
+				System.out.println("Fecha disponible: " + dt);
 			
 		} catch (Exception e1) {
 			e1.printStackTrace();
