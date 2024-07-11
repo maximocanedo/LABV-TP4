@@ -1,6 +1,6 @@
 'use strict';
 import * as u from './../auth.js';
-import { updateAccessToken } from './../security.js';
+import { updateAccessToken, updateRefreshToken } from './../security.js';
 import * as db from "./../store/users.js";
 import { Permit, PermitTemplate } from './../types/models.js';
 /// <reference path="../types/entities.js" />
@@ -36,6 +36,14 @@ export const FilterStatus = Object.freeze({
 export const login = async (username, password) => {
     updateAccessToken(null);
     return u.post("users/login", { username, password });
+};
+
+/**
+ * Cerrar sesión. 
+ */
+export const logout = () => {
+    updateAccessToken(null);
+    updateRefreshToken(null);
 };
 
 /**
