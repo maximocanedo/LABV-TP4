@@ -2,6 +2,7 @@ import { login, myself, logout } from "../api/actions/users.js";
 
 const navLogout = document.getElementById("navLogout");
 const navLogin = document.getElementById("navLogin");
+const navRegister = document.getElementById("navRegister");
 const txtUsername = document.getElementById("txtUsername");
 const txtPassword = document.getElementById("txtPassword");
 const btnLogin = document.getElementById("btnLogin");
@@ -17,6 +18,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const user = await myself();
         navLogout.className = "nav-link";
         navLogin.className = "nav-link d-none";
+        navRegister.className = "nav-link d-none";
     } catch (error) {
         console.log(error);
         formLogin.className = "flex-fill needs-validation";

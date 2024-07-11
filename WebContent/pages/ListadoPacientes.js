@@ -1,8 +1,15 @@
 import { findAll } from '../api/actions/patients.js';
-import { login } from "../api/actions/users.js";
+import { login, myself } from "../api/actions/users.js";
 
 addEventListener("DOMContentLoaded", async (event) => {
-    const user = await login("alicia.schimmel", "12345678");
+    try {
+        const user = await myself();
+        if (!user.doctor) {
+            location.href = "listadoTurnos.html"
+        }
+    } catch (error) {
+        location.href = "login.html"
+    }
     const pacientes = await findAll();
     
     // @ts-ignore
