@@ -27,6 +27,17 @@ export const findById = async (id) => {
         });
 };
 /**
+ * Busca todos los appointment.
+ * @returns {Promise<Object>} Promesa con la respuesta del servidor.
+ */
+export const findAll = async () => {
+    return u.get(`appoinments/`)
+        .then(response => response.json())
+        .catch(err => {
+            throw err;
+        });
+};
+/**
  * Actualiza un appointment.
  * @param {number} id Id del appointment.
  * @param {Object} data Datos del appointment.
