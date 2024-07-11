@@ -4,7 +4,6 @@ import web.generator.Generator;
 import web.logic.ITicketLogic;
 import web.logicImpl.TicketLogicImpl;
 import web.logicImpl.UserLogicImpl;
-import web.logicImpl.UserPermitLogicImpl;
 import web.resources.Context;
 
 public class App {
@@ -13,7 +12,6 @@ public class App {
 	private Context context;
 	private ITicketLogic tickets;
 	private UserLogicImpl users;
-	private UserPermitLogicImpl userpermit;
 	
 	// Constructor, no usar como main. 
 	public App() {
@@ -21,7 +19,6 @@ public class App {
 		generator = context.getBean(Generator.class);
 		tickets = context.getBean(TicketLogicImpl.class);
 		users = context.getBean(UserLogicImpl.class);
-		userpermit = context.getBean(UserPermitLogicImpl.class);
 	}
 
 	/**

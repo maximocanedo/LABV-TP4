@@ -118,6 +118,7 @@ public class DoctorValidator {
 		return legacy;
 	}
 	
+	
 	private Schedule nonOverlapping(Schedule newSchedule, Set<Schedule> schedules) throws ValidationException {
 		CommonException ve = new ValidationException("Overlapping schedules. ", "Uno o varios de los horarios a introducir se superpone con uno existente. ");
         for (Schedule existingSchedule : schedules) {
@@ -136,6 +137,50 @@ public class DoctorValidator {
             }
         }
         return newSchedule;
+    }
+	
+	public Set<Schedule> nonOverlappingIndividual(Schedule newSchedule, Set<Schedule> schedules) throws ValidationException {
+		CommonException ve = new ValidationException("Overlapping schedules. ", "Uno o varios de los horarios a introducir se superpone con uno existente. ");
+        boolean overlaps = schedules.parallelStream()
+        		.anyMatch(e -> 
+        			( // N.day = E.day
+        				newSchedule.getBeginDay() == e.getBeginDay()
+        				// & N.end > E.start
+        				&& newSchedule.getEndTimeLT().isAfter(e.getStartTimeLT()) 
+        				// & N.start < E.end
+        				&& newSchedule.getStartTimeLT().isBefore(e.getEndTimeLT())
+					) || (
+						newSchedule.getFinishDay() == e.getBeginDay()
+						&& newSchedule.getEndTimeLT().isAfter(e.getStartTimeLT()) 
+						&& newSchedule.getEndTimeLT().isBefore(e.getEndTimeLT())
+					) || (
+						newSchedule.getBeginDay() == e.getFinishDay()
+						&& newSchedule.getStartTimeLT().isBefore(e.getEndTimeLT()) 
+						&& newSchedule.getStartTimeLT().isAfter(e.getStartTimeLT())
+					)
+        		);
+        if(overlaps) throw ve;
+        
+		// No borrar hasta probar que funcione adecuadamente. 
+		/* for (Schedule e : schedules) {
+		
+            if (newSchedule.getBeginDay() == e.getBeginDay()) {
+                if (newSchedule.getEndTimeLT().isAfter(e.getStartTimeLT()) &&
+                    newSchedule.getStartTimeLT().isBefore(e.getEndTimeLT()))
+                    throw ve;
+            } else if (newSchedule.getFinishDay() == e.getBeginDay()) {
+                if (newSchedule.getEndTimeLT().isAfter(e.getStartTimeLT()) &&
+                    newSchedule.getEndTimeLT().isBefore(e.getEndTimeLT()))
+                    throw ve;
+            } else if (newSchedule.getBeginDay() == e.getFinishDay()) {
+                if (newSchedule.getStartTimeLT().isBefore(e.getEndTimeLT()) &&
+                    newSchedule.getStartTimeLT().isAfter(e.getStartTimeLT()))
+                    throw ve;
+            }
+        } // */
+        schedules.add(newSchedule);
+        
+        return schedules;
     }
 	
 	

@@ -5,13 +5,9 @@ import org.springframework.stereotype.Component;
 
 import web.entity.Specialty;
 import web.entity.User;
-import web.logicImpl.SpecialtyLogicImpl;
 
 @Component("specialtyGenerator")
 public class SpecialtyGenerator implements IEntityGenerator<Specialty[]> {
-
-    @Autowired
-	private SpecialtyLogicImpl specialties;
    
     @Autowired
     private Specialty cirugiaGeneral;

@@ -14,7 +14,6 @@ import com.github.javafaker.Name;
 
 import web.entity.Day;
 import web.entity.Doctor;
-import web.entity.Permit;
 import web.entity.Schedule;
 import web.entity.Specialty;
 import web.entity.User;

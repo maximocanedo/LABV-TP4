@@ -19,6 +19,7 @@ import web.exceptions.CommonException;
 import web.exceptions.NotAllowedException;
 import web.exceptions.NotFoundException;
 import web.logic.IAppointmentLogic;
+import web.validator.AppointmentValidator;
 
 @Component("appointments")
 public class AppointmentLogicImpl implements IAppointmentLogic {
@@ -28,12 +29,20 @@ public class AppointmentLogicImpl implements IAppointmentLogic {
 	
 	@Autowired
 	private UserPermitLogicImpl permits;
+	
+	@Autowired
+	private AppointmentValidator appointmentValidator;
 
 	public AppointmentLogicImpl() {}
 
 	@Override
     public Appointment register(Appointment t, User requiring) {
 		permits.require(requiring, Permit.CREATE_APPOINTMENT);
+		t.setDate(appointmentValidator.date(t.getDate()));
+		t.setRemarks(appointmentValidator.remarks(t.getRemarks()));
+		t.setStatus(appointmentValidator.status(t.getStatus()));
+		t.setAssignedDoctor(appointmentValidator.doctor(t.getAssignedDoctor()));
+		t.setPatient(appointmentValidator.patient(t.getPatient()));
 		return this.appointmentsrepository.add(t);
 	}
 	
@@ -50,11 +59,11 @@ public class AppointmentLogicImpl implements IAppointmentLogic {
 		Optional<Appointment> search = appointmentsrepository.findById(turno.getId(), false);
 		if(search.isEmpty()) throw new NotFoundException();
 		Appointment original = search.get();
-		if (turno.getDate() != null) original.setDate(turno.getDate());
-        if (turno.getRemarks() != null) original.setRemarks(turno.getRemarks());
-        if (turno.getStatus() != null) original.setStatus(turno.getStatus());
-        if (turno.getAssignedDoctor() != null) original.setAssignedDoctor(turno.getAssignedDoctor());
-        if (turno.getPatient() != null) original.setPatient(turno.getPatient());
+		if (turno.getDate() != null) original.setDate(appointmentValidator.date(turno.getDate()));
+        if (turno.getRemarks() != null) original.setRemarks(appointmentValidator.remarks(turno.getRemarks()));
+        if (turno.getStatus() != null) original.setStatus(appointmentValidator.status(turno.getStatus()));
+        if (turno.getAssignedDoctor() != null) original.setAssignedDoctor(appointmentValidator.doctor(turno.getAssignedDoctor()));
+        if (turno.getPatient() != null) original.setPatient(appointmentValidator.patient(turno.getPatient()));
 		return this.appointmentsrepository.update(turno);
 	}
 

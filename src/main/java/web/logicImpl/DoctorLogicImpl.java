@@ -1,8 +1,9 @@
 package web.logicImpl;
 
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -35,22 +36,50 @@ public class DoctorLogicImpl implements IDoctorLogic {
     public DoctorLogicImpl() {}
 
     @Override
-    public Doctor add(Doctor d, User requiring) {
+    public Doctor add(Doctor doctor, User requiring) {
     	permits.require(requiring, Permit.CREATE_DOCTOR);
-    	d.setFile(doctorValidator.file(d.getFile()));
-    	d.setName(doctorValidator.name(d.getName()));
-    	d.setSurname(doctorValidator.surname(d.getSurname()));
-    	d.setSex(doctorValidator.sex(d.getSex()));
-    	d.setBirth(doctorValidator.birth(d.getBirth()));
-    	d.setAddress(doctorValidator.address(d.getAddress()));
-    	d.setLocalty(doctorValidator.localty(d.getLocalty()));
-    	d.setEmail(doctorValidator.email(d.getEmail()));
-    	d.setPhone(doctorValidator.phone(d.getPhone()));
-    	d.setSpecialty(doctorValidator.specialty(d.getSpecialty()));
-    	d.setUser(doctorValidator.user(d.getUser()));
-    	// TODO: Verificar si valida bien los horarios dados, en lugar de compararlos con los nuevos.
-    	d.setSchedules(doctorValidator.nonOverlapping(d.getSchedules(), new HashSet<Schedule>()));
-        return doctorsrepository.add(d);
+    	doctor.setFile(doctorValidator.file(doctor.getFile()));
+    	doctor.setName(doctorValidator.name(doctor.getName()));
+    	doctor.setSurname(doctorValidator.surname(doctor.getSurname()));
+    	doctor.setSex(doctorValidator.sex(doctor.getSex()));
+    	doctor.setBirth(doctorValidator.birth(doctor.getBirth()));
+    	doctor.setAddress(doctorValidator.address(doctor.getAddress()));
+    	doctor.setLocalty(doctorValidator.localty(doctor.getLocalty()));
+    	doctor.setEmail(doctorValidator.email(doctor.getEmail()));
+    	doctor.setPhone(doctorValidator.phone(doctor.getPhone()));
+    	doctor.setSpecialty(doctorValidator.specialty(doctor.getSpecialty()));
+    	doctor.setUser(doctorValidator.user(doctor.getUser()));
+    	// No es posible agregar un conjunto de horarios al registrar un doctor. Ver más info en el javadoc de este método.
+    	//doctor.setSchedules(doctorValidator.nonOverlapping(doctor.getSchedules(), new HashSet<Schedule>()));
+        return doctorsrepository.add(doctor);
+    }
+    
+    // TODO Pendiente probar
+    @Override
+    public Set<Schedule> addSchedule(int file, Schedule schedule, User requiring) {
+    	requiring = permits.require(requiring, Permit.UPDATE_DOCTOR_SCHEDULES);
+    	Optional<Doctor> optdoctor = doctorsrepository.findByFile(file);
+    	if(optdoctor.isEmpty()) throw new NotFoundException("Doctor not found. ");
+    	Doctor doctor = optdoctor.get();
+    	Set<Schedule> originalSchedules = doctor.getSchedules();
+    	Set<Schedule> newSchedules = doctorValidator.nonOverlappingIndividual(schedule, originalSchedules);
+    	doctor.setSchedules(newSchedules);
+    	return newSchedules;
+    }
+    
+    // TODO Pendiente probar
+    @Override
+    public Set<Schedule> removeSchedule(int file, Schedule schedule, User requiring) {
+    	requiring = permits.require(requiring, Permit.UPDATE_DOCTOR_SCHEDULES);
+    	Optional<Doctor> optdoctor = doctorsrepository.findByFile(file);
+    	if(optdoctor.isEmpty()) throw new NotFoundException("Doctor not found. ");
+    	Doctor doctor = optdoctor.get();
+    	Set<Schedule> originalSchedules = doctor.getSchedules();
+    	Set<Schedule> newSchedules = originalSchedules.parallelStream()
+    		.filter(sch -> sch.getId() != schedule.getId())
+    		.collect(Collectors.toSet());
+    	doctor.setSchedules(newSchedules);
+    	return newSchedules;
     }
 
     @Override
