@@ -27,7 +27,7 @@ BEGIN
         HAVING turnosdisponibles > 0;
         SET diaMes = diaMes + 1;
     END WHILE dias;
-    SELECT date_required FROM diasDisponibles;
+    SELECT fecha FROM diasDisponibles;
 END //
 DELIMITER ;
 
