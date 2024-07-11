@@ -2,6 +2,8 @@ import { login, myself, logout } from "../api/actions/users.js";
 
 const navLogout = document.getElementById("navLogout");
 const navLogin = document.getElementById("navLogin");
+const ddMenu = document.getElementById("ddMenu");
+const ddMenuButton = document.getElementById("ddMenuButton");
 const navRegister = document.getElementById("navRegister");
 const txtUsername = document.getElementById("txtUsername");
 const txtPassword = document.getElementById("txtPassword");
@@ -16,7 +18,8 @@ navLogout.addEventListener("click", () => {
 document.addEventListener("DOMContentLoaded", async () => {
     try {
         const user = await myself();
-        navLogout.className = "nav-link";
+        ddMenu.className = "dropdown";
+        ddMenuButton.innerText = user.username;
         navLogin.className = "nav-link d-none";
         navRegister.className = "nav-link d-none";
     } catch (error) {

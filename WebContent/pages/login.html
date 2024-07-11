@@ -26,7 +26,14 @@
                 <div class="ms-auto navbar-nav">
                     <a class="nav-link active" id="navLogin" aria-current="page" href="./login.html">Iniciar Sesion</a>
 					<a class="nav-link" id="navRegister" href="register.html">Registrarse</a>
-					<a class="nav-link d-none" id="navLogout" href="javascript:void(0);" onclick="logoutSession()">Logout</a>
+					<div class="dropdown d-none" id="ddMenu">
+						<button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" id="ddMenuButton" aria-expanded="false">
+						  
+						</button>
+						<ul class="dropdown-menu">
+						  <li><a class="nav-link" id="navLogout" href="javascript:void(0);" onclick="logoutSession()">Logout</a></li>
+						</ul>
+					  </div>
                 </div>
             </div>
         </div>
