@@ -1,13 +1,22 @@
-import { login, myself } from "../api/actions/users.js";
+import { login, myself, logout } from "../api/actions/users.js";
 
+const navLogout = document.getElementById("navLogout");
+const navLogin = document.getElementById("navLogin");
 const txtUsername = document.getElementById("txtUsername");
 const txtPassword = document.getElementById("txtPassword");
 const btnLogin = document.getElementById("btnLogin");
 const formLogin = document.getElementById("formLogin");
 
+navLogout.addEventListener("click", () => {
+    logout();
+    location.reload();
+});
+
 document.addEventListener("DOMContentLoaded", async () => {
     try {
         const user = await myself();
+        navLogout.className = "nav-link";
+        navLogin.className = "nav-link d-none";
     } catch (error) {
         console.log(error);
         formLogin.className = "flex-fill needs-validation";
