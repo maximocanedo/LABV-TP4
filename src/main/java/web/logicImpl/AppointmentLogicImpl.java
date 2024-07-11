@@ -38,7 +38,7 @@ public class AppointmentLogicImpl implements IAppointmentLogic {
 	@Override
     public Appointment register(Appointment t, User requiring) {
 		permits.require(requiring, Permit.CREATE_APPOINTMENT);
-		t.setDate(appointmentValidator.date(t.getDate()));
+		t.setDate(appointmentValidator.date(t.getDate(), t.getAssignedDoctor()));
 		t.setRemarks(appointmentValidator.remarks(t.getRemarks()));
 		t.setStatus(appointmentValidator.status(t.getStatus()));
 		t.setAssignedDoctor(appointmentValidator.doctor(t.getAssignedDoctor()));
@@ -59,7 +59,7 @@ public class AppointmentLogicImpl implements IAppointmentLogic {
 		Optional<Appointment> search = appointmentsrepository.findById(turno.getId(), false);
 		if(search.isEmpty()) throw new NotFoundException();
 		Appointment original = search.get();
-		if (turno.getDate() != null) original.setDate(appointmentValidator.date(turno.getDate()));
+		if (turno.getDate() != null) original.setDate(appointmentValidator.date(turno.getDate(), turno.getAssignedDoctor()));
         if (turno.getRemarks() != null) original.setRemarks(appointmentValidator.remarks(turno.getRemarks()));
         if (turno.getStatus() != null) original.setStatus(appointmentValidator.status(turno.getStatus()));
         if (turno.getAssignedDoctor() != null) original.setAssignedDoctor(appointmentValidator.doctor(turno.getAssignedDoctor()));
