@@ -170,11 +170,10 @@ public class AppointmentQuery implements Searchable {
 			hql.append(" AND ( a.patient.dni = :pdni OR a.patient.id = :pId ) ");
 		}
 		if(getDoctor() != null) {
-			hql.append(" AND ( a.doctor.file = :file OR a.doctor.id = :dId ) ");
+			hql.append(" AND ( a.assignedDoctor.file = :file OR a.assignedDoctor.id = :dId ) ");
 		}
-		hql.append("");
 		if(getStatus() != FilterStatus.BOTH) {
-			hql.append(" AND p.active = :status ");
+			hql.append(" AND a.active = :status ");
 		}
 		Query query = session.createQuery(hql.toString());
 		query.setParameter("q", "%" + getQueryText() + "%");

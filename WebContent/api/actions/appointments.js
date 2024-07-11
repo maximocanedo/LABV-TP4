@@ -20,7 +20,7 @@ export const create = async (data) => {
  * @returns {Promise<Object>} Promesa con la respuesta del servidor.
  */
 export const findById = async (id) => {
-    return u.get(`appoinments/id/${id}`)
+    return u.get(`appointments/id/${id}`)
         .then(response => response.json())
         .catch(err => {
             throw err;
@@ -31,7 +31,7 @@ export const findById = async (id) => {
  * @returns {Promise<Object>} Promesa con la respuesta del servidor.
  */
 export const findAll = async () => {
-    return u.get(`appoinments/`)
+    return u.get("appointments/")
         .then(response => response.json())
         .catch(err => {
             throw err;
@@ -44,7 +44,7 @@ export const findAll = async () => {
  * @returns {Promise<Object>} Promesa con la respuesta del servidor.
  */
 export const update = async (id, data) => {
-    return u.patch(`appoinments/id/${id}`, data)
+    return u.patch(`appointments/id/${id}`, data)
         .then(response => response.json())
         .catch(err => {
             throw err;
@@ -56,7 +56,7 @@ export const update = async (id, data) => {
  * @returns {Promise<Object>} Promesa con la respuesta del servidor.
  */
 export const disable = async (id) => {
-    return u.del(`appoinments/id/${id}`)
+    return u.del(`appointments/id/${id}`)
         .then(response => response.ok)
         .catch(err => {
             throw err;
@@ -68,7 +68,7 @@ export const disable = async (id) => {
  * @returns {Promise<Object>} Promesa con la respuesta del servidor.
  */
 export const enable = async (id) => {
-    return u.post(`appoinments/id/${id}`)
+    return u.post(`appointments/id/${id}`)
         .then(response => response.ok)
         .catch(err => {
             throw err;

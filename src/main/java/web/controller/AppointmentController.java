@@ -42,6 +42,7 @@ public class AppointmentController {
         auth.preHandle(req, res);
     }
 	
+	@GetMapping
 	public List<AppointmentMinimalView> search(
 			@RequestParam(required = false, defaultValue = "") String q, 
 			@RequestParam(required = false, defaultValue = "") FilterStatus status,
