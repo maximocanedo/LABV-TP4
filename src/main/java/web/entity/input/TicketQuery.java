@@ -3,28 +3,28 @@ package web.entity.input;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
-public class SpecialtyQuery implements Searchable {
+public class TicketQuery implements Searchable {
     private String q;
     private FilterStatus status = FilterStatus.ONLY_ACTIVE;
     private int page;
     private int size;
     
-    public SpecialtyQuery(String q, FilterStatus status) {
+    public TicketQuery(String q, FilterStatus status) {
         setQueryText(q);
         setStatus(status);
     }
     
-    public SpecialtyQuery(String q) {
+    public TicketQuery(String q) {
         this(q, FilterStatus.ONLY_ACTIVE);
     }
     
-    public SpecialtyQuery paginate(int page, int size) {
+    public TicketQuery paginate(int page, int size) {
         this.page = page;
         this.size = size;
         return this;
     }
     
-    public SpecialtyQuery paginate(String page, String size) {
+    public TicketQuery paginate(String page, String size) {
         try {
             this.page = Integer.parseInt(page);
             this.size = Integer.parseInt(size);
@@ -35,12 +35,12 @@ public class SpecialtyQuery implements Searchable {
     
     @Override
     public Query toQuery(Session session) {
-        StringBuilder hql = new StringBuilder("SELECT s FROM Specialty s ");
+        StringBuilder hql = new StringBuilder("SELECT t FROM Ticket t ");
         if(getStatus() != FilterStatus.BOTH) {
-            hql.append("WHERE s.active = :status ");
+            hql.append("WHERE t.active = :status ");
         }
         if (getQueryText() != null && !getQueryText().isEmpty()) {
-            hql.append("AND (s.name LIKE :queryText OR s.description LIKE :queryText) ");
+            hql.append("AND (t.deviceIdentifier LIKE :queryText OR t.deviceAgent LIKE :queryText) ");
         }
         Query query = session.createQuery(hql.toString());
         

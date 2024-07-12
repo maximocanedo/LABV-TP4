@@ -1,6 +1,7 @@
 package web.logicImpl;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.crypto.SecretKey;
 
@@ -19,10 +20,12 @@ import web.entity.Optional;
 import web.entity.Permit;
 import web.entity.Ticket;
 import web.entity.User;
+import web.entity.input.TicketQuery;
 import web.exceptions.CommonException;
 import web.exceptions.InvalidTokenException;
 import web.exceptions.NotFoundException;
 import web.logic.ITicketLogic;
+import web.validator.TicketValidator;
 
 @Component("tickets")
 public class TicketLogicImpl implements ITicketLogic {
@@ -32,6 +35,9 @@ public class TicketLogicImpl implements ITicketLogic {
 	
 	@Autowired
 	private TicketDAOImpl ticketsrepository;
+	
+	@Autowired
+	private TicketValidator ticketValidator;
 	
 	@Autowired
 	private UserPermitLogicImpl permits;
@@ -242,6 +248,45 @@ public class TicketLogicImpl implements ITicketLogic {
     		permits.require(requiring, Permit.CLOSE_USER_SESSIONS);
     	ticketsrepository.closeAllSessions(username);
     }
-    
+    @Override
+    public Ticket add(Ticket e, User requiring) {
+		permits.require(requiring, Permit.CREATE_TICKET);
+		e.setId(e.getId());
+		e.setVersion(e.getVersion());
+		return ticketsrepository.add(e);
+	}
+
+	public Optional<Ticket> findById(int id, boolean includeInactive, User requiring) {
+		if(includeInactive) {
+			includeInactive = permits.check(requiring, Permit.ENABLE_TICKET);
+		}
+		return ticketsrepository.findById(id, includeInactive);
+	}
+
+    @Override
+    public List<Ticket> search(TicketQuery query, User requiring) {
+		return ticketsrepository.search(query);
+    }
+
+    @Override
+    public Ticket update(Ticket record, User requiring) throws NotFoundException {
+		permits.require(requiring, Permit.UPDATE_TICKET);
+    	Optional<Ticket> file = findById(record.getId(), false, requiring);
+    	if(file.isEmpty()) throw new NotFoundException("Ticket no encontrado");
+        Ticket original = file.get();
+        if(record.getId() != 0)
+        	original.setId(record.getId());
+        if(record.getUser() != null)
+        	original.setUser(record.getUser());
+        if(record.getVersion() != 0)
+        	original.setVersion(record.getVersion());
+		return ticketsrepository.update(original);
+    }
+
+    @Override
+    public Optional<Ticket> findById(int id) {
+		return findById(id, false, null);
+    }
+
     
 }
