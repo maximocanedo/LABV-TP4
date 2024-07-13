@@ -17,6 +17,14 @@
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
+	<filter>
+	    <filter-name>JsMimeTypeFilter</filter-name>
+	    <filter-class>web.controller.JsMimeTypeFilter</filter-class>
+	</filter>
+	<filter-mapping>
+	    <filter-name>JsMimeTypeFilter</filter-name>
+	    <url-pattern>*.js</url-pattern>
+	</filter-mapping>
 	<servlet-mapping>
 		<servlet-name>spring</servlet-name>
 		<url-pattern>/</url-pattern>

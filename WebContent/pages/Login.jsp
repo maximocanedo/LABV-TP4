@@ -63,7 +63,7 @@
 			<div class="col-3"></div>
 		</div>
 	</div>
-	<script type="module" src="../assets/js/login.js"></script>
+	<script type="module" src="../api/controller/login.js"></script>
 	<%@include file="CommonFooter.html" %>
 </body>
 </html>
