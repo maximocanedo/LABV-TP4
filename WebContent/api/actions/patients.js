@@ -4,8 +4,8 @@ import * as u from './../auth.js';
 
 /**
  * Registra un paciente.
- * @param {*} data 
- * @returns 
+ * @param {PatientSignRequest} data 
+ * @returns {Promise<Patient>} Paciente registrado.
  */
 export const create = async (data) => {
     return u.post("patients", data)
@@ -15,6 +15,10 @@ export const create = async (data) => {
         })
 };
 
+/**
+ * 
+ * @deprecated Usar search() PENDIENTE de crear.
+ */
 export const findAll = async () => {
     return u.get("patients/")
         .then(response => response.json())
@@ -23,6 +27,11 @@ export const findAll = async () => {
         });
 };
 
+/**
+ * Buscar por ID.
+ * @param {number} id 
+ * @returns {Promise<IPatient>}
+ */
 export const findById = async (id) => {
     return u.get("patients/id/" + id)
         .then(response => response.json())
@@ -31,6 +40,12 @@ export const findById = async (id) => {
         });
 };
 
+/**
+ * Actualizar datos de un paciente.
+ * @param {number} id 
+ * @param {PatientUpdateRequest} data 
+ * @returns {Promise<Patient>}
+ */
 export const update = async (id, data) => {
     return u.patch("patients/id/" + id, data)
         .then(response => response.json())
@@ -39,6 +54,10 @@ export const update = async (id, data) => {
         });
 };
 
+/**
+ * 
+ * @param {number} id 
+ */
 export const disable = async (id) => {
     return u.del("patients/id/" + id)
         .then(response => response.ok)
@@ -47,6 +66,10 @@ export const disable = async (id) => {
         });
 };
 
+/**
+ * 
+ * @param {number} id 
+ */
 export const enable = async (id) => {
     return u.post("patients/id/" + id)
         .then(response => response.ok)
