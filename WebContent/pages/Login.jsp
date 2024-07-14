@@ -47,8 +47,7 @@
 						<span class="input-group-text" id="login-input-group" for="txtUsername">Nombre de
 							Usuario:</span>
 						<input type="text" class="form-control" aria-label="Username input"
-							aria-describedby="login-input-group" id="txtUsername" name="txtUsername"
-							pattern="^[a-z]+\.[a-z]+$" placeholder="alice.manhattan" title="El nombre de usuario no debe contener espacios" required>
+							aria-describedby="login-input-group" id="txtUsername" name="txtUsername" required>
 						<div class="invalid-feedback">
 							Invalido. El nombre de usuario no debe contener espacios
 						</div>
@@ -56,8 +55,7 @@
 					<div class="input-group input-group-sm mb-3">
 						<span class="input-group-text" id="login-input-group" for="txtPassword">Password</span>
 						<input type="password" class="form-control" aria-label="Password input"
-							aria-describedby="login-input-group" id="txtPassword" name="txtPassword" 
-							placeholder="verySecurePassword" required>
+							aria-describedby="login-input-group" id="txtPassword" name="txtPassword" required>
 						<div class="invalid-feedback">
 							Invalido. La contrasenia debe contener como minimo 8 caracteres, 1 minuscula, 1 Mayuscula, 1 digito y un numero.
 						</div>
