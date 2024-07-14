@@ -5,7 +5,14 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <%@include file="CommonHeader.html" %>
-<title>Insert title here</title>
+<title>Login</title>
+<style>
+		html,
+		body {
+			height: 100%;
+			overflow-y: hidden;
+		}
+	</style>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
