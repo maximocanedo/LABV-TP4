@@ -4,13 +4,49 @@ import { login, getUsers, getUser, update, signup, resetPassword, disable, mysel
 import * as doctors from './actions/doctors.js';
 import * as patients from "./actions/patients.js";
 import { domTesterElement, domSection } from "./test.js";
-import { resolveURLParams } from "./auth.js";
+import { ElementBuilder } from "./controller/dom.js";
 
 const usersSection = domSection("Usuarios");
 const doctorsSection = domSection("Médicos");
 const patientsSection = domSection("Pacientes");
 
+(async () => {
+    const builder = new ElementBuilder("div")
+                        .id("elementoDePrueba")
+                        .classList("red", "box", "wine")
+                        .text("Holaholahola")
+                        .css("backgroundColor", "red")
+                        .click((event, element) => {
+                            console.log(event, element);
+                        })
+                        .name("osama")
+                        .removeClass("box")
+                        .appendTo(document.body);
+    console.log(builder.build());
+})();
+
+(async () => {
+
+    const miElementoDiv = document.createElement("div");
+    miElementoDiv.id = "elementoDePrueba_Legacy";
+    miElementoDiv.classList.add("red");
+    miElementoDiv.classList.add("box");
+    miElementoDiv.classList.add("wine");
+    miElementoDiv.innerText = "Holaholahola";
+    miElementoDiv.style.backgroundColor = "red";
+    miElementoDiv.addEventListener("click", (event) => {
+        console.log(event);
+    });
+    miElementoDiv.setAttribute("name", "osama");
+    miElementoDiv.classList.remove("box");
+    document.body.append(miElementoDiv);
+    
+    console.log(miElementoDiv);
+
+});
+
 (async (section) => {
+    
 
     const PRINCIPAL_USER = "alicia.schimmel";
     const SECONDARY_USER = "alicia.schimmel";
