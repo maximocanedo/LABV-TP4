@@ -37,7 +37,7 @@
 		<param-value>/WEB-INF/spring-servlet.xml</param-value>
 	</context-param>
 	<mime-mapping>
-        <extension>js</extension>
+		<extension>js</extension>
         <mime-type>text/javascript</mime-type>
     </mime-mapping>
 </web-app>
