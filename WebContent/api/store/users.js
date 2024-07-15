@@ -11,8 +11,9 @@ const db = useDatabase("users");
  * @returns {Promise<IUser>} Copia del elemento almacenado en la base de datos.
  */
 export const update = async (user) => {
+	if(!user) return user;
 	let doctor = null;
-	if(user.doctor != null) 
+	if(user.doctor) 
 		doctor = await doctors.update(user.doctor);
 	return db.transact(store => 
 		req(store.get(user.username)).then(legacyUser => {

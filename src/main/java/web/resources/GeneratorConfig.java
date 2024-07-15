@@ -12,7 +12,7 @@ import web.generator.*;
 @Configuration
 public class GeneratorConfig {
 	
-	@Bean
+	/* @Bean
 	public AppointmentGenerator appointmentGenerator() {
 		return new AppointmentGenerator();
 	}
@@ -35,7 +35,7 @@ public class GeneratorConfig {
 	@Bean
 	public SpecialtyGenerator specialtyGenerator() {
 		return new SpecialtyGenerator();
-	}
+	} */
 
 	@Bean
 	public Generator generator() {

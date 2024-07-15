@@ -27,6 +27,10 @@ export class ElementBuilder {
         });
     }
 
+    getTarget() {
+        return this.element;
+    }
+
     linkValue(store, action, path = this.element.id + "Value") {
         if(path == undefined || path == null || path.trim() == "" || path.trim() == "Value") 
             throw new Error("Must define an id in order to link a store. ");
@@ -76,6 +80,17 @@ export class ElementBuilder {
 
     type(type) {
         this.element.setAttribute("type", type);
+        return this;
+    }
+
+    href(href) {
+        // @ts-ignore
+        this.element.href = href;
+        return this;
+    }
+
+    attr(attribute, value) {
+        this.element.setAttribute(attribute, value);
         return this;
     }
 
