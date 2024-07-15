@@ -13,13 +13,76 @@ export class ElementBuilder {
         return builder;
     }
 
+    #currentValue;
+    #focus = false;
+
     constructor(/** @type {keyof HTMLElementTagNameMap | String} */ tagNameOrElement) {
         /** @type {HTMLElement} */
         this.element = document.createElement(tagNameOrElement);
+        this.on("focus", (ev, el) => {
+            this.#focus = true;
+        });
+        this.on("blur", (ev, el) => {
+            this.#focus = false;
+        });
+    }
+
+    linkValue(store, action, path = this.element.id + "Value") {
+        if(path == undefined || path == null || path.trim() == "" || path.trim() == "Value") 
+            throw new Error("Must define an id in order to link a store. ");
+        const getStoredValue = () => {
+            return store.getState()[path.trim()];
+        };
+        store.subscribe(() => {
+            const previousValue = this.#currentValue;
+            this.#currentValue = getStoredValue();
+            if(this.#currentValue != previousValue) {
+                if(!this.#focus)
+                    this.value(this.#currentValue);
+            }
+        });
+        this.on("input", (ev, el) => {
+            store.dispatch({
+                type: action,
+                // @ts-ignore
+                payload: this.element.value
+            });
+        });
+        this.value(getStoredValue());
+        return this;
+    }
+
+    linkReadableText(store, path) {
+        if(path == undefined || path == null || path.trim() == "" || path.trim() == "Value") 
+            throw new Error("Must define an id in order to link a store. ");
+        const getStoredValue = () => {
+            return store.getState()[path.trim()];
+        };
+        store.subscribe(() => {
+            const previousValue = this.#currentValue;
+            this.#currentValue = getStoredValue();
+            if(this.#currentValue != previousValue) {
+                if(!this.#focus)
+                    this.text(this.#currentValue);
+            }
+        });
+        this.text(getStoredValue());
+        return this;
     }
 
     build() {
         return this.element;
+    }
+
+    type(type) {
+        this.element.setAttribute("type", type);
+        return this;
+    }
+
+    value(value) {
+        // @ts-ignore
+        this.element.value = value;
+        return this;
     }
 
     classList(/** @type {string[]} */ ...tokens) {
@@ -66,6 +129,10 @@ export class ElementBuilder {
     on(/** @type {keyof HTMLElementEventMap} */ eventName, /** @type {(ev: Event, element: ElementBuilder) => void} */ handler) {
         this.element.addEventListener(eventName, (ev) => handler(ev, this));
         return this;
+    }
+
+    change(/** @type {(ev: Event, element: ElementBuilder) => void} */ handler) {
+        return this.on("change", handler);
     }
 
     click(/** @type {(ev: Event, element: ElementBuilder) => void} */ handler) {

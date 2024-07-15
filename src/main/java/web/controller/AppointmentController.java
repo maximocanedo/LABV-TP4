@@ -69,9 +69,9 @@ public class AppointmentController {
 	}
 	
 	@PostMapping
-	public Appointment create(@RequestBody Appointment Appointment, HttpServletRequest req, HttpServletResponse res) {
+	public Appointment create(@RequestBody Appointment data, HttpServletRequest req, HttpServletResponse res) {
 		User requiring = auth.require(req, res);
-		return appointments.register(Appointment, requiring);
+		return appointments.register(data, requiring);
 	}
 	
 	// Acciones con Terceros
@@ -82,10 +82,10 @@ public class AppointmentController {
 	}
 
 	@PatchMapping("/id/{id}")
-	public Appointment update(@PathVariable int id, @RequestBody Appointment Appointment, HttpServletRequest req, HttpServletResponse res) {
+	public Appointment update(@PathVariable int id, @RequestBody Appointment data, HttpServletRequest req, HttpServletResponse res) {
 		User requiring = auth.require(req, res);
-		Appointment.setId(id);
-		return appointments.update(Appointment, requiring);
+		data.setId(id);
+		return appointments.update(data, requiring);
 	}	
 	
 	@DeleteMapping("/id/{id}")

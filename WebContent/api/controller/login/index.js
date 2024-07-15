@@ -1,4 +1,4 @@
-import { login, myself, logout } from "../api/actions/users.js";
+import { login, myself, logout } from "./../../actions/users.js";
 
 const navLogout = document.getElementById("navLogout");
 const navLogin = document.getElementById("navLogin");

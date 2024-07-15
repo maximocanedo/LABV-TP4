@@ -44,14 +44,17 @@
  * @typedef {SpecialtyProps & Identifiable & Deletable} Specialty
  */
 /**
+ * @typedef {Object} IdentifiableDoctorProps
+ * @property {number} file Número de legajo del doctor. 
+ * @typedef {IdentifiableDoctorProps & Identifiable} IdentifiableDoctor
+ */
+/**
  * @typedef {Object} IDoctorBasicProperties
- * @property {number} id - El ID del doctor.
- * @property {number} file - Número de legajo del doctor.
  * @property {string} name - El nombre del doctor.
  * @property {string} surname - El apellido del doctor.
  * @property {Specialty} specialty - Especialidad del doctor.
  * @property {Schedule[]} schedules - Lista de horarios del doctor.
- * @typedef {IDoctorBasicProperties & SaveableEntity & Deletable} IDoctor
+ * @typedef {IdentifiableDoctor & IDoctorBasicProperties & SaveableEntity & Deletable} IDoctor
  */
 /**
  * @typedef {IDoctor} DoctorMinimalView
@@ -110,11 +113,15 @@
 
 // PACIENTES
 /**
+ * @typedef {Object} IdentifiablePatientProps
+ * @property {string} dni D.N.I. del paciente.
+ * @typedef {IdentifiablePatientProps & Identifiable} IdentifiablePatient
+ */
+/**
  * @typedef {Object} PatientBasicProperties
  * @property {string} name Nombre del paciente.
  * @property {string} surname Apellido del paciente.
- * @property {string} dni D.N.I. del paciente.
- * @typedef {Identifiable & SaveableEntity & PatientBasicProperties & Deletable} IPatient
+ * @typedef {IdentifiablePatient & SaveableEntity & PatientBasicProperties & Deletable} IPatient
  */
 /**
  * @typedef {PatientBasicProperties} PatientMinimalView
@@ -138,4 +145,38 @@
  */
 /**
  * @typedef {PatientBasicProperties & PatientCommunicationFields & PatientPrivateInformationFields} PatientUpdateRequest
+ */
+// Appointments
+/**
+ * @typedef {"PENDING" | "ABSENT" | "PRESENT"} AppointmentStatus
+ */
+/**
+ * @typedef {Object} AppointmentRegistrationRequest
+ * @property {Date | string} date Fecha y hora del turno.
+ * @property {IDoctor} doctor Médico asignado.
+ * @property {IPatient} patient Paciente.
+ */
+/**
+ * @typedef {Object} AppointmentBasicProperties
+ * @property {string} remarks Observaciones.
+ * @property {AppointmentStatus} status Estado del turno.
+ * @typedef {AppointmentRegistrationRequest & AppointmentBasicProperties & Deletable & Identifiable & SaveableEntity} IAppointment
+ */
+/**
+ * @typedef {Object} AppointmentMinimalViewProps
+ * @property {DoctorMinimalView} doctor Médico asignado
+ * @property {PatientMinimalView} patient Paciente.
+ * @typedef {IAppointment & AppointmentMinimalViewProps} AppointmentMinimalView
+ */
+/**
+ * @typedef {Object} AppointmentCommunicationViewProps
+ * @property {DoctorMinimalView} doctor Médico asignado
+ * @property {PatientCommunicationView} patient Paciente.
+ * @typedef {IAppointment & AppointmentCommunicationViewProps} AppointmentCommunicationView
+ */
+/**
+ * @typedef {Object} AppointmentProps
+ * @property {Doctor} doctor Médico asignado.
+ * @property {Patient} paciente Paciente.
+ * @typedef {IAppointment & AppointmentProps} Appointment
  */

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import web.dao.IAppointmentDAO;
 import web.entity.Appointment;
+import web.entity.AppointmentStatus;
 import web.entity.IAppointment;
 import web.entity.Optional;
 import web.entity.Permit;
@@ -40,9 +41,10 @@ public class AppointmentLogicImpl implements IAppointmentLogic {
 		permits.require(requiring, Permit.CREATE_APPOINTMENT);
 		t.setDate(appointmentValidator.date(t.getDate(), t.getAssignedDoctor()));
 		t.setRemarks(appointmentValidator.remarks(t.getRemarks()));
-		t.setStatus(appointmentValidator.status(t.getStatus()));
+		t.setStatus(AppointmentStatus.PENDING);
 		t.setAssignedDoctor(appointmentValidator.doctor(t.getAssignedDoctor()));
 		t.setPatient(appointmentValidator.patient(t.getPatient()));
+		// TODO: Comprobar permisos!!!! Devolver un AppointmentCommunicationView!
 		return this.appointmentsrepository.add(t);
 	}
 	
@@ -59,10 +61,10 @@ public class AppointmentLogicImpl implements IAppointmentLogic {
 		Optional<Appointment> search = appointmentsrepository.findById(turno.getId(), false);
 		if(search.isEmpty()) throw new NotFoundException();
 		Appointment original = search.get();
+        if (turno.getAssignedDoctor() != null) original.setAssignedDoctor(appointmentValidator.doctor(turno.getAssignedDoctor()));
 		if (turno.getDate() != null) original.setDate(appointmentValidator.date(turno.getDate(), turno.getAssignedDoctor()));
         if (turno.getRemarks() != null) original.setRemarks(appointmentValidator.remarks(turno.getRemarks()));
         if (turno.getStatus() != null) original.setStatus(appointmentValidator.status(turno.getStatus()));
-        if (turno.getAssignedDoctor() != null) original.setAssignedDoctor(appointmentValidator.doctor(turno.getAssignedDoctor()));
         if (turno.getPatient() != null) original.setPatient(appointmentValidator.patient(turno.getPatient()));
 		return this.appointmentsrepository.update(turno);
 	}

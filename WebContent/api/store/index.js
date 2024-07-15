@@ -55,6 +55,17 @@ const STORES = [{
             objectStore.createIndex("name", "name");
             objectStore.createIndex("description", "description");
         }
+    }, {
+        name: "appointments",
+        update: db => {
+            const objectStore = db.createObjectStore("appointments", { keyPath: "id" });
+            objectStore.createIndex("id", "id", { unique: true });
+            objectStore.createIndex("date", "date");
+            objectStore.createIndex("remarks", "remarks");
+            objectStore.createIndex("status", "status");
+            objectStore.createIndex("doctor", "assignedDoctor.id");
+            objectStore.createIndex("patient", "patient.id");
+        }
     }
 ];
 

@@ -4,13 +4,33 @@ import { login, getUser, update, signup, resetPassword, disable, myself, updateM
 import * as doctors from './actions/doctors.js';
 import * as patients from "./actions/patients.js";
 import { domTesterElement, domSection } from "./test.js";
+import { createStore } from "./lib/redux.js";
+import { ElementBuilder } from "./controller/dom.js";
 
 const usersSection = domSection("Usuarios");
 const doctorsSection = domSection("Médicos");
 const patientsSection = domSection("Pacientes");
 
+const changeValueReducer = (state = { input: "" }, action) => {
+    if(action.type == "UPDATE_VALUE") return { ...state, input: action.payload };
+    return { ...state };
+};
+
+const store = createStore(changeValueReducer, { input: "" });
+console.log(store);
+
 (async (section) => {
-    
+
+    const builder = new ElementBuilder("input")
+                        .type("text")
+                        .linkValue(store, "UPDATE_VALUE", "input")
+                        .appendTo(document.body)
+                        .build();
+    const p = new ElementBuilder("p")
+                        .linkReadableText(store, "input")
+                        .appendTo(document.body)
+                        .build();
+                    
 
     const PRINCIPAL_USER = "alicia.schimmel";
     const SECONDARY_USER = "alicia.schimmel";

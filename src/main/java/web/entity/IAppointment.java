@@ -15,6 +15,7 @@ public interface IAppointment {
 	boolean isActive();
 
 	String getStatusDescription();
+	
 
 	void setId(int id);
 

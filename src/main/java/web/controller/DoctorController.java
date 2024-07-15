@@ -64,11 +64,7 @@ public class DoctorController {
 						, requiring)
 				);
 	}
-	
-	/**
-	 * Endpoint: Crear doctor.
-	 * TODO: Validar entrada de información.
-	 */
+
 	@PostMapping
 	public Doctor create(
 				@RequestBody Doctor doctor,
