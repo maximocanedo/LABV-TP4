@@ -19,12 +19,76 @@ public interface IDoctorDAO {
      * @param medico datos del medico a agregar.
      */
     Doctor add(Doctor medico);
+    
+    /**
+     * Revisa si un médico existe según su número de legajo.
+     * @param file Legajo del médico.
+     */
+    boolean existsByFile(int file);
+    
+    /**
+     * Revisa si un médico existe según su ID.
+     * @param id ID del médico.
+     */
+    boolean existsById(int id);
+
+
+    /**
+     * Busca un médico por su legajo.
+     * @param file Legajo del médico.
+     * @param includeInactives ¿Se deben tomar en cuenta registros deshabilitados? Por defecto, no.
+     */
+    Optional<Doctor> findByFile(int file);
+
+    /**
+     * Busca un médico por su legajo.
+     * @param file Legajo del médico.
+     * @param includeInactives ¿Se deben tomar en cuenta registros deshabilitados? Por defecto, no.
+     */
+    Optional<Doctor> findByFile(int file, boolean includeInactives);
+
 
     /**
      * Busca un médico por su ID.
-     * @param id ID del medico.
+     * @param id ID del médico.
+     * @param includeInactives ¿Se deben tomar en cuenta registros deshabilitados? Por defecto, no.
      */
     Optional<Doctor> findById(int id);
+
+    /**
+     * Busca un médico por su ID.
+     * @param id ID del médico.
+     * @param includeInactives ¿Se deben tomar en cuenta registros deshabilitados? Por defecto, no.
+     */
+    Optional<Doctor> findById(int id, boolean includeInactives);
+
+    /**
+     * Busca un médico por su ID.
+     * @param id ID del médico.
+     * @param includeInactives ¿Se deben tomar en cuenta registros deshabilitados? Por defecto, no.
+     */
+    Optional<DoctorMinimalView> findMinById(int id);
+
+    /**
+     * Busca un médico por su ID.
+     * @param id ID del médico.
+     * @param includeInactives ¿Se deben tomar en cuenta registros deshabilitados? Por defecto, no.
+     */
+    Optional<DoctorMinimalView> findMinById(int id, boolean searchDisabled);
+
+    /**
+     * Busca un médico por su legajo.
+     * @param file Legajo del médico.
+     * @param includeInactives ¿Se deben tomar en cuenta registros deshabilitados? Por defecto, no.
+     */
+    Optional<DoctorMinimalView> findMinByFile(int file);    
+
+    /**
+     * Busca un médico por su legajo.
+     * @param file Legajo del médico.
+     * @param includeInactives ¿Se deben tomar en cuenta registros deshabilitados? Por defecto, no.
+     */
+    Optional<DoctorMinimalView> findMinByFile(int file, boolean includeInactives);
     
     /**
      * Devuelve una lista con los espacios libres del horario de un doctor en un día especificado.
@@ -33,19 +97,6 @@ public interface IDoctorDAO {
      */
     List<LocalTime> getFreeTimeForDoctor(int file, Date date);
     
-    /**
-     * Busca un médico por su legajo.
-     * @param file Legajo
-     */
-    Optional<Doctor> findByFile(int file);
-    Optional<Doctor> findByFile(int file, boolean includeInactives);
-    
-    /**
-     * Busca un médico por su ID.
-     * @param id ID del medico.
-     * @param searchDisabled Si se buscan registros deshabilitados.
-     */
-    Optional<Doctor> findById(int id, boolean searchDisabled);
     
     /**
      * Busca médicos en la base de datos.

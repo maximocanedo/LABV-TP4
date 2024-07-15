@@ -13,30 +13,49 @@ import web.exceptions.NotFoundException;
 public interface IAppointmentDAO {
 	
 	/**
-	 * Registra un turno
-	 * @param turno Datos del turno.
-	 * @return 
+	 * Registra un turno en la base de datos.
+	 * @param turno Datos del turno a registrar.
+	 * @return Turno registrado con el ID generado.
 	 */
 	Appointment add(Appointment turno);
 
 	/**
-	 * Busca un Turno en la base de datos.
+	 * Busca un turno en la base de datos por su ID.
 	 * @param id ID del turno.
 	 */
 	Optional<Appointment> findById(int id);
-
+	
+	/**
+	 * Busca un turno en la base de datos por su ID.
+	 * @param id ID del turno.
+	 */
 	Optional<AppointmentMinimalView> findMinById(int id);
 
+	/**
+	 * Busca un turno en la base de datos por su ID.
+	 * @param id ID del turno.
+	 */
 	Optional<AppointmentCommunicationView> findComById(int id);
 	
 	/**
-	 * Busca un Turno en la base de datos.
+	 * Busca un turno en la base de datos por su ID.
 	 * @param id ID del turno.
+	 * @param includeInactives ¿Se deben incluir registros deshabilitados? Por defecto, false.
 	 */
 	Optional<Appointment> findById(int id, boolean includeInactives);
 
+	/**
+	 * Busca un turno en la base de datos por su ID.
+	 * @param id ID del turno.
+	 * @param includeInactives ¿Se deben incluir registros deshabilitados? Por defecto, false.
+	 */
 	Optional<AppointmentMinimalView> findMinById(int id, boolean includeInactives);
 
+	/**
+	 * Busca un turno en la base de datos por su ID.
+	 * @param id ID del turno.
+	 * @param includeInactives ¿Se deben incluir registros deshabilitados? Por defecto, false.
+	 */
 	Optional<AppointmentCommunicationView> findComById(int id, boolean includeInactives);
 
 	/**

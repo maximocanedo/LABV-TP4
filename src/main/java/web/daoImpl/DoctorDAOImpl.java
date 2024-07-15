@@ -36,6 +36,61 @@ public class DoctorDAOImpl implements IDoctorDAO {
     }
     
     @Override
+	public boolean existsByFile(int file) {
+		final Optional<Boolean> cfUser = new Optional<Boolean>();
+		dataManager.run(session -> {
+			String hql = "SELECT COUNT(p) FROM DoctorMinimalView p WHERE p.file = :file";
+	        Query query = session.createQuery(hql);
+	        query.setParameter("file", file);
+	        Long d = (Long) query.uniqueResult();
+	        cfUser.set(d > 0);
+		});
+		return cfUser.get().booleanValue();
+	}
+    
+    @Override
+	public boolean existsById(int id) {
+		final Optional<Boolean> cfUser = new Optional<Boolean>();
+		dataManager.run(session -> {
+			String hql = "SELECT COUNT(p) FROM DoctorMinimalView p WHERE p.id = :id";
+	        Query query = session.createQuery(hql);
+	        query.setParameter("id", id);
+	        Long d = (Long) query.uniqueResult();
+	        cfUser.set(d > 0);
+		});
+		return cfUser.get().booleanValue();
+	}
+
+	@Override
+	public Optional<Doctor> findByFile(int file) {
+		final Optional<Doctor> optional = new Optional<>();
+		dataManager.run(session -> {
+			String hql = "SELECT m FROM Doctor m WHERE m.file = :legajo";
+			Query query = session.createQuery(hql);
+			query.setParameter("legajo", file);
+			optional.set((Doctor) query.uniqueResult()); 
+		});
+		return optional;
+	}
+
+	@Override
+	public Optional<Doctor> findByFile(int file, boolean includeInactives) {
+		final Optional<Doctor> optional = new Optional<>();
+		dataManager.run(session -> {
+			String hql = "SELECT m FROM Doctor m WHERE m.file = :legajo"  + (includeInactives ? "" : " AND active = 1");
+			Query query = session.createQuery(hql);
+			query.setParameter("legajo", file);
+			optional.set((Doctor) query.uniqueResult()); 
+		});
+		return optional;
+	}
+
+	@Override
+	public Optional<Doctor> findById(int id) {
+		return findById(id, false);
+	}
+
+	@Override
     public Optional<Doctor> findById(int id, boolean searchDisabled) {
         final Optional<Doctor> cfMedico = new Optional<>(null);
         dataManager.run(session -> {
@@ -47,6 +102,12 @@ public class DoctorDAOImpl implements IDoctorDAO {
         return cfMedico;
     }
 
+    @Override
+	public Optional<DoctorMinimalView> findMinById(int id) {
+		return findMinById(id, false);
+	}
+
+	@Override
     public Optional<DoctorMinimalView> findMinById(int id, boolean searchDisabled) {
         final Optional<DoctorMinimalView> cfMedico = new Optional<>(null);
         dataManager.run(session -> {
@@ -59,35 +120,66 @@ public class DoctorDAOImpl implements IDoctorDAO {
     }
     
     @Override
-    public Doctor update(Doctor medico) {
-    	dataManager.transact(session -> {
-            session.update(medico);
-        });
-    	return medico;
-    }
-
-    public boolean existsByFile(int file) {
-		final Optional<Boolean> cfUser = new Optional<Boolean>();
+	public Optional<DoctorMinimalView> findMinByFile(int file) {
+		final Optional<DoctorMinimalView> optional = new Optional<>();
 		dataManager.run(session -> {
-			String hql = "SELECT COUNT(p) FROM DoctorMinimalView p WHERE p.file = :file";
-	        Query query = session.createQuery(hql);
-	        query.setParameter("file", file);
-	        Long d = (Long) query.uniqueResult();
-	        cfUser.set(d > 0);
+			String hql = "SELECT m FROM DoctorMinimalView m WHERE m.file = :legajo";
+			Query query = session.createQuery(hql);
+			query.setParameter("legajo", file);
+			optional.set((DoctorMinimalView) query.uniqueResult()); 
 		});
-		return cfUser.get().booleanValue();
+		return optional;
 	}
-    
+
+	@Override
+	public Optional<DoctorMinimalView> findMinByFile(int file, boolean includeInactives) {
+		final Optional<DoctorMinimalView> optional = new Optional<>();
+		dataManager.run(session -> {
+			String hql = "SELECT m FROM DoctorMinimalView m WHERE m.file = :legajo"  + (includeInactives ? "" : " AND active = 1");
+			Query query = session.createQuery(hql);
+			query.setParameter("legajo", file);
+			optional.set((DoctorMinimalView) query.uniqueResult()); 
+		});
+		return optional;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<LocalTime> getFreeTimeForDoctor(int file, Date date) {
+		final List<LocalTime> times = new ArrayList<LocalTime>();
+		dataManager.run(session -> {
+			Query q = session.createSQLQuery("CALL getFreeTimesForDoctor(:file, :date)");
+			q.setParameter("file", file);
+			q.setParameter("date", date);
+			List<Object> result = q.list();
+			for(Object x : result) {
+				times.add(((Time) x).toLocalTime());
+			}
+		});
+		return times;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<DoctorMinimalView> search(DoctorQuery query) {
+		final Optional<List<DoctorMinimalView>> doctors = new Optional<List<DoctorMinimalView>>();
+		dataManager.run(session -> {
+			Query q = query.toQuery(session);
+			doctors.set(q.list());
+		});
+		return doctors.get();
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Object[]> listOnlyFileNumbersAndNames() {
 		final Optional<List<Object[]>> optionalList = new Optional<>();
 		dataManager.run(session -> {
-            String hql = "SELECT m.file, m.name, m.surname FROM Doctor m ORDER BY m.file ASC";
-            Query query = session.createQuery(hql);
-            optionalList.set(query.list());
-        });
-        return optionalList.get();
+	        String hql = "SELECT m.file, m.name, m.surname FROM Doctor m ORDER BY m.file ASC";
+	        Query query = session.createQuery(hql);
+	        optionalList.set(query.list());
+	    });
+	    return optionalList.get();
 	}
 
 	@Override
@@ -95,8 +187,16 @@ public class DoctorDAOImpl implements IDoctorDAO {
 		List<Doctor> list = this.listOrderByFileDescending(1, 1);
 		return list.get(0);
 	}
-	
-	@SuppressWarnings("unchecked")
+
+	@Override
+    public Doctor update(Doctor medico) {
+    	dataManager.transact(session -> {
+            session.update(medico);
+        });
+    	return medico;
+    }
+
+    @SuppressWarnings("unchecked")
 	@Override
 	public List<Integer> listOnlyFileNumbers(){
 		final Optional<List<Integer>> optionalMedicos = new Optional<>();
@@ -160,58 +260,6 @@ public class DoctorDAOImpl implements IDoctorDAO {
 	    return cfList.get();
 	}
 
-	@Override
-	public Optional<Doctor> findByFile(int file) {
-		final Optional<Doctor> optional = new Optional<>();
-		dataManager.run(session -> {
-			String hql = "SELECT m FROM Doctor m WHERE m.file = :legajo";
-			Query query = session.createQuery(hql);
-			query.setParameter("legajo", file);
-			optional.set((Doctor) query.uniqueResult()); 
-		});
-		return optional;
-	}
-	
-	public Optional<DoctorMinimalView> findMinByFile(int file) {
-		final Optional<DoctorMinimalView> optional = new Optional<>();
-		dataManager.run(session -> {
-			String hql = "SELECT m FROM DoctorMinimalView m WHERE m.file = :legajo";
-			Query query = session.createQuery(hql);
-			query.setParameter("legajo", file);
-			optional.set((DoctorMinimalView) query.uniqueResult()); 
-		});
-		return optional;
-	}
-
-
-	@Override
-	public Optional<Doctor> findByFile(int file, boolean includeInactives) {
-		final Optional<Doctor> optional = new Optional<>();
-		dataManager.run(session -> {
-			String hql = "SELECT m FROM Doctor m WHERE m.file = :legajo"  + (includeInactives ? "" : " AND active = 1");
-			Query query = session.createQuery(hql);
-			query.setParameter("legajo", file);
-			optional.set((Doctor) query.uniqueResult()); 
-		});
-		return optional;
-	}
-	
-	public Optional<DoctorMinimalView> findMinByFile(int file, boolean includeInactives) {
-		final Optional<DoctorMinimalView> optional = new Optional<>();
-		dataManager.run(session -> {
-			String hql = "SELECT m FROM DoctorMinimalView m WHERE m.file = :legajo"  + (includeInactives ? "" : " AND active = 1");
-			Query query = session.createQuery(hql);
-			query.setParameter("legajo", file);
-			optional.set((DoctorMinimalView) query.uniqueResult()); 
-		});
-		return optional;
-	}
-
-	@Override
-	public Optional<Doctor> findById(int id) {
-		return findById(id, false);
-	}
-	
 	private void updateStatus(int id, boolean newStatus) throws NotFoundException {
 		Optional<Doctor> search = findById(id, newStatus);
     	if(search.isEmpty()) throw new NotFoundException();
@@ -232,33 +280,6 @@ public class DoctorDAOImpl implements IDoctorDAO {
 		updateStatus(id, true);
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<DoctorMinimalView> search(DoctorQuery query) {
-		final Optional<List<DoctorMinimalView>> doctors = new Optional<List<DoctorMinimalView>>();
-		dataManager.run(session -> {
-			Query q = query.toQuery(session);
-			doctors.set(q.list());
-		});
-		return doctors.get();
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<LocalTime> getFreeTimeForDoctor(int file, Date date) {
-		final List<LocalTime> times = new ArrayList<LocalTime>();
-		dataManager.run(session -> {
-			Query q = session.createSQLQuery("CALL getFreeTimesForDoctor(:file, :date)");
-			q.setParameter("file", file);
-			q.setParameter("date", date);
-			List<Object> result = q.list();
-			for(Object x : result) {
-				times.add(((Time) x).toLocalTime());
-			}
-		});
-		return times;
-	}
-	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Date> getScheduleForDoctor(int file, Date startDate) {
