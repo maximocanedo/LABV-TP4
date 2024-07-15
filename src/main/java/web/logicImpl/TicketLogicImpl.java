@@ -25,7 +25,6 @@ import web.exceptions.CommonException;
 import web.exceptions.InvalidTokenException;
 import web.exceptions.NotFoundException;
 import web.logic.ITicketLogic;
-import web.logic.validator.TicketValidator;
 
 @Component("tickets")
 public class TicketLogicImpl implements ITicketLogic {
@@ -35,9 +34,6 @@ public class TicketLogicImpl implements ITicketLogic {
 	
 	@Autowired
 	private TicketDAOImpl ticketsrepository;
-	
-	@Autowired
-	private TicketValidator ticketValidator;
 	
 	@Autowired
 	private UserPermitLogicImpl permits;
