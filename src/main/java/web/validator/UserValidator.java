@@ -22,7 +22,7 @@ public class UserValidator {
 	private DoctorDAOImpl doctorsrepository;
 	
 	private static final String USERNAME_PATTERN = "^[a-zA-Z][a-zA-Z0-9._]{4,14}$";
-	private static final String NAMES_PATTERN = "/^[a-zA-Z\\s,.'-\\pL]+$/u";
+	private static final String NAMES_PATTERN = "^[a-zA-Z]+(([\\'\\,\\.\\-][a-zA-Z])?[a-zA-Z]*)*$";
 	/**
 	 * Mínimo ocho caracteres.
 	 * Al menos una mayúscula y una minúscula del alfabeto.

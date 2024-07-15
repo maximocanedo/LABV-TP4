@@ -95,12 +95,14 @@ const patientsSection = domSection("Pacientes");
             console.log(`${bool?"T":"No t"}e deshabilitaste ${bool&&"exitosamente"}. `);
         }, section);
 
+    // @ts-ignore
     document.addEventListener('onConnectionFailure', (event) => {
         // @ts-ignore
         console.error('Problema de conexión:', event.detail);
         // Mostrar notificación, manejar acá el error de conexión a internet.!
     }, section);
 
+    // @ts-ignore
     document.addEventListener('onAPIException', (event) => {
         // @ts-ignore
         console.warn('Excepción de API:', event.detail);
@@ -172,6 +174,7 @@ const patientsSection = domSection("Pacientes");
 })(doctorsSection);
 
 (async (section) => {
+    const ID = 171;
     const createPatient = domTesterElement("Crear un nuevo paciente", "En la base de datos. ", async (e) => {
         const patient = await patients.create({
             name: "Alejandro",
@@ -182,9 +185,22 @@ const patientsSection = domSection("Pacientes");
             localty: "Gerli",
             province: "Buenos Aires",
             birth: "1978-11-11",
-            email: "vera.alejandro@fake.org",
-            active: true
+            email: "vera.alejandro@fake.org"
         });
         console.log(patient);
+    }, patientsSection);
+    const search = domTesterElement("Buscar pacientes", "En la base de datos. ", async (e) => {
+        const query = new patients.Query("Ale");
+        const results = await query.search();
+        console.log(results);
+    }, patientsSection);
+    const id = domTesterElement("Buscar paciente con id N.º " + ID, "", async (e) => {
+        const patient = await patients.findById(ID);
+        console.log(patient);
+    }, patientsSection);
+    const update = domTesterElement("Actualizar paciente con id N.º " + ID, "", async (e) => {
+        // @ts-ignore
+        const updated = await patients.update(ID, { surname: "Escudero" });
+        console.log(updated);
     }, patientsSection);
 })(patientsSection);

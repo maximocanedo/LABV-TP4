@@ -130,7 +130,7 @@
  * @property {string} address Dirección.
  * @property {string} localty Localidad.
  * @property {string} province Provincia.
- * @property {Date} birth Fecha de nacimiento.
+ * @property {Date | string} birth Fecha de nacimiento.
  * @typedef {IPatient & PatientCommunicationFields & PatientPrivateInformationFields} Patient
  */
 /**

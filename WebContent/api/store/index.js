@@ -37,6 +37,17 @@ const STORES = [{
             objectStore.createIndex("specialty", "specialty.id");
         }
     }, {
+        name: "patients",
+        update: db => {
+            const objectStore = db.createObjectStore("patients", { keyPath: "id" });
+            objectStore.createIndex("id", "id", { unique: true });
+            objectStore.createIndex("name", "name");
+            objectStore.createIndex("surname", "surname");
+            objectStore.createIndex("dni", "dni", { unique: true });
+            objectStore.createIndex("phone", "phone");
+            objectStore.createIndex("email", "email");
+        }
+    }, {
         name: "specialties",
         update: db => {
             const objectStore = db.createObjectStore("specialties", { keyPath: 'id' });
@@ -59,7 +70,7 @@ export const useDatabase = (storeName) => {
      * @returns {Promise<IDBDatabase>}
      */
     const open = async () => new Promise((resolve, reject) => {
-        const request = indexedDB.open(DB_NAME, 9);
+        const request = indexedDB.open(DB_NAME, 1);
         request.onerror = (event) => {
             reject(request.error);
         };
