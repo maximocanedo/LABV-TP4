@@ -1,10 +1,9 @@
 'use strict';
 import { getAccessToken, getRefreshToken } from "./security.js";
-import { login, getUsers, getUser, update, signup, resetPassword, disable, myself, updateMe, resetMyPassword, disableMe, FilterStatus } from "./actions/users.js";
+import { login, getUser, update, signup, resetPassword, disable, myself, updateMe, resetMyPassword, disableMe, FilterStatus, Query } from "./actions/users.js";
 import * as doctors from './actions/doctors.js';
 import * as patients from "./actions/patients.js";
 import { domTesterElement, domSection } from "./test.js";
-import { ElementBuilder } from "./controller/dom.js";
 
 const usersSection = domSection("Usuarios");
 const doctorsSection = domSection("Médicos");
@@ -34,9 +33,12 @@ const patientsSection = domSection("Pacientes");
 
     let listUsers__page = 1;
     const listUsers = domTesterElement("Buscar usuarios", "Cargar de a diez usuarios e imprimir en consola. ", async (e) => {
-        const xe = await getUsers("Silva", listUsers__page, 10, FilterStatus.ONLY_INACTIVE);
+        const query = new Query("Silva")
+                        .paginate(listUsers__page, 10)
+                        .filterByStatus(FilterStatus.BOTH);
+        const results = await query.search();
         listUsers__page++;
-        console.log(xe, { listUsers__page });
+        console.log(results, { listUsers__page });
     }, section);
 
     const updateTest = domTesterElement("Actualizar un usuario", `Busca el usuario @${SECONDARY_USER}, y luego se intenta cambiar su nombre. `, async (e) => {

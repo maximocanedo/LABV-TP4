@@ -3,6 +3,7 @@ import * as u from './../auth.js';
 import { updateAccessToken, updateRefreshToken } from './../security.js';
 import * as db from "./../store/users.js";
 import { Permit, PermitTemplate } from './../types/models.js';
+import { GenericQuery } from './commons.js';
 /// <reference path="../types/entities.js" />
 
 /**
@@ -56,36 +57,17 @@ export const signup = async (request) => {
     return response.json();
 };
 
-/**
- * Busca usuarios a partir de los parámetros dados.
- * Si hay errores de conexión, intenta recuperar los usuarios en la base de datos interna.
- * 
- * Importante: Cuando se consulta a la base de datos local, **no se aplica ningún tipo de filtro**, salvo la paginación.
- * 
- * @param {String} q Texto de búsqueda
- * @param {number} page Número de página (Comenzando en 1)
- * @param {number} size Tamaño de página (Por defecto en 15)
- * @param {FilterStatus} status Tipo de filtro de estado. Por defecto se filtran sólo {@link FilterStatus.ONLY_ACTIVE elementos activos}.
- * @returns {Promise<UserMinimalView[]>} Array con usuarios.
- */
-export const getUsers = async (q, page = 1, size = 15, status = FilterStatus.ONLY_ACTIVE) => {
-    return u.get("users", { q, page, size, status })
-    .then(response => response.json())
-    .then(users => {
-        /** @type {IUser[]} **/
-        const updatePromises = users.map(user =>
-            db.update(user).then(updatedUser => {
-                return updatedUser;
-            })
-        );
-        return Promise.all(updatePromises);
-    })
-    .catch(error => {
-        console.error("Error al obtener o actualizar usuarios:", error);
-        throw error;
-    });
 
-};
+/**
+ * @extends {GenericQuery<IUser>}
+ */
+export class Query extends GenericQuery {
+    constructor(q = "") {
+        super(q);
+        super.setLocalDatabase(db);
+        super.setPrefix("users");
+    }
+}
 
 /**
  * Busca un usuario por su nombre de usuario.
@@ -97,7 +79,7 @@ export const getUser = async (username) => {
         .then(response => response.json())
         .then(user => db.update(user))
         .catch(err => {
-            if(true) { // Actualizar condición
+            if(true) { // TODO: Actualizar condición
                 return db.getByUsername(username).then(user => {
                     return user;
                 }).catch(e => {

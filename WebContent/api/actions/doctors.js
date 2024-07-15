@@ -1,6 +1,7 @@
 'use strict';
 import * as u from './../auth.js';
 import * as db from "./../store/doctors.js";
+import { GenericQuery } from './commons.js';
 /// <reference path="../types/entities.js" />
 
 /**
@@ -12,23 +13,6 @@ export const create = async (data) => {
     return u.post("doctors", data)
         .then(response => response.json())
         .then(doctor => db.update(doctor)) // Actualiza el almacenamiento local
-        .catch(err => {
-            throw err;
-        });
-};
-
-/**
- * @deprecated Usar {@link Query} en su lugar.
- * Busca todos los doctores.
- * @returns {Promise<Object[]>} Promesa con un array de doctores.
- */
-export const findAll = async () => {
-    return u.get("doctors")
-        .then(response => response.json())
-        .then(doctors => {
-            const updatePromises = doctors.map(doctor => db.update(doctor)); // Actualiza el almacenamiento local
-            return Promise.all(updatePromises);
-        })
         .catch(err => {
             throw err;
         });
@@ -106,9 +90,10 @@ export const enable = async (id) => {
 
 /**
  * Clase para construir y ejecutar consultas de búsqueda de doctores.
+ * @extends {GenericQuery<IDoctor>}
  * @example 
  * // Búsqueda simple:
- * const list: Promise<Doctor[]> = await new Query("Algo").search();
+ * const list: Promise<IDoctor[]> = await new Query("Algo").search();
  * 
  * @example
  * // Búsqueda con filtros:
@@ -120,84 +105,30 @@ export const enable = async (id) => {
  *   .paginate(2, 5);
  * const list: Promise<Doctor[]> = await query.search();
  */
-export class Query {
-    #q;
-    #status = "";
+export class Query extends GenericQuery {
+
     #day = "";
     #specialty = null;
-    #page = 1;
-    #size = 10;
 
-    /**
-     * Crea una nueva instancia de Query.
-     * @param {string} q Texto de búsqueda.
-     */
     constructor(q = "") {
-        this.#q = q;
+        super(q);
+        super.setLocalDatabase(db);
+        super.setPrefix("doctors");
     }
 
-    /**
-     * Ejecuta la búsqueda de doctores según los parámetros configurados.
-     * @returns {Promise<Object[]>} Promesa con un array de doctores encontrados.
-     */
-    async search() {
-        const params = {
-            q: this.#q,
-            status: this.#status,
+    getParams() {
+        return {
+            ...super.getParams(),
             day: this.#day,
-            specialty: this.#specialty,
-            page: this.#page,
-            size: this.#size
-        };
-
-        return u.get("doctors", params)
-            .then(response => response.json())
-            .then(doctors => {
-                const updatePromises = doctors.map(doctor => db.update(doctor)); // Actualiza el almacenamiento local
-                return Promise.all(updatePromises);
-            })
-            .catch(err => {
-                throw err;
-            });
+            specialty: this.#specialty
+        }
     }
 
-    /**
-     * Configura la paginación para la búsqueda.
-     * @param {number} page Número de página.
-     * @param {number} size Tamaño de la página.
-     * @returns {Query} Instancia actual de Query.
-     */
-    paginate(page, size) {
-        if (page != null && page > 0) this.#page = page;
-        if (size != null && size > 0) this.#size = size;
-        return this;
-    }
-
-    /**
-     * Filtra los doctores por estado.
-     * @param {string} status Estado por el cual filtrar.
-     * @returns {Query} Instancia actual de Query.
-     */
-    filterByStatus(status) {
-        this.#status = status;
-        return this;
-    }
-
-    /**
-     * Filtra los doctores por día disponible.
-     * @param {string} day Día por el cual filtrar.
-     * @returns {Query} Instancia actual de Query.
-     */
     filterByDay(day) {
         this.#day = day;
         return this;
     }
 
-    /**
-     * Filtra los doctores por especialidad.
-     * @param {string} specialty Especialidad por la cual filtrar.
-     * @returns {Query} Instancia actual de Query.
-     */
     filterBySpecialty(specialty) {
         this.#specialty = specialty;
         return this;
