@@ -13,7 +13,7 @@ import web.entity.User;
 import web.entity.input.SpecialtyQuery;
 import web.exceptions.NotFoundException;
 import web.logic.ISpecialtyLogic;
-import web.validator.SpecialtyValidator;
+import web.logic.validator.SpecialtyValidator;
 
 @Component("specialties")
 public class SpecialtyLogicImpl implements ISpecialtyLogic {

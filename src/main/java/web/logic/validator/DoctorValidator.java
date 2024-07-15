@@ -1,4 +1,4 @@
-package web.validator;
+package web.logic.validator;
 
 import java.util.Calendar;
 import java.util.Date;

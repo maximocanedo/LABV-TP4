@@ -1,4 +1,4 @@
-package web.validator;
+package web.logic.validator;
 
 import java.time.LocalTime;
 import java.util.Calendar;

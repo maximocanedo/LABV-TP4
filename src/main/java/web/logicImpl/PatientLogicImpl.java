@@ -16,7 +16,7 @@ import web.entity.view.PatientCommunicationView;
 import web.exceptions.NotAllowedException;
 import web.exceptions.NotFoundException;
 import web.logic.IPatientLogic;
-import web.validator.PatientValidator;
+import web.logic.validator.PatientValidator;
 
 @Component("patients")
 public class PatientLogicImpl implements IPatientLogic {

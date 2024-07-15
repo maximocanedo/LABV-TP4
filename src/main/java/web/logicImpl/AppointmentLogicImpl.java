@@ -19,7 +19,7 @@ import web.exceptions.CommonException;
 import web.exceptions.NotAllowedException;
 import web.exceptions.NotFoundException;
 import web.logic.IAppointmentLogic;
-import web.validator.AppointmentValidator;
+import web.logic.validator.AppointmentValidator;
 
 @Component("appointments")
 public class AppointmentLogicImpl implements IAppointmentLogic {

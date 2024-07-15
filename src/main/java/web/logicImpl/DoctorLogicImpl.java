@@ -19,7 +19,7 @@ import web.entity.input.DoctorQuery;
 import web.entity.view.DoctorMinimalView;
 import web.exceptions.NotFoundException;
 import web.logic.IDoctorLogic;
-import web.validator.DoctorValidator;
+import web.logic.validator.DoctorValidator;
 
 @Component("doctors")
 public class DoctorLogicImpl implements IDoctorLogic {

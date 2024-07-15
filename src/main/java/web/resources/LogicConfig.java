@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 //import web.logicImpl.*;
-//import web.validator.*;
+//import web.logic.validator.*;
 
 @Configuration
 public class LogicConfig {

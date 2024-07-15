@@ -25,7 +25,7 @@ import web.exceptions.CommonException;
 import web.exceptions.InvalidTokenException;
 import web.exceptions.NotFoundException;
 import web.logic.ITicketLogic;
-import web.validator.TicketValidator;
+import web.logic.validator.TicketValidator;
 
 @Component("tickets")
 public class TicketLogicImpl implements ITicketLogic {

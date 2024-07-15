@@ -1,4 +1,4 @@
-package web.validator;
+package web.logic.validator;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

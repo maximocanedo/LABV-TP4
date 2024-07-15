@@ -1,4 +1,4 @@
-package web.validator;
+package web.logic.validator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

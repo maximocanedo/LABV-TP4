@@ -19,7 +19,7 @@ import web.exceptions.NotFoundException;
 import web.generator.PermitTemplate;
 import web.logic.ITicketLogic;
 import web.logic.IUserLogic;
-import web.validator.UserValidator;
+import web.logic.validator.UserValidator;
 
 @Component("users")
 public class UserLogicImpl implements IUserLogic {
