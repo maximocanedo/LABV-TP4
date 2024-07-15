@@ -58,8 +58,9 @@ public class PatientDAOImpl implements IPatientDAO {
 		});
 		return cfUser;
 	}
-	
-	public boolean existsDNI(String dni) {
+
+	@Override
+	public boolean existsByDNI(String dni) {
 		final Optional<Boolean> cfUser = new Optional<Boolean>();
 		dataManager.run(session -> {
 			String hql = "SELECT COUNT(p) FROM Patient p WHERE p.dni = :dni";

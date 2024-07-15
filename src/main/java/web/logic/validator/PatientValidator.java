@@ -49,7 +49,7 @@ public class PatientValidator {
 		dni = dni.replaceAll("[^0-9]", "");
 		if(dni.length() < 4 || dni.length() > 12) 
 			throw new ValidationException("DNI inválido. ", "Ingrese un número de DNI válido. ");
-		if(patientsrepository.existsDNI(dni))
+		if(patientsrepository.existsByDNI(dni))
 			throw new ValidationException("Patient already in system. ", "Existe un registro en el sistema con ese DNI. ");
 		return dni;
 	}
