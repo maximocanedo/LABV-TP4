@@ -33,8 +33,8 @@
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <label for="txtSurname" class="form-label">DNI</label>
-                            <input type="text" class="form-control" id="txtSurname" placeholder="49685973" pattern="^[A-Za-z]+$" title="Solo puede contener texto" 
+                            <label for="txtDNI" class="form-label">DNI</label>
+                            <input type="text" class="form-control" id="txtDNI" placeholder="49685973" pattern="^\d{8}$" title="Solo puede contener texto" 
                             required>
                             <div class="invalid-feedback">
                                 Invalido.
@@ -43,8 +43,8 @@
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label for="txtSurname" class="form-label">Mail</label>
-                            <input type="text" class="form-control" id="txtSurname" placeholder="alice.manhattan@example.com" pattern="^[A-Za-z]+$" title="Solo puede contener texto" 
+                            <label for="txtEmail" class="form-label">Mail</label>
+                            <input type="text" class="form-control" id="txtEmail" placeholder="alice.manhattan@example.com" pattern="^[A-Za-z]+$" title="Solo puede contener texto" 
                             required>
                             <div class="invalid-feedback">
                                 Invalido.
@@ -52,15 +52,10 @@
                         </div>
                         <div class="col-md-6">
                             <label for="txtPhone" class="form-label">Telefono</label>
-                            <div class="input-group">
-                                <span class="input-group-text" id="phone-input" for="txtPhone">+54 11</span>
-                                <input type="text" class="form-control" aria-label="Phone input"
-                                    aria-describedby="phone-input" id="txtPhone" name="txtPhone"
-                                    pattern="^\d{8}$" title="El formato es incorrecto solo deben tener 8 caracteres y sin espacios" placeholder="56369594"
-                                    title="El telefono debe cumplir con el formato " required>
-                                <div class="invalid-feedback">
-                                    Invalido. El telefono debe cumplir con el formato 
-                                </div>
+                            <input type="text" class="form-control" id="txtPhone" placeholder="911 2658 9584" pattern="^\d{8}$" title="El formato es incorrecto solo deben tener 8 caracteres y sin espacios" 
+                            required>
+                            <div class="invalid-feedback">
+                                Invalido. El telefono no cumple el formato
                             </div>
                         </div>
                     </div>
