@@ -1,6 +1,6 @@
 'use strict';
 
-import { ElementBuilder } from "./../../controller/dom.js";
+import { ElementBuilder } from "../dom.js";
 
 export const load = (listaObjetos) => {
     const keys = Object.keys(listaObjetos[0]);

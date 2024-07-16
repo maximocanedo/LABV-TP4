@@ -1,6 +1,6 @@
 import { Query } from '../../actions/patients.js';
 import { login } from "../../actions/users.js";
-import * as headerAdminService from "./../services/headerAdminService.js";
+import * as headerAdminService from "../services/headerAdminService.js";
 import * as table from "./table.js";
 
 (() => {
