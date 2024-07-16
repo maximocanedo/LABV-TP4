@@ -57,6 +57,8 @@ navLogout.click(() => {
         const user = await myself();
         ddMenu.classList("dropdown");
         ddMenuButton.text(user.username);
+        navLogin.classList("d-none");
+        navRegister.classList("d-none");
     } catch (error) {
         console.log(error);
         formLogin.classList("flex-fill", "needs-validation");
