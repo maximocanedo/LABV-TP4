@@ -1,6 +1,7 @@
 'use strict';
-import { logout } from "./../../actions/users.js";
+import { logout, myself } from "./../../actions/users.js";
 import { ElementBuilder } from "./../../controller/dom.js";
+
 
 
 export const load = () => {
@@ -63,7 +64,7 @@ export const load = () => {
         .attr('data-bs-toggle', 'dropdown')
         .id('ddMenuButton')
         .attr('aria-expanded', 'false')
-        .appendTo(dropdown.getTarget());;
+        .appendTo(dropdown.getTarget());
 
     const dropdownMenu = new ElementBuilder('ul')
         .classList('dropdown-menu')
@@ -89,4 +90,24 @@ export const load = () => {
     //navbar.append(container);
 
     document.body.prepend(navbar.build());
+
+    const setUser = user => {
+        dropdownButton.text(user.name);
+        dropdownButton.show();
+    };
+
+    const setLoginButtons = () => {
+        navLogin.hide();
+        navRegister.hide();
+    };
+
+    return {
+        update: async () => {
+            return myself().then(user => {
+                setUser(user);
+            }).catch(err => {
+                setLoginButtons();
+            });
+        }
+    }
 };

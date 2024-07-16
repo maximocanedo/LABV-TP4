@@ -4,7 +4,8 @@ import { createStore } from "./../../lib/redux.js";
 import * as headerService from "./../services/headerService.js";
 
 (() => {
-    headerService.load();
+    const header = headerService.load();
+    console.log(header.update);
 })();
 
 const event = {
