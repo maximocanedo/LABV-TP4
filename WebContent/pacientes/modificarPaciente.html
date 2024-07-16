@@ -44,7 +44,7 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="txtEmail" class="form-label">Mail</label>
-                            <input type="text" class="form-control" id="txtEmail" placeholder="alice.manhattan@example.com" pattern="^[A-Za-z]+$" title="Solo puede contener texto" 
+                            <input type="text" class="form-control" id="txtEmail" placeholder="alice.manhattan@example.com" pattern="^[^@\s]+@[^@\s]+\.[^@\s]+" title="Solo puede contener texto" 
                             required>
                             <div class="invalid-feedback">
                                 Invalido.
@@ -52,7 +52,7 @@
                         </div>
                         <div class="col-md-6">
                             <label for="txtPhone" class="form-label">Telefono</label>
-                            <input type="text" class="form-control" id="txtPhone" placeholder="911 2658 9584" pattern="^\d{8}$" title="El formato es incorrecto solo deben tener 8 caracteres y sin espacios" 
+                            <input type="text" class="form-control" id="txtPhone" placeholder="911 2658 9584" pattern="^[0-9-]+$" title="El formato es incorrecto solo deben tener 8 caracteres y sin espacios" 
                             required>
                             <div class="invalid-feedback">
                                 Invalido. El telefono no cumple el formato
