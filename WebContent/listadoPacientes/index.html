@@ -11,27 +11,13 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Administrador</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
-                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                <div class="navbar-nav">
-                    <a class="nav-link active" aria-current="page" href="#">Pacientes</a>
-                    <a class="nav-link" href="#">Medicos</a> <a class="nav-link">Informes</a>
-                </div>
-            </div>
-        </div>
-    </nav>
+    <br><br><br>
 
     <main id="container-md">
         <div class="row mt-3">
             <div class="col-2"></div>
-            <div class="col">
-                <table id="tableListadoPacientes" class="display" style="width:100%"></table>
+            <div class="col" id="tableContainer">
+                <!--<table id="tableListadoPacientes" class="display" style="width:100%"></table>-->
             </div>
             <div class="col-2"></div>
         </div>
@@ -42,7 +28,7 @@
         crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdn.datatables.net/v/bs5/dt-2.0.8/datatables.min.js"></script>
-    <script type="module" src="./ListadoPacientes.js"></script>
+    <script type="module" src="../api/controller/listadoPacientes/index.js"></script>
 </body>
 
 </html>
