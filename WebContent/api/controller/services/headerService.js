@@ -42,14 +42,14 @@ export const load = () => {
         .classList('nav-link', 'active')
         .id('navLogin')
         .attr('aria-current', 'page')
-        .href('./login.html')
+        .href('../login/index.html')
         .text('Iniciar Sesion')
         .appendTo(navLinks.getTarget());
 
     const navRegister = new ElementBuilder('a')
         .classList('nav-link')
         .id('navRegister')
-        .href('register.html')
+        .href('../register/index.html')
         .text('Registrarse')
         .appendTo(navLinks.getTarget());
 

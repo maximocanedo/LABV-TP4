@@ -52,8 +52,6 @@ navLogout.click(() => {
     location.reload();
 });
 
-
-
 (async () => {
     try {
         const user = await myself();
@@ -74,8 +72,8 @@ formLogin.on("submit", async (event, _element) => {
         event.stopPropagation();
     }
     formLogin.classList('was-validated');
-    // @ts-ignore
+    console.log(store.getState().username)
+    console.log(store.getState().password)
     const loginResponse = await login(store.getState().username, store.getState().password);
     console.log(loginResponse);
-   // location.reload();
 });

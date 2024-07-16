@@ -144,7 +144,7 @@ export const myself = async () => {
         })
         .then(user => db.update(user))
         .catch(err => {
-            console.error(err);
+            //console.error(err);
             throw err;
         });
 };
