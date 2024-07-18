@@ -114,6 +114,12 @@ public class PatientLogicImpl implements IPatientLogic {
 		boolean f = includeInactives && requiring.can(Permit.ENABLE_PATIENT);
 		return patientsrepository.findById(id, f);
 	}
+	
+	@Override
+	public void enable(int id, User requiring) throws NotFoundException {
+		permits.require(requiring, Permit.ENABLE_PATIENT);
+		patientsrepository.enable(id);
+	}
 
 	@Override
 	public void disable(int id, User requiring) throws NotFoundException {
