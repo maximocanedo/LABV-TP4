@@ -38,10 +38,12 @@ let dataTablePacientes;
 })();
 
 const dataTableUpdate = async () => {
+    const actualPage = dataTablePacientes.page();
     dataTablePacientes.clear();
     const pacientes = await new Query().paginate(1, 100).filterByStatus(FilterStatus.BOTH).search();    
     dataTablePacientes.rows.add(pacientes);
-    dataTablePacientes.draw();
+    dataTablePacientes.draw()
+    dataTablePacientes.page(actualPage).draw("page");
 }
 
 
