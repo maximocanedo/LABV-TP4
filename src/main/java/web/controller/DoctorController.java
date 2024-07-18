@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -101,15 +102,17 @@ public class DoctorController {
 	}
 
 	@DeleteMapping("/id/{id}")
-	public void disableById(@PathVariable int id, HttpServletRequest req, HttpServletResponse res) {
+	public ResponseEntity<?> disableById(@PathVariable int id, HttpServletRequest req, HttpServletResponse res) {
 		User requiring = auth.require(req, res);
 		doctors.disable(id, requiring);
+		return ResponseEntity.status(200).build();
 	}
 	
 	@PostMapping("/id/{id}")
-	public void enableById(@PathVariable int id, HttpServletRequest req, HttpServletResponse res) {
+	public ResponseEntity<?> enableById(@PathVariable int id, HttpServletRequest req, HttpServletResponse res) {
 		User requiring = auth.require(req, res);
 		doctors.enable(id, requiring);
+		return ResponseEntity.status(200).build();
 	}
 
 }
