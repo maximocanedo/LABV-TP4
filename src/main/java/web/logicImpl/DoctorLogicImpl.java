@@ -213,7 +213,7 @@ public class DoctorLogicImpl implements IDoctorLogic {
 	@Override
 	public void enable(int id, User requiring) throws NotFoundException {
     	permits.require(requiring, Permit.ENABLE_DOCTOR);
-		doctorsrepository.disable(id);
+		doctorsrepository.enable(id);
 	}
 	
 }
