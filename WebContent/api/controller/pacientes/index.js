@@ -1,7 +1,8 @@
-import { Query } from '../../actions/patients.js';
-import { login } from "../../actions/users.js";
+import { Query, enable, disable } from '../../actions/patients.js';
+import { FilterStatus, login } from "../../actions/users.js";
 import * as headerAdminService from "../services/headerAdminService.js";
-import * as table from "./table.js";
+
+let dataTablePacientes;
 
 (() => {
     const header = headerAdminService.load();
@@ -9,9 +10,9 @@ import * as table from "./table.js";
 
 (async () => {
     const user = await login("alicia.schimmel", "12345678");
-    const pacientes = await new Query().paginate(1, 100).search();    
+    const pacientes = await new Query().paginate(1, 100).filterByStatus(FilterStatus.BOTH).search();    
     // @ts-ignore
-    new DataTable('#tableListadoPacientes', {
+    dataTablePacientes = new DataTable('#tableListadoPacientes', {
         columns: [
             { data: 'id', title: 'Id' },
             { data: 'name', title: 'Nombre' },
@@ -24,21 +25,35 @@ import * as table from "./table.js";
                 return `<form action="./modificarPaciente.html?Id=${data}" method="post"><button type="submit" class="btn btn-primary">Modificar Paciente</button></form>`;
             }},
             { data: 'id', render: function ( data, type, row ) {
-                return `<button type="button" class="btn btn-primary">Activar</button>`;
+                return `<button type="button" class="btn btn-primary" onclick="enablePatient(${data});">Activar</button>`;
             }},
             { data: 'id', render: function ( data, type, row ) {
-                return `<button type="button" class="btn btn-primary">Desactivar</button>`;
+                return `<button type="button" class="btn btn-primary" onclick="disablePatient(${data});">Desactivar</button>`;
             }}
         ],
         data: pacientes,
     });
-    
-    /*
-    const user = await login("alicia.schimmel", "12345678");
-
-    const tableContainer = document.getElementById("tableContainer");
-    let pacientes = await new Query().paginate(1, 25).search();
-    tableContainer.appendChild(table.load(pacientes).build());
-    console.log(pacientes);
-    */
 })();
+
+const dataTableUpdate = async () => {
+    dataTablePacientes.clear();
+    const pacientes = await new Query().paginate(1, 100).filterByStatus(FilterStatus.BOTH).search();    
+    dataTablePacientes.rows.add(pacientes);
+    dataTablePacientes.draw();
+}
+
+
+const enablePatient = async (id) => {
+    const enableResponse = await enable(id);
+    dataTableUpdate()
+}
+
+const disablePatient = async (id) => {
+    const disableResponse = await disable(id);
+    dataTableUpdate();
+}
+
+// @ts-ignore
+window.enablePatient = enablePatient;
+// @ts-ignore
+window.disablePatient = disablePatient;
