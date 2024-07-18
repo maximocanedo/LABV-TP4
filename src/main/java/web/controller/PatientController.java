@@ -82,9 +82,10 @@ public class PatientController {
 		}
 		
 		@PostMapping("/id/{id}")
-		public void enable(@PathVariable int id, @RequestBody Patient patient, HttpServletRequest req, HttpServletResponse res) {
+		public ResponseEntity<?> enable(@PathVariable int id, HttpServletRequest req, HttpServletResponse res) {
 			User requiring = auth.require(req, res);
 			patients.enable(id, requiring);
+			return ResponseEntity.status(200).build();
 		}
 		
 		@DeleteMapping("/id/{id}")
