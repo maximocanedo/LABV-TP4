@@ -20,7 +20,9 @@ let dataTablePacientes;
             { data: 'dni', title: 'Dni' },
             { data: 'email', title: 'Email'},
             { data: 'phone', title: 'Telefono' },
-            { data: 'active', title:'Activo'},
+            { data: 'active', render: function ( data, type, row ) {
+                return data ? "Activo" : "Inactivo";
+            }},
             { data: 'id', render: function ( data, type, row ) {
                 return `<form action="./modificarPaciente.html?Id=${data}" method="post"><button type="submit" class="btn btn-primary">Modificar Paciente</button></form>`;
             }},
