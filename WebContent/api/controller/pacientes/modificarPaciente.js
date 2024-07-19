@@ -4,8 +4,6 @@ import { ElementBuilder } from "../dom.js";
 import { findById } from "../../actions/patients.js";
 import { login } from "../../actions/users.js";
 
-let patient;
-
 const event = {
     UPDATE_NAME: "UPDATE_NAME",
     UPDATE_SURNAME: "UPDATE_SURNAME",
@@ -48,10 +46,11 @@ const load = async () => {
     const header = headerAdminService.load();
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
-    patient = await findById(parseInt(urlParams.get("Id")));
+    const patient = await findById(parseInt(urlParams.get("Id")));
+    return patient
 };
 
-load().then(() => {
+load().then((patient) => {
     const store = createStore(reducer, patient);
     const formRegister = document.getElementById("formModificarPaciente");
 
