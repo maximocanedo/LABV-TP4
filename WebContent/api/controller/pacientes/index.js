@@ -3,6 +3,9 @@ import { FilterStatus, login } from "../../actions/users.js";
 import * as headerAdminService from "../services/headerAdminService.js";
 
 let dataTablePacientes;
+let page = 0;
+const btnPrevPage = document.getElementById("btnPrevPage");
+const btnNextPage = document.getElementById("btnNextPage");
 
 (() => {
     const header = headerAdminService.load();
@@ -10,7 +13,7 @@ let dataTablePacientes;
 
 (async () => {
     const user = await login("alicia.schimmel", "12345678");
-    const pacientes = await new Query().paginate(0, 10).filterByStatus(FilterStatus.BOTH).search();    
+    const pacientes = await new Query().paginate(page, 10).filterByStatus(FilterStatus.BOTH).search();    
     // @ts-ignore
     dataTablePacientes = new DataTable('#tableListadoPacientes', {
         columns: [
@@ -35,13 +38,42 @@ let dataTablePacientes;
 })();
 
 const dataTableUpdate = async () => {
+    /*
     const actualPage = dataTablePacientes.page();
     dataTablePacientes.clear();
     const pacientes = await new Query().paginate(0, 10).filterByStatus(FilterStatus.BOTH).search();    
     dataTablePacientes.rows.add(pacientes);
     dataTablePacientes.draw()
     dataTablePacientes.page(actualPage).draw("page");
+    */
 }
+
+btnPrevPage.addEventListener("click", async () => {
+    page--;
+    dataTablePacientes.clear();
+    if (page >= 0) {
+        try {
+            const pacientes = await new Query().paginate(page, 10).filterByStatus(FilterStatus.BOTH).search(); 
+            dataTablePacientes.rows.add(pacientes);
+            dataTablePacientes.draw()
+        } catch (error) {
+            console.log(error);
+        }
+    }
+})
+
+btnNextPage.addEventListener("click", async () => {
+    page++;
+    dataTablePacientes.clear();
+    try {
+        const pacientes = await new Query().paginate(page, 10).filterByStatus(FilterStatus.BOTH).search();
+        console.log(page) 
+        dataTablePacientes.rows.add(pacientes);
+        dataTablePacientes.draw()
+    } catch (error) {
+        console.log(error);
+    }
+})
 
 
 const enablePatient = async (id) => {
