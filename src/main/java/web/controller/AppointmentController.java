@@ -24,6 +24,7 @@ import web.entity.IAppointment;
 import web.entity.User;
 import web.entity.input.AppointmentQuery;
 import web.entity.input.FilterStatus;
+import web.entity.view.AppointmentCommunicationView;
 import web.entity.view.AppointmentMinimalView;
 import web.logicImpl.AppointmentLogicImpl;
 
@@ -69,9 +70,9 @@ public class AppointmentController {
 	}
 	
 	@PostMapping
-	public Appointment create(@RequestBody Appointment data, HttpServletRequest req, HttpServletResponse res) {
+	public AppointmentCommunicationView create(@RequestBody Appointment data, HttpServletRequest req, HttpServletResponse res) {
 		User requiring = auth.require(req, res);
-		return appointments.register(data, requiring);
+		return appointments.registerComm(data, requiring);
 	}
 	
 	// Acciones con Terceros
@@ -82,10 +83,10 @@ public class AppointmentController {
 	}
 
 	@PatchMapping("/id/{id}")
-	public Appointment update(@PathVariable int id, @RequestBody Appointment data, HttpServletRequest req, HttpServletResponse res) {
+	public AppointmentCommunicationView update(@PathVariable int id, @RequestBody Appointment data, HttpServletRequest req, HttpServletResponse res) {
 		User requiring = auth.require(req, res);
 		data.setId(id);
-		return appointments.update(data, requiring);
+		return appointments.updateComm(data, requiring);
 	}	
 	
 	@DeleteMapping("/id/{id}")

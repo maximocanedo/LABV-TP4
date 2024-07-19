@@ -17,6 +17,7 @@ import javax.persistence.Transient;
 
 import org.hibernate.annotations.Immutable;
 
+import web.entity.Appointment;
 import web.entity.AppointmentStatus;
 import web.entity.IAppointment;
 import web.formatter.Card;
@@ -28,6 +29,32 @@ import web.formatter.Formatter;
 @Card(size = 64)
 @Table(name = "appointments")
 public class AppointmentMinimalView implements IAppointment {
+	
+	public static AppointmentMinimalView from(IAppointment data) {
+		if(data == null) return null;
+		AppointmentMinimalView view = new AppointmentMinimalView();
+		view.setId(data.getId());
+		view.setRemarks(data.getRemarks());
+		view.setStatus(data.getStatus());
+		view.setActive(data.isActive());
+		return view;
+	}
+	
+	public static AppointmentMinimalView from(AppointmentCommunicationView data) {
+		AppointmentMinimalView view = from(data);
+		if(view == null) return null;
+		view.setAssignedDoctor(data.getAssignedDoctor());
+		view.setPatient(PatientMinimalView.from(data.getPatient()));
+		return view;
+	}
+	
+	public static AppointmentMinimalView from(Appointment data) {
+		AppointmentMinimalView view = from(data);
+		if(view == null) return null;
+		view.setAssignedDoctor(DoctorMinimalView.from(data.getAssignedDoctor()));
+		view.setPatient(PatientMinimalView.from(data.getPatient()));
+		return view;
+	}
 	
     private int id;
 	private Date date;

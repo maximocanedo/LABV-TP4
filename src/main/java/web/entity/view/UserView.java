@@ -20,6 +20,15 @@ import web.formatter.Formatter;
 @Table(name="users")
 public class UserView implements IUser {
 	
+	public static UserView from(IUser data) {
+		if(data == null) return null;
+		UserView view = new UserView();
+		view.setUsername(data.getUsername());
+		view.setName(data.getName());
+		view.setActive(data.isActive());
+		return view;
+	}
+	
 	private String username;
 	private String name;
 	private boolean active = true;

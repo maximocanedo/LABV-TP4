@@ -35,6 +35,7 @@ public class AppointmentLogicImpl implements IAppointmentLogic {
 	private AppointmentValidator appointmentValidator;
 
 	public AppointmentLogicImpl() {}
+	
 
 	@Override
     public Appointment register(Appointment t, User requiring) {
@@ -44,8 +45,12 @@ public class AppointmentLogicImpl implements IAppointmentLogic {
 		t.setStatus(AppointmentStatus.PENDING);
 		t.setAssignedDoctor(appointmentValidator.doctor(t.getAssignedDoctor()));
 		t.setPatient(appointmentValidator.patient(t.getPatient()));
-		// TODO: Comprobar permisos!!!! Devolver un AppointmentCommunicationView!
 		return this.appointmentsrepository.add(t);
+	}
+	
+	public AppointmentCommunicationView registerComm(Appointment t, User requiring) {
+		Appointment data = register(t, requiring);
+		return AppointmentCommunicationView.from(data);
 	}
 	
 	@Override
@@ -67,6 +72,11 @@ public class AppointmentLogicImpl implements IAppointmentLogic {
         if (turno.getStatus() != null) original.setStatus(appointmentValidator.status(turno.getStatus()));
         if (turno.getPatient() != null) original.setPatient(appointmentValidator.patient(turno.getPatient()));
 		return this.appointmentsrepository.update(turno);
+	}
+	
+	public AppointmentCommunicationView updateComm(Appointment appointment, User requiring) throws NotFoundException {
+		Appointment data = update(appointment, requiring);
+		return AppointmentCommunicationView.from(data);
 	}
 
 	@Override
