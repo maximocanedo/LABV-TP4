@@ -16,7 +16,8 @@ const event = {
     UPDATE_BIRTH: "UPDATE_BIRTH"
 };
 
-const reducer = (state = { name: "", surname: "", dni: "", email: "", phone: "", address: "", localty: "", province: "", birth: "" }, action) => {
+const reducer = (state = { id: null, name: "", surname: "", dni: "", email: "", phone: "", address: "", localty: "", province: "", birth: "", active: false,
+    _lastOfflineSaved: null }, action) => {
     switch(action.type) {
         case event.UPDATE_NAME:
             return { ...state, name: action.payload };

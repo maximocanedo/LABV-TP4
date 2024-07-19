@@ -10,8 +10,7 @@ let dataTableMedicos;
 
 (async () => {
     const user = await login("alicia.schimmel", "12345678");
-    const medicos = await new Query().paginate(1, 100).filterByStatus(FilterStatus.BOTH).search();    
-    console.log(medicos)
+    const medicos = await new Query().paginate(1, 100).filterByStatus(FilterStatus.BOTH).search();
     // @ts-ignore
     dataTableMedicos = new DataTable('#tableListadoMedicos', {
         columns: [
