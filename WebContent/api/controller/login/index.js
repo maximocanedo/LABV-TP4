@@ -59,6 +59,7 @@ navLogout.click(() => {
         ddMenuButton.text(user.username);
         navLogin.classList("d-none");
         navRegister.classList("d-none");
+        formLogin.classList("d-none");
     } catch (error) {
         console.log(error);
         formLogin.classList("flex-fill", "needs-validation");
@@ -74,8 +75,12 @@ formLogin.on("submit", async (event, _element) => {
         event.stopPropagation();
     }
     formLogin.classList('was-validated');
-    console.log(store.getState().username)
-    console.log(store.getState().password)
     const loginResponse = await login(store.getState().username, store.getState().password);
-    console.log(loginResponse);
+    const user = await myself();
+    // @ts-ignore
+    if(user.access.length >= 30){
+        location.replace("/pacientes/index.html")
+    } else {
+        //location.replace("/turnos/index.html")
+    }
 });
