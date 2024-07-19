@@ -1,81 +1,53 @@
-import { login, myself, logout } from "./../../actions/users.js";
+import { login } from "./../../actions/users.js";
 import { ElementBuilder } from "./../dom.js";
-import { createStore } from "./../../lib/redux.js";
-import * as headerService from "./../services/headerService.js";
+import { resolveUrl } from "./../../auth.js";
 
-(() => {
-    const header = headerService.load();
-    console.log(header.update);
-})();
-
-const event = {
-    UPDATE_USER: "UPDATE_USER",
-    UPDATE_USERNAME: "UPDATE_USERNAME",
-    UPDATE_PASSWORD: "UPDATE_PASSWORD"
-};
-
-const reducer = (state = { user: null, username: "", password: "" }, action) => {
-    switch(action.type) {
-        case event.UPDATE_USER:
-            return { ...state, user: action.payload };
-        case event.UPDATE_USERNAME:
-            return { ...state, username: action.payload };
-        case event.UPDATE_PASSWORD:
-            return { ...state, password: action.payload };
-        default:
-            return { ...state };
-    }
-};
-
-const store = createStore(reducer, {
-    user: null,
-    username: "",
-    password: ""
-});
-
-const navLogout = ElementBuilder.from(document.getElementById("navLogout"));
-const navLogin = ElementBuilder.from(document.getElementById("navLogin"));
-const ddMenu = ElementBuilder.from(document.getElementById("ddMenu"));
-const ddMenuButton = ElementBuilder.from(document.getElementById("ddMenuButton"));
-const navRegister = ElementBuilder.from(document.getElementById("navRegister"));
-const txtUsername = ElementBuilder
-                        .from(document.getElementById("txtUsername"))
-                        .linkValue(store, event.UPDATE_USERNAME, "username");
-const txtPassword = ElementBuilder
-                        .from(document.getElementById("txtPassword"))
-                        .linkValue(store, event.UPDATE_PASSWORD, "password");
+const txtUsername = document.getElementById("txtUsername");
+const txtPassword = document.getElementById("txtPassword");
+const txtUsernameEB = ElementBuilder.from(txtUsername);
+const txtPasswordEB = ElementBuilder.from(txtPassword);
 const btnLogin = ElementBuilder.from(document.getElementById("btnLogin"));
 const formLogin = ElementBuilder.from(document.getElementById("formLogin"));
 
-navLogout.click(() => {
-    logout();
-    location.reload();
-});
+const onValid = () => {
+    clearVal();
+    const PREFIX = ""; // "pages";
+    const HOME = "/";
+    const search = new URLSearchParams(window.location.search);
+    const next = search.get("next")?? HOME;
+    window.location.href = resolveUrl(PREFIX + (!next.startsWith("/") ? "/": "") + next);
+};
 
-(async () => {
-    try {
-        const user = await myself();
-        ddMenu.classList("dropdown");
-        ddMenuButton.text(user.username);
-        navLogin.classList("d-none");
-        navRegister.classList("d-none");
-    } catch (error) {
-        console.log(error);
-        formLogin.classList("flex-fill", "needs-validation");
-    }
-})();
+const clearVal = () => {
+    txtUsernameEB.removeClass("is-invalid").removeClass("is-valid");
+    txtPasswordEB.removeClass("is-invalid").removeClass("is-valid");
+};
 
+const onInvalid = (error) => {
+    clearVal();
+    txtUsernameEB.classList("is-invalid");
+    txtPasswordEB.classList("is-invalid");
+    document.getElementById("iF_username").innerText = error.message;
+};
 
-formLogin.on("submit", async (event, _element) => {
-    event.preventDefault();
+const tryLogin = () => {
+    clearVal();
     // @ts-ignore
-    if (!formLogin.getTarget().checkValidity()) {
-        event.preventDefault();
-        event.stopPropagation();
-    }
-    formLogin.classList('was-validated');
-    console.log(store.getState().username)
-    console.log(store.getState().password)
-    const loginResponse = await login(store.getState().username, store.getState().password);
-    console.log(loginResponse);
+    return login(txtUsername.value, txtPassword.value)
+        .then(async (response) => {
+            if(!response.ok) {
+                const err = await response.json();
+                onInvalid(err);
+            } else {
+                onValid();
+            }
+        }).catch(err => {
+            onInvalid(err.error);
+        });
+};
+
+btnLogin.click(async (ev, el) => {
+    //formLogin.classList('was-validated');
+    await tryLogin();
 });
+

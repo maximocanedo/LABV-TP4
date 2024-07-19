@@ -5,8 +5,8 @@ import { ElementBuilder } from "./../../controller/dom.js";
 
 
 export const load = () => {
-    const navbar = new ElementBuilder('nav')
-        .classList('navbar', 'navbar-expand-lg', 'bg-body-tertiary');
+    const navbar = ElementBuilder.from(document.querySelector("header"))
+        .classList('navbar', 'bg-body-tertiary');
 
     const container = new ElementBuilder('div')
         .classList('container-fluid')

@@ -6,6 +6,7 @@ import * as patients from "./actions/patients.js";
 import { domTesterElement, domSection } from "./test.js";
 import { createStore } from "./lib/redux.js";
 import { ElementBuilder } from "./controller/dom.js";
+import { load } from "./controller/services/headerService.js";
 
 const usersSection = domSection("Usuarios");
 const doctorsSection = domSection("Médicos");
@@ -19,16 +20,20 @@ const changeValueReducer = (state = { input: "" }, action) => {
 const store = createStore(changeValueReducer, { input: "" });
 console.log(store);
 
+const main = document.querySelector("main");
+
 (async (section) => {
+
+    // load();
 
     const builder = new ElementBuilder("input")
                         .type("text")
                         .linkValue(store, "UPDATE_VALUE", "input")
-                        .appendTo(document.body)
+                        .appendTo(main)
                         .build();
     const p = new ElementBuilder("p")
                         .linkReadableText(store, "input")
-                        .appendTo(document.body)
+                        .appendTo(main)
                         .build();
                     
 
