@@ -37,12 +37,10 @@ const btnNextPage = document.getElementById("btnNextPage");
 })();
 
 const dataTableUpdate = async () => {
-    const actualPage = dataTableMedicos.page();
     dataTableMedicos.clear();
-    const medicos = await new Query().paginate(0, 10).filterByStatus(FilterStatus.BOTH).search();    
+    const medicos = await new Query().paginate(page, 10).filterByStatus(FilterStatus.BOTH).search();    
     dataTableMedicos.rows.add(medicos);
     dataTableMedicos.draw()
-    dataTableMedicos.page(actualPage).draw("page");
 }
 
 btnPrevPage.addEventListener("click", async () => {

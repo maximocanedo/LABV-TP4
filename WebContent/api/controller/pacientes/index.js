@@ -38,14 +38,10 @@ const btnNextPage = document.getElementById("btnNextPage");
 })();
 
 const dataTableUpdate = async () => {
-    /*
-    const actualPage = dataTablePacientes.page();
     dataTablePacientes.clear();
     const pacientes = await new Query().paginate(0, 10).filterByStatus(FilterStatus.BOTH).search();    
     dataTablePacientes.rows.add(pacientes);
     dataTablePacientes.draw()
-    dataTablePacientes.page(actualPage).draw("page");
-    */
 }
 
 btnPrevPage.addEventListener("click", async () => {
