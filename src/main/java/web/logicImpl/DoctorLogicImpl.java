@@ -1,6 +1,9 @@
 package web.logicImpl;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -214,6 +217,27 @@ public class DoctorLogicImpl implements IDoctorLogic {
 	public void enable(int id, User requiring) throws NotFoundException {
     	permits.require(requiring, Permit.ENABLE_DOCTOR);
 		doctorsrepository.enable(id);
+	}
+	
+	public List<Date> getSchedulesForDoctor(int file, Date startDate, User requiring) {
+		permits.require(requiring, Permit.CREATE_APPOINTMENT, Permit.UPDATE_APPOINTMENT, Permit.READ_DOCTOR_APPOINTMENTS);
+		if(!doctorsrepository.existsByFile(file))
+			throw new NotFoundException("Doctor not found. ");
+		return doctorsrepository.getScheduleForDoctor(file, startDate);
+	}
+	
+	public List<Date> getSchedulesForDoctor(int file, Calendar startDate, User requiring) {
+		permits.require(requiring, Permit.CREATE_APPOINTMENT, Permit.UPDATE_APPOINTMENT, Permit.READ_DOCTOR_APPOINTMENTS);
+		if(!doctorsrepository.existsByFile(file))
+			throw new NotFoundException("Doctor not found. ");
+		return doctorsrepository.getScheduleForDoctor(file, startDate);
+	}
+	
+	public List<LocalTime> getFreeTimeForDoctor(int file, Date date, User requiring) {
+		permits.require(requiring, Permit.CREATE_APPOINTMENT, Permit.UPDATE_APPOINTMENT, Permit.READ_DOCTOR_APPOINTMENTS);
+		if(!doctorsrepository.existsByFile(file))
+			throw new NotFoundException("Doctor not found. ");
+		return doctorsrepository.getFreeTimeForDoctor(file, date);		
 	}
 	
 }

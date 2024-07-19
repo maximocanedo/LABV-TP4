@@ -1,5 +1,9 @@
 package web.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalTime;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -115,4 +119,41 @@ public class DoctorController {
 		return ResponseEntity.status(200).build();
 	}
 
+	
+	@GetMapping("/file/{file}/datesAvailable")
+	public List<Date> getDatesAvailableForDoctorByFile(@PathVariable int file, @RequestParam(defaultValue = "", name = "from") String from, HttpServletRequest req, HttpServletResponse res) {
+		User requiring = auth.require(req, res);
+		Date startDate;
+
+        if (from.isEmpty()) {
+            startDate = new Date();
+        } else {
+            try {
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                startDate = formatter.parse(from);
+            } catch (ParseException e) {
+                startDate = new Date();
+            }
+        }
+		return doctors.getSchedulesForDoctor(file, startDate, requiring);
+	}
+	
+	@GetMapping("/file/{file}/schedules")
+	public List<LocalTime> getSchedulesForDoctorByFile(@PathVariable int file, @RequestParam(defaultValue = "", name = "for") String from, HttpServletRequest req, HttpServletResponse res) {
+		User requiring = auth.require(req, res);
+		Date date;
+		if(from.isEmpty()) {
+			date = new Date();
+		} else {
+			try {
+				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+				date = formatter.parse(from);
+			} catch (ParseException e) {
+				date = new Date();
+			}
+		}
+		return doctors.getFreeTimeForDoctor(file, date, requiring);
+	}
+	
+	
 }

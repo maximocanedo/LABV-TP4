@@ -45,6 +45,7 @@ public class TicketDAOImpl implements ITicketDAO {
         return optional;
     }
 
+	@SuppressWarnings("unchecked")
 	public List<Ticket> search(TicketQuery query) {
 		final Optional<List<Ticket>> optional = new Optional<>();
 		dataManager.run(session -> {
