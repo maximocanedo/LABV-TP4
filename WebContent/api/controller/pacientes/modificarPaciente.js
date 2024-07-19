@@ -45,19 +45,18 @@ const txtDNI = ElementBuilder.from(document.getElementById("txtDNI")).linkValue(
 const txtEmail = ElementBuilder.from(document.getElementById("txtEmail")).linkValue(store, event.UPDATE_EMAIL, "email");
 const txtPhone = ElementBuilder.from(document.getElementById("txtPhone")).linkValue(store, event.UPDATE_PHONE, "phone");
 
-addEventListener("DOMContentLoaded", async (event) => {
+(async () => {
     const user = await login("alicia.schimmel", "12345678");
     const header = headerAdminService.load();
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const patient = await findById(parseInt(urlParams.get("Id")));
-    console.log(patient)
-    txtName.value(patient.name);
-    txtSurname.value(patient.surname);
-    txtDNI.value(patient.dni);
+    store.dispatch({type: event.UPDATE_NAME, payload: patient.name});
+    store.dispatch({type: event.UPDATE_SURNAME, payload: patient.surname});
+    store.dispatch({type: event.UPDATE_DNI, payload: patient.dni});
     // @ts-ignore
-    txtEmail.value(patient.email);
+    store.dispatch({type: event.UPDATE_EMAIL, payload: patient.email});
     // @ts-ignore
-    txtPhone.value(patient.phone);
-})
+    store.dispatch({type: event.UPDATE_PHONE, payload: patient.phone});
+})();
 

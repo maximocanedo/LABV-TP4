@@ -37,7 +37,7 @@ const store = createStore(reducer, {
     specialty: ""
 });
 
-const formRegister = document.getElementById("formRegister");
+const formModificar = document.getElementById("formModificar");
 
 const txtName = ElementBuilder.from(document.getElementById("txtName")).linkValue(store, event.UPDATE_NAME, "name");
 const txtSurname = ElementBuilder.from(document.getElementById("txtSurname")).linkValue(store, event.UPDATE_SURNAME, "surname");
@@ -45,16 +45,16 @@ const txtEmail = ElementBuilder.from(document.getElementById("txtEmail")).linkVa
 const txtAddress = ElementBuilder.from(document.getElementById("txtAddress")).linkValue(store, event.UPDATE_ADDRESS, "address");
 const txtSpecialty = ElementBuilder.from(document.getElementById("txtSpecialty")).linkValue(store, event.UPDATE_SPECIALTY, "specialty");
 
-addEventListener("DOMContentLoaded", async (event) => {
+(async () => {
     const user = await login("alicia.schimmel", "12345678");
     const header = headerAdminService.load();
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const doctor = await findById(parseInt(urlParams.get("Id")));
-    txtName.value(doctor.name);
-    txtSurname.value(doctor.surname);
-    txtSpecialty.value(doctor.specialty.name);
-    txtEmail.value(doctor.email);
-    txtAddress.value(doctor.address);
-})
+    store.dispatch({type: event.UPDATE_NAME, payload: doctor.name});
+    store.dispatch({type: event.UPDATE_SURNAME, payload: doctor.surname});
+    store.dispatch({type: event.UPDATE_SPECIALTY, payload: doctor.specialty.name});
+    store.dispatch({type: event.UPDATE_EMAIL, payload: doctor.email});
+    store.dispatch({type: event.UPDATE_ADDRESS, payload: doctor.address});
+})();
 
