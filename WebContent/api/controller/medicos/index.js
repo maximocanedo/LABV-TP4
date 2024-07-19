@@ -10,7 +10,7 @@ let dataTableMedicos;
 
 (async () => {
     const user = await login("alicia.schimmel", "12345678");
-    const medicos = await new Query().paginate(1, 100).filterByStatus(FilterStatus.BOTH).search();
+    const medicos = await new Query().paginate(0, 10).filterByStatus(FilterStatus.BOTH).search();
     // @ts-ignore
     dataTableMedicos = new DataTable('#tableListadoMedicos', {
         columns: [
@@ -22,14 +22,11 @@ let dataTableMedicos;
             { data: 'active', render: function ( data, type, row ) {
                 return data ? "Activo" : "Inactivo";
             }},
-            { data: 'id', render: function ( data, type, row ) {
-                return `<form action="./modificarMedico.html?Id=${data}" method="post"><button type="submit" class="btn btn-primary">Modificar Medico</button></form>`;
+            { data: '', render: function ( data, type, row ) {
+                return `<form action="./modificarMedico.html?Id=${row.id}" method="post"><button type="submit" class="btn btn-primary">Modificar Medico</button></form>`;
             }},
-            { data: 'id', render: function ( data, type, row ) {
-                return `<button type="button" class="btn btn-primary" onclick="enableDoctor(${data});">Activar</button>`;
-            }},
-            { data: 'id', render: function ( data, type, row ) {
-                return `<button type="button" class="btn btn-primary" onclick="disableDoctor(${data});">Desactivar</button>`;
+            { data: '', render: function ( data, type, row ) {
+                return `<button type="button" class="btn btn-primary" onclick="${row.active ? "disable" : "enable"}Doctor(${row.id});">${row.active ? "Desactivar" : "Activar"}</button>`;
             }}
         ],
         data: medicos,
@@ -39,7 +36,7 @@ let dataTableMedicos;
 const dataTableUpdate = async () => {
     const actualPage = dataTableMedicos.page();
     dataTableMedicos.clear();
-    const pacientes = await new Query().paginate(1, 100).filterByStatus(FilterStatus.BOTH).search();    
+    const pacientes = await new Query().paginate(0, 10).filterByStatus(FilterStatus.BOTH).search();    
     dataTableMedicos.rows.add(pacientes);
     dataTableMedicos.draw()
     dataTableMedicos.page(actualPage).draw("page");
