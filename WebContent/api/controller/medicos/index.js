@@ -3,6 +3,9 @@ import { FilterStatus, login } from "../../actions/users.js";
 import * as headerAdminService from "../services/headerAdminService.js";
 
 let dataTableMedicos;
+let page = 0;
+const btnPrevPage = document.getElementById("btnPrevPage");
+const btnNextPage = document.getElementById("btnNextPage");
 
 (() => {
     const header = headerAdminService.load();
@@ -36,11 +39,37 @@ let dataTableMedicos;
 const dataTableUpdate = async () => {
     const actualPage = dataTableMedicos.page();
     dataTableMedicos.clear();
-    const pacientes = await new Query().paginate(0, 10).filterByStatus(FilterStatus.BOTH).search();    
-    dataTableMedicos.rows.add(pacientes);
+    const medicos = await new Query().paginate(0, 10).filterByStatus(FilterStatus.BOTH).search();    
+    dataTableMedicos.rows.add(medicos);
     dataTableMedicos.draw()
     dataTableMedicos.page(actualPage).draw("page");
 }
+
+btnPrevPage.addEventListener("click", async () => {
+    if (page > 0) {
+        page--;
+        dataTableMedicos.clear();
+        try {
+            const medicos = await new Query().paginate(page, 10).filterByStatus(FilterStatus.BOTH).search(); 
+            dataTableMedicos.rows.add(medicos);
+            dataTableMedicos.draw()
+        } catch (error) {
+            console.log(error);
+        }
+    }
+})
+
+btnNextPage.addEventListener("click", async () => {
+    page++;
+    dataTableMedicos.clear();
+    try {
+        const medicos = await new Query().paginate(page, 10).filterByStatus(FilterStatus.BOTH).search();
+        dataTableMedicos.rows.add(medicos);
+        dataTableMedicos.draw()
+    } catch (error) {
+        console.log(error);
+    }
+})
 
 
 const enableDoctor = async (id) => {

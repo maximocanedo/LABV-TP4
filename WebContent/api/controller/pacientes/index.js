@@ -49,9 +49,9 @@ const dataTableUpdate = async () => {
 }
 
 btnPrevPage.addEventListener("click", async () => {
-    page--;
-    dataTablePacientes.clear();
-    if (page >= 0) {
+    if (page > 0) {
+        page--;
+        dataTablePacientes.clear();
         try {
             const pacientes = await new Query().paginate(page, 10).filterByStatus(FilterStatus.BOTH).search(); 
             dataTablePacientes.rows.add(pacientes);
@@ -67,7 +67,6 @@ btnNextPage.addEventListener("click", async () => {
     dataTablePacientes.clear();
     try {
         const pacientes = await new Query().paginate(page, 10).filterByStatus(FilterStatus.BOTH).search();
-        console.log(page) 
         dataTablePacientes.rows.add(pacientes);
         dataTablePacientes.draw()
     } catch (error) {
