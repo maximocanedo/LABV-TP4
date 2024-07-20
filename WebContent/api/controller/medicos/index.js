@@ -3,7 +3,7 @@ import { FilterStatus, login } from "../../actions/users.js";
 import * as headerAdminService from "../services/headerAdminService.js";
 
 let dataTableMedicos;
-let page = 0;
+let page = 1;
 const btnPrevPage = document.getElementById("btnPrevPage");
 const btnNextPage = document.getElementById("btnNextPage");
 
@@ -52,7 +52,7 @@ load().then(() => {
     };
     
     btnPrevPage.addEventListener("click", async () => {
-        if (page > 0) {
+        if (page > 1) {
             page--;
             dataTableMedicos.clear();
             try {
