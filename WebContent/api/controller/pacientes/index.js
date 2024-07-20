@@ -20,7 +20,8 @@ const btnNextPage = document.getElementById("btnNextPage");
 
 const load = async () => {
     const user = await login("alicia.schimmel", "12345678");
-    const pacientes = await new Query().paginate(page, 10).filterByStatus(FilterStatus.BOTH).search();    
+    // @ts-ignore
+    const pacientes = await new Query().paginate(page, parseInt(ddlEntriesPerPage.value)).filterByStatus(FilterStatus.BOTH).search();    
     // @ts-ignore
     dataTablePacientes = new DataTable('#tableListadoPacientes', {
         columns: [
@@ -42,7 +43,7 @@ const load = async () => {
         ],
         data: pacientes,
         paging: false,
-        searching: false
+        searching: false,
     });
     btnPrevPage.classList.add("disabled");
 };

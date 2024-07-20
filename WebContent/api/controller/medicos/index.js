@@ -24,7 +24,8 @@ const btnNextPage = document.getElementById("btnNextPage");
 
 const load = async () => {
     const user = await login("alicia.schimmel", "12345678");
-    const medicos = await new Query().paginate(0, 10).filterByStatus(FilterStatus.BOTH).search();
+    // @ts-ignore
+    const medicos = await new Query().paginate(page, parseInt(ddlEntriesPerPage.value)).filterByStatus(FilterStatus.BOTH).search();
     // @ts-ignore
     dataTableMedicos = new DataTable('#tableListadoMedicos', {
         columns: [
