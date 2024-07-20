@@ -34,6 +34,7 @@ const load = async () => {
         ],
         data: medicos,
     });
+    btnPrevPage.classList.add("disabled");
 };
 
 load().then(() => {
@@ -45,6 +46,11 @@ load().then(() => {
         const medicos = await new Query().paginate(page, parseInt(ddlEntriesPerPage.value)).filterByStatus(FilterStatus.BOTH).search();
         dataTableMedicos.rows.add(medicos);
         dataTableMedicos.draw()
+        if(page == 1){
+            btnPrevPage.classList.add("disabled");
+        } else {
+            btnPrevPage.classList.remove("disabled")
+        }
     }
 
     ddlEntriesPerPage.onchange = () => {

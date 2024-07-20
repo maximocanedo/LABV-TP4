@@ -36,6 +36,7 @@ const load = async () => {
         ],
         data: pacientes,
     });
+    btnPrevPage.classList.add("disabled");
 };
 
 load().then(() => {
@@ -46,7 +47,12 @@ load().then(() => {
         // @ts-ignore
         const pacientes = await new Query().paginate(page, parseInt(ddlEntriesPerPage.value)).filterByStatus(FilterStatus.BOTH).search();
         dataTablePacientes.rows.add(pacientes);
-        dataTablePacientes.draw()
+        dataTablePacientes.draw();
+        if(page == 1){
+            btnPrevPage.classList.add("disabled");
+        } else {
+            btnPrevPage.classList.remove("disabled")
+        }
     }
     
     ddlEntriesPerPage.onchange = () => {
