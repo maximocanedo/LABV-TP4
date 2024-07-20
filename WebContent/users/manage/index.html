@@ -10,49 +10,98 @@
     crossorigin="anonymous"></script>
 </head>
 <body>
-    <center>
-        <section class="viewing">
-            <h3 data-field="user.name"></h3>
-            <br>
-            <p data-field="user.username"></p>
-        </section>
-        <section class="updating">
-            <br><br>Actualizar datos<br>
-            <input type="text" placeholder="Nombre" data-value="user.name" /><br>
-            <button>Actualizar nombre</button>
-
-            <br><br>
-            Cambiar clave<br>
-            <input type="password" id="password0" placeholder="Contraseña actual" />
-            <br>
-            <input type="password" id="password1" placeholder="Nueva contraseña" />
-            <br>
-            <input type="password" id="password2" placeholder="Repita nueva contraseña" />
-            <br>
-            <button id="btnUpdatePassword">Cambiar contraseña</button>
-        </section>
-        <section class="permissions">
-            <br><br>
-            Conceder rol: <select id="rol_template_select">
-                <option selected>Seleccione rol</option>
-                <option value="ROOT">Súperusuario</option>
-                <option value="PATIENT_MANAGER">Administrador de pacientes</option>
-                <option value="DOCTOR_MANAGER">Administrador de médicos</option>
-                <option value="EXTRA_MANAGER">Administrador de datos secundarios</option>
-                <option value="USER_OFFICE">Administrador de usuarios</option>
-                <option value="SECURITY_OFFICE">Responsable de seguridad</option>
-            </select>
-            <br>
-            <button id="rol_template_select_btn">Conceder rol</button>
-            <br><br>
-            Permisos
-
-            <div class="container _permit-container">
+    <br><br><br>
+    <main class="container container-sm">
+        <nav>
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+              <button class="nav-link active" id="nav-personal-info-tab" data-bs-toggle="tab" data-bs-target="#nav-personal-info" type="button" role="tab" aria-controls="nav-personal-info" aria-selected="true">Información básica</button>
+              <button class="nav-link" id="nav-update-info-tab" data-bs-toggle="tab" data-bs-target="#nav-update-info" type="button" role="tab" aria-controls="nav-update-info" aria-selected="false">Actualizar información</button>
+              <button class="nav-link" id="nav-permissions-tab" data-bs-toggle="tab" data-bs-target="#nav-permissions" type="button" role="tab" aria-controls="nav-permissions" aria-selected="false">Permisos</button>
+              <button class="nav-link" id="nav-more-actions-tab" data-bs-toggle="tab" data-bs-target="#nav-more-actions" type="button" role="tab" aria-controls="nav-more-actions" aria-selected="false" disabled>Más</button>
             </div>
-            <button id="denyAllbtn">Borrar todos los permisos</button>
-        </section>
-        <button id="btnState" data-field="user.active.switchButton"></button>
-    </center>
+          </nav>
+          <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="nav-personal-info" role="tabpanel" aria-labelledby="nav-personal-info-tab" tabindex="0">
+                <h4 data-field="user.name"></h4><br>
+                <p data-field="user.username"></p>
+            </div>
+            <div class="tab-pane fade" id="nav-update-info" role="tabpanel" aria-labelledby="nav-update-info-tab" tabindex="0">
+                <br>
+                <div class="card mb-3">
+                    <div class="card-header">
+                        Cambiar nombre de la cuenta
+                    </div>
+                    <div class="card-body hstack gap-3">
+                        <input class="form-control me-auto" id="nameInput" data-value="user.name" type="text" placeholder="Nuevo nombre" >
+                        <button type="button" class="btn btn-secondary">Actualizar</button>
+                    </div>
+                </div>
+                <div class="card mb-3">
+                    <div class="card-header">
+                        Cambiar contraseña
+                    </div>
+                    <div class="card-body">
+                        <div class="form-floating mb-3 pass0">
+                            <input type="password" class="form-control" id="password0" placeholder="">
+                            <label for="password0">Contraseña actual</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control" id="password1" placeholder="">
+                            <label for="password1">Nueva contraseña</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control" id="password2" placeholder="">
+                            <label for="password2">Repita nueva contraseña</label>
+                        </div>
+                        <button class="btn btn-primary" id="btnUpdatePassword">Cambiar contraseña</button>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="nav-permissions" role="tabpanel" aria-labelledby="nav-permissions-tab" tabindex="0">
+                <br>
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Conceder un rol</h5>
+                        <p class="card-text">Los roles son una serie de permisos concedidos preestablecidos. Al conceder un rol a un usuario, estos permisos se autoconcederán todos a la vez, lo que evita tener que concederlos uno a uno. </p>
+                        <div class="hstack gap-3">
+                            <select class="form-control me-auto form-select" id="rol_template_select">
+                                <option selected>Seleccione rol</option>
+                                <option value="ROOT">Súperusuario</option>
+                                <option value="PATIENT_MANAGER">Administrador de pacientes</option>
+                                <option value="DOCTOR_MANAGER">Administrador de médicos</option>
+                                <option value="EXTRA_MANAGER">Administrador de datos secundarios</option>
+                                <option value="USER_OFFICE">Administrador de usuarios</option>
+                                <option value="SECURITY_OFFICE">Responsable de seguridad</option>
+                            </select>
+                            <button type="button" id="rol_template_select_btn" class="btn btn-warning">Conceder</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-3">
+                    <div class="card-header">Permisos</div>
+                    <div class="card-body _permit-container list-group list-group-flush" style="padding: 0px">
+                    </div>
+                </div>
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Borrar permisos</h5>
+                        <p class="card-text">Denegar todos los permisos concedidos a este usuario. </p>
+                        <button class="btn btn-danger" id="denyAllbtn">Borrar todos los permisos</button>
+                    </div>
+                </div>
+    
+                
+            </div>
+            <div class="tab-pane fade" id="nav-more-actions" role="tabpanel" aria-labelledby="nav-more-actions-tab" tabindex="0">
+                <button id="btnState" data-field="user.active.switchButton"></button>
+            </div>
+          </div>
+    </main>
+    <style>
+        .spaced_chk {
+            margin-right: 10px;
+        }
+    </style>
     <script type="module" src="./../../api/controller/userProfile/index.js"></script>
 </body>
 </html>

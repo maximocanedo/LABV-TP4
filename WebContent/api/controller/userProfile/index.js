@@ -76,21 +76,28 @@ let me = {};
 
 
 const permitCheckbox = (action_name) => {
+    /**
+     * <div class="list-group-item">
+                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                            <label class="form-check-label" for="flexCheckDefault">
+                                Default checkbox
+                            </label>
+                        </div>
+     */
     const allowed = [...user.access].some(action => action == action_name);
     const canModify = [...me.access].some(action => action == users.PERMIT.GRANT_PERMISSIONS);
     const row = new ElementBuilder("div")
-                    .classList("row");
-    const col = new ElementBuilder("div")
-                    .classList("col")
-                    .appendTo(row.getTarget());
+                    .classList("list-group-item");
     const checkBox = new ElementBuilder("input")
                     .attr("type", "checkbox")
+                    .classList("form-check-input", "spaced_chk")
                     .id("action__" + action_name)
-                    .appendTo(col.getTarget());
+                    .appendTo(row.getTarget());
     const lbl = new ElementBuilder("label")
+                    .classList("form-check-label")
                     .attr("for", "action__" + action_name)
                     .text(users.permitDocs[action_name])
-                    .appendTo(col.getTarget());
+                    .appendTo(row.getTarget());
     
     /** @type {HTMLInputElement} */
     const chk = /** @type {HTMLInputElement} */ checkBox.getTarget();
@@ -168,7 +175,7 @@ const loadUserData = async () => {
     if(u == "") user = me;
     else user = await users.getUser(u);
     fillUserData();
-    if(!itsMe()) password0.remove();
+    if(!itsMe()) document.querySelector(".pass0").remove();
     console.log(user);
     fillAuthPermits();
     return user;
