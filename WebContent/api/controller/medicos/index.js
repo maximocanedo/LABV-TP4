@@ -11,7 +11,7 @@ const btnNextPage = document.getElementById("btnNextPage");
     const header = headerAdminService.load();
 })();
 
-(async () => {
+const load = async () => {
     const user = await login("alicia.schimmel", "12345678");
     const medicos = await new Query().paginate(0, 10).filterByStatus(FilterStatus.BOTH).search();
     // @ts-ignore
@@ -34,53 +34,59 @@ const btnNextPage = document.getElementById("btnNextPage");
         ],
         data: medicos,
     });
-})();
+};
 
-const dataTableUpdate = async () => {
-    dataTableMedicos.clear();
-    const medicos = await new Query().paginate(page, 10).filterByStatus(FilterStatus.BOTH).search();    
-    dataTableMedicos.rows.add(medicos);
-    dataTableMedicos.draw()
-}
+load().then(() => {
+    const ddlEntriesPerPage = document.getElementById("dt-length-0");
 
-btnPrevPage.addEventListener("click", async () => {
-    if (page > 0) {
-        page--;
+    const dataTableUpdate = async () => {
+        dataTableMedicos.clear();
+        // @ts-ignore
+        const medicos = await new Query().paginate(page, parseInt(ddlEntriesPerPage.value)).filterByStatus(FilterStatus.BOTH).search();
+        dataTableMedicos.rows.add(medicos);
+        dataTableMedicos.draw()
+    }
+
+    ddlEntriesPerPage.onchange = () => {
+        dataTableUpdate();
+    };
+    
+    btnPrevPage.addEventListener("click", async () => {
+        if (page > 0) {
+            page--;
+            dataTableMedicos.clear();
+            try {
+                dataTableUpdate();
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    })
+    
+    btnNextPage.addEventListener("click", async () => {
+        page++;
         dataTableMedicos.clear();
         try {
-            const medicos = await new Query().paginate(page, 10).filterByStatus(FilterStatus.BOTH).search(); 
-            dataTableMedicos.rows.add(medicos);
-            dataTableMedicos.draw()
+            dataTableUpdate();
         } catch (error) {
             console.log(error);
         }
+    })
+    
+    
+    const enableDoctor = async (id) => {
+        const enableResponse = await enable(id);
+        dataTableUpdate()
     }
+    
+    const disableDoctor = async (id) => {
+        const disableResponse = await disable(id);
+        dataTableUpdate();
+    }
+    
+    // @ts-ignore
+    window.enableDoctor = enableDoctor;
+    // @ts-ignore
+    window.disableDoctor = disableDoctor;
 })
 
-btnNextPage.addEventListener("click", async () => {
-    page++;
-    dataTableMedicos.clear();
-    try {
-        const medicos = await new Query().paginate(page, 10).filterByStatus(FilterStatus.BOTH).search();
-        dataTableMedicos.rows.add(medicos);
-        dataTableMedicos.draw()
-    } catch (error) {
-        console.log(error);
-    }
-})
-
-
-const enableDoctor = async (id) => {
-    const enableResponse = await enable(id);
-    dataTableUpdate()
-}
-
-const disableDoctor = async (id) => {
-    const disableResponse = await disable(id);
-    dataTableUpdate();
-}
-
-// @ts-ignore
-window.enableDoctor = enableDoctor;
-// @ts-ignore
-window.disableDoctor = disableDoctor;

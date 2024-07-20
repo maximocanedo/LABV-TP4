@@ -11,7 +11,7 @@ const btnNextPage = document.getElementById("btnNextPage");
     const header = headerAdminService.load();
 })();
 
-(async () => {
+const load = async () => {
     const user = await login("alicia.schimmel", "12345678");
     const pacientes = await new Query().paginate(page, 10).filterByStatus(FilterStatus.BOTH).search();    
     // @ts-ignore
@@ -35,56 +35,62 @@ const btnNextPage = document.getElementById("btnNextPage");
         ],
         data: pacientes,
     });
-})();
+};
 
-const dataTableUpdate = async () => {
-    dataTablePacientes.clear();
-    const pacientes = await new Query().paginate(0, 10).filterByStatus(FilterStatus.BOTH).search();    
-    dataTablePacientes.rows.add(pacientes);
-    dataTablePacientes.draw()
-}
+load().then(() => {
+    const ddlEntriesPerPage = document.getElementById("dt-length-0");
 
-btnPrevPage.addEventListener("click", async () => {
-    if (page > 0) {
-        page--;
+    const dataTableUpdate = async () => {
+        dataTablePacientes.clear();
+        // @ts-ignore
+        const pacientes = await new Query().paginate(page, parseInt(ddlEntriesPerPage.value)).filterByStatus(FilterStatus.BOTH).search();
+        dataTablePacientes.rows.add(pacientes);
+        dataTablePacientes.draw()
+    }
+    
+    ddlEntriesPerPage.onchange = () => {
+        dataTableUpdate();
+    };
+    
+    btnPrevPage.addEventListener("click", async () => {
+        if (page > 0) {
+            page--;
+            dataTablePacientes.clear();
+            try {
+                dataTableUpdate()
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    })
+    
+    btnNextPage.addEventListener("click", async () => {
+        page++;
         dataTablePacientes.clear();
         try {
-            const pacientes = await new Query().paginate(page, 10).filterByStatus(FilterStatus.BOTH).search(); 
-            dataTablePacientes.rows.add(pacientes);
-            dataTablePacientes.draw()
+            dataTableUpdate()
         } catch (error) {
             console.log(error);
         }
-    }
-})
-
-btnNextPage.addEventListener("click", async () => {
-    page++;
-    dataTablePacientes.clear();
-    try {
-        const pacientes = await new Query().paginate(page, 10).filterByStatus(FilterStatus.BOTH).search();
-        dataTablePacientes.rows.add(pacientes);
-        dataTablePacientes.draw()
-    } catch (error) {
-        console.log(error);
-    }
-})
-
-
-const enablePatient = async (id) => {
-    const enableResponse = await enable(id).then(() => {
-        dataTableUpdate()
     })
     
-}
+    
+    const enablePatient = async (id) => {
+        const enableResponse = await enable(id).then(() => {
+            dataTableUpdate()
+        })
+        
+    }
+    
+    const disablePatient = async (id) => {
+        const disableResponse = await disable(id).then(() => {
+            dataTableUpdate()
+        })
+    }
+    
+    // @ts-ignore
+    window.enablePatient = enablePatient;
+    // @ts-ignore
+    window.disablePatient = disablePatient;
+});
 
-const disablePatient = async (id) => {
-    const disableResponse = await disable(id).then(() => {
-        dataTableUpdate()
-    })
-}
-
-// @ts-ignore
-window.enablePatient = enablePatient;
-// @ts-ignore
-window.disablePatient = disablePatient;
