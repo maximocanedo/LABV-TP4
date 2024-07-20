@@ -48,15 +48,11 @@
                     </div>
                     <div class="row mb-3">
                         <div class="col">
-                            <div class="input-group">
-                                <span class="input-group-text" id="login-input-group" for="txtEmail">Email</span>
-                                <input type="email" class="form-control" aria-label="Email input"
-                                    aria-describedby="email-input" id="txtEmail" name="txtEmail"
-                                    pattern="[^@\s]+@[^@\s]+\.[^@\s]+" placeholder="alice.manhattan@example.com"
-                                    title="El email debe cumplir con el formato" required>
-                                <div class="invalid-feedback">
-                                    Invalido. El email debe cumplir con el formato example@example.com
-                                </div>
+                            <label for="txtEmail" class="form-label">Email</label>
+                            <input type="text" class="form-control" id="txtEmail" placeholder="example@example.com" pattern="^[A-Za-z]+$" title="Solo puede contener texto"
+                                required>
+                            <div class="invalid-feedback">
+                                Invalido.
                             </div>
                         </div>
                     </div>
