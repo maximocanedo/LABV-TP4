@@ -22,12 +22,28 @@ const query = new users.Query()
  * @param {IUser} user 
  */
 const userListElement = user => {
-    const li = new ElementBuilder("li")
-                    .classList("result");
-    const a = new ElementBuilder("a")
-                    .href(resolveLocalUrl("/users/manage?u=" + user.username))
-                    .text(user.name)
-                    .appendTo(li.getTarget());
+    const li = new ElementBuilder("a")
+                    .classList("list-group-item", "list-group-item-action")
+                    .click((e, el) => {
+                        window.location.href = resolveLocalUrl("/users/manage?u=" + user.username);
+                    });
+    const meAuto = new ElementBuilder("div")
+                        .classList("ms-2", "me-auto")
+                        .appendTo(li.getTarget());
+    const ttl = new ElementBuilder("div")
+                        .classList("fw-bold")
+                        .text(user.name)
+                        .appendTo(meAuto.getTarget());
+    const a = new ElementBuilder("div")
+                    .href()
+                    .text('@' + user.username)
+                    .appendTo(meAuto.getTarget());
+    if(!user.active) {
+        const st = new ElementBuilder("small")
+                    .classList("text-muted")
+                    .text("Deshabilitado")
+                    .appendTo(meAuto.getTarget())
+    }
     return li;
 };
 const clearResults = () => {

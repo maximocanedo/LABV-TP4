@@ -37,14 +37,12 @@ public class UserQuery implements Searchable {
 	@Override
 	public Query toQuery(Session session) {
 		StringBuilder hql = new StringBuilder("SELECT u FROM UserView u ");
-		hql.append("WHERE u.username LIKE :username ");
-		hql.append("AND u.name LIKE :name ");
+		hql.append("WHERE (u.username LIKE :q OR u.name LIKE :q) ");
 		if(getStatus() != FilterStatus.BOTH) {
 			hql.append("AND u.active = :status");
 		}
 		Query query = session.createQuery(hql.toString());
-		query.setParameter("username", "%" + getQueryText() + "%");
-		query.setParameter("name", "%" + getQueryText() + "%");
+		query.setParameter("q", "%" + getQueryText() + "%");
 		switch(getStatus()) {
 		case ONLY_ACTIVE: 
 			query.setParameter("status", true);

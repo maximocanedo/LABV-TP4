@@ -97,6 +97,10 @@ public class Schedule {
 	public void setStartTime(LocalTime startTime) {
 		this.startTime = startTime;
 	}
+	
+	public void setEndTime(Time time) {
+		this.endTime = time.toLocalTime();
+	}
 
 	public void setEndTime(LocalTime endTime) {
 		this.endTime = endTime;
