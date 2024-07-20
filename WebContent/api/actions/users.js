@@ -1,6 +1,7 @@
 'use strict';
 import * as u from './../auth.js';
-import { updateAccessToken, updateRefreshToken } from './../security.js';
+import { updateAccessToken,
+     updateRefreshToken } from './../security.js';
 import * as db from "./../store/users.js";
 import { Permit, PermitTemplate } from './../types/models.js';
 import { GenericQuery } from './commons.js';
@@ -128,6 +129,16 @@ export const disable = async (username) => {
 };
 
 /**
+ * Habilita un usuario.
+ * @param {string} username Nombre de usuario.
+ * @returns {Promise<boolean>} Booleano indicando si se deshabilitó correctamente.
+ */
+export const enable = async (username) => {
+    const response = await u.post("users/u/" + username);
+    return response.ok;
+};
+
+/**
  * Devuelve la información del usuario actualmente autenticado.
  * @returns {Promise<User>} Usuario autenticado.
  */
@@ -195,6 +206,10 @@ export const disableMe = async () => {
 export const grantOne = async (username, permit) => {
     return u.post("users/u/" + username + "/grant/p/" + permit)
     .then(response => response.json())
+    .then(json => {
+        if(!json.error) return json;
+        else throw json.err;
+    })
     .catch(err => {
         throw err;
     });
@@ -243,4 +258,88 @@ export const denyAll = async (username) => {
 export const grantTemplate = async (username, permitTemplate) => {
     const response = await u.post("users/u/" + username + "/grant/t/" + permitTemplate);
     return response.ok;
+};
+
+
+export const permitDocs = {
+	CREATE_SPECIALTY: "Crear especialidades",
+	UPDATE_SPECIALTY: "Actualizar especialidades",
+	READ_DISABLED_SPECIALTY_RECORDS: "Leer especialidades deshabilitadas",
+	DISABLE_SPECIALTY: "Deshabilitar especialidades",
+	ENABLE_SPECIALTY: "Habilitar especialidades",
+	
+	// Paciente
+	// TODO: Funcionalidad y permisos para leer registros eliminados lógicamente.
+	CREATE_PATIENT: "Registrar pacientes",
+	READ_PATIENT_PERSONAL_DATA: "Leer datos personales de pacientes", // Para listados y búsqueda específica.
+	READ_PATIENT_APPOINTMENTS: "Leer turnos de un paciente", // TODO: Crear funcionalidad de listado de turnos por paciente.
+	UPDATE_PATIENT: "Actualizar pacientes",
+	DISABLE_PATIENT: "Eliminar pacientes",
+	ENABLE_PATIENT: "Habilitar pacientes",
+	// Doctor
+	CREATE_DOCTOR: "Registrar doctores",
+	// Leer datos personales del doctor. No se necesitan permisos para leer un doctor.
+	READ_DOCTOR: "Leer datos personales de un doctor",
+	READ_DOCTOR_APPOINTMENTS: "Leer turnos de un doctor",
+	UPDATE_DOCTOR_PERSONAL_DATA: "Actualizar datos de doctor",
+	UPDATE_DOCTOR_SCHEDULES: "Actualizar horarios de doctor", // Reconsiderar
+	DISABLE_DOCTOR: "Deshabilitar doctores",
+	ENABLE_DOCTOR: "Habilitar doctores",
+	// Appointment
+	CREATE_APPOINTMENT: "Crear turno",
+	READ_APPOINTMENT: "Leer turno", // Puede aparecer información del paciente o médico relacionados.
+	UPDATE_APPOINTMENT: "Actualizar turno",
+	DISABLE_APPOINTMENT: "Deshabilitar turno",
+	ENABLE_APPOINTMENT: "Habilitar turno",
+	// UserPermit
+	GRANT_PERMISSIONS: "Conceder permisos a otros usuarios",
+	// User
+	ASSIGN_DOCTOR: "Asignar un doctor a un usuario", // Reconsiderar
+	RESET_PASSWORD: "Cambiar la contraseña de otro usuario",
+	UPDATE_USER_DATA: "Actualizar información de usuario",
+	DELETE_OR_ENABLE_USER: "Eliminar o rehabilitar un usuario",
+	READ_USER_DATA: "Leer datos de usuario",
+	// Ticket
+	READ_USER_SESSIONS: "Ver sesiones abiertas",
+	CLOSE_USER_SESSIONS: "Cerrar sesiones de un usuario", 
+    UPDATE_TICKET: "Actualizar ticket", 
+    CREATE_TICKET: "Crear ticket", 
+    ENABLE_TICKET: "Habilitar ticket"
+}; //*/
+
+export const PERMIT = {
+    CREATE_SPECIALTY: "CREATE_SPECIALTY",
+    UPDATE_SPECIALTY: "UPDATE_SPECIALTY",
+    READ_DISABLED_SPECIALTY_RECORDS: "READ_DISABLED_SPECIALTY_RECORDS",
+    DISABLE_SPECIALTY: "DISABLE_SPECIALTY",
+    ENABLE_SPECIALTY: "ENABLE_SPECIALTY",
+    CREATE_PATIENT: "CREATE_PATIENT",
+    READ_PATIENT_PERSONAL_DATA: "READ_PATIENT_PERSONAL_DATA",
+    READ_PATIENT_APPOINTMENTS: "READ_PATIENT_APPOINTMENTS",
+    UPDATE_PATIENT: "UPDATE_PATIENT",
+    DISABLE_PATIENT: "DISABLE_PATIENT",
+    ENABLE_PATIENT: "ENABLE_PATIENT",
+    CREATE_DOCTOR: "CREATE_DOCTOR",
+    READ_DOCTOR: "READ_DOCTOR",
+    READ_DOCTOR_APPOINTMENTS: "READ_DOCTOR_APPOINTMENTS",
+    UPDATE_DOCTOR_PERSONAL_DATA: "UPDATE_DOCTOR_PERSONAL_DATA",
+    UPDATE_DOCTOR_SCHEDULES: "UPDATE_DOCTOR_SCHEDULES",
+    DISABLE_DOCTOR: "DISABLE_DOCTOR",
+    ENABLE_DOCTOR: "ENABLE_DOCTOR",
+    CREATE_APPOINTMENT: "CREATE_APPOINTMENT",
+    READ_APPOINTMENT: "READ_APPOINTMENT",
+    UPDATE_APPOINTMENT: "UPDATE_APPOINTMENT",
+    DISABLE_APPOINTMENT: "DISABLE_APPOINTMENT",
+    ENABLE_APPOINTMENT: "ENABLE_APPOINTMENT",
+    GRANT_PERMISSIONS: "GRANT_PERMISSIONS",
+    ASSIGN_DOCTOR: "ASSIGN_DOCTOR",
+    RESET_PASSWORD: "RESET_PASSWORD",
+    UPDATE_USER_DATA: "UPDATE_USER_DATA",
+    DELETE_OR_ENABLE_USER: "DELETE_OR_ENABLE_USER",
+    READ_USER_DATA: "READ_USER_DATA",
+    READ_USER_SESSIONS: "READ_USER_SESSIONS",
+    CLOSE_USER_SESSIONS: "CLOSE_USER_SESSIONS",
+    UPDATE_TICKET: "UPDATE_TICKET",
+    CREATE_TICKET: "CREATE_TICKET",
+    ENABLE_TICKET: "ENABLE_TICKET"
 };

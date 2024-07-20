@@ -85,7 +85,11 @@ public class UserDAOImpl implements IUserDAO {
 	        Query query = session.createQuery(hql);
 	        query.setParameter("username", username);
 	        UserView x = (UserView) query.uniqueResult();
+	        if(x != null) {
+	        	Hibernate.initialize(x.getAllowedPermits());
+	        }
 	        cfUser.set(x);
+        	session.evict(x);
 		});
 		return cfUser;
 	}

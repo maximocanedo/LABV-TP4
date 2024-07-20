@@ -120,6 +120,13 @@ public class UserController {
 		return ResponseEntity.status(200).build();
 	}
 	
+	@PostMapping("/u/{username:.+}")
+	public ResponseEntity<?> enable(@PathVariable String username, HttpServletRequest req, HttpServletResponse res) {
+		User requiring = auth.require(req, res);
+		users.enable(username, requiring);
+		return ResponseEntity.status(200).build();
+	}
+	
 	/** # Acciones con el usuario actual **/
 	
 	@GetMapping("/me")

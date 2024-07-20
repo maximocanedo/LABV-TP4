@@ -1,14 +1,21 @@
 package web.entity.view;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.*;
 
 import org.hibernate.annotations.Immutable;
+import org.hibernate.annotations.Where;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import web.entity.IUser;
+import web.entity.Permit;
+import web.entity.UserPermit;
 import web.formatter.Card;
 import web.formatter.Format;
 import web.formatter.Formatter;
@@ -33,6 +40,7 @@ public class UserView implements IUser {
 	private String name;
 	private boolean active = true;
 	private DoctorMinimalView doctor;
+	private List<UserPermit> allowedPermits;
 	
 	public UserView() {}
 	
@@ -69,6 +77,40 @@ public class UserView implements IUser {
 	public DoctorMinimalView getDoctor() {
 		return doctor;
 	}
+	
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Where(clause = "allowed")
+	@JsonIgnore
+    public List<UserPermit> getAllowedPermits() {
+        return allowedPermits;
+    }
+	
+	@Transient
+	@JsonIgnore
+	public boolean loadedPermissions() {
+		return allowedPermits != null;
+	}
+	
+	@Transient
+    @JsonProperty("access")
+	public Permit[] getPermits() {
+		if(this.getAllowedPermits() == null) return new Permit[0];
+		List<Permit> permits = new ArrayList<Permit>();
+		permits.size();
+		for(UserPermit p : getAllowedPermits()) {
+			permits.add(p.getAction());
+		}
+		return (Permit[]) permits.toArray(new Permit[0]);	
+	}
+	
+	@Transient
+	@JsonIgnore
+	public boolean can(Permit action) {
+		for(Permit allowed : getPermits())
+			if(allowed.equals(action)) 
+				return true;
+		return false;
+	}
 
 	/* # Setters */
 
@@ -90,6 +132,11 @@ public class UserView implements IUser {
 	public void setDoctor(DoctorMinimalView medico) {
 		this.doctor = medico;
 	}
+	
+
+	public void setAllowedPermits(List<UserPermit> allowedPermits) {
+        this.allowedPermits = allowedPermits;
+    }
 	
 	/* # Otros métodos */
 	

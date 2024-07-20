@@ -14,7 +14,13 @@
  * @typedef {Object} IUserBasicProperties
  * @property {string} name - Nombre.
  * @property {IDoctor} [doctor] - Doctor asignado.
+ * @property {import('./models.js').Permit[]} access Permisos concedidos.
  * @typedef {IdentifiableUser & IUserBasicProperties & SaveableEntity & Deletable} IUser
+ */
+/**
+ * @typedef {Object} IUserActionProperty
+ * @property {import('./models.js').Permit[]} access Permisos concedidos.
+ * @typedef {IUserActionProperty & IUser} IUserWithActions
  */
 /**
  * @typedef {IUser} User
