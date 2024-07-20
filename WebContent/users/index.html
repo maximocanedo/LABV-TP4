@@ -5,7 +5,17 @@
     <title>Document</title>
 </head>
 <body>
-    
-    <script type="module" src="./../api/controller/userProfile/index.js"></script>
+    <input type="search" id="user_q">
+    <select name="filterStatus" id="filterStatus__user">
+        <option value="ONLY_ACTIVE">Usuarios activos</option>
+        <option value="ONLY_INACTIVE">Usuarios deshabilitados</option>
+        <option value="BOTH">Todos los usuarios</option>
+    </select>
+    <button id="btnSearch">Buscar</button>
+    <ul class="results">
+
+    </ul>
+    <button id="nextBtn">Cargar más</button>
+    <script type="module" src="./../api/controller/userSearch/index.js"></script>
 </body>
 </html>

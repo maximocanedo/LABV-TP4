@@ -36,6 +36,11 @@ export class GenericQuery {
         this.#q = q;
     }
 
+    setQueryText(q) {
+        this.#q = q;
+        return this;
+    }
+
     setLocalDatabase(localDatabase) {
         this.#localDatabase = localDatabase;
         return this;
@@ -80,6 +85,16 @@ export class GenericQuery {
             .catch(err => {
                 throw err;
             });
+    }
+
+    async next() {
+        this.paginate(this.#page + 1, this.#size);
+        return this.search();
+    }
+
+    async prev() {
+        this.paginate((this.#page == 1 ? 1 : this.#page - 1), this.#size);
+        return this.search();
     }
 
     /**

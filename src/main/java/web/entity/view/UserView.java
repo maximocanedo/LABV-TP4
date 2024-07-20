@@ -78,7 +78,7 @@ public class UserView implements IUser {
 		return doctor;
 	}
 	
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Where(clause = "allowed")
 	@JsonIgnore
     public List<UserPermit> getAllowedPermits() {
