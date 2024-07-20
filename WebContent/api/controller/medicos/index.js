@@ -4,11 +4,22 @@ import * as headerAdminService from "../services/headerAdminService.js";
 
 let dataTableMedicos;
 let page = 1;
+let searchText = "";
+// Barra Filtros //
+const ddlEntriesPerPage = document.getElementById("ddlEntriesPerPage");
+const txtBuscar = document.getElementById("txtBuscar");
+const btnBuscar = document.getElementById("btnBuscar");
+const ddlStatusFilter = document.getElementById("ddlStatusFilter");
+// Paginacion
 const btnPrevPage = document.getElementById("btnPrevPage");
 const btnNextPage = document.getElementById("btnNextPage");
 
 (() => {
     const header = headerAdminService.load();
+    const navPacientes = document.getElementById("navPacientes");
+    const navMedicos = document.getElementById("navMedicos");
+    navPacientes.classList.remove("active");
+    navMedicos.classList.add("active");
 })();
 
 const load = async () => {
@@ -33,17 +44,24 @@ const load = async () => {
             }}
         ],
         data: medicos,
+        paging: false,
+        searching: false
     });
     btnPrevPage.classList.add("disabled");
 };
 
 load().then(() => {
-    const ddlEntriesPerPage = document.getElementById("dt-length-0");
+    
 
     const dataTableUpdate = async () => {
         dataTableMedicos.clear();
-        // @ts-ignore
-        const medicos = await new Query().paginate(page, parseInt(ddlEntriesPerPage.value)).filterByStatus(FilterStatus.BOTH).search();
+        const medicos = await new Query()
+            .setQueryText(searchText)
+            // @ts-ignore
+            .paginate(page, parseInt(ddlEntriesPerPage.value))
+            // @ts-ignore
+            .filterByStatus(FilterStatus[ddlStatusFilter.value])
+            .search();
         dataTableMedicos.rows.add(medicos);
         dataTableMedicos.draw()
         if(page == 1){
@@ -56,6 +74,14 @@ load().then(() => {
     ddlEntriesPerPage.onchange = () => {
         dataTableUpdate();
     };
+
+    ddlStatusFilter.onchange = () => {
+        dataTableUpdate();
+    };
+
+    btnBuscar.addEventListener("click", async () => {
+        dataTableUpdate();
+    });
     
     btnPrevPage.addEventListener("click", async () => {
         if (page > 1) {
