@@ -4,15 +4,16 @@ import { ElementBuilder } from "./../../controller/dom.js";
 import * as users from "./../../actions/users.js";
 
 
-const btnState = document.getElementById("btnState");
-const password1 = document.getElementById("password1");
-const password2 = document.getElementById("password2");
-const password0 = document.getElementById("password0");
-const updateBtn = document.getElementById("updateBtn");
-const rol_template_select = document.getElementById("rol_template_select");
-const rol_template_select_btn = document.getElementById("rol_template_select_btn");
-const denyAllbtn = document.getElementById("denyAllbtn");
-const btnUpdatePassword = document.getElementById("btnUpdatePassword");
+const btnState = /** @type {HTMLButtonElement} */(document.getElementById("btnState"));
+const password1 = /** @type {HTMLInputElement} */(document.getElementById("password1"));
+const password2 = /** @type {HTMLInputElement} */(document.getElementById("password2"));
+const password0 = /** @type {HTMLInputElement} */(document.getElementById("password0"));
+const updateBtn = /** @type {HTMLButtonElement} */(document.getElementById("updateBtn"));
+const rol_template_select = /** @type {HTMLSelectElement} */(document.getElementById("rol_template_select"));
+const rol_template_select_btn = /** @type {HTMLButtonElement} */(document.getElementById("rol_template_select_btn"));
+const denyAllbtn = /** @type {HTMLButtonElement} */(document.getElementById("denyAllbtn"));
+const btnUpdatePassword = /** @type {HTMLButtonElement} */(document.getElementById("btnUpdatePassword"));
+
 
 const getUsernameInPath = () => {
     const sp = new URLSearchParams(window.location.search);
@@ -20,6 +21,14 @@ const getUsernameInPath = () => {
 };
 
 const itsMe = () => getUsernameInPath().trim() == "";
+const can = action => me.active && me.access.some(x => x == action);
+
+
+const canChangeName = () => itsMe() || can(users.PERMIT.UPDATE_USER_DATA);
+const canResetPassword = () => itsMe() || can(users.PERMIT.RESET_PASSWORD);
+const canDisable = () => can(users.PERMIT.DELETE_OR_ENABLE_USER);
+const canGrant = () => can(users.PERMIT.GRANT_PERMISSIONS);
+
 
 const fill = (cname, value) => {
     document.querySelectorAll('[data-field="' + cname + '"]').forEach(element => {
@@ -32,8 +41,8 @@ const fill = (cname, value) => {
     });
 };
 
-/** @type {User | UserMinimalView | IUser} */
-let user = null;
+/** @type {User | UserMinimalView | IUser | null} */
+let user;
 
 let updating = false;
 
@@ -72,7 +81,7 @@ denyAllbtn.addEventListener("click", async (e) => {
 });
 
 
-let me = {};
+let me;
 
 
 const permitCheckbox = (action_name) => {
@@ -100,7 +109,7 @@ const permitCheckbox = (action_name) => {
                     .appendTo(row.getTarget());
     
     /** @type {HTMLInputElement} */
-    const chk = /** @type {HTMLInputElement} */ checkBox.getTarget();
+    const chk = /** @type {HTMLInputElement} */(checkBox.getTarget());
     chk.checked = allowed;
     chk.disabled = !canModify;
     chk.addEventListener("change", async (e) => {

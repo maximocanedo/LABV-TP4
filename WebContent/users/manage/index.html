@@ -17,7 +17,6 @@
               <button class="nav-link active" id="nav-personal-info-tab" data-bs-toggle="tab" data-bs-target="#nav-personal-info" type="button" role="tab" aria-controls="nav-personal-info" aria-selected="true">Información básica</button>
               <button class="nav-link" id="nav-update-info-tab" data-bs-toggle="tab" data-bs-target="#nav-update-info" type="button" role="tab" aria-controls="nav-update-info" aria-selected="false">Actualizar información</button>
               <button class="nav-link" id="nav-permissions-tab" data-bs-toggle="tab" data-bs-target="#nav-permissions" type="button" role="tab" aria-controls="nav-permissions" aria-selected="false">Permisos</button>
-              <button class="nav-link" id="nav-more-actions-tab" data-bs-toggle="tab" data-bs-target="#nav-more-actions" type="button" role="tab" aria-controls="nav-more-actions" aria-selected="false" disabled>Más</button>
             </div>
           </nav>
           <div class="tab-content" id="nav-tabContent">
@@ -56,6 +55,12 @@
                         <button class="btn btn-primary" id="btnUpdatePassword">Cambiar contraseña</button>
                     </div>
                 </div>
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Deshabilitar o habilitar</h5>
+                        <button class="btn btn-danger" id="btnState" data-field="user.active.switchButton"></button>
+                    </div>
+                </div>
             </div>
             <div class="tab-pane fade" id="nav-permissions" role="tabpanel" aria-labelledby="nav-permissions-tab" tabindex="0">
                 <br>
@@ -91,9 +96,6 @@
                 </div>
     
                 
-            </div>
-            <div class="tab-pane fade" id="nav-more-actions" role="tabpanel" aria-labelledby="nav-more-actions-tab" tabindex="0">
-                <button id="btnState" data-field="user.active.switchButton"></button>
             </div>
           </div>
     </main>
