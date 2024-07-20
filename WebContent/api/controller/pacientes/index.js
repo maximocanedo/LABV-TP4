@@ -3,9 +3,10 @@ import { FilterStatus, login } from "../../actions/users.js";
 import * as headerAdminService from "../services/headerAdminService.js";
 
 let dataTablePacientes;
-let page = 0;
+let page = 1;
 const btnPrevPage = document.getElementById("btnPrevPage");
 const btnNextPage = document.getElementById("btnNextPage");
+//const btnNextPage = document.getElementById("btnNextPage");
 
 (() => {
     const header = headerAdminService.load();
@@ -53,7 +54,7 @@ load().then(() => {
     };
     
     btnPrevPage.addEventListener("click", async () => {
-        if (page > 0) {
+        if (page > 1) {
             page--;
             dataTablePacientes.clear();
             try {
