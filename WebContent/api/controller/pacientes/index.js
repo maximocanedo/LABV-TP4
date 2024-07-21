@@ -1,3 +1,4 @@
+import { Toast } from './../../lib/toast.js';
 import { Query, enable, disable } from '../../actions/patients.js';
 import { FilterStatus, login } from "../../actions/users.js";
 import * as headerAdminService from "../services/headerAdminService.js";
@@ -24,7 +25,7 @@ const btnNextPage = document.getElementById("btnNextPage");
 const load = async () => {
     const user = await login("alicia.schimmel", "12345678");
     // @ts-ignore
-    const pacientes = await new Query().paginate(page, parseInt(ddlEntriesPerPage.value)).filterByStatus(FilterStatus.BOTH).search();    
+    const pacientes = await new Query().paginate(page, parseInt(ddlEntriesPerPage.value)).filterByStatus(FilterStatus[ddlStatusFilter.value]).search();    
     // @ts-ignore
     dataTablePacientes = new DataTable('#tableListadoPacientes', {
         columns: [
@@ -56,6 +57,14 @@ load().then(() => {
     if(!isLoading){
         loadingSpinner.classList.add("d-none")
     }
+
+    const notification = new Toast({id: "notification"});
+    notification.setText("Usuario Activado");
+    /*
+    const notificationDisable = new Toast({id: "notificationDisable"});
+    notificationEnable.setText("Usuario Desactivado");
+*/
+
     const dataTableUpdate = async () => {
         dataTablePacientes.clear();
         const pacientes = await new Query()
@@ -123,14 +132,20 @@ load().then(() => {
     
     const enablePatient = async (id) => {
         const enableResponse = await enable(id).then(() => {
-            dataTableUpdate()
+            dataTableUpdate();            
+            notification.setText("Usuario Activado");
+            notification.setWarnColor(false);
+            notification.show();
         })
         
     }
     
     const disablePatient = async (id) => {
         const disableResponse = await disable(id).then(() => {
-            dataTableUpdate()
+            dataTableUpdate();
+            notification.setText("Usuario Desactivado");
+            notification.setWarnColor(true);
+            notification.show();
         })
     }
     
