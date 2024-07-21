@@ -1,7 +1,7 @@
 import * as headerAdminService from "../services/headerAdminService.js";
 import { createStore } from "../../lib/redux.js";
 import { ElementBuilder } from "../dom.js";
-import { findById } from "../../actions/doctors.js";
+import { findById, update } from "../../actions/doctors.js";
 import { login } from "../../actions/users.js";
 
 const event = {
@@ -10,6 +10,7 @@ const event = {
     UPDATE_EMAIL: "UPDATE_EMAIL",
     UPDATE_ADDRESS: "UPDATE_ADDRESS",
     UPDATE_SPECIALTYNAME: "UPDATE_SPECIALTYNAME",
+    UPDATE_SPECIALTYDESC: "UPDATE_SPECIALTYDESC",
     UPDATE_SEX: "UPDATE_SEX",
     UPDATE_BIRTH: "UPDATE_BIRTH",
     UPDATE_PHONE: "UPDATE_PHONE",
@@ -63,6 +64,14 @@ const reducer = (state = {
                     name: action.payload
                 }
             };
+        case event.UPDATE_SPECIALTYDESC:
+            return {
+                ...state,
+                specialty: {
+                    ...state.specialty,
+                    description: action.payload
+                }
+            };
         default:
             return { ...state };
     }
@@ -79,7 +88,7 @@ const load = async () => {
 
 load().then((doctor) => {
     const store = createStore(reducer, doctor);
-    const formModificar = document.getElementById("formModificar");
+    const formModificarMedico = document.getElementById("formModificarMedico");
 
     const txtName = ElementBuilder.from(document.getElementById("txtName")).linkValue(store, event.UPDATE_NAME, "name");
     const txtSurname = ElementBuilder.from(document.getElementById("txtSurname")).linkValue(store, event.UPDATE_SURNAME, "surname");
@@ -90,6 +99,16 @@ load().then((doctor) => {
     const txtBirth = ElementBuilder.from(document.getElementById("txtBirth")).linkValue(store, event.UPDATE_BIRTH, "birth");
     const txtGenre = ElementBuilder.from(document.getElementById("txtGenre")).linkValue(store, event.UPDATE_SEX, "sex");
     const txtSpecialtyName = ElementBuilder.from(document.getElementById("txtSpecialtyName")).linkValue(store, event.UPDATE_SPECIALTYNAME, 'specialty.name');
-    const txtSpecialtyDescription = ElementBuilder.from(document.getElementById("txtSpecialtyDescription")).linkValue(store, event.UPDATE_SPECIALTYNAME, 'specialty.description');
+    const txtSpecialtyDescription = ElementBuilder.from(document.getElementById("txtSpecialtyDescription")).linkValue(store, event.UPDATE_SPECIALTYDESC, 'specialty.description');
+
+    formModificarMedico.addEventListener("submit", async (event) => {
+        event.preventDefault()
+        event.stopPropagation()
+        try {
+            await update(store.getState().id, store.getState());
+        } catch (error) {
+            console.log(error)
+        }
+    });
     
 })
