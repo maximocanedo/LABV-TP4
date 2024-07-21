@@ -59,11 +59,6 @@ load().then(() => {
     }
 
     const notification = new Toast({id: "notification"});
-    notification.setText("Usuario Activado");
-    /*
-    const notificationDisable = new Toast({id: "notificationDisable"});
-    notificationEnable.setText("Usuario Desactivado");
-*/
 
     const dataTableUpdate = async () => {
         dataTablePacientes.clear();
@@ -133,17 +128,16 @@ load().then(() => {
     const enablePatient = async (id) => {
         const enableResponse = await enable(id).then(() => {
             dataTableUpdate();            
-            notification.setText("Usuario Activado");
+            notification.setText("Paciente Activado");
             notification.setWarnColor(false);
             notification.show();
         })
-        
     }
     
     const disablePatient = async (id) => {
         const disableResponse = await disable(id).then(() => {
             dataTableUpdate();
-            notification.setText("Usuario Desactivado");
+            notification.setText("Paciente Desactivado");
             notification.setWarnColor(true);
             notification.show();
         })
