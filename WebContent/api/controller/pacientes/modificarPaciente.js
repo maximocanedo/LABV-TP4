@@ -66,8 +66,10 @@ load().then((patient) => {
     const txtBirth = ElementBuilder.from(document.getElementById("txtBirth")).linkValue(store, event.UPDATE_BIRTH, "birth");
 
     formModificarPaciente.addEventListener("submit", async (event) => {
-        event.preventDefault()
-        event.stopPropagation()
+        event.preventDefault();
+        event.stopPropagation();
+        // @ts-ignore
+        formModificarPaciente.checkValidity()
         try {
             await update(store.getState().id, store.getState());
             location.replace("/pacientes/index.html")

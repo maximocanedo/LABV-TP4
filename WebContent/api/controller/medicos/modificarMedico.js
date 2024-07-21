@@ -102,8 +102,8 @@ load().then((doctor) => {
     const txtSpecialtyDescription = ElementBuilder.from(document.getElementById("txtSpecialtyDescription")).linkValue(store, event.UPDATE_SPECIALTYDESC, 'specialty.description');
 
     formModificarMedico.addEventListener("submit", async (event) => {
-        event.preventDefault()
-        event.stopPropagation()
+        event.preventDefault();
+        event.stopPropagation();
         try {
             await update(store.getState().id, store.getState());
         } catch (error) {
