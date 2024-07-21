@@ -35,7 +35,7 @@ export class ElementBuilder {
         if(path == undefined || path == null || path.trim() == "" || path.trim() == "Value") 
             throw new Error("Must define an id in order to link a store. ");
         const getStoredValue = () => {
-            return store.getState()[path.trim()];
+            return path.trim().split('.').reduce((acc, part) => acc && acc[part], store.getState());
         };
         store.subscribe(() => {
             const previousValue = this.#currentValue;

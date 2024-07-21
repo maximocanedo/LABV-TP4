@@ -53,7 +53,7 @@ const load = async () => {
 
 load().then((patient) => {
     const store = createStore(reducer, patient);
-    const formRegister = document.getElementById("formModificarPaciente");
+    const formModificarPaciente = document.getElementById("formModificarPaciente");
 
     const txtName = ElementBuilder.from(document.getElementById("txtName")).linkValue(store, event.UPDATE_NAME, "name");
     const txtSurname = ElementBuilder.from(document.getElementById("txtSurname")).linkValue(store, event.UPDATE_SURNAME, "surname");
@@ -64,5 +64,11 @@ load().then((patient) => {
     const txtLocalty = ElementBuilder.from(document.getElementById("txtLocalty")).linkValue(store, event.UPDATE_LOCALTY, "localty");
     const txtProvince = ElementBuilder.from(document.getElementById("txtProvince")).linkValue(store, event.UPDATE_PROVINCE, "province");
     const txtBirth = ElementBuilder.from(document.getElementById("txtBirth")).linkValue(store, event.UPDATE_BIRTH, "birth");
+
+    formModificarPaciente.addEventListener("submit", event => {
+        event.preventDefault()
+        event.stopPropagation()
+        console.log(store.getState())
+    });
 })
 
