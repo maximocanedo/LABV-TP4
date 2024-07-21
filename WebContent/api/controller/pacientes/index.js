@@ -68,16 +68,19 @@ load().then(() => {
     }
     
     ddlEntriesPerPage.onchange = () => {
+        page = 1;
         dataTableUpdate();
     };
 
     ddlStatusFilter.onchange = () => {
+        page = 1;
         dataTableUpdate();
     };
 
     btnBuscar.addEventListener("click", async () => {
+        page = 1;
         // @ts-ignore
-        searchText = txtBuscar.value
+        searchText = txtBuscar.value;
         dataTableUpdate();
     });
     

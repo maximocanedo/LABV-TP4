@@ -1,7 +1,7 @@
 import * as headerAdminService from "../services/headerAdminService.js";
 import { createStore } from "./../../lib/redux.js";
 import { ElementBuilder } from "../dom.js";
-import { findById } from "../../actions/patients.js";
+import { findById, update } from "../../actions/patients.js";
 import { login } from "../../actions/users.js";
 
 const event = {
@@ -65,10 +65,15 @@ load().then((patient) => {
     const txtProvince = ElementBuilder.from(document.getElementById("txtProvince")).linkValue(store, event.UPDATE_PROVINCE, "province");
     const txtBirth = ElementBuilder.from(document.getElementById("txtBirth")).linkValue(store, event.UPDATE_BIRTH, "birth");
 
-    formModificarPaciente.addEventListener("submit", event => {
+    formModificarPaciente.addEventListener("submit", async (event) => {
         event.preventDefault()
         event.stopPropagation()
-        console.log(store.getState())
+        try {
+            await update(store.getState().id, store.getState());
+            location.replace("/pacientes/index.html")
+        } catch (error) {
+            console.log(error)
+        }
     });
 })
 
