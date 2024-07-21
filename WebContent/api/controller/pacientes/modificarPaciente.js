@@ -16,8 +16,8 @@ const event = {
     UPDATE_BIRTH: "UPDATE_BIRTH"
 };
 
-const reducer = (state = { id: null, name: "", surname: "", dni: "", email: "", phone: "", address: "", localty: "", province: "", birth: "", active: false,
-    _lastOfflineSaved: null }, action) => {
+const reducer = (state = 
+    { id: null, name: "", surname: "", dni: "", email: "", phone: "", address: "", localty: "", province: "", birth: "", active: false, _lastOfflineSaved: null }, action) => {
     switch(action.type) {
         case event.UPDATE_NAME:
             return { ...state, name: action.payload };
@@ -66,8 +66,10 @@ load().then((patient) => {
     const txtBirth = ElementBuilder.from(document.getElementById("txtBirth")).linkValue(store, event.UPDATE_BIRTH, "birth");
 
     formModificarPaciente.addEventListener("submit", async (event) => {
-        event.preventDefault()
-        event.stopPropagation()
+        event.preventDefault();
+        event.stopPropagation();
+        // @ts-ignore
+        formModificarPaciente.checkValidity()
         try {
             await update(store.getState().id, store.getState());
             location.replace("/pacientes/index.html")

@@ -98,7 +98,7 @@ public class PatientLogicImpl implements IPatientLogic {
 		Patient original = search.get();
 		if (paciente.getName() != null) original.setName(patientValidator.name(paciente.getName()));
         if (paciente.getSurname() != null) original.setSurname(patientValidator.surname(paciente.getSurname()));
-        if (paciente.getDni() != null) original.setDni(patientValidator.dni(paciente.getDni()));
+        if (paciente.getDni() != null) original.setDni(patientValidator.dniUpdate(paciente.getDni()));
         if (paciente.getPhone() != null) original.setPhone(patientValidator.phone(paciente.getPhone()));
         if (paciente.getAddress() != null) original.setAddress(patientValidator.address(paciente.getAddress()));
         if (paciente.getLocalty() != null) original.setLocalty(patientValidator.localty(paciente.getLocalty()));

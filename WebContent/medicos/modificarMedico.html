@@ -13,11 +13,11 @@
         <div class="row h-75">
             <div class="col-3"></div>
             <div class="col d-flex align-items-center">
-                <form class="g-3 needs-validation" id="formModificarMedico" action="" method="post">
+                <form class="g-3 needs-validation" id="formModificarMedico" action="" method="post" novalidate>
                     <div class="row mb-3">
                         <div class="col-md-4">
                             <label for="txtName" class="form-label">Nombre</label>
-                            <input type="text" class="form-control" id="txtName" placeholder="Alice" title="Solo puede contener texto"
+                            <input type="text" class="form-control" id="txtName" placeholder="Alice" pattern="[a-zA-Z]+((['.,\-][a-zA-Z])?[a-zA-Z]*)*" title="Solo puede contener texto, revise que no haya ningun numero"
                                 required>
                             <div class="invalid-feedback">
                                 Invalido.
@@ -25,7 +25,7 @@
                         </div>
                         <div class="col-md-4">
                             <label for="txtSurname" class="form-label">Apellido</label>
-                            <input type="text" class="form-control" id="txtSurname" placeholder="Manhattan" title="Solo puede contener texto" 
+                            <input type="text" class="form-control" id="txtSurname" placeholder="Manhattan" pattern="[a-zA-Z]+((['.,\-][a-zA-Z])?[a-zA-Z]*)*" title="Solo puede contener texto, revise que no haya ningun numero" 
                             required>
                             <div class="invalid-feedback">
                                 Invalido.
@@ -33,7 +33,7 @@
                         </div>
                         <div class="col-md-4">
                             <label for="txtPhone" class="form-label">Phone</label>
-                            <input type="text" class="form-control" id="txtPhone" placeholder="49685973" 
+                            <input type="text" class="form-control" id="txtPhone" placeholder="+5491126589584" pattern="(\+\d{1,3} ?)?\d{10}" title="El formato del telefono debe ser de la siguiente manera: +5491185742635, 3 digitos para codigo de pais y 10 para el numero." 
                             required>
                             <div class="invalid-feedback">
                                 Invalido.
@@ -43,7 +43,7 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="txtEmail" class="form-label">Mail</label>
-                            <input type="text" class="form-control" id="txtEmail" placeholder="alice.manhattan@example.com" title="Solo puede contener texto" 
+                            <input type="text" class="form-control" id="txtEmail" placeholder="alice.manhattan@example.com" pattern=".+@.+..+" title="Verifique el formato del mail" 
                             required>
                             <div class="invalid-feedback">
                                 Invalido.
@@ -63,7 +63,7 @@
                     <div class="row mb-3">
                         <div class="col-md-8">
                             <label for="txtAddress" class="form-label">Direccion</label>
-                            <input type="text" class="form-control" id="txtAddress" placeholder="Av. Libertador 978" title="Solo puede contener texto"
+                            <input type="text" class="form-control" id="txtAddress" placeholder="Av. Libertador 978" pattern="[a-zA-Z0-9\s]+" title="Solo puede contener texto o numeros"
                                 required>
                             <div class="invalid-feedback">
                                 Invalido.
@@ -71,7 +71,7 @@
                         </div>
                         <div class="col-md-4">
                             <label for="txtLocalty" class="form-label">Localidad</label>
-                            <input type="text" class="form-control" id="txtLocalty" placeholder="Tigre" title="Solo puede contener texto" 
+                            <input type="text" class="form-control" id="txtLocalty" placeholder="Tigre" pattern="[a-zA-Z\s]+" title="Solo puede contener texto"
                             required>
                             <div class="invalid-feedback">
                                 Invalido.
@@ -81,7 +81,7 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="txtBirth" class="form-label">Fecha Nacimiento</label>
-                            <input type="date" class="form-control" id="txtBirth" placeholder="49685973" title="Solo puede contener texto" 
+                            <input type="date" class="form-control" id="txtBirth" 
                             required>
                             <div class="invalid-feedback">
                                 Invalido.
@@ -89,7 +89,7 @@
                         </div>
                         <div class="col-md-6">
                             <label for="txtSpecialtyName" class="form-label">Especialidad</label>
-                            <input type="text" class="form-control" id="txtSpecialtyName" placeholder="Cardiologia"  title="Solo puede contener texto" 
+                            <input type="text" class="form-control" id="txtSpecialtyName" placeholder="Cardiologia" pattern="[a-zA-Z]+((['.,\-][a-zA-Z])?[a-zA-Z]*)*" title="Solo puede contener texto, revise que no haya ningun numero" 
                             required>
                             <div class="invalid-feedback">
                                 Invalido.
@@ -99,7 +99,7 @@
                     <div class="row mb-3">
                         <div class="col">
                             <label for="txtSpecialtyDescription" class="form-label">Descripcion Especialidad</label>
-                            <textarea class="form-control" id="txtSpecialtyDescription" rows="2"></textarea>
+                            <textarea class="form-control" id="txtSpecialtyDescription" rows="2" required></textarea>
                             <div class="invalid-feedback">
                                 Invalido.
                             </div>

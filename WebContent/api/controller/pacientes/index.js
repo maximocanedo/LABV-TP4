@@ -5,11 +5,14 @@ import * as headerAdminService from "../services/headerAdminService.js";
 let dataTablePacientes;
 let page = 1;
 let searchText = "";
+let isLoading = true;
 // Barra Filtros //
 const ddlEntriesPerPage = document.getElementById("ddlEntriesPerPage");
 const txtBuscar = document.getElementById("txtBuscar");
 const btnBuscar = document.getElementById("btnBuscar");
 const ddlStatusFilter = document.getElementById("ddlStatusFilter");
+// Table
+const loadingSpinner = document.getElementById("loadingSpinner");
 // Paginacion
 const btnPrevPage = document.getElementById("btnPrevPage");
 const btnNextPage = document.getElementById("btnNextPage");
@@ -49,6 +52,10 @@ const load = async () => {
 };
 
 load().then(() => {
+    isLoading = false;
+    if(!isLoading){
+        loadingSpinner.classList.add("d-none")
+    }
     const dataTableUpdate = async () => {
         dataTablePacientes.clear();
         const pacientes = await new Query()
@@ -69,7 +76,14 @@ load().then(() => {
     
     ddlEntriesPerPage.onchange = () => {
         page = 1;
-        dataTableUpdate();
+        loadingSpinner.classList.remove("d-none");
+        isLoading = true;
+        dataTableUpdate().then(()=>{
+            isLoading = false;
+            if(!isLoading){
+                loadingSpinner.classList.add("d-none");
+            }
+        });
     };
 
     ddlStatusFilter.onchange = () => {
