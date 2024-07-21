@@ -5,6 +5,7 @@ import * as headerAdminService from "../services/headerAdminService.js";
 let dataTableMedicos;
 let page = 1;
 let searchText = "";
+let isLoading = true;
 // Barra Filtros //
 const ddlEntriesPerPage = document.getElementById("ddlEntriesPerPage");
 const txtBuscar = document.getElementById("txtBuscar");
@@ -52,8 +53,11 @@ const load = async () => {
 };
 
 load().then(() => {
-    
-
+    isLoading = false;
+    if(!isLoading){
+        const loadingSpinner = document.getElementById("loadingSpinner");
+        loadingSpinner.classList.add("d-none")
+    }
     const dataTableUpdate = async () => {
         dataTableMedicos.clear();
         const medicos = await new Query()

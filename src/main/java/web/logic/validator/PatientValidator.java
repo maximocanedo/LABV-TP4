@@ -54,6 +54,14 @@ public class PatientValidator {
 		return dni;
 	}
 	
+	public String dniUpdate(String dni) throws ValidationException {
+		// Tratar DNI
+		dni = dni.replaceAll("[^0-9]", "");
+		if(dni.length() < 4 || dni.length() > 12) 
+			throw new ValidationException("DNI inválido. ", "Ingrese un número de DNI válido. ");
+		return dni;
+	}
+	
 	public String phone(String phone) throws ValidationException {
 		try {
 			phone = formatPhoneNumber(phone, null);
