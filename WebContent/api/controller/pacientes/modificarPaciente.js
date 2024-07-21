@@ -68,11 +68,14 @@ load().then((patient) => {
     formModificarPaciente.addEventListener("submit", async (event) => {
         event.preventDefault();
         event.stopPropagation();
-        // @ts-ignore
-        formModificarPaciente.checkValidity()
+
         try {
-            await update(store.getState().id, store.getState());
-            location.replace("/pacientes/index.html")
+            // @ts-ignore
+            if (formModificarPaciente.checkValidity()) {
+                await update(store.getState().id, store.getState());
+                location.replace("/pacientes/index.html")
+            }
+            formModificarPaciente.classList.add("was-validated");
         } catch (error) {
             console.log(error)
         }

@@ -3,14 +3,14 @@ import { createStore } from "../../lib/redux.js";
 import { ElementBuilder } from "../dom.js";
 import { findById, update } from "../../actions/doctors.js";
 import { login } from "../../actions/users.js";
+import { SpecialtySelector } from "../.././lib/selectors/SpecialtySelector.js";
 
 const event = {
     UPDATE_NAME: "UPDATE_NAME",
     UPDATE_SURNAME: "UPDATE_SURNAME",
     UPDATE_EMAIL: "UPDATE_EMAIL",
     UPDATE_ADDRESS: "UPDATE_ADDRESS",
-    UPDATE_SPECIALTYNAME: "UPDATE_SPECIALTYNAME",
-    UPDATE_SPECIALTYDESC: "UPDATE_SPECIALTYDESC",
+    UPDATE_SPECIALTY: "UPDATE_SPECIALTY",
     UPDATE_SEX: "UPDATE_SEX",
     UPDATE_BIRTH: "UPDATE_BIRTH",
     UPDATE_PHONE: "UPDATE_PHONE",
@@ -56,22 +56,8 @@ const reducer = (state = {
             return { ...state, email: action.payload };
         case event.UPDATE_ADDRESS:
             return { ...state, address: action.payload };
-        case event.UPDATE_SPECIALTYNAME:
-            return {
-                ...state,
-                specialty: {
-                    ...state.specialty,
-                    name: action.payload
-                }
-            };
-        case event.UPDATE_SPECIALTYDESC:
-            return {
-                ...state,
-                specialty: {
-                    ...state.specialty,
-                    description: action.payload
-                }
-            };
+        case event.UPDATE_SPECIALTY:
+            return { ...state, specialty: action.payload };
         default:
             return { ...state };
     }
@@ -89,6 +75,11 @@ const load = async () => {
 load().then((doctor) => {
     const store = createStore(reducer, doctor);
     const formModificarMedico = document.getElementById("formModificarMedico");
+    const btnUpdateSpecialty = document.getElementById("btnUpdateSpecialty");
+    const btnModifyDoctor = document.getElementById("btnModifyDoctor");
+
+    const specialtySelector = new SpecialtySelector();
+    document.querySelector(".specialtySelector").prepend(specialtySelector.getTrigger());
 
     const txtName = ElementBuilder.from(document.getElementById("txtName")).linkValue(store, event.UPDATE_NAME, "name");
     const txtSurname = ElementBuilder.from(document.getElementById("txtSurname")).linkValue(store, event.UPDATE_SURNAME, "surname");
@@ -98,17 +89,33 @@ load().then((doctor) => {
     const txtLocalty = ElementBuilder.from(document.getElementById("txtLocalty")).linkValue(store, event.UPDATE_LOCALTY, "localty");
     const txtBirth = ElementBuilder.from(document.getElementById("txtBirth")).linkValue(store, event.UPDATE_BIRTH, "birth");
     const txtGenre = ElementBuilder.from(document.getElementById("txtGenre")).linkValue(store, event.UPDATE_SEX, "sex");
-    const txtSpecialtyName = ElementBuilder.from(document.getElementById("txtSpecialtyName")).linkValue(store, event.UPDATE_SPECIALTYNAME, 'specialty.name');
-    const txtSpecialtyDescription = ElementBuilder.from(document.getElementById("txtSpecialtyDescription")).linkValue(store, event.UPDATE_SPECIALTYDESC, 'specialty.description');
 
-    formModificarMedico.addEventListener("submit", async (event) => {
-        event.preventDefault();
-        event.stopPropagation();
+    specialtySelector.updateSelection(store.getState().specialty ?? null);
+
+    btnUpdateSpecialty.onclick = () => {
+        store.dispatch({
+            type: event.UPDATE_SPECIALTY,
+            payload: specialtySelector.getSelectedFile()
+        });
+        //console.log(specialtySelector.getSelectedFile())
+    };
+
+    btnModifyDoctor.addEventListener("click", async (event) => {
         try {
-            await update(store.getState().id, store.getState());
+            // @ts-ignore
+            if (formModificarMedico.checkValidity()) {
+                await update(store.getState().id, store.getState());
+                location.replace("./index.html")
+            }
+            formModificarMedico.classList.add("was-validated");
         } catch (error) {
             console.log(error)
         }
     });
-    
+
+    formModificarMedico.onsubmit = (event) => {
+        event.preventDefault()
+        event.stopPropagation()
+    }
+
 })
