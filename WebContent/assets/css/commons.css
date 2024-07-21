@@ -1,5 +1,4 @@
-
-
+@import url('./components/selectors.css');
 * {
     box-sizing: border-box;
 }

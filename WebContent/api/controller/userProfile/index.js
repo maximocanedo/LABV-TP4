@@ -3,6 +3,8 @@
 import { ElementBuilder } from "./../../controller/dom.js";
 import * as users from "./../../actions/users.js";
 import { CommonModal } from "./../../lib/modals.js";
+import { UserSelector } from "./../../lib/selectors/UserSelector.js";
+import { DoctorSelector } from "./../../lib/selectors/DoctorSelector.js";
 
 
 const btnState = /** @type {HTMLButtonElement} */(document.getElementById("btnState"));
@@ -245,8 +247,16 @@ const fillUserData = () => {
 
 (async () => {
 
-    const modal = new CommonModal({ id: "myCommonModal" });
-    console.log(modal);
+    const selector = new UserSelector();
+    console.log(selector);
+    document.querySelector(".wrapper").append(selector.getTrigger());
+
+    const selector2 = new DoctorSelector();
+    console.log(selector2);
+    document.querySelector(".wrapper").append(selector2.getTrigger());
+
+
+
     await loadUserData();
 
 })();

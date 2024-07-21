@@ -26,6 +26,8 @@ export class CommonModal {
     
     #setInitializedState(x) { this.#initialized = x; }
     
+    getDialogElement() { return this.#dialog; }
+
     isInitialized() { return this.#initialized; }
     getId() { return this.#id; } #setId(id) { 
         this.#id = id; 
@@ -36,6 +38,13 @@ export class CommonModal {
 
     getTitle() { return this.#titleTextNode.wholeText; } 
     setTitle(title) { this.#titleTextNode.nodeValue = title; return this; }
+
+    isScrollable() { return this.#dialog.classList.contains("modal-dialog-scrollable"); }
+    setScrollable(x) {
+        this.#dialog.classList.remove("modal-dialog-scrollable");
+        if(x) this.#dialog.classList.add("modal-dialog-scrollable");
+        return this;
+    }
 
     getCloseButtonLabel() { return this.#btnCloseFooterTextNode.wholeText; }
     setCloseButtonLabel(label) { this.#btnCloseFooterTextNode.nodeValue = label; return this; }
@@ -120,12 +129,14 @@ export class CommonModal {
         this.#initWrapper();
     }
 
-    constructor({ id }) {
+    constructor({ id, scrollable }) {
         this.#init(id);
+        this.setScrollable(scrollable);
     }
 
     show() {this.getWrapper().show();}
     hide() {this.getWrapper().hide();}
+
     getBody() {
         return this.#body;
     }
