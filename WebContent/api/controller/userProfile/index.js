@@ -1,7 +1,8 @@
-
+// PENDIENTE: CAMBIAR RUTA /doctors/manage más abajo.
 'use strict';
 import { ElementBuilder } from "./../../controller/dom.js";
 import * as users from "./../../actions/users.js";
+import { CommonModal } from "./../../lib/modals.js";
 
 
 const btnState = /** @type {HTMLButtonElement} */(document.getElementById("btnState"));
@@ -9,11 +10,21 @@ const password1 = /** @type {HTMLInputElement} */(document.getElementById("passw
 const password2 = /** @type {HTMLInputElement} */(document.getElementById("password2"));
 const password0 = /** @type {HTMLInputElement} */(document.getElementById("password0"));
 const updateBtn = /** @type {HTMLButtonElement} */(document.getElementById("updateBtn"));
+const updateDataBtn = /** @type {HTMLButtonElement} */ (document.getElementById("updateDataBtn"));
 const rol_template_select = /** @type {HTMLSelectElement} */(document.getElementById("rol_template_select"));
 const rol_template_select_btn = /** @type {HTMLButtonElement} */(document.getElementById("rol_template_select_btn"));
 const denyAllbtn = /** @type {HTMLButtonElement} */(document.getElementById("denyAllbtn"));
 const btnUpdatePassword = /** @type {HTMLButtonElement} */(document.getElementById("btnUpdatePassword"));
+const nameInput = /** @type {HTMLInputElement} */ (document.querySelector("#nameInput"));
+const card__changeAccountName = document.querySelector(".card.__changeAccountName");
+const card__resetPassword = document.querySelector(".card.__resetPassword");
+const card__grantRole = document.querySelector(".card.__grantRole");
+const card__deletePermissions = document.querySelector(".card.__deletePermissions");
+const card__disable = document.querySelector(".card.disable");
 
+rol_template_select.addEventListener("change", (e) => {
+    rol_template_select_btn.disabled = rol_template_select.value == "NONE";
+});
 
 const getUsernameInPath = () => {
     const sp = new URLSearchParams(window.location.search);
@@ -21,14 +32,15 @@ const getUsernameInPath = () => {
 };
 
 const itsMe = () => getUsernameInPath().trim() == "";
+/** @type {(string) => boolean} */
 const can = action => me.active && me.access.some(x => x == action);
-
 
 const canChangeName = () => itsMe() || can(users.PERMIT.UPDATE_USER_DATA);
 const canResetPassword = () => itsMe() || can(users.PERMIT.RESET_PASSWORD);
 const canDisable = () => can(users.PERMIT.DELETE_OR_ENABLE_USER);
 const canGrant = () => can(users.PERMIT.GRANT_PERMISSIONS);
 
+const shouldUpdateTabBeRemoved = () => !canChangeName() && !canResetPassword() && !canDisable();
 
 const fill = (cname, value) => {
     document.querySelectorAll('[data-field="' + cname + '"]').forEach(element => {
@@ -82,6 +94,16 @@ denyAllbtn.addEventListener("click", async (e) => {
 
 
 let me;
+
+
+updateDataBtn.addEventListener("click", async (e) => {
+    const newName = nameInput.value;
+    users.update(user.username, /** @type {any} */ ({ name: newName }))
+        .then(updated => {
+            user = { ...user, ...updated};
+            fillUserData();
+        }).catch(console.error);
+});
 
 
 const permitCheckbox = (action_name) => {
@@ -152,17 +174,6 @@ btnUpdatePassword.addEventListener("click", async (e) => {
     await updatePasswords();
 });
 
-
-const switchViewingAndEditingSections = () => {
-    if(!updating && [ ...user.access ].some(action => action == users.PERMIT.UPDATE_USER_DATA)) {
-        document.querySelector("section.updating").classList.remove("d-none");
-        document.querySelector("section.viewing").classList.add("d-none");
-    } else {
-        document.querySelector("section.updating").classList.add("d-none");
-        document.querySelector("section.viewing").classList.remove("d-none");
-    }
-}
-
 const rem = async () => {
     if(user.active) {
         // Deshabilitar.
@@ -185,16 +196,47 @@ const loadUserData = async () => {
     else user = await users.getUser(u);
     fillUserData();
     if(!itsMe()) document.querySelector(".pass0").remove();
-    console.log(user);
     fillAuthPermits();
+    loadSections();
     return user;
 };
 
+const loadSections = () => {
+    !canChangeName() && card__changeAccountName.remove();
+    !canResetPassword() && card__resetPassword.remove();
+    !canGrant() && card__grantRole.remove();
+    !canGrant() && card__deletePermissions.remove();
+    !canDisable() && card__disable.remove();
+    if(shouldUpdateTabBeRemoved()) document.querySelector("#nav-update-info-tab").classList.add("disabled");
+};
+
 const fillUserData = () => {
+
+    const dl = /** @type {HTMLDivElement} */ (document.querySelector("#linkedDoctor"));
+    dl.innerHTML = '';
     fill("user.name", user.name);
     fill("user.username", "@" + user.username);
     fill("user.active", (user.active ? "Habilitado" : "Deshabilitado"));
     fill("user.active.switchButton", (user.active ? "Deshabilitar" : "Habilitar"));
+    //console.log(user);
+    if(user._lastOfflineSaved) {
+        let d = new Date(user._lastOfflineSaved);
+        fill("localState", "Disponible sin conexión.");
+        fill("lastTimeLocallyUpdated", d.toLocaleDateString() + " a las " + d.toLocaleTimeString());
+    } else {
+        fill("localState", "Este registro no está disponible fuera de línea. ");
+        fill("lastTimeLocallyUpdated", "-");
+    }
+    if(user.doctor) {
+        const a = new ElementBuilder("a")
+                    .text(user.doctor.surname + ", " + user.doctor.name)
+                    .href("/doctors/manage?file=" + user.doctor.file);// TODO: Actualizar ruta.
+        dl.append(a.getTarget());
+    } else {
+        dl.innerText = "Esta cuenta no está vinculada a ningún doctor. ";
+    }
+
+
     btnState.addEventListener("click", async (e) => {
         await rem();
     });
@@ -202,5 +244,9 @@ const fillUserData = () => {
 
 
 (async () => {
+
+    const modal = new CommonModal({ id: "myCommonModal" });
+    console.log(modal);
     await loadUserData();
+
 })();

@@ -42,12 +42,14 @@ public class UserValidator {
 	}
 	
 	public String name(String name) throws ValidationException {
+		return name;
+		/*
 		Pattern pattern = Pattern.compile(NAMES_PATTERN);
 		Matcher matcher = pattern.matcher(name);
 		if(!matcher.matches()) {
 			throw new ValidationException("Invalid name. ", "El nombre/apellido ingresado no es válido. ");
 		}
-		return name;
+		return name; */
 	}
 	
 	public String password(String password, String name, String username) throws ValidationException {

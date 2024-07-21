@@ -66,10 +66,10 @@ const req = async (url, method, body) => {
     };
 
     try {
-        console.log("Autenticando solicitud con token de ACCESO.");
+        //console.log("Autenticando solicitud con token de ACCESO.");
         const firstTry = await makeRequest(getAccessToken());
         if (firstTry.status === 498) {
-            console.warn("Token de ACCESO expirado: Se autenticará con el token de REFRESCO disponible.");
+            console.warn("Autenticando con token de refresco.");
             return await makeRequest(getRefreshToken());
         }
         if (!firstTry.ok) throw (await firstTry.json());
