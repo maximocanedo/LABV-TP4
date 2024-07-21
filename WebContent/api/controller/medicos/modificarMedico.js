@@ -9,7 +9,7 @@ const event = {
     UPDATE_SURNAME: "UPDATE_SURNAME",
     UPDATE_EMAIL: "UPDATE_EMAIL",
     UPDATE_ADDRESS: "UPDATE_ADDRESS",
-    UPDATE_SPECIALTY: "UPDATE_SPECIALTY",
+    UPDATE_SPECIALTYNAME: "UPDATE_SPECIALTYNAME",
     UPDATE_SEX: "UPDATE_SEX",
     UPDATE_BIRTH: "UPDATE_BIRTH",
     UPDATE_PHONE: "UPDATE_PHONE",
@@ -17,7 +17,7 @@ const event = {
 };
 
 const reducer = (state = {
-    id: null, 
+    id: null,
     file: null,
     schedules: [],
     _lastOfflineSaved: null,
@@ -25,10 +25,10 @@ const reducer = (state = {
     birth: "",
     phone: "",
     active: false,
-    name: "", 
-    surname: "", 
-    email: "", 
-    address: "", 
+    name: "",
+    surname: "",
+    email: "",
+    address: "",
     localty: "",
     specialty: {
         id: null,
@@ -55,8 +55,14 @@ const reducer = (state = {
             return { ...state, email: action.payload };
         case event.UPDATE_ADDRESS:
             return { ...state, address: action.payload };
-        case event.UPDATE_SPECIALTY:
-            return { ...state, specialty: action.payload };
+        case event.UPDATE_SPECIALTYNAME:
+            return {
+                ...state,
+                specialty: {
+                    ...state.specialty,
+                    name: action.payload
+                }
+            };
         default:
             return { ...state };
     }
@@ -68,7 +74,6 @@ const load = async () => {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const doctor = await findById(parseInt(urlParams.get("Id")));
-    console.log(doctor);
     return doctor;
 };
 
@@ -83,6 +88,7 @@ load().then((doctor) => {
     const txtAddress = ElementBuilder.from(document.getElementById("txtAddress")).linkValue(store, event.UPDATE_ADDRESS, "address");
     const txtLocalty = ElementBuilder.from(document.getElementById("txtLocalty")).linkValue(store, event.UPDATE_LOCALTY, "localty");
     const txtBirth = ElementBuilder.from(document.getElementById("txtBirth")).linkValue(store, event.UPDATE_BIRTH, "birth");
-    const txtSpecialty = ElementBuilder.from(document.getElementById("txtSpecialty")).linkValue(store, event.UPDATE_SPECIALTY, "specialty.name");
     const txtGenre = ElementBuilder.from(document.getElementById("txtGenre")).linkValue(store, event.UPDATE_SEX, "sex");
+    const txtSpecialty = ElementBuilder.from(document.getElementById("txtSpecialty")).linkValue(store, event.UPDATE_SPECIALTYNAME, 'specialty.name');
+    
 })
