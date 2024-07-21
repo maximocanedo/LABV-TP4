@@ -89,6 +89,7 @@ load().then((doctor) => {
     const txtLocalty = ElementBuilder.from(document.getElementById("txtLocalty")).linkValue(store, event.UPDATE_LOCALTY, "localty");
     const txtBirth = ElementBuilder.from(document.getElementById("txtBirth")).linkValue(store, event.UPDATE_BIRTH, "birth");
     const txtGenre = ElementBuilder.from(document.getElementById("txtGenre")).linkValue(store, event.UPDATE_SEX, "sex");
-    const txtSpecialty = ElementBuilder.from(document.getElementById("txtSpecialty")).linkValue(store, event.UPDATE_SPECIALTYNAME, 'specialty.name');
+    const txtSpecialtyName = ElementBuilder.from(document.getElementById("txtSpecialtyName")).linkValue(store, event.UPDATE_SPECIALTYNAME, 'specialty.name');
+    const txtSpecialtyDescription = ElementBuilder.from(document.getElementById("txtSpecialtyDescription")).linkValue(store, event.UPDATE_SPECIALTYNAME, 'specialty.description');
     
 })
