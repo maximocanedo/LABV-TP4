@@ -24,6 +24,7 @@ const nameInput = /** @type {HTMLInputElement} */ (document.querySelector("#name
 const card__changeAccountName = document.querySelector(".card.__changeAccountName");
 const card__resetPassword = document.querySelector(".card.__resetPassword");
 const card__grantRole = document.querySelector(".card.__grantRole");
+const card__assignDoctor = document.querySelector(".card.__assignDoctor");
 const card__deletePermissions = document.querySelector(".card.__deletePermissions");
 const card__disable = document.querySelector(".card.disable");
 
@@ -42,10 +43,11 @@ const can = action => me.active && me.access.some(x => x == action);
 
 const canChangeName = () => itsMe() || can(users.PERMIT.UPDATE_USER_DATA);
 const canResetPassword = () => itsMe() || can(users.PERMIT.RESET_PASSWORD);
+const canAssignDoctor = () => can(users.PERMIT.ASSIGN_DOCTOR);
 const canDisable = () => can(users.PERMIT.DELETE_OR_ENABLE_USER);
 const canGrant = () => can(users.PERMIT.GRANT_PERMISSIONS);
 
-const shouldUpdateTabBeRemoved = () => !canChangeName() && !canResetPassword() && !canDisable();
+const shouldUpdateTabBeRemoved = () => !canChangeName() && !canResetPassword() && !canDisable() && canAssignDoctor();
 
 const fill = (cname, value) => {
     document.querySelectorAll('[data-field="' + cname + '"]').forEach(element => {
@@ -220,6 +222,7 @@ const loadSections = () => {
     !canGrant() && card__grantRole.remove();
     !canGrant() && card__deletePermissions.remove();
     !canDisable() && card__disable.remove();
+    !canAssignDoctor() && card__assignDoctor.remove();
     if(shouldUpdateTabBeRemoved()) document.querySelector("#nav-update-info-tab").classList.add("disabled");
 };
 
@@ -232,7 +235,6 @@ const fillUserData = () => {
     fill("user.active", (user.active ? "Habilitado" : "Deshabilitado"));
     fill("user.active.switchButton", (user.active ? "Deshabilitar" : "Habilitar"));
     doctorSelector.updateSelection(user.doctor?? null);
-    //console.log(user);
     if(user._lastOfflineSaved) {
         let d = new Date(user._lastOfflineSaved);
         fill("localState", "Disponible sin conexión.");
