@@ -6,7 +6,9 @@ import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import web.daoImpl.DoctorDAOImpl;
 import web.daoImpl.UserDAOImpl;
+import web.entity.Doctor;
 import web.entity.IUser;
 import web.entity.Optional;
 import web.entity.Permit;
@@ -26,6 +28,9 @@ public class UserLogicImpl implements IUserLogic {
 	
 	@Autowired
 	private UserDAOImpl usersrepository;
+	
+	@Autowired
+	private DoctorDAOImpl doctorsrepository;
 	
 	@Autowired
 	private UserValidator userValidator;
@@ -185,8 +190,13 @@ public class UserLogicImpl implements IUserLogic {
 		User original = search.get();
 		if(user.getName() != null) 
 			original.setName(userValidator.name(user.getName()));
-		if(user.getDoctor() != null) 
-			original.setDoctor(userValidator.doctor(user.getDoctor()));
+		if(user.getDoctor() != null) {
+			Doctor d = (userValidator.doctor(user.getDoctor()));
+			Doctor updated = doctorsrepository.assignUser(d, user);
+			user.setDoctor(updated);
+			System.out.println(user);
+			System.out.println(updated);
+		}
 		return usersrepository.update(original);
 	}
 

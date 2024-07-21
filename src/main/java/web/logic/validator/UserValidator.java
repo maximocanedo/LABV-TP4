@@ -22,7 +22,7 @@ public class UserValidator {
 	private DoctorDAOImpl doctorsrepository;
 	
 	private static final String USERNAME_PATTERN = "^[a-zA-Z][a-zA-Z0-9._]{4,14}$";
-	private static final String NAMES_PATTERN = "^[a-zA-Z]+(([\\'\\,\\.\\-][a-zA-Z])?[a-zA-Z]*)*$";
+	//private static final String NAMES_PATTERN = "^[a-zA-Z]+(([\\'\\,\\.\\-][a-zA-Z])?[a-zA-Z]*)*$";
 	/**
 	 * Mínimo ocho caracteres.
 	 * Al menos una mayúscula y una minúscula del alfabeto.
@@ -79,7 +79,7 @@ public class UserValidator {
 		else throw new ValidationException("Could not identify referenced doctor. ", "Envíe un dato identificador válido. ");
 		if(od.isEmpty() || !od.get().isActive())
 			throw new ValidationException("Referenced doctor does not exist. ", "");
-		return doctor;
+		return od.get();
 	}
 	
 }

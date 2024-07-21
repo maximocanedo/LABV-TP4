@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import web.dao.IDoctorDAO;
 import web.entity.Doctor;
 import web.entity.Optional;
+import web.entity.User;
 import web.entity.input.DoctorQuery;
 import web.entity.view.DoctorMinimalView;
 import web.exceptions.NotFoundException;
@@ -32,6 +33,17 @@ public class DoctorDAOImpl implements IDoctorDAO {
     	dataManager.transact(session -> {
             session.save(medico);
         });
+    	return medico;
+    }
+    
+    public Doctor assignUser(Doctor medico, User user) {    	
+    	dataManager.transact(session -> {
+    		Query q = session.createQuery("UPDATE Doctor d SET d.user = null WHERE d.user.username = :username");
+    		q.setParameter("username", user.getUsername());
+    		q.executeUpdate();
+    		medico.setUser(user);
+    		session.saveOrUpdate(medico);
+    	});
     	return medico;
     }
     
