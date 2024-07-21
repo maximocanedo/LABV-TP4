@@ -2,11 +2,14 @@
 'use strict';
 import { ElementBuilder } from "./../../controller/dom.js";
 import * as users from "./../../actions/users.js";
-import { CommonModal } from "./../../lib/modals.js";
-import { UserSelector } from "./../../lib/selectors/UserSelector.js";
 import { DoctorSelector } from "./../../lib/selectors/DoctorSelector.js";
 
 
+const doctorSelector = new DoctorSelector();
+doctorSelector.getTrigger().classList.add("me-auto");
+doctorSelector.getTrigger().classList.remove("mb-3");
+document.querySelector(".medicoSelectorHere").prepend(doctorSelector.getTrigger());
+const updateDoctorBtn = /** @type {HTMLButtonElement} */(document.getElementById("updateDoctorBtn"));
 const btnState = /** @type {HTMLButtonElement} */(document.getElementById("btnState"));
 const password1 = /** @type {HTMLInputElement} */(document.getElementById("password1"));
 const password2 = /** @type {HTMLInputElement} */(document.getElementById("password2"));
@@ -104,6 +107,14 @@ updateDataBtn.addEventListener("click", async (e) => {
         .then(updated => {
             user = { ...user, ...updated};
             fillUserData();
+        }).catch(console.error);
+});
+
+updateDoctorBtn.addEventListener('click', async (e) => {
+    const newDoctor = doctorSelector.getSelectedFile();
+    users.update(user.username, /** @type {any} */({ doctor: newDoctor }))
+        .then(updated => {
+            return loadUserData();
         }).catch(console.error);
 });
 
@@ -220,6 +231,7 @@ const fillUserData = () => {
     fill("user.username", "@" + user.username);
     fill("user.active", (user.active ? "Habilitado" : "Deshabilitado"));
     fill("user.active.switchButton", (user.active ? "Deshabilitar" : "Habilitar"));
+    doctorSelector.updateSelection(user.doctor?? null);
     //console.log(user);
     if(user._lastOfflineSaved) {
         let d = new Date(user._lastOfflineSaved);
@@ -246,17 +258,6 @@ const fillUserData = () => {
 
 
 (async () => {
-
-    const selector = new UserSelector();
-    console.log(selector);
-    document.querySelector(".wrapper").append(selector.getTrigger());
-
-    const selector2 = new DoctorSelector();
-    console.log(selector2);
-    document.querySelector(".wrapper").append(selector2.getTrigger());
-
-
-
     await loadUserData();
 
 })();
