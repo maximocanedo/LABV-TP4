@@ -92,6 +92,14 @@ const req = async (url, method, body) => {
 export const get = async (relativeUrl, params) => await req(resolveURLParams(relativeUrl, params), HTTP_METHOD.GET, "");
 
 /**
+ * Realiza una petición de tipo HEAD a la API.
+ * @param {String} relativeUrl URL relativa a la {@link BASE_URL URL Base}
+ * @param {Object} params Objeto con los parámetros en línea, de ser necesarios.
+ * @returns {Promise<Response>} Respuesta del servidor.
+ */
+export const head = async (relativeUrl, params) => await req(resolveURLParams(relativeUrl, params), HTTP_METHOD.HEAD, "");
+
+/**
  * Realiza una petición de tipo POST a la API.
  * @param {String} relativeUrl URL relativa a la {@link BASE_URL URL Base}
  * @param {any} body Objeto parseable a JSON, con los parámetros.

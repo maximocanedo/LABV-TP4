@@ -89,6 +89,10 @@ public class UserLogicImpl implements IUserLogic {
 		return usersrepository.checkUsernameAvailability(username);
 	}
 	
+	public boolean exists(String username) {
+		return usersrepository.exists(username);
+	}
+	
 	@Override
     public Optional<User> findByUsername(String username, User requiring) {
 		requiring = permits.require(requiring, Permit.READ_USER_DATA);

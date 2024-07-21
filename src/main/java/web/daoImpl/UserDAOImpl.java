@@ -107,6 +107,20 @@ public class UserDAOImpl implements IUserDAO {
 		return cfUser.get().booleanValue();
 	}
 	
+	public boolean exists(String username) {
+		final Optional<Boolean> cfUser = new Optional<Boolean>(false);
+		dataManager.run(session -> {
+			String hql = "SELECT COUNT(u) FROM User u WHERE u.username = :username";
+	        Query query = session.createQuery(hql);
+	        query.setParameter("username", username);
+	        Long c = (Long) query.uniqueResult();
+	        cfUser.set(c > 0);
+		});
+		return cfUser.get().booleanValue();
+	}
+	
+	
+	
 
 	@Override
 	public List<UserView> search(UserQuery q) {

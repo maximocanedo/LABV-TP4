@@ -58,6 +58,19 @@ export const signup = async (request) => {
     return response.json();
 };
 
+/**
+ * Comprueba si existe una cuenta con el nombre de usuario especificado.
+ * @param {string} username Nombre de usuario.
+ * @returns {Promise<boolean>}
+ */
+export const existsByUsername = async (username) => {
+    try {
+        const response = await u.head(`users/u/${username}`);
+        return response.status == 200;
+    } catch(err) {
+        console.error(err);
+    }
+}
 
 /**
  * @extends {GenericQuery<IUser>}
