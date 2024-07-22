@@ -1,6 +1,5 @@
 'use strict';
 import { ElementBuilder } from "./../../controller/dom.js";
-import * as users from "./../../actions/users.js";
 import { CommonModal } from "./../modals.js";
 import { GenericQuery } from "./../../actions/commons.js";
 
@@ -103,7 +102,7 @@ export class Selector {
 
     #initializeFormControl() {
         this.#trigger = document.createElement('DIV');
-        this.#trigger.setAttribute('class', 'input-group mb-3');
+        this.#trigger.setAttribute('class', 'input-group');
 
         var selectedLabel = document.createElement('SPAN');
         selectedLabel.setAttribute('class', 'form-control');

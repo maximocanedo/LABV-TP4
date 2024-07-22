@@ -1,11 +1,14 @@
 'use strict';
+import { load, patientSelector } from "./appointments.js";
 import { SpecialtySelector } from "./../../lib/selectors/SpecialtySelector.js";
 import * as doctors from "./../../actions/doctors.js";
 import { ElementBuilder } from "./../../controller/dom.js";
 
 const specialtySelector = new SpecialtySelector();
+//patientSelector.usePlaceholder();
 const updateBasicDataBtn = /** @type {HTMLButtonElement} */(document.getElementById("updateBasicDataBtn"));
 updateBasicDataBtn.parentNode.insertBefore(specialtySelector.getTrigger(), updateBasicDataBtn);
+document.querySelector(".pSelectorWrapper").append(patientSelector.getTrigger());
 const updateSensibleDataBtn =/** @type {HTMLButtonElement} */(document.getElementById("updateSensibleDataBtn"));
 const btnState = /** @type {HTMLButtonElement} */(document.getElementById("btnState"));
 const daySelect = /** @type {HTMLSelectElement} */(document.getElementById("daySelect"));
@@ -308,6 +311,7 @@ const loadDoctorData = async () => {
     else if(u.id > 0) doctor = await doctors.findById(u.id);
     else throw new Error("Must specify ID or FILE URL parameter. ");
     fillData();
+    load(doctor);
     //fillAuthPermits();
     //loadSections();
     return doctor;

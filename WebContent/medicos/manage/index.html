@@ -15,9 +15,9 @@
     <main class="container container-sm">
         <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
-              <button class="nav-link" id="nav-personal-info-tab" data-bs-toggle="tab" data-bs-target="#nav-personal-info" type="button" role="tab" aria-controls="nav-personal-info" aria-selected="true">Información básica</button>
-              <button class="nav-link active" id="nav-update-info-tab" data-bs-toggle="tab" data-bs-target="#nav-update-info" type="button" role="tab" aria-controls="nav-update-info" aria-selected="false">Acciones</button>
-              <button class="nav-link" id="nav-permissions-tab" data-bs-toggle="tab" data-bs-target="#nav-permissions" type="button" role="tab" aria-controls="nav-permissions" aria-selected="false">Permisos</button>
+              <button class="nav-link" id="nav-personal-info-tab" data-bs-toggle="tab" data-bs-target="#nav-personal-info" type="button" role="tab" aria-controls="nav-personal-info" aria-selected="false">Información básica</button>
+              <button class="nav-link" id="nav-update-info-tab" data-bs-toggle="tab" data-bs-target="#nav-update-info" type="button" role="tab" aria-controls="nav-update-info" aria-selected="false">Acciones</button>
+              <button class="nav-link active" id="nav-permissions-tab" data-bs-toggle="tab" data-bs-target="#nav-permissions" type="button" role="tab" aria-controls="nav-permissions" aria-selected="true">Turnos</button>
             </div>
           </nav>
           <div class="tab-content" id="nav-tabContent">
@@ -116,7 +116,7 @@
                 </div>
 
             </div>
-            <div class="tab-pane fade show active" id="nav-update-info" role="tabpanel" aria-labelledby="nav-update-info-tab" tabindex="0">
+            <div class="tab-pane fade" id="nav-update-info" role="tabpanel" aria-labelledby="nav-update-info-tab" tabindex="0">
                 <br>
                 <div class="card mb-3 __basicInfo">
                     <div class="card-header">
@@ -193,6 +193,46 @@
                     <div class="card-body">
                         <h5 class="card-title">Deshabilitar o habilitar</h5>
                         <button class="btn btn-danger" id="btnState" data-field="doctor.active.switchButton"></button>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="tab-pane fade show active" id="nav-permissions" role="tabpanel" aria-labelledby="nav-permissions-tab" tabindex="0">
+               <br>
+                <div class="row mb-3">
+                    <div class="col">
+                        <input class="form-control form-control-lg" id="appointment_q" type="text" placeholder="Buscar en los turnos" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-lg-6 mb-3 pSelectorWrapper"></div>
+                    <div class="col-12 col-lg-6 mb-3">
+                        <select class="form-select" id="selectStatus" aria-label="Default select example">
+                            <option value="NONE" selected>Todos los turnos</option>
+                            <option value="PENDING">Pendientes</option>
+                            <option value="ABSENT">Ausentes</option>
+                            <option value="PRESENT">Presentes</option>    
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col">
+                        <div class="input-group">
+                            <label class="input-group-text" for="inputDesde">Desde</label>
+                            <input type="date" class="form-control" id="inputDesde">
+                            <label class="input-group-text" for="inputHasta">Hasta</label>
+                            <input type="date" class="form-control" id="inputHasta">
+                          </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col">
+                        <button class="btn btn-primary" id="btnSearchForAppointments">Buscar</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="list-group"></div>
                     </div>
                 </div>
             </div>

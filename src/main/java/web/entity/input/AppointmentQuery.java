@@ -19,7 +19,7 @@ import web.entity.Patient;
 public class AppointmentQuery implements Searchable {
 
 	private String q;
-	private AppointmentStatus appointmentStatus = null;
+	private AppointmentStatus appointmentStatus = AppointmentStatus.PENDING;
 	private FilterStatus status = FilterStatus.ONLY_ACTIVE;
 	private Date date = null;
 	private Date limit = null;
@@ -34,11 +34,28 @@ public class AppointmentQuery implements Searchable {
 		setStatus(status);
 	}
 	
+	public boolean shouldFilterByAStatus() {
+		return appointmentStatus != null && (appointmentStatus == AppointmentStatus.ABSENT || appointmentStatus == AppointmentStatus.PRESENT || appointmentStatus == AppointmentStatus.PENDING);
+	}
+	
 	public AppointmentQuery(String q) {
 		this(q, FilterStatus.ONLY_ACTIVE);
 	}
 	
+	public boolean shouldFilterByPatient() {
+		return patient != null && (patient.getDni().trim() != "" || patient.getId() > 0);
+	}
+	
+	public boolean shouldFilterByDoctor() {
+		return doctor != null && (doctor.getFile() > 0 || doctor.getId() > 0);
+	}
+	
 	public AppointmentQuery filterByPatient(String dni, String idString) {
+		System.out.println("dni: '" + dni + "', id: '" + idString + "'");
+		if(dni.trim().length() == 0 && idString.trim().length() == 0) {
+			this.setPatient(null);
+			return this;
+		}
 		Patient p = new Patient();
 		p.setDni(dni);
 		try {
@@ -70,16 +87,13 @@ public class AppointmentQuery implements Searchable {
 	}
 	
 	public AppointmentQuery filterByStatus(String filter) {
-		if(filter == null || filter.trim() == "") {
+		if(filter == null || filter.trim().length() == 0) {
 			setAppointmentStatus(null);
 			return this;
-		}
-		try {
-			AppointmentStatus s = AppointmentStatus.valueOf(filter);
-			setAppointmentStatus(s);
-		} catch(IllegalArgumentException expected) {
-			
-		}
+		} else if(filter.trim().toUpperCase().equals("PENDING")) setAppointmentStatus(AppointmentStatus.PENDING);
+		else if(filter.trim().toUpperCase().equals("ABSENT")) setAppointmentStatus(AppointmentStatus.ABSENT);
+		else if(filter.trim().toUpperCase().equals("PRESENT")) setAppointmentStatus(AppointmentStatus.PRESENT);
+		else setAppointmentStatus(null);
 		return this;
 	}
 	
@@ -151,55 +165,36 @@ public class AppointmentQuery implements Searchable {
 
 	@Override
 	public Query toQuery(Session session) {
-		StringBuilder hql = new StringBuilder("SELECT a FROM AppointmentMinimalView a ");
+		StringBuilder hql = new StringBuilder("SELECT a FROM AppointmentMinimalView a JOIN a.patient p JOIN a.assignedDoctor d ");
 		hql.append(" WHERE (");
-		hql.append(" CONCAT(a.patient.name, ' ', a.patient.surname) LIKE :q OR CONCAT(a.patient.surname, ' ', a.patient.name) LIKE :q ");
-		hql.append(" OR CONCAT(a.assignedDoctor.name, ' ', a.assignedDoctor.surname) LIKE :q OR CONCAT(a.assignedDoctor.surname, ' ', a.assignedDoctor.name) LIKE :q ");
+		hql.append(" CONCAT(p.name, ' ', p.surname) LIKE :q OR CONCAT(p.surname, ' ', p.name) LIKE :q ");
+		hql.append(" OR CONCAT(d.name, ' ', d.surname) LIKE :q OR CONCAT(d.surname, ' ', d.name) LIKE :q ");
 		hql.append(") ");
 		if(getDate() != null) {
 			if(getLimitDate() != null) {
 				hql.append(" AND ( a.date BETWEEN :date AND :limit ) ");
 			} else {
-				hql.append(" AND DATE(a.date) = :date ");
+				hql.append(" AND (a.date) = :date ");
 			}
 		}
-		if(getAppointmentStatus() != null) {
-			hql.append(" AND a.status = :appointmentStatus ");
-		}
-		if(getPatient() != null) {
-			hql.append(" AND ( a.patient.dni = :pdni OR a.patient.id = :pId ) ");
-		}
-		if(getDoctor() != null) {
-			hql.append(" AND ( a.assignedDoctor.file = :file OR a.assignedDoctor.id = :dId ) ");
-		}
-		if(getStatus() != FilterStatus.BOTH) {
-			hql.append(" AND a.active = :status ");
-		}
+		if(shouldFilterByAStatus()) hql.append(" AND a.status = :appointmentStatus ");
+		if(shouldFilterByPatient()) hql.append(" AND ( p.dni LIKE :pdni OR p.id = :pId ) ");
+		if(shouldFilterByDoctor()) hql.append(" AND ( d.file = :file OR d.id = :dId ) ");
+		hql.append(" ORDER BY a.date ");
 		Query query = session.createQuery(hql.toString());
 		query.setParameter("q", "%" + getQueryText() + "%");
 		if(getDate() != null) {
-			query.setDate("date", getDate());
-			if(getLimitDate() != null) query.setDate("limit", getLimitDate());
+			query.setDate("date", new java.sql.Date(getDate().getTime()));
+			if(getLimitDate() != null) query.setDate("limit", new java.sql.Date(getLimitDate().getTime()));
 		}
-		if(getAppointmentStatus() != null) {
-			query.setParameter("appointmentStatus", getAppointmentStatus());
-		}
-		if(getPatient() != null) {
+		if(shouldFilterByAStatus()) query.setParameter("appointmentStatus", getAppointmentStatus());
+		if(shouldFilterByPatient()) {
 			query.setParameter("pdni", getPatient().getDni());
 			query.setParameter("pId", getPatient().getId());
-		}
-		if(getDoctor() != null) {
+		} 
+		if(shouldFilterByDoctor()) {
 			query.setParameter("file", getDoctor().getFile());
 			query.setParameter("dId", getDoctor().getId());
-		}
-		switch(getStatus()) {
-		case ONLY_ACTIVE: 
-			query.setParameter("status", true);
-			break;
-		case ONLY_INACTIVE:
-			query.setParameter("status", false);
-			break;
-		default: break;
 		}
 		query.setFirstResult((page - 1) * size);
 		query.setMaxResults(size);
@@ -236,6 +231,11 @@ public class AppointmentQuery implements Searchable {
 
 	public void setDoctor(Doctor doctor) {
 		this.doctor = doctor;
+	}
+
+	public AppointmentQuery filterByStatus(AppointmentStatus appointmentStatus2) {
+		this.appointmentStatus = appointmentStatus2;
+		return this;
 	}
 	
 	

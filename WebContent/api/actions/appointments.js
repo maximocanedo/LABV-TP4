@@ -31,6 +31,10 @@ export const findById = async (id) => {
         });
 };
 
+/**
+ * @class
+ * @extends GenericQuery<Appointment>
+ */
 export class Query extends GenericQuery {
     /** @type {AppointmentStatus} */
     #appointmentStatus = null;
@@ -78,7 +82,10 @@ export class Query extends GenericQuery {
     }
 
     filterByPatient(/** @type {IdentifiablePatient} */ patient) {
-        if(
+        if(!patient) {
+            this.#patient = null;
+            return this;
+        } else if(
             (patient.id == null || patient.id == undefined || patient.id < 1) &&
             (patient.dni == null || patient.dni == undefined || patient.dni == "")
         ) return this;
@@ -92,10 +99,14 @@ export class Query extends GenericQuery {
             appointmentStatus: this.#appointmentStatus,
             date: this.#date,
             limit: this.#limit,
-            doctorId: this.#doctor.id,
-            doctorFile: this.#doctor.file,
-            patientId: this.#patient.id,
-            patientDni: this.#patient.dni
+            ...(this.#doctor && {
+                doctorId: this.#doctor.id,
+                doctorFile: this.#doctor.file,
+            }),
+            ...(this.#patient && {
+                patientId: this.#patient.id,
+                patientDni: this.#patient.dni
+            })
         };
     }
 

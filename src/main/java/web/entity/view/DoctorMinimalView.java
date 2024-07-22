@@ -125,13 +125,13 @@ public class DoctorMinimalView implements IDoctor {
 		return this.getSurname() + ", " + this.getName();
 	}
 
-	@Override
+	/*@Override
 	@Transient
 	@JsonIgnore
 	@Format(omitLabel = true, prefix = "@", order = 9)
 	public String getUsername() {
 		return getUser().getUsername();
-	}
+	} */
 
 	@Override
 	@Transient

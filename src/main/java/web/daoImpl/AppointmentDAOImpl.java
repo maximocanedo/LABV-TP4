@@ -148,6 +148,7 @@ public class AppointmentDAOImpl implements IAppointmentDAO {
 		dataManager.run(session -> {
 			Query query = q.toQuery(session);
 			opt.set((List<AppointmentMinimalView>) query.list()); 
+			
 		});
 		return opt.get();
 	}

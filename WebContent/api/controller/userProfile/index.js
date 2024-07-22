@@ -246,7 +246,7 @@ const fillUserData = () => {
     if(user.doctor) {
         const a = new ElementBuilder("a")
                     .text(user.doctor.surname + ", " + user.doctor.name)
-                    .href("/doctors/manage?file=" + user.doctor.file);// TODO: Actualizar ruta.
+                    .href("/medicos/manage?file=" + user.doctor.file);// TODO: Actualizar ruta.
         dl.append(a.getTarget());
     } else {
         dl.innerText = "Esta cuenta no está vinculada a ningún doctor. ";
