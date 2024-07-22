@@ -40,14 +40,14 @@ export const load = () => {
         .classList('nav-link', 'active')
         .id('navPacientes')
         .attr('aria-current', 'page')
-        .href('../pacientes/index.html')
+        .href('../index.html')
         .text('Pacientes')
         .appendTo(navLinks.getTarget());
 
     const navMedicos = new ElementBuilder('a')
         .classList('nav-link')
         .id('navMedicos')
-        .href('../medicos/index.html')
+        .href('../index.html')
         .text('Medicos')
         .appendTo(navLinks.getTarget());
 
