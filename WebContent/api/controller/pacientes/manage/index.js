@@ -1,8 +1,7 @@
-import * as headerAdminService from "../services/headerAdminService.js";
-import { createStore } from "./../../lib/redux.js";
-import { ElementBuilder } from "../dom.js";
-import { findById, update } from "../../actions/patients.js";
-import { login } from "../../actions/users.js";
+import * as headerAdminService from "../../services/headerAdminService.js";
+import { createStore } from "../../../lib/redux.js";
+import { ElementBuilder } from "../../dom.js";
+import { findById, update } from "../../../actions/patients.js";
 
 const event = {
     UPDATE_NAME: "UPDATE_NAME",
@@ -43,7 +42,6 @@ const reducer = (state =
 };
 
 const load = async () => {
-    const user = await login("alicia.schimmel", "12345678");
     const header = headerAdminService.load();
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);

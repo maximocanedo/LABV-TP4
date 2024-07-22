@@ -39,7 +39,7 @@ const load = async () => {
                 return data ? "Activo" : "Inactivo";
             }},
             { data: '', render: function ( data, type, row ) {
-                return `<form action="./modificarPaciente.html?Id=${row.id}" method="post"><button type="submit" class="btn btn-primary">Modificar Paciente</button></form>`;
+                return `<form action="./manage/index.html?Id=${row.id}" method="post"><button type="submit" class="btn btn-primary">Modificar Paciente</button></form>`;
             }},
             { data: '', render: function ( data, type, row ) {
                 return `<button type="button" class="btn btn-primary" onclick="${row.active ? "disable" : "enable"}Patient(${row.id});">${row.active ? "Desactivar" : "Activar"}</button>`;
