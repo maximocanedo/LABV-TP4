@@ -5,11 +5,13 @@ import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import web.entity.Doctor;
 import web.entity.IDoctor;
+import web.entity.Schedule;
 import web.entity.User;
 import web.entity.input.DoctorQuery;
 import web.entity.input.FilterStatus;
@@ -119,6 +122,31 @@ public class DoctorController {
 		return ResponseEntity.status(200).build();
 	}
 
+	
+	@DeleteMapping("/id/{id}/schedules/{schedule}")
+	public Set<Schedule> deleteSchedule(@PathVariable int id, @PathVariable int schedule, HttpServletRequest req, HttpServletResponse res) {
+		User requiring = auth.require(req, res);
+		return doctors.removeScheduleById(id, schedule, requiring);
+	}
+	
+	@DeleteMapping("/file/{file}/schedules/{schedule}")
+	public Set<Schedule> deleteScheduleByFile(@PathVariable int file, @PathVariable int schedule, HttpServletRequest req, HttpServletResponse res) {
+		User requiring = auth.require(req, res);
+		return doctors.removeSchedule(file, schedule, requiring);
+	}
+	
+	@PostMapping(value = "/id/{id}/schedules", consumes = MediaType.APPLICATION_JSON_VALUE)
+	public Set<Schedule> addSchedule(@PathVariable int id, @RequestBody Schedule schedule, HttpServletRequest req, HttpServletResponse res) {
+		User requiring = auth.require(req, res);
+		return doctors.addScheduleById(id, schedule, requiring);
+	}
+	
+	@PostMapping(value = "/file/{file}/schedules", consumes = MediaType.APPLICATION_JSON_VALUE)
+	public Set<Schedule> addScheduleByFile(@PathVariable int file, @RequestBody Schedule schedule, HttpServletRequest req, HttpServletResponse res) {
+		User requiring = auth.require(req, res);
+		return doctors.addSchedule(file, schedule, requiring);
+	}
+	
 	
 	@GetMapping("/file/{file}/datesAvailable")
 	public List<Date> getDatesAvailableForDoctorByFile(@PathVariable int file, @RequestParam(defaultValue = "", name = "from") String from, HttpServletRequest req, HttpServletResponse res) {

@@ -1,17 +1,25 @@
 package web.entity;
 
 import java.sql.Time;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import jakarta.persistence.Convert;
 import web.formatter.Card;
-import web.logicImpl.LocalTimeAttributeConverter;
 
 @Entity
 @Card(size = 48)
@@ -21,8 +29,8 @@ public class Schedule {
 	private int id;
 	private Day beginDay;
 	private Day finishDay;
-	private LocalTime startTime;
-	private LocalTime endTime;
+	private Time startTime;
+	private Time endTime;
 	private boolean active;
 	
 	public Schedule() {}
@@ -48,32 +56,78 @@ public class Schedule {
 	public Day getFinishDay() {
 		return finishDay;
 	}
+	
+	
+	// Métodos problemáticos
 
-	@JsonProperty("startTime")
+	@JsonIgnore
 	@Transient
-    @Convert(converter = LocalTimeAttributeConverter.class)
+   // @Convert(converter = LocalTimeAttributeConverter.class)
 	public LocalTime getStartTimeLT() {
-		return startTime;
-	}
-
-	@JsonProperty("endTime")
-	@Transient
-    @Convert(converter = LocalTimeAttributeConverter.class)
-	public LocalTime getEndTimeLT() {
-		return endTime;
+		return startTime.toLocalTime();
 	}
 
 	@JsonIgnore
+	@Transient
+    //@Convert(converter = LocalTimeAttributeConverter.class)
+	public LocalTime getEndTimeLT() {
+		return endTime.toLocalTime();
+	}
+
+	@JsonIgnore
+	//@JsonFormat(pattern = "HH:mm:ss")
 	@Column(name = "startTime")
 	public Time getStartTime() {
-	    return startTime != null ? Time.valueOf(startTime) : null;
+	    return startTime;
 	}
 
 	@JsonIgnore
 	@Column(name = "endTime")
 	public Time getEndTime() {
-	    return endTime != null ? Time.valueOf(endTime) : null;
+	    return endTime;
 	}
+
+	@Transient
+	@JsonProperty("startTime")
+	public String getStartTimeString() {
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+        return sdf.format(startTime);
+	}
+	
+	@Transient
+	@JsonProperty("endTime")
+	public String getEndTimeString() {
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+        return sdf.format(endTime);
+	}
+
+	@Transient
+	public void setEndTimeString(String endTimeString) {
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+        try {
+            java.util.Date date = sdf.parse(endTimeString);
+            Time time = new Time(date.getTime());
+            setEndTime(time);
+        } catch (ParseException e) {
+            System.out.println("Error al parsear la cadena: " + e.getMessage());
+        }
+	}
+
+	@Transient
+	public void setStartTimeString(String startTimeString) {
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+        try {
+            java.util.Date date = sdf.parse(startTimeString);
+            Time time = new Time(date.getTime());
+            setStartTime(time);
+        } catch (ParseException e) {
+            System.out.println("Error al parsear la cadena: " + e.getMessage());
+        }
+	}
+	
+	
+	// Fin métodos problemáticos
+	
 	
 	@Column(name = "active")
 	public boolean isActive() {
@@ -93,17 +147,21 @@ public class Schedule {
 	public void setFinishDay(Day finishDay) {
 		this.finishDay = finishDay;
 	}
-
-	public void setStartTime(LocalTime startTime) {
+	
+	public void setStartTime(Time startTime) {
 		this.startTime = startTime;
 	}
 	
+	public void setStartTime(LocalTime startTime) {
+		this.startTime = Time.valueOf(startTime);
+	}
+	
 	public void setEndTime(Time time) {
-		this.endTime = time.toLocalTime();
+		this.endTime = time;
 	}
 
 	public void setEndTime(LocalTime endTime) {
-		this.endTime = endTime;
+		this.endTime = Time.valueOf(endTime);
 	}
 	
 	public void setActive(boolean active) {

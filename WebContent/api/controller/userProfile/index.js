@@ -34,7 +34,7 @@ rol_template_select.addEventListener("change", (e) => {
 
 const getUsernameInPath = () => {
     const sp = new URLSearchParams(window.location.search);
-    return sp.get("u").trim() ?? "";
+    return (sp.get("u")??"").trim() ?? "";
 };
 
 const itsMe = () => getUsernameInPath().trim() == "";
@@ -254,7 +254,7 @@ const fillUserData = () => {
 
 
     btnState.addEventListener("click", async (e) => {
-        await rem();
+        if(confirm("Estás a punto de deshabilitar esta cuenta de usuario. \n¿Continuar?")) await rem();
     });
 };
 

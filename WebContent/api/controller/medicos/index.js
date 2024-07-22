@@ -1,5 +1,5 @@
 import { Query, enable, disable } from '../../actions/doctors.js';
-import { FilterStatus, login } from "../../actions/users.js";
+import { FilterStatus } from "../../actions/users.js";
 import * as headerAdminService from "../services/headerAdminService.js";
 
 let dataTableMedicos;
@@ -26,7 +26,7 @@ const btnNextPage = document.getElementById("btnNextPage");
 })();
 
 const load = async () => {
-    const user = await login("alicia.schimmel", "12345678");
+    // const user = await login("alicia.schimmel", "12345678");
     // @ts-ignore
     const medicos = await new Query().paginate(page, parseInt(ddlEntriesPerPage.value)).filterByStatus(FilterStatus.BOTH).search();
     // @ts-ignore

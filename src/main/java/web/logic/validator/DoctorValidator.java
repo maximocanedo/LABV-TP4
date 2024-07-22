@@ -141,7 +141,7 @@ public class DoctorValidator {
 	
 	public Set<Schedule> nonOverlappingIndividual(Schedule newSchedule, Set<Schedule> schedules) throws ValidationException {
 		CommonException ve = new ValidationException("Overlapping schedules. ", "Uno o varios de los horarios a introducir se superpone con uno existente. ");
-        boolean overlaps = schedules.parallelStream()
+        /* boolean overlaps = schedules.parallelStream()
         		.anyMatch(e -> 
         			( // N.day = E.day
         				newSchedule.getBeginDay() == e.getBeginDay()
@@ -159,10 +159,11 @@ public class DoctorValidator {
 						&& newSchedule.getStartTimeLT().isAfter(e.getStartTimeLT())
 					)
         		);
-        if(overlaps) throw ve;
+        if(overlaps) throw ve; // */
         
 		// No borrar hasta probar que funcione adecuadamente. 
-		/* for (Schedule e : schedules) {
+		///* 
+        for (Schedule e : schedules) {
 		
             if (newSchedule.getBeginDay() == e.getBeginDay()) {
                 if (newSchedule.getEndTimeLT().isAfter(e.getStartTimeLT()) &&

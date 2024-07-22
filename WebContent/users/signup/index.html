@@ -10,9 +10,10 @@
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
 </head>
-<body>
-    <br>
+<body><br>
     <form name="signup" action="#" class="container">
+        <h3>Registrar una cuenta</h3>
+        <br>
         <div class="mb-3">
             <label for="txtUsername" class="form-label">Nombre de usuario</label>
             <div class="input-group has-validation mb-3">
@@ -40,9 +41,10 @@
         <div class="mb-3">
             <label for="txtRepeatPassword" class="form-label">Repita su contraseña</label>
             <input type="password" required name="repeatPassword" id="txtRepeatPassword" class="form-control" aria-describedby="passwordRepeatHelpBlock" />
-            <div class="form-text" id="passwordRepeatHelpBlock">
-                Las contraseñas deben coincidir
-            </div>
+            <div class="invalid-feedback" id="passwordRepeatInvalidFeedback"></div>
+        </div>
+        <div class="mb-3">
+            <button type="submit" class="btn btn-primary" disabled id="btnCrear">Crear</button>
         </div>
     </form>
     <script type="module" src="./../../api/controller/signup/index.js"></script>

@@ -155,7 +155,7 @@ public class Doctor implements IDoctor {
 	}
 
 	@Override
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(
         name = "doctor_schedules",
         joinColumns = @JoinColumn(name = "doctor"),

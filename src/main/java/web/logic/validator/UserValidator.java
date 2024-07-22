@@ -28,7 +28,7 @@ public class UserValidator {
 	 * Al menos una mayúscula y una minúscula del alfabeto.
 	 * Al menos un dígito y un caracter especial.
 	 */
-	private static final String PASS_PATTERN = "/^(?=.*?[A-ZÑÇ])(?=.*?[a-zñç])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/";
+	private static final String PASS_PATTERN = "^(?=.*?[A-ZÑÇ])(?=.*?[a-zñç])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$";
 	
 	public String username(String username) throws ValidationException {
 		Pattern pattern = Pattern.compile(USERNAME_PATTERN);
@@ -36,7 +36,7 @@ public class UserValidator {
 		if(!matcher.matches()) {
 			throw new ValidationException("Validation error. ", "El nombre de usuario debe empezar con una letra, tener entre cinco y quince caracteres alfanúmericos, guiones bajos y/o puntos. ");
 		}
-		if(!users.checkUsernameAvailability(username))
+		if(users.exists(username))
 			throw new ValidationException("Username not available. ", "El nombre de usuario especificado no está disponible. Intente con otro. ");
 		return username;
 	}

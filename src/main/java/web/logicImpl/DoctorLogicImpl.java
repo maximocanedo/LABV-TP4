@@ -6,12 +6,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import web.daoImpl.DoctorDAOImpl;
+import web.daoImpl.ScheduleDAOImpl;
 import web.entity.Doctor;
 import web.entity.IDoctor;
 import web.entity.Optional;
@@ -32,6 +32,9 @@ public class DoctorLogicImpl implements IDoctorLogic {
 	
 	@Autowired
 	private UserPermitLogicImpl permits;
+	
+	@Autowired
+	private ScheduleDAOImpl schedulesrepository;
 	
 	@Autowired
 	private DoctorValidator doctorValidator;
@@ -66,23 +69,46 @@ public class DoctorLogicImpl implements IDoctorLogic {
     	Doctor doctor = optdoctor.get();
     	Set<Schedule> originalSchedules = doctor.getSchedules();
     	Set<Schedule> newSchedules = doctorValidator.nonOverlappingIndividual(schedule, originalSchedules);
+    	schedule = schedulesrepository.save(schedule);
+    	newSchedules = doctorValidator.nonOverlappingIndividual(schedule, originalSchedules);
     	doctor.setSchedules(newSchedules);
     	return newSchedules;
+    }
+    
+    public Set<Schedule> addScheduleById(int id, Schedule schedule, User requiring) {
+    	IDoctor d = doctorsrepository.findMinById(id, false).get();
+    	if(d == null) throw new NotFoundException("Doctor not found. ");
+    	return addSchedule(d.getFile(), schedule, requiring);
     }
     
     // TODO Pendiente probar
     @Override
     public Set<Schedule> removeSchedule(int file, Schedule schedule, User requiring) {
     	requiring = permits.require(requiring, Permit.UPDATE_DOCTOR_SCHEDULES);
+    	schedulesrepository.delete(schedule.getId());
     	Optional<Doctor> optdoctor = doctorsrepository.findByFile(file);
     	if(optdoctor.isEmpty()) throw new NotFoundException("Doctor not found. ");
     	Doctor doctor = optdoctor.get();
-    	Set<Schedule> originalSchedules = doctor.getSchedules();
-    	Set<Schedule> newSchedules = originalSchedules.parallelStream()
-    		.filter(sch -> sch.getId() != schedule.getId())
-    		.collect(Collectors.toSet());
-    	doctor.setSchedules(newSchedules);
-    	return newSchedules;
+    	doctor.removeSchedule(schedule);
+    	return doctor.getSchedules();
+    }
+    
+    public Set<Schedule> removeSchedule(int file, int schedule, User requiring) {
+    	Schedule s = new Schedule();
+    	s.setId(schedule);
+    	return removeSchedule(file, s, requiring);
+    }
+    
+    public Set<Schedule> removeScheduleById(int id, Schedule schedule, User requiring) {
+    	IDoctor d = doctorsrepository.findMinById(id, false).get();
+    	if(d == null) throw new NotFoundException("Doctor not found. ");
+    	return removeSchedule(d.getFile(), schedule, requiring);
+    }
+    
+    public Set<Schedule> removeScheduleById(int id, int schedule, User requiring) {
+    	IDoctor d = doctorsrepository.findMinById(id, false).get();
+    	if(d == null) throw new NotFoundException("Doctor not found. ");
+    	return removeSchedule(d.getFile(), schedule, requiring);
     }
 
     @Override

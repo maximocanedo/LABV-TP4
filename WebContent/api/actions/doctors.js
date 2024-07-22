@@ -50,7 +50,7 @@ export const findByFile = async (file) => {
  * Actualiza los datos de un doctor.
  * @param {number} id ID del doctor a actualizar.
  * @param {Object} data Nuevos datos del doctor.
- * @returns {Promise<Object>} Promesa con los datos actualizados del doctor.
+ * @returns {Promise<IDoctor>} Promesa con los datos actualizados del doctor.
  */
 export const update = async (id, data) => {
     return u.patch(`doctors/id/${id}`, data)
@@ -60,6 +60,33 @@ export const update = async (id, data) => {
             throw err;
         });
 };
+
+/**
+ * @param {number} scheduleId 
+ * @param {number} doctorFile 
+ * @returns {Promise<Schedule[]>}
+ */
+export const deleteSchedule = async (scheduleId, doctorFile) => {
+    return u.del(`doctors/file/${doctorFile}/schedules/${scheduleId}`)
+        .then(response => response.json())
+        .catch(err => {
+            throw err;
+        });
+};
+
+/**
+ * @param {Schedule} schedule 
+ * @param {number} doctorFile 
+ * @returns {Promise<Schedule[]>}
+ */
+export const addSchedule = async (schedule, doctorFile) => {
+    return u.post(`doctors/file/${doctorFile}/schedules`, {
+        ...schedule
+    }).then(response => response.json())
+    .catch(err => {
+        throw err;
+    });
+}
 
 /**
  * Deshabilita a un doctor por su ID.

@@ -1,24 +1,20 @@
 package web.logicImpl;
 
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
+import java.sql.Time;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
 @Converter(autoApply = true)
-public class LocalTimeAttributeConverter implements AttributeConverter<LocalTime, String> {
+public class LocalTimeAttributeConverter implements AttributeConverter<Time, Time> {
     
-    /**/
-	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
-
-    @Override
-    public String convertToDatabaseColumn(LocalTime locTime) {
-        return locTime == null ? null : locTime.format(FORMATTER);
+	@Override
+    public Time convertToDatabaseColumn(Time localTime) {
+        return localTime;
     }
 
     @Override
-    public LocalTime convertToEntityAttribute(String sqlTime) {
-        return sqlTime == null ? null : LocalTime.parse(sqlTime, FORMATTER);
-    } //*/
+    public Time convertToEntityAttribute(Time sqlTime) {
+        return sqlTime;
+    }
 }

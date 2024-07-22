@@ -35,8 +35,8 @@
  * @property {number} [id] - El ID del horario.
  * @property {string} beginDay - Día de inicio.
  * @property {string} finishDay - Día de finalización.
- * @property {[number, number]} startTime - Hora de inicio [hora, minuto].
- * @property {[number, number]} endTime - Hora de finalización [hora, minuto].
+ * @property {string} startTime - Hora de inicio [hora, minuto].
+ * @property {string} endTime - Hora de finalización [hora, minuto].
  * @typedef {ScheduleBasicProperties & Deletable} Schedule
  */
 /**
