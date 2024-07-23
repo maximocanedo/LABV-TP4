@@ -12,12 +12,13 @@ import { GenericQuery } from "./../../actions/commons.js";
 export class DoctorSelector extends Selector {
 
     static NO_FILE_SELECTED_LABEL = "Ningún médico seleccionado";
+    queryL = new doctors.Query();
 
     /**
      * @returns {GenericQuery<IDoctor>}
      */
-    initQuery() { return new doctors.Query(); }
-
+    initQuery() { return this.queryL; }
+    setInitialQuery(query = new doctors.Query()) { this.queryL = query; }
     /**
      * @param {IDoctor} file 
      * @param {ElementBuilder} parent 

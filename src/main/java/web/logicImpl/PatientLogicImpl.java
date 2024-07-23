@@ -140,6 +140,10 @@ public class PatientLogicImpl implements IPatientLogic {
 		patientsrepository.disable(id);
 	}
 
+	public boolean exists(String dni) {
+		return patientsrepository.existsByDNI(dni);
+	}
+
 	
 
 }

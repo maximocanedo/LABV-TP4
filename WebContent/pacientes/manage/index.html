@@ -11,27 +11,30 @@
     crossorigin="anonymous"></script>
 </head>
 <body>
-    <br><br>
-    <div class="wrapper">
+    <div class="wrapper d-none"> <!-- Dentro de este elemento todo lo necesario para control de horarios -->
+        <br><br>
+        <div class="sselector">
+
+        </div>
         <div class="mselector">
 
         </div>
         <select name="" id="fecha">
 
-        </select>
+        </select><button id="nextMonth">Siguiente mes</button>
         <select name="" id="hora"></select>
-    </div>
-    <br><br>
+        <br><br>
+    </div><br>
     <main class="container container-sm">
         <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
-              <button class="nav-link" id="nav-personal-info-tab" data-bs-toggle="tab" data-bs-target="#nav-personal-info" type="button" role="tab" aria-controls="nav-personal-info" aria-selected="false">Información básica</button>
-              <button class="nav-link active" id="nav-update-info-tab" data-bs-toggle="tab" data-bs-target="#nav-update-info" type="button" role="tab" aria-controls="nav-update-info" aria-selected="false">Acciones</button>
+              <button class="nav-link active " id="nav-personal-info-tab" data-bs-toggle="tab" data-bs-target="#nav-personal-info" type="button" role="tab" aria-controls="nav-personal-info" aria-selected="false">Información básica</button>
+              <button class="nav-link" id="nav-update-info-tab" data-bs-toggle="tab" data-bs-target="#nav-update-info" type="button" role="tab" aria-controls="nav-update-info" aria-selected="false">Acciones</button>
               <button class="nav-link" id="nav-permissions-tab" data-bs-toggle="tab" data-bs-target="#nav-permissions" type="button" role="tab" aria-controls="nav-permissions" aria-selected="true">Turnos</button>
             </div>
           </nav>
           <div class="tab-content" id="nav-tabContent">
-            <div class="tab-pane fade" id="nav-personal-info" role="tabpanel" aria-labelledby="nav-personal-info-tab" tabindex="0">
+            <div class="tab-pane fade show active" id="nav-personal-info" role="tabpanel" aria-labelledby="nav-personal-info-tab" tabindex="0">
                 <div class="list-group list-group-flush">
                     <div class="list-group-item">
                         <div class="row">
@@ -120,7 +123,7 @@
                 </div>
 
             </div>
-            <div class="tab-pane fade show active" id="nav-update-info" role="tabpanel" aria-labelledby="nav-update-info-tab" tabindex="0">
+            <div class="tab-pane fade" id="nav-update-info" role="tabpanel" aria-labelledby="nav-update-info-tab" tabindex="0">
                 <br>
                 <div class="card mb-3 __basicInfo">
                     <div class="card-header">

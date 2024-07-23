@@ -155,19 +155,28 @@ export const enable = async (id) => {
         });
 };
 
-
+/**
+ * 
+ * @param {number} doctorFile 
+ * @param {Date} begin 
+ * @returns {Promise<string[] | Date[]>}
+ */
 export const getAvailableDates = async (doctorFile, begin) => {
-    return u.get(`doctors/file/${doctorFile}/datesAvailable?from=${new Date(begin).toISOString().split("T")[0]}`)
+    return u.get(`doctors/file/${doctorFile}/datesAvailable`, { from: new Date(begin).toISOString().split("T")[0] })
         .then(response => response.json())
-        .then(x => {
-            x.map(d => console.log(new Date(d).toISOString().split("T")[0]));
-        })
+        .then(x => x.map(d => (new Date(d).toLocaleDateString())))
         .catch(console.error);
 };
 
+/**
+ * 
+ * @param {number} doctorFile 
+ * @param {Date} date 
+ * @returns {Promise<string[]>}
+ */
 export const getAvailableSchedules = async (doctorFile, date) => {
-    return u.get(`doctors/file/${doctorFile}/schedules?for=${new Date(date).toISOString().split("T")[0]}`)
+    return u.get(`doctors/file/${doctorFile}/schedules`, {"for": new Date(date).toISOString().split("T")[0]})
         .then(response => response.json())
-        .then(console.log)
+        .then(schedule => schedule.map(z => z.map(zz => ('0' + zz).slice(-2)).join(":")))
         .catch(console.error);
 };

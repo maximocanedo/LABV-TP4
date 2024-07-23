@@ -54,6 +54,13 @@ export const findByDNI = async (DNI) => {
         });
 };
 
+export const existsByDNI = async (DNI) => {
+    return u.head("patients/dni/" + DNI)
+        .then(response => response.ok)
+        .catch(err => {
+            throw err;
+        });
+};
 
 /**
  * Actualizar datos de un paciente.
