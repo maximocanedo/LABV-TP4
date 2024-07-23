@@ -47,7 +47,7 @@ btnAsignarTurno.addEventListener("click", () => {
     validateDate();
     if (valid.doctor && valid.patient && valid.date) {
         // @ts-ignore
-        appointments.create({doctor: doctorSelector.getSelectedFile(), patient: patientSelector.getSelectedFile(), date: txtDate.value})
+        appointments.create({doctor: doctorSelector.getSelectedFile(), patient: patientSelector.getSelectedFile(), date: new Date(txtDate.value).toISOString()})
     }
 });
 
