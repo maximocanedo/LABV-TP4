@@ -1,4 +1,4 @@
-import { div, input, select } from "../../../actions/commons.js";
+import { div, input, button } from "../../../actions/commons.js";
 import * as patients from "../../../actions/patients.js";
 /**
  * 
@@ -20,3 +20,4 @@ export const [ txtLocalty, txtLocaltyValid, txtLocaltyInvalid ] = vinput("Localt
 export const [ txtProvince, txtProvinceValid, txtProvinceInvalid ] = vinput("Province");
 export const [ txtBirth, txtBirthValid, txtBirthInvalid ] = vinput("Birth");
 export const [ txtEmail, txtEmailValid, txtEmailInvalid ] = vinput("Email");
+export const btnEnviar = button("#btnEnviar");

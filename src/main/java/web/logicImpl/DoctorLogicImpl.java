@@ -272,5 +272,13 @@ public class DoctorLogicImpl implements IDoctorLogic {
 			throw new NotFoundException("Doctor not found. ");
 		return doctorsrepository.getFreeTimeForDoctor(file, date);		
 	}
+
+	public boolean existsByFile(int file) {
+		return doctorsrepository.existsByFile(file);
+	}
+	
+	public boolean existsById(int id) {
+		return doctorsrepository.existsById(id);
+	}
 	
 }

@@ -11,10 +11,12 @@ import { GenericQuery } from "./../../actions/commons.js";
  */
 export class UserSelector extends Selector {
     
+    queryL = new users.Query();
     /**
      * @returns {GenericQuery<IUser>}
      */
-    initQuery() { return new users.Query(); }
+    initQuery() { return this.queryL; }
+    setInitialQuery(query = new users.Query()) { this.queryL = query; }
 
     /**
      * @param {IUser} file 

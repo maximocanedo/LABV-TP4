@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -92,6 +93,19 @@ public class DoctorController {
 	public IDoctor findbyFile(@PathVariable int file, HttpServletRequest req, HttpServletResponse res) {
 		User requiring = auth.require(req, res);
 		return (doctors.getByFile(file, requiring));
+	}
+	
+
+	@RequestMapping(value = "/file/{file}", method = RequestMethod.HEAD)
+	public void existsbyFile(@PathVariable int file, HttpServletRequest req, HttpServletResponse res) {
+		boolean exists = doctors.existsByFile(file);
+		res.setStatus(exists ? 200 : 404);
+	}
+	
+	@RequestMapping(value = "/id/{id}", method = RequestMethod.HEAD)
+	public void existsbyId(@PathVariable int id, HttpServletRequest req, HttpServletResponse res) {
+		boolean exists = doctors.existsById(id);
+		res.setStatus(exists ? 200 : 404);
 	}
 	
 	@PatchMapping("/id/{id}")
