@@ -160,8 +160,10 @@ load().then(() => {
 
     // @ts-ignore
     window.ausentAppointment  = async (id) => 
-        // @ts-ignore
-        update(id, {status: "ABSENT"})
+        update(id, {
+            status: "ABSENT", 
+            remarks: ''}
+        )
             .then(() => {
                 dataTableUpdate();
                 notification.setText("Marcado Ausente");
