@@ -71,7 +71,7 @@ const handleResults = (results) => {
         toListItem(result).appendTo(document.querySelector('.appointmentList'));
     });
     if(!results.length) {
-        document.querySelector(".appointmentList").innerHTML = 'No se han encontrado turnos. ';
+        document.querySelector(".appointmentListErr").innerHTML = 'No se han encontrado turnos. ';
     } else {
         loadMoreAppointments.classList.remove("d-none");
     }
@@ -94,6 +94,7 @@ btnSearchForAppointments.addEventListener('click', e => {
         .filterByDateBetween(data.from, data.to)
         .filterByStatus("ONLY_ACTIVE");
     document.querySelector(".appointmentList").innerHTML = '';
+    document.querySelector(".appointmentListErr").innerHTML = '';
     appointmentQuery.search().then(handleResults).catch(console.error);
 });
 

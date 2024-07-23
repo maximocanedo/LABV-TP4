@@ -76,7 +76,7 @@ public class DoctorLogicImpl implements IDoctorLogic {
     	Schedule saved = schedulesrepository.save(schedule);
     	Set<Schedule> n2wSchedules = doctorValidator.nonOverlappingIndividual(schedule, originalSchedules);
     	//originalSchedules.add(saved);
-    	schedulesrepository.link(schedule, doctor);
+    	schedulesrepository.link(saved, doctor);
     	doctor.setSchedules(n2wSchedules);
     	return n2wSchedules;
     }
