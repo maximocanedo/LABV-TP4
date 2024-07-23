@@ -169,6 +169,7 @@ public class DoctorMinimalView implements IDoctor {
 	@Format(label = "Horarios")
 	public String listSchedules() {
 		String schedules = "";
+		if(getSchedules() == null) return "";
 		for(Schedule schedule : this.getSchedules()) {
 			schedules += "\n · " + schedule;
 		}

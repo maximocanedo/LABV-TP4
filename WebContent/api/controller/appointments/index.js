@@ -146,32 +146,28 @@ load().then(() => {
     })
 
 
-    const presentAppointment = async (id) => {
-        const appointment = await findById(id).then(async (response) => {
-            const obs = prompt("Observaciones Consulta:")
-            const presentResponse = await update(id, { ...response, status: "PRESENT", remarks: obs }).then(() => {
+    // @ts-ignore
+    window.presentAppointment = async (id) => 
+        update(id, { 
+                status: "PRESENT", 
+                remarks: prompt("Observaciones Consulta:") 
+            }).then(() => {
                 dataTableUpdate();
                 notification.setText("Marcado Presente");
                 notification.setWarnColor(false);
                 notification.show();
-            })
-        });
-    }
+            }).catch(console.error);
 
-    const absentAppointment = async (id) => {
-        const appointment = await findById(id).then(async (response) => {
-            const ausentResponse = await update(id, { ...response, status: "ABSENT" }).then(() => {
+    // @ts-ignore
+    window.ausentAppointment  = async (id) => 
+        // @ts-ignore
+        update(id, {status: "ABSENT"})
+            .then(() => {
                 dataTableUpdate();
                 notification.setText("Marcado Ausente");
                 notification.setWarnColor(true);
                 notification.show();
-            })
-        });
-    }
-
-    // @ts-ignore
-    window.presentAppointment = presentAppointment;
-    // @ts-ignore
-    window.absentAppointment = absentAppointment;
+            }).catch(console.error);
+    
 });
 

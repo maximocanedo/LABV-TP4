@@ -1,6 +1,7 @@
 'use strict';
 import * as page from "./dom.js";
 import * as patients from "./../../../actions/patients.js";
+//import libphonenumber from "https://cdnjs.cloudflare.com/ajax/libs/google-libphonenumber/3.2.37/libphonenumber.min.js";
 
 function calcularDiferencia(date) {
     const today = new Date();
@@ -93,6 +94,28 @@ const validateBirth = () => {
     if(birth.getTime() > new Date().getTime()) {
         iv("birth", "El paciente aún no nació. ")
     } else v("birth", labelBirth(birth));
+};
+const validatePhone = () => {
+    
+
+};
+
+const initPhone = () => {
+    // @ts-ignore
+    const { AsYouTypeFormatter } = libphonenumber;
+    const asYouType = new AsYouTypeFormatter('ar');
+    const input = page.txtPhone;
+
+    input.addEventListener('keyup', (event) => {
+        asYouType.clear();
+        if(!input.value.startsWith("+54")) asYouType.inputDigit("+54");
+        input.value.split("").map(letter => {
+            asYouType.inputDigit(letter);
+        });
+        const validated = asYouType.currentOutput_;
+        (asYouType.isCompleteNumber_ ? v : iv)("phone", validated);
+    });
+    console.log(asYouType);
 }
 
 
@@ -100,6 +123,8 @@ page.txtName.addEventListener('change', validateName);
 page.txtSurname.addEventListener('change', validateSurname);
 page.txtDni.addEventListener('change', validateDni);
 page.txtBirth.addEventListener('change', validateBirth);
+initPhone();
+page.txtPhone.addEventListener('change', validatePhone);
 
 const v = (attr, v = "") => {
     valid[attr] = true;
@@ -108,7 +133,7 @@ const v = (attr, v = "") => {
     page["txt" + attr].classList.remove("is-invalid");
     page["txt" + attr + "Valid"].innerText = v;
     page["txt" + attr + "Invalid"].innerText = '';
-    console.log(valid);
+    //console.log(valid);
 };
 
 const iv = (attr, v = "") => {
@@ -118,9 +143,9 @@ const iv = (attr, v = "") => {
     page["txt" + attr].classList.add("is-invalid");
     page["txt" + attr + "Valid"].innerText = '';
     page["txt" + attr + "Invalid"].innerText = v;
-    console.log(valid);
+    //console.log(valid);
 };
 
 (async () => {
-    console.log("OK");
+    //console.log("OK");
 })();

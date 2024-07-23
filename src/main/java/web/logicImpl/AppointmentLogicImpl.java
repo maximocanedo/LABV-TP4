@@ -71,7 +71,7 @@ public class AppointmentLogicImpl implements IAppointmentLogic {
         if (turno.getRemarks() != null) original.setRemarks(appointmentValidator.remarks(turno.getRemarks()));
         if (turno.getStatus() != null) original.setStatus(appointmentValidator.status(turno.getStatus()));
         if (turno.getPatient() != null) original.setPatient(appointmentValidator.patient(turno.getPatient()));
-		return this.appointmentsrepository.update(turno);
+		return this.appointmentsrepository.update(original);
 	}
 	
 	public AppointmentCommunicationView updateComm(Appointment appointment, User requiring) throws NotFoundException {
