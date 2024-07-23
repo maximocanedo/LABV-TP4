@@ -3,6 +3,10 @@ import { load, patientSelector } from "./appointments.js";
 import { SpecialtySelector } from "./../../lib/selectors/SpecialtySelector.js";
 import * as doctors from "./../../actions/doctors.js";
 import { ElementBuilder } from "./../../controller/dom.js";
+import { div } from "../../actions/commons.js";
+import { resolveLocalUrl } from "./../../lib/commons.js";
+
+const userLinkedWrapper = div("#userLinkedWrapper");
 
 const specialtySelector = new SpecialtySelector();
 //patientSelector.usePlaceholder();
@@ -100,6 +104,15 @@ addScheduleBtn.addEventListener('click', async (e) => {
         }).catch(markError);
 });
 
+const getLink = user => {
+    if(!user) {
+        return "No está vinculado a una cuenta de usuario. ";
+    }
+    const a = document.createElement("a");
+    a.href = resolveLocalUrl('/users/manage?u=' + user.username);
+    a.innerText = `${user.name} (@${user.username})`;
+    return a;
+}
 
 btnState.addEventListener('click', async (e) => {
     if(confirm(`Estás a punto de ${doctor.active ? "deshabilitar" : "habilitar"} este registro. \n¿Continuar?`)) {
@@ -234,6 +247,9 @@ const fillData = () => {
     fill("doctor.file", doctor.file);
     fill("doctor.name", doctor.name);
     fill("doctor.surname", doctor.surname);
+    userLinkedWrapper.innerHTML = '';
+    // @ts-ignore
+    userLinkedWrapper.append(getLink(doctor.assignedUser));
     if(doctor.sex) {
         allowSensible("doctor.sex");
         fill("doctor.sex", doctor.sex);
