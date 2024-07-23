@@ -23,7 +23,7 @@ const btnNextPage = document.getElementById("btnNextPage");
 })();
 
 const load = async () => {
-    const user = await login("alicia.schimmel", "12345678");
+   // const user = await login("alicia.schimmel", "12345678");
     // @ts-ignore
     const pacientes = await new Query().paginate(page, parseInt(ddlEntriesPerPage.value)).filterByStatus(FilterStatus[ddlStatusFilter.value]).search();    
     // @ts-ignore
@@ -39,7 +39,7 @@ const load = async () => {
                 return data ? "Activo" : "Inactivo";
             }},
             { data: '', render: function ( data, type, row ) {
-                return `<form action="./manage/index.html?Id=${row.id}" method="post"><button type="submit" class="btn btn-primary">Modificar Paciente</button></form>`;
+                return `<form action="./manage?id=${row.id}" method="post"><button type="submit" class="btn btn-primary">Ver</button></form>`;
             }},
             { data: '', render: function ( data, type, row ) {
                 return `<button type="button" class="btn btn-primary" onclick="${row.active ? "disable" : "enable"}Patient(${row.id});">${row.active ? "Desactivar" : "Activar"}</button>`;

@@ -51,7 +51,7 @@ export class Selector {
     /** @type {HTMLButtonElement} */ #mainButton;
     /** @type {Text} */ #mainButtonTextNode;
     // End of form control private properties.
-    #trigger;
+    /** @type {HTMLDivElement} */ #trigger;
     /** @type {GenericQuery<T>} */#query = this.initQuery();
     // Modal list
     /** @type {HTMLDivElement} */ #listElement;
@@ -78,6 +78,7 @@ export class Selector {
         return new GenericQuery();
     }
 
+
     getSelectedFile() { return this.#file; } updateSelection(file) { 
         if(!file) {
             this.#selectedLabelTextNode.nodeValue = this.getStrings().NO_FILE_SELECTED_LABEL;
@@ -90,6 +91,7 @@ export class Selector {
             this.#clearButton.classList.remove("d-none");
         }
         this.#file = file;
+        (this.getTrigger()).dispatchEvent(new Event('change'));
         this.#modal.hide();
         return this;
     }
@@ -101,7 +103,7 @@ export class Selector {
     }
 
     #initializeFormControl() {
-        this.#trigger = document.createElement('DIV');
+        this.#trigger = /** @type {HTMLDivElement} */(document.createElement('DIV'));
         this.#trigger.setAttribute('class', 'input-group');
 
         var selectedLabel = document.createElement('SPAN');
