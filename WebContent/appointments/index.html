@@ -14,32 +14,27 @@
     <br>
     <main id="container-md">
         <div class="row">
-            <div class="col-2"></div>
+            <div class="col-1"></div>
             <div class="col w-100">
-                <div class="container justify-content-end">
-                    <div class="d-flex" role="search">
-                        <select class="form-select me-2" style="width: 80px;" aria-label="Default select example" id="ddlEntriesPerPage">
-                            <option value="10" selected>10</option>
-                            <option value="25">25</option>
-                            <option value="50">50</option>
-                        </select>
-                        <select class="form-select me-2" style="width: 140px;" aria-label="Default select example" id="ddlStatusFilter">
-                            <option value="ONLY_ACTIVE" selected>Activo</option>
-                            <option value="ONLY_INACTIVE">Inactivo</option>
-                            <option value="BOTH">Ambos</option>
-                        </select>
-                        <select class="form-select me-2" style="width: 140px;" aria-label="Default select example" id="ddlStatusFilterAppointment">
-                            <option value="PENDING" selected>PENDING</option>
-                            <option value="ABSENT">ABSENT</option>
-                            <option value="PRESENT">PRESENT</option>
-                        </select>
-                        <input class="form-control me-2" type="search" id="txtBuscar" placeholder="Buscar..." aria-label="Search">
-                        <button class="btn btn-outline-success me-2" type="submit" id="btnBuscar">Buscar</button>
-                    </div>
+                <div class="d-flex" role="search">
+                    <select class="form-select me-2" style="width: 80px;" aria-label="Default select example"
+                        id="ddlEntriesPerPage">
+                        <option value="10" selected>10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                    </select>
+                    <select class="form-select me-2" style="width: 140px;" aria-label="Default select example"
+                        id="ddlStatusFilterAppointment">
+                        <option value="PENDING" selected>PENDING</option>
+                        <option value="ABSENT">ABSENT</option>
+                        <option value="PRESENT">PRESENT</option>
+                    </select>
+                    <input class="form-control me-2" type="search" id="txtBuscar" placeholder="Buscar..."
+                        aria-label="Search">
+                    <button class="btn btn-outline-success me-2" type="submit" id="btnBuscar">Buscar</button>
                 </div>
-
             </div>
-            <div class="col-2"></div>
+            <div class="col-1"></div>
         </div>
         <div class="row mt-3">
             <div class="col-1"></div>
@@ -47,7 +42,7 @@
                 <table id="tableListadoAppointments" class="display" style="width:100%"></table>
                 <div class="spinner-border" role="status" id="loadingSpinner">
                     <span class="visually-hidden">Loading...</span>
-                  </div>
+                </div>
             </div>
             <div class="col-1"></div>
         </div>
