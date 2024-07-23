@@ -55,6 +55,10 @@ public class AppointmentValidator {
 		return date;
 	}
 	
+	public Date dateUpdate(Date date, IDoctor doctor) throws ValidationException {	
+		return date;
+	}
+	
 	public String remarks(String remarks) throws ValidationException {
 		return remarks;
 	}

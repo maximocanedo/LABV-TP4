@@ -67,7 +67,7 @@ public class AppointmentLogicImpl implements IAppointmentLogic {
 		if(search.isEmpty()) throw new NotFoundException();
 		Appointment original = search.get();
         if (turno.getAssignedDoctor() != null) original.setAssignedDoctor(appointmentValidator.doctor(turno.getAssignedDoctor()));
-		if (turno.getDate() != null) original.setDate(appointmentValidator.date(turno.getDate(), turno.getAssignedDoctor()));
+		if (turno.getDate() != null) original.setDate(appointmentValidator.dateUpdate(turno.getDate(), turno.getAssignedDoctor()));
         if (turno.getRemarks() != null) original.setRemarks(appointmentValidator.remarks(turno.getRemarks()));
         if (turno.getStatus() != null) original.setStatus(appointmentValidator.status(turno.getStatus()));
         if (turno.getPatient() != null) original.setPatient(appointmentValidator.patient(turno.getPatient()));
