@@ -50,7 +50,7 @@ public class AppointmentDAOImpl implements IAppointmentDAO {
     public Optional<Appointment> findById(int id, boolean includeInactives) {
 		final Optional<Appointment> turno = new Optional<>();
 		dataManager.run(session -> {
-			String hql = "FROM Appointment WHERE id = :id" + (includeInactives ? "" : " AND active");
+			String hql = "FROM Appointment WHERE id = :id" + (includeInactives ? "" : " AND active = 1");
 			Query query = session.createQuery(hql);
 			query.setParameter("id", id);
 			turno.set((Appointment) query.uniqueResult());
@@ -62,7 +62,7 @@ public class AppointmentDAOImpl implements IAppointmentDAO {
     public Optional<AppointmentCommunicationView> findComById(int id, boolean includeInactives) {
 		final Optional<AppointmentCommunicationView> turno = new Optional<>();
 		dataManager.run(session -> {
-			String hql = "FROM AppointmentCommunicationView WHERE id = :id" + (includeInactives ? "" : " AND active");
+			String hql = "FROM AppointmentCommunicationView WHERE id = :id" + (includeInactives ? "" : " AND active = 1");
 			Query query = session.createQuery(hql);
 			query.setParameter("id", id);
 			turno.set((AppointmentCommunicationView) query.uniqueResult());
@@ -74,7 +74,7 @@ public class AppointmentDAOImpl implements IAppointmentDAO {
     public Optional<AppointmentMinimalView> findMinById(int id, boolean includeInactives) {
 		final Optional<AppointmentMinimalView> turno = new Optional<>();
 		dataManager.run(session -> {
-			String hql = "FROM AppointmentMinimalView WHERE id = :id" + (includeInactives ? "" : " AND active");
+			String hql = "FROM AppointmentMinimalView WHERE id = :id" + (includeInactives ? "" : " AND active = 1");
 			Query query = session.createQuery(hql);
 			query.setParameter("id", id);
 			turno.set((AppointmentMinimalView) query.uniqueResult());
