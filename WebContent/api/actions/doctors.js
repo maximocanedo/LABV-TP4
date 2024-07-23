@@ -46,6 +46,17 @@ export const findByFile = async (file) => {
         });
 };
 
+export const existsByFile = async (file) => u.head(`doctors/file/${file}`)
+    .then(response => response.ok)
+    .catch(err => {
+        throw err;
+    });
+
+export const existsById = async (id) => u.head(`doctors/id/${id}`)
+    .then(response => response.ok)
+    .catch(err => {throw err});
+
+
 /**
  * Actualiza los datos de un doctor.
  * @param {number} id ID del doctor a actualizar.

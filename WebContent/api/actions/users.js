@@ -76,10 +76,25 @@ export const existsByUsername = async (username) => {
  * @extends {GenericQuery<IUser>}
  */
 export class Query extends GenericQuery {
+
+    unassigned = false;
+
     constructor(q = "") {
         super(q);
         super.setLocalDatabase(db);
         super.setPrefix("users");
+    }
+
+    filterByUnassigned(x) {
+        this.unassigned = x;
+        return this;
+    }
+
+    getParams() {
+        return {
+            ...super.getParams(),
+            checkUnassigned: this.unassigned ? "true" : "false"
+        };
     }
 }
 

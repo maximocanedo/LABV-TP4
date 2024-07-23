@@ -8,6 +8,7 @@ public class UserQuery implements Searchable {
 	private FilterStatus status = FilterStatus.ONLY_ACTIVE;
 	private int page;
 	private int size;
+	public boolean checkUnassigned = false; // ¿Filtramos los que no tienen doctor asignado?
 	
 	public UserQuery(String q, FilterStatus status) {
 		setQueryText(q);
@@ -24,6 +25,14 @@ public class UserQuery implements Searchable {
 		return this;
 	}
 	
+	public UserQuery filterByUnassigned(boolean x) {
+		this.checkUnassigned = x;
+		System.out.println("Check? " + x);
+		return this;
+	}
+	
+	
+	
 	public UserQuery paginate(String page, String size) {
 		try {
 			this.page = Integer.parseInt(page);
@@ -36,10 +45,13 @@ public class UserQuery implements Searchable {
 	
 	@Override
 	public Query toQuery(Session session) {
-		StringBuilder hql = new StringBuilder("SELECT u FROM UserView u ");
+		StringBuilder hql = new StringBuilder("SELECT u FROM UserView u LEFT JOIN u.doctor d ");
 		hql.append("WHERE (u.username LIKE :q OR u.name LIKE :q) ");
 		if(getStatus() != FilterStatus.BOTH) {
 			hql.append("AND u.active = :status");
+		}
+		if(this.checkUnassigned) {
+			hql.append(" AND d IS NULL ");
 		}
 		Query query = session.createQuery(hql.toString());
 		query.setParameter("q", "%" + getQueryText() + "%");

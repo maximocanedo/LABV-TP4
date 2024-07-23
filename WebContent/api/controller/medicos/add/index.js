@@ -1,8 +1,33 @@
 'use strict';
 import * as page from "./dom.js";
-import * as patients from "./../../../actions/patients.js";
+import * as doctors from "./../../../actions/doctors.js";
 import { resolveLocalUrl } from "../../../lib/commons.js";
 //import libphonenumber from "https://cdnjs.cloudflare.com/ajax/libs/google-libphonenumber/3.2.37/libphonenumber.min.js";
+
+
+
+const v = (attr, v = "") => {
+    valid[attr] = true;
+    attr = attr[0].toUpperCase() + attr.slice(1);
+    page["txt" + attr].classList.add("is-valid");
+    page["txt" + attr].classList.remove("is-invalid");
+    page["txt" + attr + "Valid"].innerText = v;
+    page["txt" + attr + "Invalid"].innerText = '';
+   // console.log(valid);
+    page.btnEnviar.disabled = Object.keys(valid).some(key => !valid[key]);
+};
+
+const iv = (attr, v = "") => {
+    valid[attr] = false;
+    attr = attr[0].toUpperCase() + attr.slice(1);
+    page["txt" + attr].classList.remove("is-valid");
+    page["txt" + attr].classList.add("is-invalid");
+    page["txt" + attr + "Valid"].innerText = '';
+    page["txt" + attr + "Invalid"].innerText = v;
+    page.btnEnviar.disabled = true;
+    //console.log(valid);
+};
+
 
 const calcularDiferencia = (date) => {
     const today = new Date();
@@ -41,20 +66,16 @@ const labelBirth = (date) => {
         if(isBirthDay) return `Hoy cumple ${y}`;
         else return y;
     }
-    if(x.months) return `${x.months} mes${x.months > 1 ? "es" : ""}`;
-    if(x.days > 1) return `${x.days} día${x.days > 1 ? "s" : ""}`;
-    if(x.days == 0) return `El paciente nació hoy. `;
-    if(x.days == 1) return `El paciente nació ayer. `;
 };
 
 const valid = {
     name: false,
     surname: false,
-    dni: false,
+    file: false,
+    sex: false,
     phone: false,
     address: false,
     localty: false,
-    province: false,
     birth: false,
     email: false
 };
@@ -74,26 +95,29 @@ const validateSurname = () => {
     } else v("surname");
 };
 
-const validateDni = async () => {
-    const dni = page.txtDni.value;
-    if(dni.length == 0) {
-        iv("dni", "Campo requerido. ");
-    } else if(/\D/.test(dni)) {
-        iv("dni", "El D.N.I. sólo puede contener números. ");
+const validateFile = async () => {
+    const file = page.txtFile.value;
+    if(file.length == 0) {
+        iv("file", "Campo requerido. ");
+    } else if(/\D/.test(file)) {
+        iv("file", "El legajo sólo puede contener números. ");
     } else {
-        patients.existsByDNI(dni).then(ok => {
-            if(ok) iv("dni", "El D.N.I. ya fue registrado. ");
-            else v("dni");
+        doctors.existsByFile(file).then(ok => {
+            if(ok) iv("file", "El legajo ya fue registrado. ");
+            else v("file");
         }).catch(err => {
-            v("dni")
+            v("file")
         })
     }
 };
 const validateBirth = () => {
     const birth = page.txtBirth.valueAsDate;
     birth.setDate(birth.getDate() + 1);
-    if(birth.getTime() > new Date().getTime()) {
-        iv("birth", "El paciente aún no nació. ")
+    const d18 = new Date();
+    d18.setFullYear(d18.getFullYear() - 18);
+
+    if(birth.getTime() > d18.getTime()) {
+        iv("birth", "El médico debe ser mayor de edad. ")
     } else v("birth", labelBirth(birth));
 };
 
@@ -147,73 +171,63 @@ const validateLocalty = () => {
     if(localty.length == 0) iv("localty", "Campo requerido. ");
     else v("localty");
 };
-const validateProvince = () => {
-    const province = page.txtProvince.value.trim();
-    if(province.length == 0) iv("province", "Campo requerido. ");
-    else v("province");
+const validateSex = () => {
+    const sex = page.txtSex.value;
+    if(sex != 'M' && sex != 'F') iv("sex", "Ingrese un valor válido. ");
+    else v("sex");
 };
-
+const validateUser = () => {
+    const user = page.userSelector.getSelectedFile();
+    if(user == null) iv("user", "Seleccione un usuario. ");
+    else if(user.doctor) iv("user", "Este usuario ya tiene un doctor asignado. Intente con otro. ");
+    else v("user"); 
+};
+const validateSpecialty = () => {
+    const specialty = page.specialtySelector.getSelectedFile();
+    if(specialty == null) iv("specialty", "Seleccione una especialidad. ");
+    else v("specialty");
+}
 
 page.txtName.addEventListener('change', validateName);
 page.txtSurname.addEventListener('change', validateSurname);
-page.txtDni.addEventListener('change', validateDni);
+page.txtFile.addEventListener('change', validateFile);
 page.txtBirth.addEventListener('change', validateBirth);
 page.txtEmail.addEventListener('change', validateEmail);
 page.txtAddress.addEventListener('change', validateAddress);
 page.txtLocalty.addEventListener('change', validateLocalty);
-page.txtProvince.addEventListener('change', validateProvince);
+page.txtSex.addEventListener('change', validateSex);
 page.txtName.addEventListener('blur', validateName);
 page.txtSurname.addEventListener('blur', validateSurname);
-page.txtDni.addEventListener('blur', validateDni);
+page.txtFile.addEventListener('blur', validateFile);
 page.txtBirth.addEventListener('blur', validateBirth);
 page.txtEmail.addEventListener('blur', validateEmail);
 page.txtAddress.addEventListener('blur', validateAddress);
 page.txtLocalty.addEventListener('blur', validateLocalty);
-page.txtProvince.addEventListener('blur', validateProvince);
+page.specialtySelector.getTrigger().addEventListener('change', validateSpecialty);
+page.userSelector.getTrigger().addEventListener('change', validateUser);
 page.btnEnviar.addEventListener('click', async () => {
     const birth = page.txtBirth.valueAsDate;
     birth.setDate(birth.getDate() + 1);
     const data = {
         name: page.txtName.value,
         surname: page.txtSurname.value,
-        dni: page.txtDni.value,
+        file: page.txtFile.value,
         birth,
         phone: phoneValue,
         email: page.txtEmail.value,
         address: page.txtAddress.value,
         localty: page.txtLocalty.value,
-        province: page.txtProvince.value
+        specialty: page.specialtySelector.getSelectedFile(),
+        sex: page.txtSex.value,
+        user: page.userSelector.getSelectedFile()
     };
-    console.log(data);
-    patients.create(data)
-        .then(patient => {
-            const url = resolveLocalUrl(`/pacientes/manage?id=${patient.id}`);
+    doctors.create(data)
+        .then(doctor => {
+            const url = resolveLocalUrl(`/medicos/manage?file=${doctor.file}`);
             window.location.href = url;
         }).catch(console.error);
-
 });
 
-
-
-const v = (attr, v = "") => {
-    valid[attr] = true;
-    attr = attr[0].toUpperCase() + attr.slice(1);
-    page["txt" + attr].classList.add("is-valid");
-    page["txt" + attr].classList.remove("is-invalid");
-    page["txt" + attr + "Valid"].innerText = v;
-    page["txt" + attr + "Invalid"].innerText = '';
-    page.btnEnviar.disabled = Object.keys(valid).some(key => !valid[key]);
-};
-
-const iv = (attr, v = "") => {
-    valid[attr] = false;
-    attr = attr[0].toUpperCase() + attr.slice(1);
-    page["txt" + attr].classList.remove("is-valid");
-    page["txt" + attr].classList.add("is-invalid");
-    page["txt" + attr + "Valid"].innerText = '';
-    page["txt" + attr + "Invalid"].innerText = v;
-    page.btnEnviar.disabled = true;
-};
 
 (async () => {
     initPhone();

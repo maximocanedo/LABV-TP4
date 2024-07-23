@@ -13,7 +13,7 @@
 </head>
 <body><br>
     <main class="container">
-        <h2>Registrar paciente</h2>
+        <h2>Registrar médico</h2>
         <br>
         <h4>Información básica</h4>
         <div class="mb-3">
@@ -29,16 +29,39 @@
             <div class="invalid-feedback" id="txtSurnameInvalid"></div>
         </div>
         <div class="mb-3">
-            <label for="txtDNI" class="form-label">Número de D.N.I.:</label>
-            <input class="form-control" type="text" id="txtDNI">
-            <div class="valid-feedback" id="txtDNIValid"></div>
-            <div class="invalid-feedback" id="txtDNIInvalid"></div>
+            <label for="txtFile" class="form-label">Número de legajo:</label>
+            <input class="form-control" type="text" id="txtFile">
+            <div class="valid-feedback" id="txtFileValid"></div>
+            <div class="invalid-feedback" id="txtFileInvalid"></div>
+        </div>
+        <div class="mb-3">
+            <label for="txtUser" class="form-label">Usuario:</label>
+            <div class="txtUserWrapper">
+                <div class="valid-feedback" id="txtUserValid"></div>
+                <div class="invalid-feedback" id="txtUserInvalid"></div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="txtSex" class="form-label">Sexo:</label>
+            <select name="txtSex" class="form-control form-select" id="txtSex">
+                <option selected disabled>Seleccione una opción</option>
+                <option value="M">Masculino</option>
+                <option value="F">Femenino</option>
+            </select>
+            <div class="valid-feedback" id="txtSexValid"></div>
+            <div class="invalid-feedback" id="txtSexInvalid"></div>
         </div>
         <div class="mb-3">
             <label for="txtBirth" class="form-label">Fecha de nacimiento:</label>
             <input class="form-control" type="date" id="txtBirth">
             <div class="valid-feedback" id="txtBirthValid"></div>
             <div class="invalid-feedback" id="txtBirthInvalid"></div>
+        </div>
+        <div class="mb-3">
+            <label for="specialtySelector" class="form-label">Especialidad:</label>
+            <div class="specialtySelectorWrapper"></div>
+            <div class="valid-feedback" id="specialtySelectorValid"></div>
+            <div class="invalid-feedback" id="specialtySelectorInvalid"></div>
         </div>
         <hr>
         <h4>Contacto</h4>
@@ -69,15 +92,9 @@
             <div class="invalid-feedback" id="txtLocaltyInvalid"></div>
         </div>
         <div class="mb-3">
-            <label for="txtProvince" class="form-label">Provincia o estado: </label>
-            <input class="form-control" type="text" id="txtProvince">
-            <div class="valid-feedback" id="txtProvinceValid"></div>
-            <div class="invalid-feedback" id="txtProvinceInvalid"></div>
-        </div>
-        <div class="mb-3">
             <button class="btn btn-primary" disabled id="btnEnviar">Enviar</button>
         </div>
     </main>
-    <script type="module" src="./../../api/controller/pacientes/add/index.js"></script>
+    <script type="module" src="./../../api/controller/medicos/add/index.js"></script>
 </body>
 </html>

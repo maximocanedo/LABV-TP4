@@ -67,12 +67,13 @@ public class UserController {
 	public List<UserView> search(
 			@RequestParam(required = false, defaultValue = "") String q, 
 			@RequestParam(required = false, defaultValue = "") FilterStatus status,
+			@RequestParam(required = false, defaultValue = "false") boolean checkUnassigned,
 			@RequestParam(required = false, defaultValue = "1") int page,
 			@RequestParam(required = false, defaultValue = "15") int size,
 			HttpServletRequest req, HttpServletResponse res
 			) {
 		User requiring = auth.require(req, res);
-		return users.search(new UserQuery(q, status).paginate(page, size), requiring);
+		return users.search(new UserQuery(q, status).paginate(page, size).filterByUnassigned(checkUnassigned), requiring);
 	}
 	
 	/** # Acciones con terceros **/
