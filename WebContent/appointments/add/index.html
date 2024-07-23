@@ -13,6 +13,27 @@
 </head>
 <body>
     <main class="container">
+        <div class="mb-3">
+            <label for="selectorDoctor" class="form-label">Doctor:</label>
+            <div class="selectorDoctor"></div>
+            <div class="valid text-success d-none" id="selectorDoctorValid"></div>
+            <div class="invalid text-danger d-none" id="selectorDoctorInvalid"></div>
+        </div>
+        <div class="mb-3">
+            <label for="selectorPatient" class="form-label">Paciente:</label>
+            <div class="selectorPatient"></div>
+            <div class="valid text-success d-none" id="selectorPatientValid"></div>
+            <div class="invalid text-danger d-none" id="selectorPatientInvalid"></div>
+        </div>
+        <div class="mb-3">
+            <label for="selectorDate" class="form-label">Fecha y Hora Turno:</label>
+            <div class="selectorDate"></div>
+            <div class="valid-feedback" id="selectorDateValid"></div>
+            <div class="invalid-feedback" id="selectorDateInvalid"></div>
+        </div>
+        <div class="mb-3">
+            <button type="button" class="btn btn-success" id="btnAsignarTurno">Asignar Turno</button>
+        </div>
     </main>
     <script type="module" src="./../../api/controller/appointments/add/index.js"></script>
 </body>

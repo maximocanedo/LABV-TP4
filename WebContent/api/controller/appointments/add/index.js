@@ -6,15 +6,15 @@ import * as doctors from "../../../actions/doctors.js";
 import { SpecialtySelector } from "../../../lib/selectors/SpecialtySelector.js";
 import { div, button, input, select } from "./../../../actions/commons.js";
 
-export const mselector = div(".mselector");
-export const sselector = div(".sselector");
-export const specialtyS = new SpecialtySelector();
+const mselector = div(".selectorDoctor");
+const sselector = div(".selectorPatient");
+const specialtyS = new SpecialtySelector();
 sselector.append(specialtyS.getTrigger());
-export const doctorS = new DoctorSelector();
+const doctorS = new DoctorSelector();
 mselector.append(doctorS.getTrigger());
-export const fecha = select("#fecha");
-export const hora = select("#hora");
-export const nextMonth = button("#nextMonth");
+const fecha = select("#fecha");
+const hora = select("#hora");
+const nextMonth = button("#nextMonth");
 
 const date = new Date();
 specialtyS.getTrigger().addEventListener('change', e => {
