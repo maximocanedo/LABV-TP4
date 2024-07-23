@@ -36,7 +36,11 @@ const load = async () => {
         columns: [
             { data: 'id', title: 'Id' },
             { data: 'assignedDoctor.name', title: 'Doctor Asignado' },
-            { data: 'date', title: 'Fecha Turno' },
+            { data: 'date', title: 'Fecha Turno', render: function ( data, type, row ) {
+                const dateEpoch = new Date(data);
+                const date = new Date(dateEpoch).toISOString().split("T")[0];
+                return date;
+            }},
             { data: 'patient.name', title: 'Paciente Asignado' },
             { data: 'patient.dni', title: 'DNI Paciente' },
             { data: 'remarks', title: 'Observaciones'},
