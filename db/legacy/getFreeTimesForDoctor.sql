@@ -66,7 +66,7 @@ BEGIN
                     IF hayTurno = 0 THEN
                         INSERT INTO horarios (hora) SELECT SEC_TO_TIME((hh * 60 * 60) + (mm * 60)) as hora;
                     END IF;
-                SET mm = mm + 60;
+                SET mm = mm + 15;
             END WHILE;
             SET mm = 0;
             SET hh = hh + 1;
