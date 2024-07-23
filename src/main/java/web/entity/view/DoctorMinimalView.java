@@ -50,8 +50,12 @@ public class DoctorMinimalView implements IDoctor {
 	}
 	
 	public static DoctorMinimalView from(Doctor data) {
-		DoctorMinimalView view = from(data);
-		if(view == null) return null;
+		DoctorMinimalView view = new DoctorMinimalView();
+		view.setId(data.getId());
+		view.setFile(data.getFile());
+		view.setName(data.getName());
+		view.setSurname(data.getSurname());
+		view.setSpecialty(data.getSpecialty());
 		view.setUser(UserView.from(data.getUser()));
 		return view;
 	}
