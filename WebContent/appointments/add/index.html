@@ -16,20 +16,23 @@
         <div class="mb-3">
             <label for="selectorDoctor" class="form-label">Doctor:</label>
             <div class="selectorDoctor"></div>
-            <div class="valid-feedback" id="selectorDoctorValid"></div>
-            <div class="invalid-feedback" id="selectorDoctorValid"></div>
+            <div class="valid text-success d-none" id="selectorDoctorValid"></div>
+            <div class="invalid text-danger d-none" id="selectorDoctorInvalid"></div>
         </div>
         <div class="mb-3">
-            <label for="selectorPaciente" class="form-label">Paciente:</label>
-            <div class="selectorPaciente"></div>
-            <div class="valid-feedback" id="selectorPacienteValid"></div>
-            <div class="invalid-feedback" id="selectorPacienteValid"></div>
+            <label for="selectorPatient" class="form-label">Paciente:</label>
+            <div class="selectorPatient"></div>
+            <div class="valid text-success d-none" id="selectorPatientValid"></div>
+            <div class="invalid text-danger d-none" id="selectorPatientInvalid"></div>
         </div>
         <div class="mb-3">
             <label for="txtDate" class="form-label">Fecha y Hora Turno:</label>
             <input class="form-control" type="datetime-local" id="txtDate">
             <div class="valid-feedback" id="txtDateValid"></div>
             <div class="invalid-feedback" id="txtDateInvalid"></div>
+        </div>
+        <div class="mb-3">
+            <button type="button" class="btn btn-success" id="btnAsignarTurno">Asignar Turno</button>
         </div>
     </main>
     <script type="module" src="./../../api/controller/appointments/add/index.js"></script>
