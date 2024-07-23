@@ -1,9 +1,14 @@
+/**
+ * @deprecated usar /doctorProfile/*.js
+ */
+
 import * as headerAdminService from "../../services/headerAdminService.js";
 import { createStore } from "../../../lib/redux.js";
 import { ElementBuilder } from "../../dom.js";
 import { findById, update } from "../../../actions/doctors.js";
 import { login } from "../../../actions/users.js";
 import { SpecialtySelector } from "../../.././lib/selectors/SpecialtySelector.js";
+
 
 const event = {
     UPDATE_NAME: "UPDATE_NAME",

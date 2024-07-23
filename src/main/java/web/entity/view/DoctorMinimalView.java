@@ -120,6 +120,15 @@ public class DoctorMinimalView implements IDoctor {
     public UserView getUser() {
 		return user;
 	}
+	
+	@Transient
+	@JsonProperty("assignedUser")
+	public UserView getAssignedUser() {
+		if(getUser() == null) return null;
+		UserView view = getUser();
+		view.setDoctor(null);
+		return view;
+	}
 
 	@Override
 	@Transient

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import web.entity.view.UserView;
 import web.formatter.Card;
 import web.formatter.Format;
 import web.formatter.Formatter;
@@ -147,6 +148,15 @@ public class Doctor implements IDoctor {
 			return getUser().getUsername();
 		else return null;
 	} // */
+	
+	@Transient
+	@JsonProperty("assignedUser")
+	public UserView getAssignedUser() {
+		if(getUser() == null) return null;
+		UserView view = UserView.from(getUser());
+		view.setDoctor(null);
+		return view;
+	}
 
 	@Override
 	@Transient
@@ -180,6 +190,7 @@ public class Doctor implements IDoctor {
 	@Format(label = "Horarios")
 	public String listSchedules() {
 		String schedules = "";
+		if(this.getSchedules() == null) return schedules;
 		for(Schedule schedule : this.getSchedules()) {
 			schedules += "\n · " + schedule;
 		}
