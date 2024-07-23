@@ -64,7 +64,6 @@ const reducer = (state = {
 };
 
 const load = async () => {
-    const user = await login("alicia.schimmel", "12345678");
     const header = headerAdminService.load();
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
