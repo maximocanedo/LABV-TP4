@@ -47,7 +47,7 @@ const load = async () => {
             { data: 'patient.name', title: 'Paciente Asignado' },
             { data: 'patient.dni', title: 'DNI Paciente' },
             { data: 'remarks', title: 'Observaciones' },
-            { data: 'status', title: 'Estado' },
+            { data: 'statusDescription', title: 'Estado' },
             {
                 data: 'active', render: function (data, type, row) {
                     return data ? "Activo" : "Inactivo";
