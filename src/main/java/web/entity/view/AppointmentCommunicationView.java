@@ -41,8 +41,12 @@ public class AppointmentCommunicationView implements IAppointment {
 	}
 	
 	public static AppointmentCommunicationView from(Appointment data) {
-		AppointmentCommunicationView view = from(data);
-		if(view == null) return null;
+		if(data == null) return null;
+		AppointmentCommunicationView view = new AppointmentCommunicationView();
+		view.setId(data.getId());
+		view.setRemarks(data.getRemarks());
+		view.setStatus(data.getStatus());
+		view.setActive(data.isActive());
 		view.setAssignedDoctor(DoctorMinimalView.from(data.getAssignedDoctor()));
 		view.setPatient(PatientCommunicationView.from(data.getPatient()));
 		return view;
