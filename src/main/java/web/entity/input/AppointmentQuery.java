@@ -179,6 +179,9 @@ public class AppointmentQuery implements Searchable {
 		if(shouldFilterByAStatus()) hql.append(" AND a.status = :appointmentStatus ");
 		if(shouldFilterByPatient()) hql.append(" AND ( p.dni LIKE :pdni OR p.id = :pId ) ");
 		if(shouldFilterByDoctor()) hql.append(" AND ( d.file = :file OR d.id = :dId ) ");
+		if(getStatus() != FilterStatus.BOTH) {
+            hql.append("AND a.active = :status ");
+        }
 		hql.append(" ORDER BY a.date ");
 		Query query = session.createQuery(hql.toString());
 		query.setParameter("q", "%" + getQueryText() + "%");
@@ -195,6 +198,16 @@ public class AppointmentQuery implements Searchable {
 			query.setParameter("file", getDoctor().getFile());
 			query.setParameter("dId", getDoctor().getId());
 		}
+		switch(getStatus()) {
+        case ONLY_ACTIVE:
+            query.setParameter("status", true);
+            break;
+        case ONLY_INACTIVE:
+            query.setParameter("status", false);
+            break;
+        default:
+            break;
+    }
 		query.setFirstResult((page - 1) * size);
 		query.setMaxResults(size);
 		return query;
