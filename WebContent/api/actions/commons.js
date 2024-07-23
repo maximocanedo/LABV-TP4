@@ -78,10 +78,10 @@ export class GenericQuery {
         const params = this.#getCleanedParams();
         return u.get(this.#APIPrefix, params)
             .then(response => response.json())
-            .then(results => {
+            /*.then(results => {
                 const updatePromises = results.map(result => this.#localDatabase.update(result));
                 return Promise.all(updatePromises);
-            })
+            }) */
             .catch(err => {
                 throw err;
             });

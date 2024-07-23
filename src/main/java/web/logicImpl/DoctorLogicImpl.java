@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -67,13 +68,19 @@ public class DoctorLogicImpl implements IDoctorLogic {
     	Optional<Doctor> optdoctor = doctorsrepository.findByFile(file);
     	if(optdoctor.isEmpty()) throw new NotFoundException("Doctor not found. ");
     	Doctor doctor = optdoctor.get();
+
     	Set<Schedule> originalSchedules = doctor.getSchedules();
-    	Set<Schedule> newSchedules = doctorValidator.nonOverlappingIndividual(schedule, originalSchedules);
-    	schedule = schedulesrepository.save(schedule);
-    	newSchedules = doctorValidator.nonOverlappingIndividual(schedule, originalSchedules);
-    	doctor.setSchedules(newSchedules);
-    	return newSchedules;
+    	HashSet<Schedule> clonedOriginal = new HashSet<Schedule>(originalSchedules);
+    	Set<Schedule> newSchedules = doctorValidator.nonOverlappingIndividual(schedule, clonedOriginal);
+    	
+    	Schedule saved = schedulesrepository.save(schedule);
+    	Set<Schedule> n2wSchedules = doctorValidator.nonOverlappingIndividual(schedule, originalSchedules);
+    	//originalSchedules.add(saved);
+    	schedulesrepository.link(schedule, doctor);
+    	doctor.setSchedules(n2wSchedules);
+    	return n2wSchedules;
     }
+	//newSchedules = doctorValidator.nonOverlappingIndividual(schedule, originalSchedules);
     
     public Set<Schedule> addScheduleById(int id, Schedule schedule, User requiring) {
     	IDoctor d = doctorsrepository.findMinById(id, false).get();

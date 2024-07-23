@@ -120,7 +120,7 @@ public class DoctorValidator {
 	
 	
 	private Schedule nonOverlapping(Schedule newSchedule, Set<Schedule> schedules) throws ValidationException {
-		CommonException ve = new ValidationException("Overlapping schedules. ", "Uno o varios de los horarios a introducir se superpone con uno existente. ");
+		CommonException ve = new ValidationException("E.Overlapping schedules. ", "Uno o varios de los horarios a introducir se superpone con uno existente. ");
         for (Schedule existingSchedule : schedules) {
             if (newSchedule.getBeginDay() == existingSchedule.getBeginDay()) {
                 if (newSchedule.getEndTimeLT().isAfter(existingSchedule.getStartTimeLT()) &&
@@ -140,7 +140,9 @@ public class DoctorValidator {
     }
 	
 	public Set<Schedule> nonOverlappingIndividual(Schedule newSchedule, Set<Schedule> schedules) throws ValidationException {
-		CommonException ve = new ValidationException("Overlapping schedules. ", "Uno o varios de los horarios a introducir se superpone con uno existente. ");
+		CommonException ve = new ValidationException("1.Overlapping schedules. ", "Uno o varios de los horarios a introducir se superpone con uno existente. ");
+		CommonException ve2 = new ValidationException("2.Overlapping schedules. ", "Uno o varios de los horarios a introducir se superpone con uno existente. ");
+		CommonException ve3 = new ValidationException("3.Overlapping schedules. ", "Uno o varios de los horarios a introducir se superpone con uno existente. ");
         /* boolean overlaps = schedules.parallelStream()
         		.anyMatch(e -> 
         			( // N.day = E.day
@@ -164,7 +166,7 @@ public class DoctorValidator {
 		// No borrar hasta probar que funcione adecuadamente. 
 		///* 
         for (Schedule e : schedules) {
-		
+        	System.out.println(e);
             if (newSchedule.getBeginDay() == e.getBeginDay()) {
                 if (newSchedule.getEndTimeLT().isAfter(e.getStartTimeLT()) &&
                     newSchedule.getStartTimeLT().isBefore(e.getEndTimeLT()))
@@ -172,11 +174,11 @@ public class DoctorValidator {
             } else if (newSchedule.getFinishDay() == e.getBeginDay()) {
                 if (newSchedule.getEndTimeLT().isAfter(e.getStartTimeLT()) &&
                     newSchedule.getEndTimeLT().isBefore(e.getEndTimeLT()))
-                    throw ve;
+                    throw ve2;
             } else if (newSchedule.getBeginDay() == e.getFinishDay()) {
                 if (newSchedule.getStartTimeLT().isBefore(e.getEndTimeLT()) &&
                     newSchedule.getStartTimeLT().isAfter(e.getStartTimeLT()))
-                    throw ve;
+                    throw ve3;
             }
         } // */
         schedules.add(newSchedule);

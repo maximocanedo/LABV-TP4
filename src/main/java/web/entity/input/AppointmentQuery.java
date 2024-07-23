@@ -51,7 +51,6 @@ public class AppointmentQuery implements Searchable {
 	}
 	
 	public AppointmentQuery filterByPatient(String dni, String idString) {
-		System.out.println("dni: '" + dni + "', id: '" + idString + "'");
 		if(dni.trim().length() == 0 && idString.trim().length() == 0) {
 			this.setPatient(null);
 			return this;
