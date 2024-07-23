@@ -1,101 +1,63 @@
 'use strict';
-import * as appointments from "./../../../actions/appointments.js";
-import { DoctorSelector } from "./../../.././lib/selectors/DoctorSelector.js";
-import { PatientSelector } from "./../../.././lib/selectors/PatientSelector.js";
+'use strict';
+import { DoctorSelector } from "../../../lib/selectors/DoctorSelector.js";
+import * as appointments from "../../../actions/appointments.js";
+import * as doctors from "../../../actions/doctors.js";
+import { SpecialtySelector } from "../../../lib/selectors/SpecialtySelector.js";
+import { div, button, input, select } from "./../../../actions/commons.js";
 
-const valid = {
-    doctor: false,
-    patient: false,
-    date: false
-};
+export const mselector = div(".mselector");
+export const sselector = div(".sselector");
+export const specialtyS = new SpecialtySelector();
+sselector.append(specialtyS.getTrigger());
+export const doctorS = new DoctorSelector();
+mselector.append(doctorS.getTrigger());
+export const fecha = select("#fecha");
+export const hora = select("#hora");
+export const nextMonth = button("#nextMonth");
 
-// Doctor
-const doctorSelector = new DoctorSelector();
-const selectorDoctorValid = document.getElementById("selectorDoctorValid");
-const selectorDoctorInvalid = document.getElementById("selectorDoctorInvalid");
-// Paciente
-const patientSelector = new PatientSelector();
-const selectorPatientValid = document.getElementById("selectorPatientValid");
-const selectorPatientInvalid = document.getElementById("selectorPatientInvalid");
-//
-const txtDate = document.getElementById("txtDate");
-const txtDateValid = document.getElementById("txtDateValid");
-const txtDateInvalid = document.getElementById("txtDateInvalid");
-const btnAsignarTurno = document.getElementById("btnAsignarTurno");
-
-document.querySelector(".selectorDoctor").prepend(doctorSelector.getTrigger());
-document.querySelector(".selectorPatient").prepend(patientSelector.getTrigger());
-
-// No permite seleccionar minutos, resetea minutos
-txtDate.addEventListener("change", () => {
-    try {
-        // @ts-ignore
-        let date = new Date(txtDate.value);
-        date.setMinutes(0);
-        let isoDateTime = new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString();
-        // @ts-ignore
-        txtDate.value = isoDateTime.split(".")[0];
-        validateDate()
-    } catch (error) {
-        // nada...
-    }
+const date = new Date();
+specialtyS.getTrigger().addEventListener('change', e => {
+    const selected = specialtyS.getSelectedFile();
+    doctorS.setInitialQuery(new doctors.Query().filterBySpecialty(selected.id));
 });
-
-btnAsignarTurno.addEventListener("click", () => {
-    validateDoctor();
-    validatePatient();
-    validateDate();
-    if (valid.doctor && valid.patient && valid.date) {
-        // @ts-ignore
-        appointments.create({doctor: doctorSelector.getSelectedFile(), patient: patientSelector.getSelectedFile(), date: new Date(txtDate.value).toISOString()})
+const handleDoctorChange = async () => {
+    if(doctorS.getSelectedFile() == null) return;
+    const dates = await appointments.getAvailableDates(doctorS.getSelectedFile().file, date);
+    fecha.innerHTML = '';
+    if(dates.length == 0) {
+        console.warn("No hay más fechas disponibles este mes. ");
+        return;
     }
+    dates.map(d => {
+        const x = document.createElement("option");
+        x.value = d;
+        x.text = d;
+        fecha.append(x);
+    });
+    console.log(dates);
+    console.log(date);
+    await handlerForTime(date);
+
+};
+doctorS.getTrigger().addEventListener('change', handleDoctorChange);
+nextMonth.addEventListener('click', async () => {
+    const actualMonth = (date.getMonth())
+    date.setMonth((actualMonth + 1) % 12);
+    date.setDate(1);
+    date.setFullYear(date.getFullYear() + Math.floor((actualMonth + 1) / 12));
+    await handleDoctorChange();
 });
-
-const validateDoctor = () => {
-    if(doctorSelector.getSelectedFile() !== null){
-        selectorDoctorValid.innerText = "Valido!";
-        selectorDoctorValid.classList.remove("d-none");
-        selectorDoctorInvalid.classList.add("d-none");
-        valid.doctor = true;
-        return;
-    }
-    selectorDoctorValid.classList.remove("d-none");
-    selectorDoctorInvalid.innerText = "Invalido! Seleccione un Doctor";
-    selectorDoctorInvalid.classList.remove("d-none")
-    valid.doctor = false;
+const handlerForTime = async (e) => {
+    const date = fecha.value;
+    const schedules = await appointments.getAvailableSchedules(doctorS.getSelectedFile().file, new Date(date));
+    hora.innerHTML = '';
+    console.log(schedules);
+    schedules.map(schedule => {
+        const x = document.createElement("option");
+        x.value = schedule;
+        x.text = schedule;
+        hora.append(x);
+    });
 };
-
-const validatePatient = () => {
-    if(patientSelector.getSelectedFile() !== null){
-        selectorPatientValid.innerText = "Valido!";
-        selectorPatientValid.classList.remove("d-none");
-        selectorPatientInvalid.classList.add("d-none");
-        valid.patient = true;
-        return;
-    }
-    selectorDoctorValid.classList.add("d-none");
-    selectorPatientInvalid.innerText = "Invalido! Seleccione un Paciente";
-    selectorPatientInvalid.classList.remove("d-none");
-    valid.patient = false;
-};
-
-const validateDate = () => {
-    // @ts-ignore
-    if (txtDate.value !== "" && isValidDate(txtDate.value)) {
-        txtDateValid.innerText = "Valido!";
-        txtDateInvalid.innerText = "";
-        txtDate.classList.remove("is-invalid")
-        txtDate.classList.add("is-valid")
-        valid.date = true;
-        return;
-    }
-    txtDateValid.innerText = "";
-    txtDateInvalid.innerText = "Invalido";
-    txtDate.classList.remove("is-valid")
-    txtDate.classList.add("is-invalid")
-    valid.date = false
-}; 
-
-const isValidDate = (date) => {
-    return new Date(date) > new Date();
-};
+fecha.addEventListener('change', handlerForTime);
