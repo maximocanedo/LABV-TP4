@@ -68,4 +68,8 @@ public interface IPatientDAO {
      */
     void enable(int id) throws NotFoundException;
 
+	Optional<PatientCommunicationView> findComViewByDni(String dni, boolean includeInactives);
+
+	Optional<Patient> findByDni(String dni, boolean includeInactives);
+
 }

@@ -2,6 +2,14 @@
 
 import * as u from './../auth.js';
 
+const q = s => document.querySelector(s);
+
+export const button = selector => /** @type {HTMLButtonElement} */(q(selector));
+export const div = selector => /** @type {HTMLDivElement} */(q(selector));
+export const input = selector => /** @type {HTMLInputElement} */(q(selector));
+export const select = selector => /** @type {HTMLSelectElement} */(q(selector));
+export const a = selector => /** @type {HTMLAnchorElement} */(q(selector));
+
 /**
  * Clase para construir y ejecutar consultas de búsqueda de registros.
  * @template T Entidad.

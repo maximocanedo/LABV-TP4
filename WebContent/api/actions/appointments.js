@@ -73,7 +73,10 @@ export class Query extends GenericQuery {
     }
 
     filterByDoctor(/** @type {IdentifiableDoctor} */ doctor) {
-        if(
+        if(!doctor) {
+            this.#doctor = null;
+            return this;
+        } else if(
             (doctor.id == null || doctor.id == undefined || doctor.id < 1) &&
             (doctor.file == null || doctor.file == undefined || doctor.file < 1)
         ) return this;

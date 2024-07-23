@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import web.dao.IPatientDAO;
+import web.daoImpl.PatientDAOImpl;
 import web.entity.IPatient;
 import web.entity.Optional;
 import web.entity.Patient;
@@ -22,7 +22,7 @@ import web.logic.validator.PatientValidator;
 public class PatientLogicImpl implements IPatientLogic {
 	
 	@Autowired
-	private IPatientDAO patientsrepository;
+	private PatientDAOImpl patientsrepository;
 	
 	@Autowired
 	private UserPermitLogicImpl permits;
@@ -90,6 +90,19 @@ public class PatientLogicImpl implements IPatientLogic {
 		return x.get();
 	}
 	
+	public IPatient getByDni(String dni, User requiring) {
+		requiring = permits.require(requiring, Permit.READ_PATIENT_PERSONAL_DATA, Permit.READ_USER_DATA);
+		boolean includeInactives = requiring.can(Permit.ENABLE_PATIENT);
+		if(!requiring.can(Permit.READ_PATIENT_PERSONAL_DATA)) {
+			Optional<PatientCommunicationView> x = patientsrepository.findComViewByDni(dni, includeInactives);
+			if(x.isEmpty()) throw new NotFoundException("Patient not found. ");
+			return x.get();
+		}
+		Optional<Patient> x = patientsrepository.findByDni(dni, includeInactives);
+		if(x.isEmpty()) throw new NotFoundException("Patient not found. ");
+		return x.get();
+	}
+	
 	@Override
     public Patient update(Patient paciente, User requiring) throws NotFoundException {
 		permits.require(requiring, Permit.UPDATE_PATIENT);
@@ -126,5 +139,7 @@ public class PatientLogicImpl implements IPatientLogic {
 		permits.require(requiring, Permit.DISABLE_PATIENT);
 		patientsrepository.disable(id);
 	}
+
+	
 
 }

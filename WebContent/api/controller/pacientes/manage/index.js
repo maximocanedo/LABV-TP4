@@ -1,82 +1,153 @@
-import * as headerAdminService from "../../services/headerAdminService.js";
-import { createStore } from "../../../lib/redux.js";
-import { ElementBuilder } from "../../dom.js";
-import { findById, update } from "../../../actions/patients.js";
+'use strict';
+import { div, button, input } from "./../../../actions/commons.js";
+import * as patients from "./../../../actions/patients.js";
+import * as appointments from "./../../../actions/appointments.js";
+import { load } from "./events.js";
+import * as ap from "./appointments.js";
+import { 
+    updateBasicDataBtn,
+    updateSensibleDataBtn,
+    nameInput, 
+    surnameInput, 
+    sensibleInfoCard,
+    birthInput,
+    addressInput,
+    localtyInput,
+    emailInput,
+    provinceInput,
+    phoneInput,
+    btnState
+} from "./dom.js";
 
-const event = {
-    UPDATE_NAME: "UPDATE_NAME",
-    UPDATE_SURNAME: "UPDATE_SURNAME",
-    UPDATE_DNI: "UPDATE_DNI",
-    UPDATE_PHONE: "UPDATE_PHONE",
-    UPDATE_EMAIL: "UPDATE_EMAIL",
-    UPDATE_ADDRESS: "UPDATE_ADDRESS",
-    UPDATE_LOCALTY: "UPDATE_LOCALTY",
-    UPDATE_PROVINCE: "UPDATE_PROVINCE",
-    UPDATE_BIRTH: "UPDATE_BIRTH"
-};
 
-const reducer = (state = 
-    { id: null, name: "", surname: "", dni: "", email: "", phone: "", address: "", localty: "", province: "", birth: "", active: false, _lastOfflineSaved: null }, action) => {
-    switch(action.type) {
-        case event.UPDATE_NAME:
-            return { ...state, name: action.payload };
-        case event.UPDATE_SURNAME:
-            return { ...state, surname: action.payload };
-        case event.UPDATE_DNI:
-            return { ...state, dni: action.payload };
-        case event.UPDATE_EMAIL:
-            return { ...state, email: action.payload };
-        case event.UPDATE_PHONE:
-            return { ...state, phone: action.payload };
-        case event.UPDATE_ADDRESS:
-            return { ...state, address: action.payload };
-        case event.UPDATE_LOCALTY:
-            return { ...state, localty: action.payload };
-        case event.UPDATE_PROVINCE:
-            return { ...state, province: action.payload };
-        case event.UPDATE_BIRTH:
-            return { ...state, birth: action.payload };
-        default:
-            return { ...state };
-    }
-};
-
-const load = async () => {
-    const header = headerAdminService.load();
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    const patient = await findById(parseInt(urlParams.get("Id")));
-    return patient
-};
-
-load().then((patient) => {
-    const store = createStore(reducer, patient);
-    const formModificarPaciente = document.getElementById("formModificarPaciente");
-
-    const txtName = ElementBuilder.from(document.getElementById("txtName")).linkValue(store, event.UPDATE_NAME, "name");
-    const txtSurname = ElementBuilder.from(document.getElementById("txtSurname")).linkValue(store, event.UPDATE_SURNAME, "surname");
-    const txtDNI = ElementBuilder.from(document.getElementById("txtDNI")).linkValue(store, event.UPDATE_DNI, "dni");
-    const txtEmail = ElementBuilder.from(document.getElementById("txtEmail")).linkValue(store, event.UPDATE_EMAIL, "email");
-    const txtPhone = ElementBuilder.from(document.getElementById("txtPhone")).linkValue(store, event.UPDATE_PHONE, "phone");
-    const txtAddress = ElementBuilder.from(document.getElementById("txtAddress")).linkValue(store, event.UPDATE_ADDRESS, "address");
-    const txtLocalty = ElementBuilder.from(document.getElementById("txtLocalty")).linkValue(store, event.UPDATE_LOCALTY, "localty");
-    const txtProvince = ElementBuilder.from(document.getElementById("txtProvince")).linkValue(store, event.UPDATE_PROVINCE, "province");
-    const txtBirth = ElementBuilder.from(document.getElementById("txtBirth")).linkValue(store, event.UPDATE_BIRTH, "birth");
-
-    formModificarPaciente.addEventListener("submit", async (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-
-        try {
-            // @ts-ignore
-            if (formModificarPaciente.checkValidity()) {
-                await update(store.getState().id, store.getState());
-                location.replace("/pacientes/index.html")
+btnState.addEventListener('click', async (e) => {
+    if(confirm(`Estás a punto de ${patient.active ? "deshabilitar" : "habilitar"} este registro. \n¿Continuar?`)) {
+        (patient.active ? patients.disable(patient.id) : patients.enable(patient.id)).then(ok => {
+            if(ok) {
+                console.log("Listo. ");
+                patient.active = !patient.active;
+                fillData();
             }
-            formModificarPaciente.classList.add("was-validated");
-        } catch (error) {
-            console.log(error)
-        }
-    });
-})
+        }).catch(console.error)
+    }
+});
 
+updateSensibleDataBtn.addEventListener('click', async (e) => {
+    // @ts-ignore
+    patients.update(patient.id, {
+        birth: birthInput.valueAsDate,
+        address: addressInput.value,
+        localty: localtyInput.value,
+        province: provinceInput.value,
+        email: emailInput.value,
+        phone: phoneInput.value
+    }).then(updated => {
+        // @ts-ignore
+        patient = updated;
+        fillData();
+    }).catch(console.error);
+});
+
+updateBasicDataBtn.addEventListener('click', async (e) => {
+    // @ts-ignore
+    patients.update(patient.id, {
+        name: nameInput.value,
+        surname: surnameInput.value
+    }).then(updated => {
+        // @ts-ignore
+        patient = updated;
+        fillData();
+    }).catch(console.error);
+});
+
+
+const getDNIInPath = () => {
+    const sp = new URLSearchParams(window.location.search);
+    return (sp.get("dni")??"").trim();
+};
+
+const getIdInPath = () => {
+    const sp = new URLSearchParams(window.location.search);
+    return (sp.get("id")??"0").trim().match(/\d+/)[0];
+};
+
+const getIdentifier = () => {
+    return {
+        dni: (getDNIInPath()),
+        id: parseInt(getIdInPath())
+    };
+};
+
+const fill = (cname, value) => {
+    document.querySelectorAll('[data-field="' + cname + '"]').forEach(element => {
+        // @ts-ignore
+        element.innerText = value;
+    });
+    document.querySelectorAll('[data-value="' + cname + '"]').forEach(element => {
+        // @ts-ignore
+        element.value = value;
+    });
+};
+
+const fillData = () => {
+    fill("patient.id", patient.id);
+    fill("patient.name", patient.name);
+    fill("patient.surname", patient.surname);
+    fill("patient.dni", patient.dni);
+    if(patient.phone) {
+        sensibleInfoCard.classList.remove("d-none");
+        fill("patient.phone", patient.phone);
+    }
+    if(patient.address) {
+        fill("patient.address", patient.address);
+    }
+    if(patient.localty) {
+        fill("patient.localty", patient.localty);
+    }
+    if(patient.province) {
+        fill("patient.province", patient.province);
+    }
+    if(patient.birth) {
+        fill("patient.birth.sql", new Date(patient.birth).toISOString().split("T")[0]);
+    }
+    if(patient.email) {
+        fill("patient.email", patient.email);
+    }
+    fill("patient.active", patient.active ? "Habilitado" : "Deshabilitado");
+    fill("patient.active.switchButton", patient.active ? "Deshabilitar" : "Habilitar");
+    if(patient._lastOfflineSaved) {
+        let d = new Date(patient._lastOfflineSaved);
+        fill("localState", "Disponible sin conexión.");
+        fill("lastTimeLocallyUpdated", d.toLocaleDateString() + " a las " + d.toLocaleTimeString());
+    } else {
+        fill("localState", "Este registro no está disponible fuera de línea. ");
+        fill("lastTimeLocallyUpdated", "-");
+    }
+    load(patient);
+    ap.load(patient);
+};
+
+/** @type {Patient} */
+let patient;
+
+const hideSensibleDataInit = () => {
+    document.querySelectorAll('[sensible-field]').forEach(el => el.classList.add("d-none"));
+};
+
+const loadPatientData = async () => {
+    hideSensibleDataInit();
+    const u = getIdentifier();
+    // @ts-ignore
+    if(u.dni != "") patient = await patients.findByDNI(u.dni);
+    // @ts-ignore
+    else if(u.id > 0) patient = await patients.findById(u.id);
+    else throw new Error("Must specify ID or FILE URL parameter. ");
+    fillData();
+    //fillAuthPermits();
+    //loadSections();
+    return patient;
+};
+
+(async () => {
+    await loadPatientData();
+})();

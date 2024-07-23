@@ -73,6 +73,12 @@ public class PatientController {
 	        return patients.getById(id, requiring);
 		}
 		
+		@GetMapping("/dni/{dni}")
+		public IPatient findByDni(@PathVariable String dni, HttpServletRequest req, HttpServletResponse res) {
+			User requiring = auth.require(req, res);
+	        return patients.getByDni(dni, requiring);
+		}
+		
 		
 		@PatchMapping("/id/{id}")
 		public Patient update(@PathVariable int id, @RequestBody Patient patient, HttpServletRequest req, HttpServletResponse res) {

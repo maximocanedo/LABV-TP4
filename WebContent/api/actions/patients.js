@@ -41,6 +41,21 @@ export const findById = async (id) => {
 };
 
 /**
+ * Buscar por DNI.
+ * @param {string} DNI 
+ * @returns {Promise<IPatient>}
+ */
+export const findByDNI = async (DNI) => {
+    return u.get("patients/dni/" + DNI)
+        .then(response => response.json())
+        .then(result => db.update(result))
+        .catch(err => {
+            throw err;
+        });
+};
+
+
+/**
  * Actualizar datos de un paciente.
  * @param {number} id 
  * @param {PatientUpdateRequest} data 
