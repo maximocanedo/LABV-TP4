@@ -271,20 +271,6 @@ nextMonth.addEventListener('click', async () => {
     updateBtnAsignarTurnoState();
 });
 
-const handlerForTime = async (e) => {
-    const date = fecha.value;
-    console.log(date);
-    const schedules = await appointments.getAvailableSchedules(doctorSelector.getSelectedFile().file, new Date(date));
-    hora.innerHTML = '';
-    console.log(schedules);
-    schedules.map(schedule => {
-        const x = document.createElement("option");
-        x.value = schedule;
-        x.text = schedule;
-        hora.append(x);
-    });
-};
-
 fecha.addEventListener('change', handlerForTime);
 
 const fechasNoDisponibles = () => {
