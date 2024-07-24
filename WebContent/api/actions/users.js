@@ -1,4 +1,5 @@
 'use strict';
+import { resolveLocalUrl } from './../lib/commons.js';
 import * as u from './../auth.js';
 import { updateAccessToken,
      updateRefreshToken } from './../security.js';
@@ -46,6 +47,7 @@ export const login = async (username, password) => {
 export const logout = () => {
     updateAccessToken(null);
     updateRefreshToken(null);
+    window.location.href = resolveLocalUrl('/login?next=/users');
 };
 
 /**

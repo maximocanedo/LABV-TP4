@@ -32,7 +32,7 @@ public class AppointmentValidator {
 		c.setTime(date);
 		int mins = c.get(Calendar.MINUTE);
 		mins -= mins % 15;
-		c.set(Calendar.MINUTE, mins);
+		c.set(Calendar.MINUTE, 0);
 		c.set(Calendar.SECOND, 0);
 		c.set(Calendar.MILLISECOND, 0);
 		return c.getTime();
@@ -56,7 +56,7 @@ public class AppointmentValidator {
 	}
 	
 	public Date dateUpdate(Date date, IDoctor doctor) throws ValidationException {	
-		return date;
+		return date(date, doctor);
 	}
 	
 	public String remarks(String remarks) throws ValidationException {
