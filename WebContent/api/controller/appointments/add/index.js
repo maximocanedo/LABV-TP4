@@ -1,32 +1,48 @@
 'use strict';
-'use strict';
 import { DoctorSelector } from "../../../lib/selectors/DoctorSelector.js";
+import { PatientSelector } from "../../../lib/selectors/PatientSelector.js";
+import { SpecialtySelector } from "../../../lib/selectors/SpecialtySelector.js";
 import * as appointments from "../../../actions/appointments.js";
 import * as doctors from "../../../actions/doctors.js";
-import { SpecialtySelector } from "../../../lib/selectors/SpecialtySelector.js";
 import { div, button, input, select } from "./../../../actions/commons.js";
+// Doctor
+const dSelector = div(".selectorDoctor");
+const doctorSelector = new DoctorSelector();
+dSelector.append(doctorSelector.getTrigger());
+const selectorDoctorValid = document.getElementById("selectorDoctorValid");
+const selectorDoctorInvalid = document.getElementById("selectorDoctorInvalid");
 
-const mselector = div(".selectorDoctor");
-const sselector = div(".selectorPatient");
-const specialtyS = new SpecialtySelector();
-sselector.append(specialtyS.getTrigger());
-const doctorS = new DoctorSelector();
-mselector.append(doctorS.getTrigger());
+// Especialidad
+const sSelector = div(".specialtySelector");
+const specialtySelector = new SpecialtySelector();
+sSelector.append(specialtySelector.getTrigger())
+const specialtySelectorValid = document.getElementById("specialtySelectorValid");
+const specialtySelectorInvalid = document.getElementById("specialtySelectorInvalid");
+
+// Paciente
+const pSelector = div(".selectorPatient");
+const patientSelector = new PatientSelector();
+pSelector.append(patientSelector.getTrigger());
+const selectorPatientValid = document.getElementById("selectorPatientValid");
+const selectorPatientInvalid = document.getElementById("selectorPatientInvalid");
+
 const fecha = select("#fecha");
 const hora = select("#hora");
 const nextMonth = button("#nextMonth");
 
 const date = new Date();
-specialtyS.getTrigger().addEventListener('change', e => {
-    const selected = specialtyS.getSelectedFile();
-    doctorS.setInitialQuery(new doctors.Query().filterBySpecialty(selected.id));
+
+specialtySelector.getTrigger().addEventListener('change', e => {
+    const selected = specialtySelector.getSelectedFile();
+    doctorSelector.setInitialQuery(new doctors.Query().filterBySpecialty(selected.id));
 });
+
 const handleDoctorChange = async () => {
-    if(doctorS.getSelectedFile() == null) return;
-    const dates = await appointments.getAvailableDates(doctorS.getSelectedFile().file, date);
+    if(doctorSelector.getSelectedFile() == null) return;
+    const dates = await appointments.getAvailableDates(doctorSelector.getSelectedFile().file, date);
     fecha.innerHTML = '';
     if(dates.length == 0) {
-        console.warn("No hay más fechas disponibles este mes. ");
+        
         return;
     }
     dates.map(d => {
@@ -40,7 +56,8 @@ const handleDoctorChange = async () => {
     await handlerForTime(date);
 
 };
-doctorS.getTrigger().addEventListener('change', handleDoctorChange);
+doctorSelector.getTrigger().addEventListener('change', handleDoctorChange);
+
 nextMonth.addEventListener('click', async () => {
     const actualMonth = (date.getMonth())
     date.setMonth((actualMonth + 1) % 12);
@@ -48,9 +65,10 @@ nextMonth.addEventListener('click', async () => {
     date.setFullYear(date.getFullYear() + Math.floor((actualMonth + 1) / 12));
     await handleDoctorChange();
 });
+
 const handlerForTime = async (e) => {
     const date = fecha.value;
-    const schedules = await appointments.getAvailableSchedules(doctorS.getSelectedFile().file, new Date(date));
+    const schedules = await appointments.getAvailableSchedules(doctorSelector.getSelectedFile().file, new Date(date));
     hora.innerHTML = '';
     console.log(schedules);
     schedules.map(schedule => {
@@ -61,3 +79,7 @@ const handlerForTime = async (e) => {
     });
 };
 fecha.addEventListener('change', handlerForTime);
+
+const fechasNoDisponibles = () => {
+    
+}
