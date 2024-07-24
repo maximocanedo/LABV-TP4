@@ -5,6 +5,16 @@ import { SpecialtySelector } from "../../../lib/selectors/SpecialtySelector.js";
 import * as appointments from "../../../actions/appointments.js";
 import * as doctors from "../../../actions/doctors.js";
 import { div, button, input, select } from "./../../../actions/commons.js";
+
+const valid = {
+    doctor: false,
+    patient: false, 
+    especilidad: false,
+};
+
+const btnAsignarTurno = document.getElementById("btnAsignarTurno")
+
+
 // Doctor
 const dSelector = div(".selectorDoctor");
 const doctorSelector = new DoctorSelector();
@@ -81,5 +91,56 @@ const handlerForTime = async (e) => {
 fecha.addEventListener('change', handlerForTime);
 
 const fechasNoDisponibles = () => {
-    
+
 }
+
+btnAsignarTurno.addEventListener("click", () => {
+    validateDoctor();
+    validatePatient();
+    if (valid.doctor && valid.patient) {
+        // @ts-ignore
+        appointments.create({doctor: doctorSelector.getSelectedFile(), patient: patientSelector.getSelectedFile(), date: new Date(txtDate.value).toISOString()})
+    }
+});
+
+const validateDoctor = () => {
+    if(doctorSelector.getSelectedFile() !== null){
+        selectorDoctorValid.innerText = "Valido!";
+        selectorDoctorValid.classList.remove("d-none");
+        selectorDoctorInvalid.classList.add("d-none");
+        valid.doctor = true;
+        return;
+    }
+    selectorDoctorValid.classList.add("d-none");
+    selectorDoctorInvalid.innerText = "Invalido! Seleccione un Doctor";
+    selectorDoctorInvalid.classList.remove("d-none")
+    valid.doctor = false;
+};
+
+const validatePatient = () => {
+    if(patientSelector.getSelectedFile() !== null){
+        selectorPatientValid.innerText = "Valido!";
+        selectorPatientValid.classList.remove("d-none");
+        selectorPatientInvalid.classList.add("d-none");
+        valid.patient = true;
+        return;
+    }
+    selectorDoctorValid.classList.add("d-none");
+    selectorPatientInvalid.innerText = "Invalido! Seleccione un Paciente";
+    selectorPatientInvalid.classList.remove("d-none");
+    valid.patient = false;
+};
+
+const validateEspecialidad = () => {
+    if(specialtySelector.getSelectedFile() !== null){
+        specialtySelectorValid.innerText = "Valido!";
+        specialtySelectorValid.classList.remove("d-none");
+        specialtySelectorInvalid.classList.add("d-none");
+        valid.doctor = true;
+        return;
+    }
+    selectorDoctorValid.classList.add("d-none");
+    specialtySelectorInvalid.innerText = "Invalido! Seleccione un Doctor";
+    specialtySelectorInvalid.classList.remove("d-none")
+    valid.doctor = false;
+};
