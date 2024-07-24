@@ -367,11 +367,46 @@ const loadDoctorData = async () => {
     }
     fillData();
     load(doctor);
-    //fillAuthPermits();
+    fillAuthPermits();
     //loadSections();
     return doctor;
 };
 
+const fillAuthPermits = () => {
+    // @ts-ignore
+    const me = window.me;
+    const can = (permit) => {
+        if(!me) {
+            console.warn(1);
+            return false;
+        }
+        if('doctor' in me && me.doctor != null && (me.doctor.file == doctor.file || me.doctor.id == doctor.id)) {
+            console.warn(2);
+            return true;
+        }
+        if('access' in me && me.access.length > 0) {
+            console.warn(3);
+            return me.access.some(action => action == permit);
+        }
+    };
+    const rem = (selector) => document.querySelectorAll(selector).forEach(el => el.classList.add("d-none"));
+
+    if(!can(PERMIT.UPDATE_DOCTOR_PERSONAL_DATA)) {
+        rem(".__basicInfo");
+        rem('.__sensibleInfo')
+    }
+    if(!can(PERMIT.UPDATE_DOCTOR_SCHEDULES)) {
+        rem(".__addSchedule");
+        rem(".__schedules _schedule-container * button");
+    }
+    if(!can(PERMIT.DISABLE_DOCTOR) && doctor.active) {
+        rem(".card.disable");
+    }
+    if(!can(PERMIT.ENABLE_DOCTOR) && !doctor.active) {
+        rem(".card.disable");
+    }
+
+};
 
 (async () => {
     await loadDoctorData();

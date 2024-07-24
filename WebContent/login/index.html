@@ -12,8 +12,18 @@
 </head>
 
 <body>
-<br><br><br>
-    <div class="container-md h-75">
+    <header class="bg-dark text-white py-3">
+    <div class="container d-flex justify-content-between align-items-center">
+        <h1 class="m-0">TIF LAB V</h1>
+        <nav>
+            <a href="#" user-link class="text-white mx-2 d-none"></a>
+            <a href="#" user-logout class="text-white mx-2 d-none">Cerrar sesión</a>
+            <a href="#" signup-link show-if-no-user-logged-in class="text-white mx-2 d-none">Registro</a>
+            <a href="#" login-link show-if-no-user-logged-in class="text-white mx-2 d-none">Administrar</a>
+        </nav>
+    </div>
+</header>
+    <main class="container-md h-75">
         <div class="row h-75">
             <div class="col-3"></div>
             <div class="col d-flex align-items-center">
@@ -24,10 +34,10 @@
                         <input type="text" class="form-control" aria-label="Username input"
                             aria-describedby="login-input-group" id="txtUsername" name="txtUsername" required>
                             <div class="valid-feedback">
-                                Looks good!
+                                OK.
                               </div>
                               <div class="invalid-feedback" id="iF_username">
-                                Looks no bueno!
+                                Credenciales inválidas.
                               </div>
                     </div>
                     <div class="input-group input-group-sm mb-3">
@@ -42,8 +52,9 @@
             </div>
             <div class="col-3"></div>
         </div>
-    </div>
+    </main>
     <!-- Footer content -->
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>

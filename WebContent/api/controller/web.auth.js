@@ -10,8 +10,14 @@ import { resolveLocalUrl } from "./../lib/commons.js";
  * @returns {Promise<IUser | null>}
  */
 export const control = async (strict = true, permits = []) => {
-    document.querySelectorAll('[signup-link]').forEach((/** @type {HTMLAnchorElement} */el) => el.href = resolveLocalUrl('/users/signup'));
-    document.querySelectorAll('[login-link]').forEach((/** @type {HTMLAnchorElement} */el) => el.href = resolveLocalUrl('/login'));
+    document.querySelectorAll('[signup-link]').forEach((/** @type {HTMLAnchorElement} */el) => {
+        el.href = resolveLocalUrl('/users/signup');
+        el.innerText = 'Registrate';
+    });
+    document.querySelectorAll('[login-link]').forEach((/** @type {HTMLAnchorElement} */el) => {
+        el.href = resolveLocalUrl('/login');
+        el.innerText = 'Iniciar sesión';
+    });
     try {
         let me = await users.myself();
         if(permits.length == 0 || me.access.some(action => permits.includes(action))) {
@@ -36,7 +42,7 @@ export const control = async (strict = true, permits = []) => {
         win.getBody().innerText = ("Tenés que iniciar sesión para entrar a esta página. ");
         win.setMainButtonLabel("");
         win.removeMainButton();
-        win.show();
+        if(strict) win.show();
         win.onHide((e) => {
             window.location.href = resolveLocalUrl("/login");
         });

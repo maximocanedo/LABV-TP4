@@ -1,6 +1,7 @@
 import { login } from "./../../actions/users.js";
 import { ElementBuilder } from "./../dom.js";
 import { resolveUrl } from "./../../auth.js";
+import { toastAPIErrors } from "./../../actions/commons.js";
 
 const txtUsername = document.getElementById("txtUsername");
 const txtPassword = document.getElementById("txtPassword");
@@ -29,6 +30,7 @@ const clearVal = () => {
 };
 
 const onInvalid = (error) => {
+    
     clearVal();
     txtUsernameEB.classList("is-invalid");
     txtPasswordEB.classList("is-invalid");
@@ -47,6 +49,7 @@ const tryLogin = () => {
                 onValid();
             }
         }).catch(err => {
+            toastAPIErrors(err);
             onInvalid(err.error);
         });
 };

@@ -3,12 +3,15 @@
 * {
     box-sizing: border-box;
 }
-header {
+header, header.py-3 {
     z-index: 25;
     width: 100%;
     position: fixed;
     top: 0px;
     left: 0px;
+    display: grid;
+    padding: 0px !important;
+    place-items: center;
 
 }
 body {
@@ -67,4 +70,8 @@ body > footer {
 #errModalPermits, #errModal {
     backdrop-filter: blur(6px);
     background: rgb(0, 0, 30, 0.7);
+}
+
+main {
+    min-height: calc(100vh - 160px);
 }

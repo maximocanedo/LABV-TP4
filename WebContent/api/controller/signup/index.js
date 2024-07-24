@@ -1,7 +1,14 @@
 'use strict';
 import { resolveLocalUrl } from "./../../lib/commons.js";
 import * as users from "./../../actions/users.js";
+import { control } from "./../../controller/web.auth.js";
+import { PERMIT } from "./../../actions/users.js";
+import { toastAPIErrors } from "./../../actions/commons.js";
 
+(async () => {
+    // @ts-ignore
+    window.me = await control(false, []);
+})();
 // @ts-ignore
 const form = /** @type {HTMLFormElement} */(document.signup);
 // @ts-ignore
@@ -38,10 +45,10 @@ form.addEventListener('submit', (e) => {
         doctor: null
     }).then(user => users.login(txtUsername.value, txtPassword.value)).then(response => {
         if(response.ok) window.location.href = resolveLocalUrl("/users/manage");
-        console.error(response);
+        toastAPIErrors(response);
     }).catch(err => {
 
-        console.error(err);
+        toastAPIErrors(err);
     }).finally(() => {
         
     });
