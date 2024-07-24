@@ -310,7 +310,7 @@ btnAsignarTurno.addEventListener("click", () => {
         // @ts-ignore
         appointments.create(data)
             .then(created => {
-                window.location.href = resolveLocalUrl('/appointments/manage?id=' + created.id);
+                window.location.href = resolveLocalUrl('/appointments/manage/?id=' + created.id);
                 console.log(created);
             }).catch(toastAPIErrors);
     }

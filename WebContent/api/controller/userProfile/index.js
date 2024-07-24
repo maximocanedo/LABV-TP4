@@ -1,4 +1,4 @@
-// PENDIENTE: CAMBIAR RUTA /doctors/manage más abajo.
+// PENDIENTE: CAMBIAR RUTA /doctors/manage/ más abajo.
 'use strict';
 import { ElementBuilder } from "./../../controller/dom.js";
 import * as users from "./../../actions/users.js";
@@ -293,7 +293,7 @@ const fillUserData = () => {
     if(user.doctor) {
         const a = new ElementBuilder("a")
                     .text(user.doctor.surname + ", " + user.doctor.name)
-                    .href("/medicos/manage?file=" + user.doctor.file);// TODO: Actualizar ruta.
+                    .href("/medicos/manage/?file=" + user.doctor.file);// TODO: Actualizar ruta.
         dl.append(a.getTarget());
     } else {
         dl.innerText = "Esta cuenta no está vinculada a ningún doctor. ";

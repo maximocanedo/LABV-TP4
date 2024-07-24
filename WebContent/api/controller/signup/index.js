@@ -44,7 +44,7 @@ form.addEventListener('submit', (e) => {
         password: txtPassword.value,
         doctor: null
     }).then(user => users.login(txtUsername.value, txtPassword.value)).then(response => {
-        if(response.ok) window.location.href = resolveLocalUrl("/users/manage");
+        if(response.ok) window.location.href = resolveLocalUrl("/users/manage/");
         toastAPIErrors(response);
     }).catch(err => {
 

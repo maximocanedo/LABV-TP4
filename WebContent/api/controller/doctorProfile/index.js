@@ -117,7 +117,7 @@ const getLink = user => {
         return "No está vinculado a una cuenta de usuario. ";
     }
     const a = document.createElement("a");
-    a.href = resolveLocalUrl('/users/manage?u=' + user.username);
+    a.href = resolveLocalUrl('/users/manage/?u=' + user.username);
     a.innerText = `${user.name} (@${user.username})`;
     return a;
 }

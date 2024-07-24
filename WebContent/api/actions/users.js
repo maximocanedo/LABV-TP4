@@ -38,7 +38,7 @@ export const FilterStatus = Object.freeze({
  */
 export const login = async (username, password) => {
     updateAccessToken(null);
-    return u.post("users/login", { username, password });
+    return u.post("users/login/", { username, password });
 };
 
 /**
@@ -47,7 +47,7 @@ export const login = async (username, password) => {
 export const logout = () => {
     updateAccessToken(null);
     updateRefreshToken(null);
-    window.location.href = resolveLocalUrl('/login?next=/users');
+    window.location.href = resolveLocalUrl('/login/?next=/users/');
 };
 
 /**
@@ -178,7 +178,7 @@ export const myself = async () => {
         })
         .then(user => {
             document.querySelectorAll('[user-link]').forEach((/** @type {HTMLAnchorElement} */a) => {
-                a.setAttribute("href", resolveLocalUrl("/users/manage"));
+                a.setAttribute("href", resolveLocalUrl("/users/manage/"));
                 a.innerText = `${user.name} (@${user.username})`;
                 a.classList.remove("d-none");
             });

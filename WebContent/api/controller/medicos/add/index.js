@@ -230,7 +230,7 @@ page.btnEnviar.addEventListener('click', async () => {
     };
     doctors.create(data)
         .then(doctor => {
-            const url = resolveLocalUrl(`/medicos/manage?file=${doctor.file}`);
+            const url = resolveLocalUrl(`/medicos/manage/?file=${doctor.file}`);
             window.location.href = url;
         }).catch(toastAPIErrors);
 });

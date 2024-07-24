@@ -19,7 +19,7 @@ export const getNumericParam =
 };
 
 export const resolveLocalUrl = (relativeUrl) => {
-    const PREFIX = "pages";
+    const PREFIX = "";
     if(window.location.port == '81')
         return resolveUrl(PREFIX + (!relativeUrl.startsWith("/") ? "/": "") + relativeUrl);
     return (!relativeUrl.startsWith("/") ? "/": "") + relativeUrl;
@@ -86,7 +86,7 @@ export const footer = () => {
     node_13.appendChild(node_14);
 
     var node_15 = document.createElement('A');
-    node_15.setAttribute('href', resolveLocalUrl('/users/signup'));
+    node_15.setAttribute('href', resolveLocalUrl('/users/signup/'));
     node_15.setAttribute('class', 'nav-link p-0 text-muted');
     node_14.appendChild(node_15);
 
@@ -98,7 +98,7 @@ export const footer = () => {
     node_13.appendChild(node_17);
 
     var node_18 = document.createElement('A');
-    node_18.setAttribute('href', resolveLocalUrl('/login'));
+    node_18.setAttribute('href', resolveLocalUrl('/login/'));
     node_18.setAttribute('class', 'nav-link p-0 text-muted');
     node_17.appendChild(node_18);
 
@@ -110,7 +110,7 @@ export const footer = () => {
     node_13.appendChild(node_20);
 
     var node_21 = document.createElement('A');
-    node_21.setAttribute('href', resolveLocalUrl('/users/manage'));
+    node_21.setAttribute('href', resolveLocalUrl('/users/manage/'));
     node_21.setAttribute('class', 'nav-link p-0 text-muted');
     node_20.appendChild(node_21);
 
@@ -122,7 +122,7 @@ export const footer = () => {
     node_13.appendChild(node_23);
 
     var node_24 = document.createElement('A');
-    node_24.setAttribute('href', resolveLocalUrl('/users'));
+    node_24.setAttribute('href', resolveLocalUrl('/users/'));
     node_24.setAttribute('class', 'nav-link p-0 text-muted');
     node_23.appendChild(node_24);
 
@@ -148,7 +148,7 @@ export const footer = () => {
     node_29.appendChild(node_30);
 
     var node_31 = document.createElement('A');
-    node_31.setAttribute('href', resolveLocalUrl('/pacientes/add'));
+    node_31.setAttribute('href', resolveLocalUrl('/pacientes/add/'));
     node_31.setAttribute('class', 'nav-link p-0 text-muted');
     node_30.appendChild(node_31);
 
@@ -172,7 +172,7 @@ export const footer = () => {
     node_29.appendChild(node_36);
 
     var node_37 = document.createElement('A');
-    node_37.setAttribute('href', resolveLocalUrl('/medicos/add'));
+    node_37.setAttribute('href', resolveLocalUrl('/medicos/add/'));
     node_37.setAttribute('class', 'nav-link p-0 text-muted');
     node_36.appendChild(node_37);
 
@@ -184,7 +184,7 @@ export const footer = () => {
     node_29.appendChild(node_39);
 
     var node_40 = document.createElement('A');
-    node_40.setAttribute('href', resolveLocalUrl('/medicos'));
+    node_40.setAttribute('href', resolveLocalUrl('/medicos/'));
     node_40.setAttribute('class', 'nav-link p-0 text-muted');
     node_39.appendChild(node_40);
 
@@ -210,7 +210,7 @@ export const footer = () => {
     node_45.appendChild(node_46);
 
     var node_47 = document.createElement('A');
-    node_47.setAttribute('href', resolveLocalUrl('/appointments/add'));
+    node_47.setAttribute('href', resolveLocalUrl('/appointments/add/'));
     node_47.setAttribute('class', 'nav-link p-0 text-muted');
     node_46.appendChild(node_47);
 
@@ -222,7 +222,7 @@ export const footer = () => {
     node_45.appendChild(node_49);
 
     var node_50 = document.createElement('A');
-    node_50.setAttribute('href', resolveLocalUrl('/appointments'));
+    node_50.setAttribute('href', resolveLocalUrl('/appointments/'));
     node_50.setAttribute('class', 'nav-link p-0 text-muted');
     node_49.appendChild(node_50);
 

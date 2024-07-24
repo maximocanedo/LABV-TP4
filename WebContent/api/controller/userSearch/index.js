@@ -33,7 +33,7 @@ const userListElement = user => {
     const li = new ElementBuilder("a")
                     .classList("list-group-item", "list-group-item-action")
                     .click((e, el) => {
-                        window.location.href = resolveLocalUrl("/users/manage?u=" + user.username);
+                        window.location.href = resolveLocalUrl("/users/manage/?u=" + user.username);
                     });
     const meAuto = new ElementBuilder("div")
                         .classList("ms-2", "me-auto")

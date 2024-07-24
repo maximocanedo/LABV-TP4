@@ -57,7 +57,7 @@ const load = async () => {
             },
             {
                 data: '', render: function (data, type, row) {
-                    return `<button type="button" class="btn btn-success" onclick="window.location.href = './manage?id=(${row.id})';">Ver</button>`;
+                    return `<button type="button" class="btn btn-success" onclick="window.location.href = './manage/?id=(${row.id})';">Ver</button>`;
                 }
             }/* ,
             {

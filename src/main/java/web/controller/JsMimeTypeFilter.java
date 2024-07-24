@@ -14,13 +14,11 @@ public class JsMimeTypeFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) 
             throws IOException, ServletException {
-    	System.out.println("FILTRO JAVASCRIPT ACTIVADO. ");
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
         if (httpRequest.getRequestURI().endsWith(".js")) {
             httpResponse.setContentType("text/javascript");
-        	System.out.println("ES JAVASCRIPT. ");
         }
 
         chain.doFilter(request, response);

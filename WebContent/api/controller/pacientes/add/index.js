@@ -194,7 +194,7 @@ page.btnEnviar.addEventListener('click', async () => {
     console.log(data);
     patients.create(data)
         .then(patient => {
-            const url = resolveLocalUrl(`/pacientes/manage?id=${patient.id}`);
+            const url = resolveLocalUrl(`/pacientes/manage/?id=${patient.id}`);
             window.location.href = url;
         }).catch(toastAPIErrors);
 

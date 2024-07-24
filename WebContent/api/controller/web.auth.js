@@ -11,11 +11,11 @@ import { resolveLocalUrl } from "./../lib/commons.js";
  */
 export const control = async (strict = true, permits = []) => {
     document.querySelectorAll('[signup-link]').forEach((/** @type {HTMLAnchorElement} */el) => {
-        el.href = resolveLocalUrl('/users/signup');
+        el.href = resolveLocalUrl('/users/signup/');
         el.innerText = 'Registrate';
     });
     document.querySelectorAll('[login-link]').forEach((/** @type {HTMLAnchorElement} */el) => {
-        el.href = resolveLocalUrl('/login');
+        el.href = resolveLocalUrl('/login/');
         el.innerText = 'Iniciar sesión';
     });
     try {
@@ -44,7 +44,7 @@ export const control = async (strict = true, permits = []) => {
         win.removeMainButton();
         if(strict) win.show();
         win.onHide((e) => {
-            window.location.href = resolveLocalUrl("/login");
+            window.location.href = resolveLocalUrl("/login/");
         });
     }
 };

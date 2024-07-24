@@ -105,9 +105,9 @@ const fillData = () => {
     fill("appointment.id", appointment.id);
     div(".patientLinkHere").innerHTML = '';
     div(".doctorLinkHere").innerHTML = '';
-    div(".patientLinkHere").append(a(`${appointment.patient.surname}, ${appointment.patient.name}`, `/pacientes/manage?dni=${appointment.patient.dni}`));
+    div(".patientLinkHere").append(a(`${appointment.patient.surname}, ${appointment.patient.name}`, `/pacientes/manage/?dni=${appointment.patient.dni}`));
     // @ts-ignore
-    div(".doctorLinkHere").append(a(`${(appointment.assignedDoctor??appointment.doctor).surname}, ${(appointment.assignedDoctor??appointment.doctor).name}`, `/medicos/manage?file=${(appointment.assignedDoctor??appointment.doctor).file}`));
+    div(".doctorLinkHere").append(a(`${(appointment.assignedDoctor??appointment.doctor).surname}, ${(appointment.assignedDoctor??appointment.doctor).name}`, `/medicos/manage/?file=${(appointment.assignedDoctor??appointment.doctor).file}`));
     // @ts-ignore
     fill("appointment.status", appointment.statusDescription?? appointment.status);
     fill("appointment.remarks", appointment.remarks);

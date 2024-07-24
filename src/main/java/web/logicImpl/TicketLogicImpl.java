@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -131,6 +132,8 @@ public class TicketLogicImpl implements ITicketLogic {
 	        		.parseSignedClaims(token)
 	                .getPayload();
 	    } catch (SignatureException e) {
+	    	throw new InvalidTokenException();
+	    } catch (ExpiredJwtException e) {
 	    	throw new InvalidTokenException();
 	    }
 
