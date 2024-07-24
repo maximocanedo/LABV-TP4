@@ -5,6 +5,7 @@ import * as users from "./../../actions/users.js";
 import * as doctors from "./../../actions/doctors.js";
 import { DoctorSelector } from "./../../lib/selectors/DoctorSelector.js";
 import { control } from "./../../controller/web.auth.js";
+import { toastAPIErrors, treatAPIErrors } from "./../../actions/commons.js";
 
 (async () => {
     // @ts-ignore
@@ -94,7 +95,7 @@ rol_template_select_btn.addEventListener("click", async (e) => {
         .then(ok => {
             console.log(ok);
             loadUserData();
-        }).catch(console.error);
+        }).catch(toastAPIErrors);
 });
 
 denyAllbtn.addEventListener("click", async (e) => {
@@ -103,7 +104,7 @@ denyAllbtn.addEventListener("click", async (e) => {
             .then(ok => {
                 console.log("Todos los permisos deshabilitados. ");
                 loadUserData();
-            }).catch(console.error);
+            }).catch(toastAPIErrors);
 });
 
 
@@ -116,7 +117,7 @@ updateDataBtn.addEventListener("click", async (e) => {
         .then(updated => {
             user = { ...user, ...updated};
             fillUserData();
-        }).catch(console.error);
+        }).catch(toastAPIErrors);
 });
 const updateDoctorButtonS = () => {
     updateDoctorBtn.disabled = true;
@@ -158,7 +159,7 @@ updateDoctorBtn.addEventListener('click', async (e) => {
     users.update(user.username, /** @type {any} */({ doctor: newDoctor }))
         .then(updated => {
             return loadUserData();
-        }).catch(console.error).finally(updateDoctorButtonS);
+        }).catch(toastAPIErrors).finally(updateDoctorButtonS);
 });
 
 
@@ -195,6 +196,7 @@ const permitCheckbox = (action_name) => {
             chk.checked = userPermit.allowed;
         }).catch(err => {
             chk.checked = !chk.checked;
+            toastAPIErrors(err);
         });
     });
 
@@ -223,7 +225,7 @@ const updatePasswords = async () => {
             .then(ok => {
                 // Se cambió correctamente. 
                 console.log("Contraseña actualizada correctamente. ");
-            }).catch(console.error);
+            }).catch(toastAPIErrors);
     }
 };
 btnUpdatePassword.addEventListener("click", async (e) => {
@@ -247,9 +249,13 @@ const rem = async () => {
 
 const loadUserData = async () => {
     const u = getUsernameInPath();
-    me = await users.myself();
+    try {
+        if(u != "") user = await users.getUser(u);
+        me = await users.myself();
+    } catch(err) {
+        treatAPIErrors(err);
+    }
     if(u == "") user = me;
-    else user = await users.getUser(u);
     fillUserData();
     if(!itsMe()) document.querySelector(".pass0").remove();
     fillAuthPermits();
@@ -268,7 +274,7 @@ const loadSections = () => {
 };
 
 const fillUserData = () => {
-
+    if(!user) return;
     const dl = /** @type {HTMLDivElement} */ (document.querySelector("#linkedDoctor"));
     dl.innerHTML = '';
     fill("user.name", user.name);
@@ -292,13 +298,22 @@ const fillUserData = () => {
     } else {
         dl.innerText = "Esta cuenta no está vinculada a ningún doctor. ";
     }
-
-
+    updateBtnState();
+    document.querySelectorAll(".hidable-if-disabled").forEach(el => {
+        el.classList.add("d-none");
+        if(user.active) el.classList.remove("d-none");
+    });
     btnState.addEventListener("click", async (e) => {
         if(confirm("Estás a punto de deshabilitar esta cuenta de usuario. \n¿Continuar?")) await rem();
     });
 };
+const updateBtnState = () => {
+    if(!user) return;
 
+    fill("user.active.switchButton", user.active ? "Deshabilitar" : "Habilitar");
+    btnState.classList.remove("btn-success", "btn-danger");
+    btnState.classList.add(user.active ? "btn-danger" : "btn-success");
+};
 
 (async () => {
     await loadUserData();

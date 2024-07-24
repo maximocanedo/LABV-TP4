@@ -4,9 +4,10 @@ import { PatientSelector } from "../../../lib/selectors/PatientSelector.js";
 import { SpecialtySelector } from "../../../lib/selectors/SpecialtySelector.js";
 import * as appointments from "../../../actions/appointments.js";
 import * as doctors from "../../../actions/doctors.js";
-import { div, button, input, select } from "./../../../actions/commons.js";
+import { div, button, input, select, toastAPIErrors, treatAPIErrors } from "./../../../actions/commons.js";
 import { control } from "./../../../controller/web.auth.js";
 import { PERMIT } from "./../../../actions/users.js";
+import { resolveLocalUrl } from "../../../lib/commons.js";
 /** @type { IUser } */
 let me;
 (async () => {
@@ -31,7 +32,7 @@ let me;
 const valid = {
     doctor: false,
     patient: false,
-    especilidad: false,
+    specialty: false,
     hora: false,
     fecha: false
 };
@@ -91,7 +92,9 @@ specialtySelector.getTrigger().addEventListener('change', e => {
     }
     if(selected == null) {
         writeValidityOfSpecialty(false, "Seleccione una especialidad. ");
-    } else writeValidityOfSpecialty(true, "");
+        return;
+    }
+    writeValidityOfSpecialty(true, "");
     doctorSelector.setInitialQuery(new doctors.Query().filterBySpecialty(selected.id));
 });
 
@@ -290,14 +293,26 @@ const updateBtnAsignarTurnoState = () => {
         prevMonth.classList.remove("d-none");
     }
     btnAsignarTurno.disabled = !Object.keys(valid).every(key => valid[key]);
+    console.log(valid);
 }
 btnAsignarTurno.addEventListener("click", () => {
-    validateDoctor();
-    validatePatient();
-    validateEspecialidad();
-    if (valid.doctor && valid.patient && valid.especilidad) {
+    const d = new Date(fecha.value);
+    const h = hora.value.split(":").map(x => parseInt(x));
+    d.setHours(h[0]);
+    d.setMinutes(h[1]);
+    const data = { 
+        doctor: doctorSelector.getSelectedFile(), 
+        patient: patientSelector.getSelectedFile(), 
+        date: d
+    };
+    if (Object.keys(valid).every(key => valid[key])) {
+        console.log(data);
         // @ts-ignore
-        appointments.create({ doctor: doctorSelector.getSelectedFile(), patient: patientSelector.getSelectedFile(), date: date })
+        appointments.create(data)
+            .then(created => {
+                window.location.href = resolveLocalUrl('/appointments/manage?id=' + created.id);
+                console.log(created);
+            }).catch(toastAPIErrors);
     }
 });
 
@@ -336,11 +351,11 @@ const validateEspecialidad = () => {
         specialtySelectorValid.innerText = "Valido!";
         specialtySelectorValid.classList.remove("d-none");
         specialtySelectorInvalid.classList.add("d-none");
-        valid.especilidad = true;
+        valid.specialty = true;
     } else {
         selectorDoctorValid.classList.add("d-none");
         specialtySelectorInvalid.innerText = "Invalido! Seleccione una Especialidad";
         specialtySelectorInvalid.classList.remove("d-none")
-        valid.especilidad = false;
+        valid.specialty = false;
     }
 };

@@ -20,6 +20,11 @@ export const inputHasta = input("#inputHasta");
 export const appointmentQuery = new appointments.Query(appointment_q.value);
 export const cln = x => x != null && x != undefined && x.trim() != "";
 
+export const navAppointments = div("#nav-appointments-tab");
+export const tabAppointments = div("#nav-appointments");
+
+
+
 
 /**
  * <div class="list-group-item">

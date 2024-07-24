@@ -1,5 +1,6 @@
 'use strict';
 
+import { Toast } from './../lib/toast.js';
 import * as u from './../auth.js';
 
 const q = s => document.querySelector(s);
@@ -7,8 +8,34 @@ const q = s => document.querySelector(s);
 export const button = selector => /** @type {HTMLButtonElement} */(q(selector));
 export const div = selector => /** @type {HTMLDivElement} */(q(selector));
 export const input = selector => /** @type {HTMLInputElement} */(q(selector));
+export const textarea = selector => /** @type {HTMLTextAreaElement} */(q(selector));
 export const select = selector => /** @type {HTMLSelectElement} */(q(selector));
 export const a = selector => /** @type {HTMLAnchorElement} */(q(selector));
+
+export const banner = text => {
+    const b = document.createElement("div");
+    b.classList.add("alert", "alert-danger", "mt-3", "mb-3");
+    b.innerText = text;
+    return b;
+};
+
+export const placeFileErrorBanner = text => {
+    const b = banner(text);
+    document.querySelector("#nav-tabContent").innerHTML = '';
+    document.querySelector('#nav-tabContent').append(b);
+};
+
+export const treatAPIErrors = err => {
+    if('error' in err && 'path' in err.error) {
+        placeFileErrorBanner(err.error.message + ': ' + err.error.description + '\n\n' + err.error.path);
+    } else placeFileErrorBanner('Error desconocido. ');
+}
+
+export const toastAPIErrors = err => {
+    if('error' in err && 'path' in err.error) {
+        new Toast({id: err.error.path}, err.error.message + ': ' + err.error.description).show();
+    } else new Toast({ id: "unknown-error"}, 'Error desconocido. ').show();
+}
 
 /**
  * Clase para construir y ejecutar consultas de búsqueda de registros.

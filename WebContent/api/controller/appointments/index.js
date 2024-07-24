@@ -39,17 +39,16 @@ const load = async () => {
     dataTableAppointments = new DataTable('#tableListadoAppointments', {
         columns: [
             { data: 'id', title: 'Id' },
-            { data: 'assignedDoctor.name', title: 'Doctor Asignado' },
+            { data: 'assignedDoctor.name', title: 'Médico' },
             {
                 data: 'date', title: 'Fecha Turno', render: function (data, type, row) {
                     const dateEpoch = new Date(data);
-                    const date = new Date(dateEpoch).toISOString().split("T")[0];
+                    const date = new Date(dateEpoch).toLocaleString();
                     return date;
                 }
             },
-            { data: 'patient.name', title: 'Paciente Asignado' },
-            { data: 'patient.dni', title: 'DNI Paciente' },
-            { data: 'remarks', title: 'Observaciones' },
+            { data: 'patient.name', title: 'Paciente' },
+            { data: 'patient.dni', title: '(DNI)' },
             { data: 'statusDescription', title: 'Estado' },
             {
                 data: 'active', render: function (data, type, row) {
@@ -58,14 +57,14 @@ const load = async () => {
             },
             {
                 data: '', render: function (data, type, row) {
-                    return `<button type="button" class="btn btn-success" onclick="presentAppointment(${row.id});">Presente</button>`;
+                    return `<button type="button" class="btn btn-success" onclick="window.location.href = './manage?id=(${row.id})';">Ver</button>`;
                 }
-            },
+            }/* ,
             {
                 data: '', render: function (data, type, row) {
                     return `<button type="button" class="btn btn-primary" onclick="ausentAppointment(${row.id});">Ausente</button>`;
                 }
-            }
+            } */
         ],
         data: appointments,
         paging: false,
@@ -86,12 +85,12 @@ load().then(() => {
         dataTableAppointments.clear();
         const appointments = await new Query()
             .setQueryText(searchText)
-            // @ts-ignore
-            .paginate(page, parseInt(ddlEntriesPerPage.value))
             .filterByAppointmentStatus(ddlStatusFilterAppointment.value)
             .filterByDateBetween(new Date("2025-01-01").toISOString().split("T")[0], new Date("2025-02-01").toISOString().split("T")[0])
             //.filterByDoctor()
             .filterByStatus(FilterStatus.ONLY_ACTIVE)
+            // @ts-ignore
+            .paginate(page, parseInt(ddlEntriesPerPage.value))
             .search();
         dataTableAppointments.rows.add(appointments);
         dataTableAppointments.draw();

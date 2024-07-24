@@ -5,6 +5,7 @@ import { resolveLocalUrl } from "../../../lib/commons.js";
 //import libphonenumber from "https://cdnjs.cloudflare.com/ajax/libs/google-libphonenumber/3.2.37/libphonenumber.min.js";
 import { control } from "./../../../controller/web.auth.js";
 import { PERMIT } from "./../../../actions/users.js";
+import { toastAPIErrors } from "./../../../actions/commons.js";
 
 (async () => {
     // @ts-ignore
@@ -111,7 +112,7 @@ const validateFile = async () => {
         doctors.existsByFile(file).then(ok => {
             if(ok) iv("file", "El legajo ya fue registrado. ");
             else v("file");
-        }).catch(err => {
+        }).catch(expected => {
             v("file")
         })
     }
@@ -231,7 +232,7 @@ page.btnEnviar.addEventListener('click', async () => {
         .then(doctor => {
             const url = resolveLocalUrl(`/medicos/manage?file=${doctor.file}`);
             window.location.href = url;
-        }).catch(console.error);
+        }).catch(toastAPIErrors);
 });
 
 

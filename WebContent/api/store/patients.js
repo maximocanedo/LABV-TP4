@@ -10,6 +10,7 @@ const db = useDatabase("patients");
  * @returns {Promise<IPatient>}
  */
 export const update = async (patient) => {
+    return patient;
     return db.transact(async (store) => req(store.get(patient.id)).then(legacyPatient => {
         /** @type {IPatient} */
         const updatedpatient = { ...legacyPatient, ...patient, _lastOfflineSaved: Date.now() };

@@ -11,6 +11,7 @@ const db = useDatabase("doctors");
  * @returns {Promise<IDoctor>} Copia del doctor almacenado en la base de datos.
  */
 export const update = async (doctor) => {
+    return doctor;
     doctor.specialty = await specialties.update(doctor.specialty);
     return db.transact(async (store) => req(store.get(doctor.id)).then(legacyDoctor => {
         const updatedDoctor = { ...legacyDoctor, ...doctor, _lastOfflineSaved: Date.now() };
@@ -26,14 +27,14 @@ export const update = async (doctor) => {
  * @param {number} id ID del doctor
  * @returns {Promise<Doctor>} Doctor encontrado.
  */
-export const getById = async (id) => db.read(store => req(store.get(id)));
+export const getById = async (id) => null;// db.read(store => req(store.get(id)));
 
 
 /**
  * Devuelve todos los doctores guardados localmente, sin ningún tipo de filtro ni paginación.
  * @returns {Promise<Doctor[]>}
  */
-export const getAll = async () => db.read(store => req(store.getAll()));
+export const getAll = async () => []; // db.read(store => req(store.getAll()));
 
 
 /**
@@ -41,5 +42,5 @@ export const getAll = async () => db.read(store => req(store.getAll()));
  * @param {string} name Nombre del doctor a buscar
  * @returns {Promise<Doctor[]>} Array de doctores encontrados.
  */
-export const findByName = async (name) => db.read(store => req(store.index('name').getAll(name)));
+export const findByName = async (name) => []; // db.read(store => req(store.index('name').getAll(name)));
 

@@ -108,16 +108,9 @@ export class Query extends GenericQuery {
 export const getUser = async (username) => {
     return u.get("users/u/"+username)
         .then(response => response.json())
-        .then(user => db.update(user))
+        //.then(user => db.update(user))
         .catch(err => {
-            if(true) { // TODO: Actualizar condición
-                return db.getByUsername(username).then(user => {
-                    return user;
-                }).catch(e => {
-                    console.error(e);
-                    throw e;
-                });
-            }
+            throw err;
         });
 };
 

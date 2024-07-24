@@ -85,7 +85,7 @@ public class UserController {
 	@GetMapping("/u/{username:.+}")
     public IUser findUser(@PathVariable String username, HttpServletRequest req, HttpServletResponse res) {
 		User requiring = auth.require(req, res);
-        return users.getByUsername(username, false, requiring);
+        return users.getByUsername(username, true, requiring);
     }
 
 	@RequestMapping(value = "/u/{username:.+}", method = RequestMethod.HEAD)

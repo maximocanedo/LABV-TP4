@@ -1,5 +1,5 @@
 'use strict';
-import { div, button, input } from "./../../../actions/commons.js";
+import { div, button, input, treatAPIErrors, toastAPIErrors } from "./../../../actions/commons.js";
 import * as patients from "./../../../actions/patients.js";
 import * as appointments from "./../../../actions/appointments.js";
 import { load } from "./events.js";
@@ -34,7 +34,7 @@ btnState.addEventListener('click', async (e) => {
                 patient.active = !patient.active;
                 fillData();
             }
-        }).catch(console.error)
+        }).catch(toastAPIErrors)
     }
 });
 
@@ -51,7 +51,7 @@ updateSensibleDataBtn.addEventListener('click', async (e) => {
         // @ts-ignore
         patient = updated;
         fillData();
-    }).catch(console.error);
+    }).catch(toastAPIErrors);
 });
 
 updateBasicDataBtn.addEventListener('click', async (e) => {
@@ -63,7 +63,7 @@ updateBasicDataBtn.addEventListener('click', async (e) => {
         // @ts-ignore
         patient = updated;
         fillData();
-    }).catch(console.error);
+    }).catch(toastAPIErrors);
 });
 
 const allowSensible = key => document.querySelectorAll(`[sensible-field="${key}"]`).forEach(el => el.classList.remove("d-none"));
@@ -130,6 +130,11 @@ const fillData = () => {
         fill("patient.email", patient.email);
     }
     fill("patient.active", patient.active ? "Habilitado" : "Deshabilitado");
+    document.querySelectorAll(".hidable-if-disabled").forEach(el => {
+        el.classList.add("d-none");
+        if(patient.active) el.classList.remove("d-none");
+    });
+    updateBtnState();
     if(patient._lastOfflineSaved) {
         let d = new Date(patient._lastOfflineSaved);
         fill("localState", "Disponible sin conexión.");
@@ -142,6 +147,14 @@ const fillData = () => {
     ap.load(patient);
 };
 
+const updateBtnState = () => {
+    if(!patient) return;
+
+    fill("patient.active.switchButton", patient.active ? "Deshabilitar" : "Habilitar");
+    btnState.classList.remove("btn-success", "btn-danger");
+    btnState.classList.add(patient.active ? "btn-danger" : "btn-success");
+};
+
 /** @type {Patient} */
 let patient;
 
@@ -152,11 +165,15 @@ const hideSensibleDataInit = () => {
 const loadPatientData = async () => {
     hideSensibleDataInit();
     const u = getIdentifier();
-    // @ts-ignore
-    if(u.dni != "") patient = await patients.findByDNI(u.dni);
-    // @ts-ignore
-    else if(u.id > 0) patient = await patients.findById(u.id);
-    else throw new Error("Must specify ID or FILE URL parameter. ");
+    try {
+        // @ts-ignore
+        if(u.dni != "") patient = await patients.findByDNI(u.dni);
+        // @ts-ignore
+        else if(u.id > 0) patient = await patients.findById(u.id);
+    
+    } catch(err) {
+        treatAPIErrors(err);
+    }
     fillData();
     //fillAuthPermits();
     //loadSections();

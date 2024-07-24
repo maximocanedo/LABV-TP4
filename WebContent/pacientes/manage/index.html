@@ -39,7 +39,7 @@
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
               <button class="nav-link active " id="nav-personal-info-tab" data-bs-toggle="tab" data-bs-target="#nav-personal-info" type="button" role="tab" aria-controls="nav-personal-info" aria-selected="false">Información básica</button>
               <button class="nav-link" id="nav-update-info-tab" data-bs-toggle="tab" data-bs-target="#nav-update-info" type="button" role="tab" aria-controls="nav-update-info" aria-selected="false">Acciones</button>
-              <button class="nav-link" id="nav-permissions-tab" data-bs-toggle="tab" data-bs-target="#nav-permissions" type="button" role="tab" aria-controls="nav-permissions" aria-selected="true">Turnos</button>
+              <button class="nav-link hidable-if-disabled" id="nav-permissions-tab" data-bs-toggle="tab" data-bs-target="#nav-permissions" type="button" role="tab" aria-controls="nav-permissions" aria-selected="true">Turnos</button>
             </div>
           </nav>
           <div class="tab-content" id="nav-tabContent">
@@ -134,7 +134,7 @@
             </div>
             <div class="tab-pane fade" id="nav-update-info" role="tabpanel" aria-labelledby="nav-update-info-tab" tabindex="0">
                 <br>
-                <div class="card mb-3 __basicInfo">
+                <div class="card mb-3 __basicInfo hidable-if-disabled">
                     <div class="card-header">
                         Información básica
                     </div>
@@ -147,7 +147,7 @@
                         <button type="button" id="updateBasicDataBtn" class="btn btn-secondary">Actualizar</button>
                     </div>
                 </div>
-                <div class="card mb-3 __sensibleInfo d-none">
+                <div class="card mb-3 __sensibleInfo d-none hidable-if-disabled">
                     <div class="card-header">
                         Información sensible
                     </div>
@@ -167,8 +167,6 @@
                         <button type="button" id="updateSensibleDataBtn" class="btn btn-secondary">Actualizar</button>
                     </div>
                 </div>
-
-
                 <div class="card mb-3 disable">
                     <div class="card-body">
                         <h5 class="card-title">Deshabilitar o habilitar</h5>
@@ -177,7 +175,7 @@
                 </div>
             </div>
         
-            <div class="tab-pane fade" id="nav-permissions" role="tabpanel" aria-labelledby="nav-permissions-tab" tabindex="0">
+            <div class="tab-pane fade hidable-if-disabled" id="nav-permissions" role="tabpanel" aria-labelledby="nav-permissions-tab" tabindex="0">
                <br>
                 <div class="row mb-3">
                     <div class="col">

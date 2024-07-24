@@ -1,9 +1,9 @@
 'use strict';
-import { load, patientSelector } from "./appointments.js";
+import { load, navAppointments, patientSelector, tabAppointments } from "./appointments.js";
 import { SpecialtySelector } from "./../../lib/selectors/SpecialtySelector.js";
 import * as doctors from "./../../actions/doctors.js";
 import { ElementBuilder } from "./../../controller/dom.js";
-import { div } from "../../actions/commons.js";
+import { div, placeFileErrorBanner, toastAPIErrors, treatAPIErrors } from "../../actions/commons.js";
 import { resolveLocalUrl } from "./../../lib/commons.js";
 import { control } from "./../../controller/web.auth.js";
 import { PERMIT } from "./../../actions/users.js";
@@ -71,6 +71,8 @@ startInput.addEventListener('input', handleTimeChange);
 endInput.addEventListener('input', handleTimeChange);
 
 const markError = err => {
+    toastAPIErrors(err);
+    return;
     scheduleAddingIn.innerText = 'error' in err ? err.error.description : err.message;
     daySelect.classList.add("is-invalid");
     startInput.classList.add("is-invalid");
@@ -128,7 +130,7 @@ btnState.addEventListener('click', async (e) => {
                 doctor.active = !doctor.active;
                 fillData();
             }
-        }).catch(console.error)
+        }).catch(toastAPIErrors)
     }
 });
 updateBasicDataBtn.addEventListener('click', async (e) => {
@@ -141,7 +143,7 @@ updateBasicDataBtn.addEventListener('click', async (e) => {
             doctor = doc;
             fillData();
             
-        }).catch(console.error);
+        }).catch(toastAPIErrors);
 });
 updateSensibleDataBtn.addEventListener('click', async (e) => {
     const sex = (/** @type {HTMLSelectElement} */(document.getElementById("sexSelect"))).value;
@@ -158,7 +160,7 @@ updateSensibleDataBtn.addEventListener('click', async (e) => {
             // @ts-ignore
             doctor = doc;
             fillData();
-        }).catch(console.error);
+        }).catch(toastAPIErrors);
 
 });
 
@@ -239,7 +241,7 @@ const listItemOutOfSchedule = schedule => {
                                 // @ts-ignore
                                 doctor = { ...doctor, schedules };
                                 fillData();
-                            }).catch(console.error);
+                            }).catch(toastAPIErrors);
                         });
     const secondCol = new ElementBuilder("div").classList("col", "col-4", "d-flex", "justify-content-end").append(btn);
     const row = new ElementBuilder("div").classList("row").append(firstCol).append(secondCol);
@@ -307,10 +309,27 @@ const fillData = () => {
         document.querySelector(".__sensibleInfo").classList.remove("d-none");
     }
 
+    /** @type {IUser} */
+    // @ts-ignore
+    const me = window.me;
 
+    if(!me.access.some(action => action == PERMIT.READ_DOCTOR_APPOINTMENTS)) {
+        if(!me.doctor || (me.doctor.id != doctor.id && me.doctor.file != doctor.file)) {
+            navAppointments.remove();
+            tabAppointments.remove();
+        }
+    }
+
+    document.querySelectorAll(".hidable-if-disabled").forEach(el => {
+        el.classList.add("d-none");
+        if(doctor.active) el.classList.remove("d-none");
+    });
 
     fill("doctor.active", doctor.active ? "Habilitado" : "Deshabilitado");
     fill("doctor.active.switchButton", doctor.active ? "Deshabilitar" : "Habilitar");
+    btnState.classList.remove("btn-success", "btn-danger");
+    btnState.classList.add(doctor.active ? "btn-danger" : "btn-success");
+    updateBtnState();
     if(doctor._lastOfflineSaved) {
         let d = new Date(doctor._lastOfflineSaved);
         fill("localState", "Disponible sin conexión.");
@@ -320,6 +339,16 @@ const fillData = () => {
         fill("lastTimeLocallyUpdated", "-");
     }
 };
+const updateBtnState = () => {
+    document.querySelectorAll(".hidable-if-disabled").forEach(el => {
+        el.classList.add("d-none");
+        if(doctor.active) el.classList.remove("d-none");
+    });
+    fill("doctor.active", doctor.active ? "Habilitado" : "Deshabilitado");
+    fill("doctor.active.switchButton", doctor.active ? "Deshabilitar" : "Habilitar");
+    btnState.classList.remove("btn-success", "btn-danger");
+    btnState.classList.add(doctor.active ? "btn-danger" : "btn-success");
+};
 
 const hideSensibleDataInit = () => {
     document.querySelectorAll('[sensible-field]').forEach(el => el.classList.add("d-none"));
@@ -328,10 +357,14 @@ const allowSensible = key => document.querySelectorAll(`[sensible-field="${key}"
 
 const loadDoctorData = async () => {
     hideSensibleDataInit();
-    const u = getIdentifier();
-    if(u.file > 0) doctor = await doctors.findByFile(u.file);
-    else if(u.id > 0) doctor = await doctors.findById(u.id);
-    else throw new Error("Must specify ID or FILE URL parameter. ");
+    try {
+        const u = getIdentifier();
+        if(u.file > 0) doctor = await doctors.findByFile(u.file);
+        else if(u.id > 0) doctor = await doctors.findById(u.id);
+
+    } catch(err) {
+        treatAPIErrors(err);
+    }
     fillData();
     load(doctor);
     //fillAuthPermits();

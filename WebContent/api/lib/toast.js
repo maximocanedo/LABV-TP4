@@ -85,8 +85,9 @@ export class Toast {
         this.#initWrapper();
     }
 
-    constructor({id}) {
+    constructor({id}, text = "") {
         this.#init(id);
+        this.setText(text);
     }
 
     show() {this.getWrapper().show();}

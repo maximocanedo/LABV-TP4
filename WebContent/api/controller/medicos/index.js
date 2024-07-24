@@ -4,6 +4,7 @@ import { FilterStatus } from "../../actions/users.js";
 import * as headerAdminService from "../services/headerAdminService.js";
 import { control } from "./../../controller/web.auth.js";
 import { PERMIT } from "./../../actions/users.js";
+import { toastAPIErrors } from './../../actions/commons.js';
 
 (async () => {
     // @ts-ignore
@@ -122,7 +123,7 @@ load().then(() => {
             try {
                 dataTableUpdate();
             } catch (error) {
-                console.log(error);
+                toastAPIErrors(error);
             }
         }
     })
@@ -133,7 +134,7 @@ load().then(() => {
         try {
             dataTableUpdate();
         } catch (error) {
-            console.log(error);
+            toastAPIErrors(error);
         }
     })
     

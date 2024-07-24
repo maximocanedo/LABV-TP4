@@ -3,6 +3,7 @@ import { ElementBuilder } from "./../../controller/dom.js";
 import * as users from "./../../actions/users.js";
 import { getNumericParam, getParam, resolveLocalUrl } from "./../../lib/commons.js";
 import { control } from "./../../controller/web.auth.js";
+import { toastAPIErrors } from "./../../actions/commons.js";
 
 const nextBtn = document.querySelector("#nextBtn");
 const btnSearch = document.querySelector("#btnSearch");
@@ -63,8 +64,8 @@ const loadResults = results => {
     });
 };
 
-const load = async () => query.search().then(loadResults).catch(console.error);
-const next = async () => query.next().then(loadResults).catch(console.error);
+const load = async () => query.search().then(loadResults).catch(toastAPIErrors);
+const next = async () => query.next().then(loadResults).catch(toastAPIErrors);
 
 nextBtn.addEventListener("click", next);
 btnSearch.addEventListener("click", async () => {

@@ -25,7 +25,7 @@
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
               <button class="nav-link active" id="nav-personal-info-tab" data-bs-toggle="tab" data-bs-target="#nav-personal-info" type="button" role="tab" aria-controls="nav-personal-info" aria-selected="false">Información básica</button>
               <button class="nav-link" id="nav-update-info-tab" data-bs-toggle="tab" data-bs-target="#nav-update-info" type="button" role="tab" aria-controls="nav-update-info" aria-selected="false">Acciones</button>
-              <button class="nav-link" id="nav-permissions-tab" data-bs-toggle="tab" data-bs-target="#nav-permissions" type="button" role="tab" aria-controls="nav-permissions" aria-selected="true">Turnos</button>
+              <button class="nav-link hidable-if-disabled" id="nav-appointments-tab" data-bs-toggle="tab" data-bs-target="#nav-appointments" type="button" role="tab" aria-controls="nav-appointments" aria-selected="true">Turnos</button>
             </div>
           </nav>
           <div class="tab-content" id="nav-tabContent">
@@ -132,7 +132,7 @@
             </div>
             <div class="tab-pane fade" id="nav-update-info" role="tabpanel" aria-labelledby="nav-update-info-tab" tabindex="0">
                 <br>
-                <div class="card mb-3 __basicInfo">
+                <div class="card mb-3 __basicInfo hidable-if-disabled">
                     <div class="card-header">
                         Información básica
                     </div>
@@ -145,13 +145,13 @@
                         <button type="button" id="updateBasicDataBtn" style="margin-top: 15px" class="btn btn-secondary">Actualizar</button>
                     </div>
                 </div>
-                <div class="card mb-3 __schedules">
+                <div class="card mb-3 __schedules hidable-if-disabled">
                     <div class="card-header">
                         Horarios
                     </div>
                     <div class="card-body _schedule-container list-group list-group-flush" style="padding: 0px"></div>
                 </div>
-                <div class="card mb-3 __addSchedule">
+                <div class="card mb-3 __addSchedule hidable-if-disabled">
                     <div class="card-header">
                         Agregar un horario
                     </div>
@@ -178,7 +178,7 @@
 
                     </div>
                 </div>
-                <div class="card mb-3 __sensibleInfo">
+                <div class="card mb-3 __sensibleInfo hidable-if-disabled">
                     <div class="card-header">
                         Información sensible
                     </div>
@@ -201,8 +201,6 @@
                         <button type="button" id="updateSensibleDataBtn" class="btn btn-secondary">Actualizar</button>
                     </div>
                 </div>
-
-
                 <div class="card mb-3 disable">
                     <div class="card-body">
                         <h5 class="card-title">Deshabilitar o habilitar</h5>
@@ -211,7 +209,7 @@
                 </div>
             </div>
         
-            <div class="tab-pane fade" id="nav-permissions" role="tabpanel" aria-labelledby="nav-permissions-tab" tabindex="0">
+            <div class="tab-pane fade hidable-if-disabled" id="nav-appointments" role="tabpanel" aria-labelledby="nav-appointments-tab" tabindex="0">
                <br>
                 <div class="row mb-3">
                     <div class="col">

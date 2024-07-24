@@ -2,6 +2,7 @@
 import { DoctorSelector } from "./../../../lib/selectors/DoctorSelector.js";
 import * as appointments from "./../../../actions/appointments.js";
 import { ElementBuilder } from "./../../../controller/dom.js";
+import { toastAPIErrors } from "./../../../actions/commons.js";
 
 const button = (selector) => /** @type {HTMLButtonElement} */(document.querySelector(selector));
 const input = (selector) => /** @type {HTMLInputElement} */(document.querySelector(selector));
@@ -47,6 +48,7 @@ const toListItem = file => {
     .text(/** @type {string} */(file['statusDescription']));
     const nd = new Date(file.date).toLocaleString();
     const sec = new ElementBuilder("span").text(nd);
+    // @ts-ignore
     const subheading = new ElementBuilder("div").classList("fw-bold").text(`Dr. ${file.assignedDoctor.surname}, ${file.assignedDoctor.name}`);
     const meAuto = new ElementBuilder("div").classList("ms-2", "me-auto").append(subheading).append(sec);
     const idDiv = new ElementBuilder("div").text(`(#${file.id})`);
@@ -95,11 +97,11 @@ btnSearchForAppointments.addEventListener('click', e => {
         .filterByStatus("ONLY_ACTIVE");
     document.querySelector(".appointmentList").innerHTML = '';
     document.querySelector(".appointmentListErr").innerHTML = '';
-    appointmentQuery.search().then(handleResults).catch(console.error);
+    appointmentQuery.search().then(handleResults).catch(toastAPIErrors);
 });
 
 loadMoreAppointments.addEventListener('click', async (e) => {
-    appointmentQuery.next().then(handleResults).catch(console.error);
+    appointmentQuery.next().then(handleResults).catch(toastAPIErrors);
 });
 
 export const load = (d) => {
