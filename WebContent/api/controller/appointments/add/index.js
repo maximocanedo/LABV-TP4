@@ -30,7 +30,7 @@ let me;
 })();
 const valid = {
     doctor: false,
-    patient: false, 
+    patient: false,
     especilidad: false,
     hora: false,
     fecha: false
@@ -271,6 +271,20 @@ nextMonth.addEventListener('click', async () => {
     updateBtnAsignarTurnoState();
 });
 
+const handlerForTime = async (e) => {
+    const date = fecha.value;
+    console.log(date);
+    const schedules = await appointments.getAvailableSchedules(doctorSelector.getSelectedFile().file, new Date(date));
+    hora.innerHTML = '';
+    console.log(schedules);
+    schedules.map(schedule => {
+        const x = document.createElement("option");
+        x.value = schedule;
+        x.text = schedule;
+        hora.append(x);
+    });
+};
+
 fecha.addEventListener('change', handlerForTime);
 
 const fechasNoDisponibles = () => {
@@ -294,38 +308,40 @@ const updateBtnAsignarTurnoState = () => {
 btnAsignarTurno.addEventListener("click", () => {
     validateDoctor();
     validatePatient();
-    if (valid.doctor && valid.patient) {
+    validateEspecialidad();
+    if (valid.doctor && valid.patient && valid.especilidad) {
         // @ts-ignore
-        appointments.create({doctor: doctorSelector.getSelectedFile(), patient: patientSelector.getSelectedFile(), date: new Date(txtDate.value).toISOString()})
+        appointments.create({ doctor: doctorSelector.getSelectedFile(), patient: patientSelector.getSelectedFile(), date: date })
     }
 });
 
 const validateDoctor = () => {
-    if(doctorSelector.getSelectedFile() !== null){
+    console.log("Working")
+    if (doctorSelector.getSelectedFile() !== null) {
         selectorDoctorValid.innerText = "Valido!";
         selectorDoctorValid.classList.remove("d-none");
         selectorDoctorInvalid.classList.add("d-none");
         valid.doctor = true;
-        return;
+    } else {
+        selectorDoctorValid.classList.add("d-none");
+        selectorDoctorInvalid.innerText = "Invalido! Seleccione un Doctor";
+        selectorDoctorInvalid.classList.remove("d-none")
+        valid.doctor = false;
     }
-    selectorDoctorValid.classList.add("d-none");
-    selectorDoctorInvalid.innerText = "Invalido! Seleccione un Doctor";
-    selectorDoctorInvalid.classList.remove("d-none")
-    valid.doctor = false;
 };
 
 const validatePatient = () => {
-    if(patientSelector.getSelectedFile() !== null){
+    if (patientSelector.getSelectedFile() !== null) {
         selectorPatientValid.innerText = "Valido!";
         selectorPatientValid.classList.remove("d-none");
         selectorPatientInvalid.classList.add("d-none");
         valid.patient = true;
-        return;
+    } else {
+        selectorPatientValid.classList.add("d-none");
+        selectorPatientInvalid.innerText = "Invalido! Seleccione un Paciente";
+        selectorPatientInvalid.classList.remove("d-none");
+        valid.patient = false;
     }
-    selectorDoctorValid.classList.add("d-none");
-    selectorPatientInvalid.innerText = "Invalido! Seleccione un Paciente";
-    selectorPatientInvalid.classList.remove("d-none");
-    valid.patient = false;
 };
 
 const validateEspecialidad = () => {
@@ -334,11 +350,11 @@ const validateEspecialidad = () => {
         specialtySelectorValid.innerText = "Valido!";
         specialtySelectorValid.classList.remove("d-none");
         specialtySelectorInvalid.classList.add("d-none");
-        valid.doctor = true;
-        return;
+        valid.especilidad = true;
+    } else {
+        selectorDoctorValid.classList.add("d-none");
+        specialtySelectorInvalid.innerText = "Invalido! Seleccione una Especialidad";
+        specialtySelectorInvalid.classList.remove("d-none")
+        valid.especilidad = false;
     }
-    selectorDoctorValid.classList.add("d-none");
-    specialtySelectorInvalid.innerText = "Invalido! Seleccione un Doctor";
-    specialtySelectorInvalid.classList.remove("d-none")
-    valid.doctor = false;
 };
