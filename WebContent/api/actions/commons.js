@@ -59,12 +59,20 @@ export class GenericQuery {
         return this;
     }
 
+    fromSelector = false;
+    isSelector(s) {
+        this.fromSelector = s;
+        return this;
+    }
+
+
     getParams() {
         return {
             q: this.#q,
             status: this.#status,
             page: this.#page,
-            size: this.#size
+            size: this.#size,
+            fromSelector: this.fromSelector
         };
     }
 

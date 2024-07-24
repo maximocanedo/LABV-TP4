@@ -3,6 +3,7 @@
 import { ElementBuilder } from "./../../controller/dom.js";
 
 export const load = () => {
+    return "";
     const navbar = new ElementBuilder('nav')
         .classList('navbar', 'navbar-expand-lg', 'bg-body-tertiary');
 

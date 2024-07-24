@@ -5,7 +5,13 @@ import * as doctors from "./../../actions/doctors.js";
 import { ElementBuilder } from "./../../controller/dom.js";
 import { div } from "../../actions/commons.js";
 import { resolveLocalUrl } from "./../../lib/commons.js";
+import { control } from "./../../controller/web.auth.js";
+import { PERMIT } from "./../../actions/users.js";
 
+(async () => {
+    // @ts-ignore
+    window.me = await control(true, [PERMIT.CREATE_DOCTOR]);
+})();
 const userLinkedWrapper = div("#userLinkedWrapper");
 
 const specialtySelector = new SpecialtySelector();

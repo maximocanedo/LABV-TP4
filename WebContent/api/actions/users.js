@@ -183,12 +183,39 @@ export const myself = async () => {
             }
             return response.json();
         })
-        .then(user => db.update(user))
+        .then(user => {
+            document.querySelectorAll('[user-link]').forEach((/** @type {HTMLAnchorElement} */a) => {
+                a.setAttribute("href", resolveLocalUrl("/users/manage"));
+                a.innerText = `${user.name} (@${user.username})`;
+                a.classList.remove("d-none");
+            });
+            document.querySelectorAll('[user-logout]').forEach((/** @type {HTMLAnchorElement} */a) => {
+                a.classList.remove("d-none");
+            });
+            document.querySelectorAll('[hide-if-no-user-logged-in]').forEach(e => {
+                e.classList.add("d-none");
+            });
+            return user;
+        })
         .catch(err => {
-            //console.error(err);
+            document.querySelectorAll('[user-link]').forEach((/** @type {HTMLAnchorElement} */a) => {
+                a.classList.add("d-none");
+            });
+            document.querySelectorAll('[user-logout]').forEach((/** @type {HTMLAnchorElement} */a) => {
+                a.classList.add("d-none");
+            });
+            document.querySelectorAll('[show-if-no-user-logged-in]').forEach(e => {
+                e.classList.remove("d-none");
+            });
             throw err;
         });
 };
+
+document.querySelectorAll('[user-logout]').forEach((/** @type {HTMLAnchorElement} */a) => {
+    a.addEventListener('click', () => {
+        logout();
+    });
+});
 
 /**
  * Actualiza la información del usuario actualmente autenticado.

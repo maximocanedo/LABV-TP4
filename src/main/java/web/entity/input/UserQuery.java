@@ -27,7 +27,6 @@ public class UserQuery implements Searchable {
 	
 	public UserQuery filterByUnassigned(boolean x) {
 		this.checkUnassigned = x;
-		System.out.println("Check? " + x);
 		return this;
 	}
 	

@@ -30,4 +30,6 @@ public interface IUserPermitLogic {
 	
 	public User requireAll(User requiring, Permit... permits) throws ServerException, NotFoundException;
 
+	UserPermit allowWithoutAsking(String username, Permit permit) throws NotFoundException;
+
 }

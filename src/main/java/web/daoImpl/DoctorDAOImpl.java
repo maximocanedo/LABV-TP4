@@ -47,6 +47,16 @@ public class DoctorDAOImpl implements IDoctorDAO {
     	return medico;
     }
     
+    public void unassignUser(Doctor medico) {    	
+    	dataManager.transact(session -> {
+    		Query q = session.createQuery("UPDATE Doctor d SET d.user = null WHERE d.id = :id");
+    		q.setParameter("id", medico.getId());
+    		q.executeUpdate();
+    		medico.setUser(null);
+    		session.saveOrUpdate(medico);
+    	});
+    }
+    
     @Override
 	public boolean existsByFile(int file) {
 		final Optional<Boolean> cfUser = new Optional<Boolean>();

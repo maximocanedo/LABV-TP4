@@ -18,7 +18,13 @@ import {
     phoneInput,
     btnState
 } from "./dom.js";
+import { control } from "./../../../controller/web.auth.js";
+import { PERMIT } from "./../../../actions/users.js";
 
+(async () => {
+    // @ts-ignore
+    window.me = await control(true, [PERMIT.READ_PATIENT_PERSONAL_DATA]);
+})();
 
 btnState.addEventListener('click', async (e) => {
     if(confirm(`Estás a punto de ${patient.active ? "deshabilitar" : "habilitar"} este registro. \n¿Continuar?`)) {
@@ -60,6 +66,7 @@ updateBasicDataBtn.addEventListener('click', async (e) => {
     }).catch(console.error);
 });
 
+const allowSensible = key => document.querySelectorAll(`[sensible-field="${key}"]`).forEach(el => el.classList.remove("d-none"));
 
 const getDNIInPath = () => {
     const sp = new URLSearchParams(window.location.search);
@@ -94,27 +101,35 @@ const fillData = () => {
     fill("patient.name", patient.name);
     fill("patient.surname", patient.surname);
     fill("patient.dni", patient.dni);
+    fill("patient.active.switchButton", patient.active ? "Deshabilitar" : "Habilitar");
+    btnState.innerText = patient.active ? "Deshabilitar" : "Habilitar";
     if(patient.phone) {
         sensibleInfoCard.classList.remove("d-none");
+        allowSensible("patient.phone");
         fill("patient.phone", patient.phone);
     }
     if(patient.address) {
+        allowSensible("patient.address");
         fill("patient.address", patient.address);
     }
     if(patient.localty) {
+        allowSensible("patient.localty");
         fill("patient.localty", patient.localty);
     }
     if(patient.province) {
+        allowSensible("patient.province");
         fill("patient.province", patient.province);
     }
     if(patient.birth) {
+        allowSensible("patient.birth");
+        fill("patient.birth", new Date(patient.birth).toLocaleDateString());
         fill("patient.birth.sql", new Date(patient.birth).toISOString().split("T")[0]);
     }
     if(patient.email) {
+        allowSensible("patient.email");
         fill("patient.email", patient.email);
     }
     fill("patient.active", patient.active ? "Habilitado" : "Deshabilitado");
-    fill("patient.active.switchButton", patient.active ? "Deshabilitar" : "Habilitar");
     if(patient._lastOfflineSaved) {
         let d = new Date(patient._lastOfflineSaved);
         fill("localState", "Disponible sin conexión.");

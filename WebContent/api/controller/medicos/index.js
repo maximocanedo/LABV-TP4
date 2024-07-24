@@ -2,7 +2,13 @@ import { Toast } from './../../lib/toast.js';
 import { Query, enable, disable } from '../../actions/doctors.js';
 import { FilterStatus } from "../../actions/users.js";
 import * as headerAdminService from "../services/headerAdminService.js";
+import { control } from "./../../controller/web.auth.js";
+import { PERMIT } from "./../../actions/users.js";
 
+(async () => {
+    // @ts-ignore
+    window.me = await control(true, [PERMIT.READ_DOCTOR, PERMIT.CREATE_APPOINTMENT, PERMIT.UPDATE_APPOINTMENT, PERMIT.UPDATE_APPOINTMENT]);
+})();
 let dataTableMedicos;
 let page = 1;
 let searchText = "";
@@ -19,11 +25,15 @@ const btnPrevPage = document.getElementById("btnPrevPage");
 const btnNextPage = document.getElementById("btnNextPage");
 
 (() => {
-    const header = headerAdminService.load();
-    const navPacientes = document.getElementById("navPacientes");
-    const navMedicos = document.getElementById("navMedicos");
-    navPacientes.classList.remove("active");
-    navMedicos.classList.add("active");
+    try {
+        const header = headerAdminService.load();
+        const navPacientes = document.getElementById("navPacientes");
+        const navMedicos = document.getElementById("navMedicos");
+        navPacientes.classList.remove("active");
+        navMedicos.classList.add("active");
+    } catch(expected) {
+
+    }
 })();
 
 const load = async () => {

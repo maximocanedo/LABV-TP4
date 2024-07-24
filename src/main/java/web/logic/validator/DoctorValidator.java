@@ -11,11 +11,13 @@ import web.daoImpl.DoctorDAOImpl;
 import web.daoImpl.SpecialtyDAOImpl;
 import web.daoImpl.UserDAOImpl;
 import web.entity.Optional;
+import web.entity.Permit;
 import web.entity.Schedule;
 import web.entity.Specialty;
 import web.entity.User;
 import web.exceptions.CommonException;
 import web.exceptions.ValidationException;
+import web.logicImpl.UserPermitLogicImpl;
 
 @Component("doctorValidator")
 public class DoctorValidator {
@@ -31,6 +33,9 @@ public class DoctorValidator {
 	
 	@Autowired
 	private UserDAOImpl usersrepository;
+	
+	@Autowired
+	private UserPermitLogicImpl permits;
 	
 	public char FEMALE = 'F';
 	
@@ -96,6 +101,16 @@ public class DoctorValidator {
 		Specialty s = new Specialty();
 		s.setId(id);
 		return specialty(s);
+	}
+	
+	public User user(User requiring, User x) throws ValidationException {
+		Optional<User> optU = usersrepository.findByUsername(x.getUsername());
+		if(optU.isEmpty() || !optU.get().isActive())
+			throw new ValidationException("User not found. ", "Ingrese un usuario válido. ");
+		if(optU.get().getDoctor() != null) {
+			permits.require(requiring, Permit.ASSIGN_DOCTOR);
+		}
+		return optU.get();
 	}
 	
 	public User user(User user) throws ValidationException {

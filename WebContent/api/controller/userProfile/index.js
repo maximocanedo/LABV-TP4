@@ -2,10 +2,17 @@
 'use strict';
 import { ElementBuilder } from "./../../controller/dom.js";
 import * as users from "./../../actions/users.js";
+import * as doctors from "./../../actions/doctors.js";
 import { DoctorSelector } from "./../../lib/selectors/DoctorSelector.js";
+import { control } from "./../../controller/web.auth.js";
 
+(async () => {
+    // @ts-ignore
+    window.me = await control(true, []);
+})();
 
 const doctorSelector = new DoctorSelector();
+doctorSelector.setInitialQuery(new doctors.Query().filterByUnassigned(true));
 doctorSelector.getTrigger().classList.add("me-auto");
 doctorSelector.getTrigger().classList.remove("mb-3");
 document.querySelector(".medicoSelectorHere").prepend(doctorSelector.getTrigger());
@@ -111,13 +118,47 @@ updateDataBtn.addEventListener("click", async (e) => {
             fillUserData();
         }).catch(console.error);
 });
+const updateDoctorButtonS = () => {
+    updateDoctorBtn.disabled = true;
+    updateDoctorBtn.classList.remove("btn-primary");
+    updateDoctorBtn.classList.remove("btn-secondary");
+    updateDoctorBtn.classList.remove("btn-danger");
+    updateDoctorBtn.classList.remove("d-none");
+    if(!user.doctor) {
+        if(!doctorSelector.getSelectedFile()) {
+        } else {
+            updateDoctorBtn.disabled = false;
+            updateDoctorBtn.classList.add("btn-primary");
+            updateDoctorBtn.innerText = "Vincular";            
+        }
+    } else {
+        if(!doctorSelector.getSelectedFile()) {
+            updateDoctorBtn.disabled = false;
+            updateDoctorBtn.classList.add("btn-danger");
+            updateDoctorBtn.innerText = "Desvincular";  
+        } else {
+            if(doctorSelector.getSelectedFile().id == user.doctor.id || user.doctor.file == doctorSelector.getSelectedFile().file) {
+                updateDoctorBtn.disabled = true;
+                updateDoctorBtn.classList.add("d-none");
+            } else {
+                updateDoctorBtn.disabled = false;
+            }
+            updateDoctorBtn.classList.add("btn-secondary");
+            updateDoctorBtn.innerText = "Actualizar";  
+        }
+    }
+};
+doctorSelector.getTrigger().addEventListener('change', updateDoctorButtonS);
 
 updateDoctorBtn.addEventListener('click', async (e) => {
-    const newDoctor = doctorSelector.getSelectedFile();
+    let newDoctor = doctorSelector.getSelectedFile();
+    if(newDoctor == null || !newDoctor) 
+        // @ts-ignore
+        newDoctor = { id: -1, file: -1 };
     users.update(user.username, /** @type {any} */({ doctor: newDoctor }))
         .then(updated => {
             return loadUserData();
-        }).catch(console.error);
+        }).catch(console.error).finally(updateDoctorButtonS);
 });
 
 

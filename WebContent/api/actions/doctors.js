@@ -146,6 +146,7 @@ export const enable = async (id) => {
 export class Query extends GenericQuery {
 
     #day = "";
+    unassigned = false;
     #specialty = null;
 
     constructor(q = "") {
@@ -158,8 +159,15 @@ export class Query extends GenericQuery {
         return {
             ...super.getParams(),
             day: this.#day,
-            specialty: this.#specialty
+            specialty: this.#specialty,
+            checkUnassigned: this.unassigned ? "true" : "false"
         }
+    }
+
+
+    filterByUnassigned(x) {
+        this.unassigned = x;
+        return this;
     }
 
     filterByDay(day) {

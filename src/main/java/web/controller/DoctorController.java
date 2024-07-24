@@ -58,20 +58,21 @@ public class DoctorController {
 			@RequestParam(required = false, defaultValue = "") String q, 
 			@RequestParam(required = false, defaultValue = "") FilterStatus status,
 			@RequestParam(required = false, defaultValue = "") String day,
+			@RequestParam(required = false, defaultValue = "false") boolean fromSelector,
+			@RequestParam(required = false, defaultValue = "false") boolean checkUnassigned,
 			@RequestParam(required = false, defaultValue = "") String specialty,
 			@RequestParam(required = false, defaultValue = "1") int page,
 			@RequestParam(required = false, defaultValue = "15") int size,
 			HttpServletRequest req, HttpServletResponse res
 			) {
 		User requiring = auth.require(req, res);
-		return (
-				doctors.search(
-						new DoctorQuery(q, status)
+		DoctorQuery query = new DoctorQuery(q, status)
 								.filterByDay(day)
 								.filterBySpecialty(specialty)
-								.paginate(page, size)
-						, requiring)
-				);
+								.filterByUnassigned(checkUnassigned)
+								.paginate(page, size);
+		if(fromSelector) return doctors.searchForSelector(query, requiring);
+		return doctors.search(query, requiring);
 	}
 
 	@PostMapping

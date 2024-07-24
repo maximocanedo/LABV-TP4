@@ -254,6 +254,7 @@ export class Selector {
         this.setLoadingState(true);
         this.#listElement.innerHTML = '';
         this.#query.paginate(1, this.getStrings().PAGE_SIZE);
+        this.#query.isSelector(true);
         return this.#query.search()
             .then(results => {
                 results.map(result => {
@@ -269,6 +270,7 @@ export class Selector {
 
     async next() {
         this.setLoadingState(true);
+        this.#query.isSelector(true);
         return this.#query.next()
             .then(results => {
                 results.map(result => {

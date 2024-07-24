@@ -34,7 +34,7 @@ public class PatientLogicImpl implements IPatientLogic {
 	
 	@Override
 	public List<PatientCommunicationView> search(PatientQuery q, User requiring) {
-		permits.require(requiring, Permit.READ_USER_DATA);
+		permits.require(requiring, Permit.READ_PATIENT_PERSONAL_DATA);
 		return patientsrepository.search(q);
 	}
 	
@@ -63,7 +63,7 @@ public class PatientLogicImpl implements IPatientLogic {
 	
 	@Override
 	public IPatient getById(int id, boolean includeInactives, User requiring) throws NotAllowedException, NotFoundException {
-		requiring = permits.require(requiring, Permit.READ_PATIENT_PERSONAL_DATA, Permit.READ_USER_DATA);
+		requiring = permits.require(requiring, Permit.READ_PATIENT_PERSONAL_DATA);
 		boolean f = includeInactives && requiring.can(Permit.ENABLE_PATIENT);
 		if(!requiring.can(Permit.READ_PATIENT_PERSONAL_DATA)) {
 			Optional<PatientCommunicationView> x = patientsrepository.findComViewById(id, f);
@@ -78,7 +78,7 @@ public class PatientLogicImpl implements IPatientLogic {
 	
 	@Override
 	public IPatient getById(int id, User requiring) throws NotAllowedException, NotFoundException {
-		requiring = permits.require(requiring, Permit.READ_PATIENT_PERSONAL_DATA, Permit.READ_USER_DATA);
+		requiring = permits.require(requiring, Permit.READ_PATIENT_PERSONAL_DATA);
 		boolean includeInactives = requiring.can(Permit.ENABLE_PATIENT);
 		if(!requiring.can(Permit.READ_PATIENT_PERSONAL_DATA)) {
 			Optional<PatientCommunicationView> x = patientsrepository.findComViewById(id, includeInactives);
@@ -91,7 +91,7 @@ public class PatientLogicImpl implements IPatientLogic {
 	}
 	
 	public IPatient getByDni(String dni, User requiring) {
-		requiring = permits.require(requiring, Permit.READ_PATIENT_PERSONAL_DATA, Permit.READ_USER_DATA);
+		requiring = permits.require(requiring, Permit.READ_PATIENT_PERSONAL_DATA);
 		boolean includeInactives = requiring.can(Permit.ENABLE_PATIENT);
 		if(!requiring.can(Permit.READ_PATIENT_PERSONAL_DATA)) {
 			Optional<PatientCommunicationView> x = patientsrepository.findComViewByDni(dni, includeInactives);

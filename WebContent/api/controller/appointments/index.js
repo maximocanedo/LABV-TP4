@@ -2,7 +2,13 @@ import { Toast } from './../../lib/toast.js';
 import { Query, update, findById } from '../../actions/appointments.js';
 import * as headerDoctorService from "../services/headerDoctorService.js";
 import { FilterStatus } from './../../actions/users.js';
+import { control } from "./../../controller/web.auth.js";
+import { PERMIT } from "./../../actions/users.js";
 
+(async () => {
+    // @ts-ignore
+    window.me = await control(true, []);
+})();
 let dataTableAppointments;
 let page = 1;
 let searchText = "";
@@ -18,18 +24,15 @@ const loadingSpinner = document.getElementById("loadingSpinner");
 const btnPrevPage = document.getElementById("btnPrevPage");
 const btnNextPage = document.getElementById("btnNextPage");
 
-(() => {
-    const header = headerDoctorService.load();
-})();
 
 const load = async () => {
 
     const appointments = await new Query()
-        .paginate(page, parseInt(ddlEntriesPerPage.value))
         .filterByAppointmentStatus(ddlStatusFilterAppointment.value)
         .filterByDateBetween(new Date("2025-01-01").toISOString().split("T")[0], new Date("2025-02-01").toISOString().split("T")[0])
         //.filterByDoctor()
         .filterByStatus(FilterStatus.ONLY_ACTIVE)
+        .paginate(page, parseInt(ddlEntriesPerPage.value))
         .search();
     // @ts-ignore
 

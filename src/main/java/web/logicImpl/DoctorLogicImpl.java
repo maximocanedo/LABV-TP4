@@ -21,6 +21,7 @@ import web.entity.Schedule;
 import web.entity.User;
 import web.entity.input.DoctorQuery;
 import web.entity.view.DoctorMinimalView;
+import web.exceptions.NotAllowedException;
 import web.exceptions.NotFoundException;
 import web.logic.IDoctorLogic;
 import web.logic.validator.DoctorValidator;
@@ -64,7 +65,7 @@ public class DoctorLogicImpl implements IDoctorLogic {
     // TODO Pendiente probar
     @Override
     public Set<Schedule> addSchedule(int file, Schedule schedule, User requiring) {
-    	requiring = permits.require(requiring, Permit.UPDATE_DOCTOR_SCHEDULES);
+    	requiring = permits.inquireDoctorByFile(requiring, file, Permit.UPDATE_DOCTOR_SCHEDULES);
     	Optional<Doctor> optdoctor = doctorsrepository.findByFile(file);
     	if(optdoctor.isEmpty()) throw new NotFoundException("Doctor not found. ");
     	Doctor doctor = optdoctor.get();
@@ -91,7 +92,7 @@ public class DoctorLogicImpl implements IDoctorLogic {
     // TODO Pendiente probar
     @Override
     public Set<Schedule> removeSchedule(int file, Schedule schedule, User requiring) {
-    	requiring = permits.require(requiring, Permit.UPDATE_DOCTOR_SCHEDULES);
+    	requiring = permits.inquireDoctorByFile(requiring, file, Permit.UPDATE_DOCTOR_SCHEDULES);
     	schedulesrepository.delete(schedule.getId());
     	Optional<Doctor> optdoctor = doctorsrepository.findByFile(file);
     	if(optdoctor.isEmpty()) throw new NotFoundException("Doctor not found. ");
@@ -120,13 +121,13 @@ public class DoctorLogicImpl implements IDoctorLogic {
 
     @Override
     public Optional<Doctor> findById(int id, User requiring) {
-    	requiring = permits.require(requiring, Permit.READ_APPOINTMENT, Permit.READ_DOCTOR);
+    	requiring = permits.inquireDoctorById(requiring, id, Permit.READ_APPOINTMENT, Permit.READ_DOCTOR);
     	boolean includeInactives = requiring.can(Permit.ENABLE_DOCTOR);
         return doctorsrepository.findById(id, includeInactives);
     }
     
     public IDoctor getById(int id, User requiring) {
-    	requiring = permits.require(requiring, Permit.READ_DOCTOR, Permit.READ_APPOINTMENT);
+    	requiring = permits.inquireDoctorById(requiring, id, Permit.READ_DOCTOR, Permit.READ_APPOINTMENT);
     	IDoctor x = null;
     	boolean includeInactives = requiring.can(Permit.ENABLE_DOCTOR);
     	if(!requiring.can(Permit.READ_DOCTOR)) {
@@ -137,7 +138,7 @@ public class DoctorLogicImpl implements IDoctorLogic {
     }
     
     public IDoctor getByFile(int file, User requiring) {
-    	requiring = permits.require(requiring, Permit.READ_DOCTOR, Permit.READ_APPOINTMENT);
+    	requiring = permits.inquireDoctorByFile(requiring, file, Permit.READ_DOCTOR, Permit.READ_APPOINTMENT);
     	IDoctor x = null;
     	boolean includeInactives = requiring.can(Permit.ENABLE_DOCTOR);
     	if(!requiring.can(Permit.READ_DOCTOR)) {
@@ -150,6 +151,16 @@ public class DoctorLogicImpl implements IDoctorLogic {
     @Override
     public List<DoctorMinimalView> search(DoctorQuery query, User requiring) {
     	permits.require(requiring, Permit.READ_DOCTOR, Permit.CREATE_APPOINTMENT, Permit.READ_APPOINTMENT, Permit.UPDATE_APPOINTMENT);
+    	return doctorsrepository.search(query);
+    }
+    
+    public List<DoctorMinimalView> searchForSelector(DoctorQuery query, User requiring) {
+    	try {
+        	requiring = permits.require(requiring, Permit.READ_DOCTOR, Permit.CREATE_APPOINTMENT, Permit.READ_APPOINTMENT, Permit.UPDATE_APPOINTMENT);
+    	} catch(NotAllowedException e) {
+    		if(requiring.getDoctor() != null) throw e;
+    		
+    	}
     	return doctorsrepository.search(query);
     }
 
@@ -197,21 +208,21 @@ public class DoctorLogicImpl implements IDoctorLogic {
 
 	@Override
 	public Optional<Doctor> findByFile(int file, User requiring) {
-		requiring = permits.require(requiring, Permit.READ_DOCTOR);
+		requiring = permits.inquireDoctorByFile(requiring, file, Permit.READ_DOCTOR);
     	boolean includeInactives = requiring.can(Permit.ENABLE_DOCTOR);
 		return doctorsrepository.findByFile(file, includeInactives);
 	}
 
 	@Override
 	public Optional<Doctor> findById(int id, boolean includeInactive, User requiring) {
-		requiring = permits.require(requiring, Permit.READ_DOCTOR);
+		requiring = permits.inquireDoctorById(requiring, id, Permit.READ_DOCTOR);
     	boolean includeInactives = includeInactive && requiring.can(Permit.ENABLE_DOCTOR);
 		return doctorsrepository.findById(id, includeInactives);
 	}
 
 	@Override
 	public Doctor update(Doctor medico, User requiring) throws NotFoundException {
-    	permits.require(requiring, Permit.UPDATE_DOCTOR_PERSONAL_DATA);
+    	permits.inquireDoctor(requiring, medico, Permit.UPDATE_DOCTOR_PERSONAL_DATA);
     	Optional<Doctor> search = doctorsrepository.findById(medico.getId());
     	if(search.isEmpty()) search = doctorsrepository.findByFile(medico.getFile());
     	if(search.isEmpty()) throw new NotFoundException();
@@ -235,13 +246,13 @@ public class DoctorLogicImpl implements IDoctorLogic {
         if (medico.getSpecialty() != null) 
         	original.setSpecialty(doctorValidator.specialty(medico.getSpecialty()));
         if (medico.getUser() != null) 
-        	original.setUser(doctorValidator.user(medico.getUser()));
+        	original.setUser(doctorValidator.user(requiring, medico.getUser()));
 		return doctorsrepository.update(original);
 	}
 
 	@Override
 	public void disable(int id, User requiring) throws NotFoundException {
-    	permits.require(requiring, Permit.DISABLE_DOCTOR);
+    	permits.inquireDoctorById(requiring, id, Permit.DISABLE_DOCTOR);
 		doctorsrepository.disable(id);
 		
 	}
@@ -253,21 +264,21 @@ public class DoctorLogicImpl implements IDoctorLogic {
 	}
 	
 	public List<Date> getSchedulesForDoctor(int file, Date startDate, User requiring) {
-		permits.require(requiring, Permit.CREATE_APPOINTMENT, Permit.UPDATE_APPOINTMENT, Permit.READ_DOCTOR_APPOINTMENTS);
+		permits.inquireDoctorByFile(requiring, file, Permit.CREATE_APPOINTMENT, Permit.UPDATE_APPOINTMENT, Permit.READ_DOCTOR_APPOINTMENTS);
 		if(!doctorsrepository.existsByFile(file))
 			throw new NotFoundException("Doctor not found. ");
 		return doctorsrepository.getScheduleForDoctor(file, startDate);
 	}
 	
 	public List<Date> getSchedulesForDoctor(int file, Calendar startDate, User requiring) {
-		permits.require(requiring, Permit.CREATE_APPOINTMENT, Permit.UPDATE_APPOINTMENT, Permit.READ_DOCTOR_APPOINTMENTS);
+		permits.inquireDoctorByFile(requiring, file, Permit.CREATE_APPOINTMENT, Permit.UPDATE_APPOINTMENT, Permit.READ_DOCTOR_APPOINTMENTS);
 		if(!doctorsrepository.existsByFile(file))
 			throw new NotFoundException("Doctor not found. ");
 		return doctorsrepository.getScheduleForDoctor(file, startDate);
 	}
 	
 	public List<LocalTime> getFreeTimeForDoctor(int file, Date date, User requiring) {
-		permits.require(requiring, Permit.CREATE_APPOINTMENT, Permit.UPDATE_APPOINTMENT, Permit.READ_DOCTOR_APPOINTMENTS);
+		permits.inquireDoctorByFile(requiring, file, Permit.CREATE_APPOINTMENT, Permit.UPDATE_APPOINTMENT, Permit.READ_DOCTOR_APPOINTMENTS);
 		if(!doctorsrepository.existsByFile(file))
 			throw new NotFoundException("Doctor not found. ");
 		return doctorsrepository.getFreeTimeForDoctor(file, date);		

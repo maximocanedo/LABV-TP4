@@ -2,7 +2,12 @@ import { Toast } from './../../lib/toast.js';
 import { Query, enable, disable } from '../../actions/patients.js';
 import { FilterStatus, login } from "../../actions/users.js";
 import * as headerAdminService from "../services/headerAdminService.js";
+import { control } from "./../../controller/web.auth.js";
 
+(async () => {
+    // @ts-ignore
+    window.me = await control(true, []);
+})();
 let dataTablePacientes;
 let page = 1;
 let searchText = "";
@@ -19,7 +24,7 @@ const btnPrevPage = document.getElementById("btnPrevPage");
 const btnNextPage = document.getElementById("btnNextPage");
 
 (() => {
-    const header = headerAdminService.load();
+    
 })();
 
 const load = async () => {
@@ -33,17 +38,15 @@ const load = async () => {
             { data: 'name', title: 'Nombre' },
             { data: 'surname', title: 'Apellido' },
             { data: 'dni', title: 'Dni' },
-            { data: 'email', title: 'Email'},
-            { data: 'phone', title: 'Telefono' },
             { data: 'active', render: function ( data, type, row ) {
                 return data ? "Activo" : "Inactivo";
             }},
             { data: '', render: function ( data, type, row ) {
                 return `<form action="./manage?id=${row.id}" method="post"><button type="submit" class="btn btn-primary">Ver</button></form>`;
-            }},
+            }} /*,
             { data: '', render: function ( data, type, row ) {
                 return `<button type="button" class="btn btn-primary" onclick="${row.active ? "disable" : "enable"}Patient(${row.id});">${row.active ? "Desactivar" : "Activar"}</button>`;
-            }}
+            }} */
         ],
         data: pacientes,
         paging: false,

@@ -68,12 +68,16 @@ public class UserController {
 			@RequestParam(required = false, defaultValue = "") String q, 
 			@RequestParam(required = false, defaultValue = "") FilterStatus status,
 			@RequestParam(required = false, defaultValue = "false") boolean checkUnassigned,
+			@RequestParam(required = false, defaultValue = "false") boolean fromSelector,
 			@RequestParam(required = false, defaultValue = "1") int page,
 			@RequestParam(required = false, defaultValue = "15") int size,
 			HttpServletRequest req, HttpServletResponse res
 			) {
 		User requiring = auth.require(req, res);
-		return users.search(new UserQuery(q, status).paginate(page, size).filterByUnassigned(checkUnassigned), requiring);
+		UserQuery query = new UserQuery(q, status).paginate(page, size).filterByUnassigned(checkUnassigned);
+		System.out.println("selector users? " + fromSelector);
+		if(fromSelector) users.searchForSelector(query, requiring);
+		return users.search(query, requiring);
 	}
 	
 	/** # Acciones con terceros **/

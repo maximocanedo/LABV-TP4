@@ -2,6 +2,7 @@
 import { ElementBuilder } from "./../../controller/dom.js";
 import * as users from "./../../actions/users.js";
 import { getNumericParam, getParam, resolveLocalUrl } from "./../../lib/commons.js";
+import { control } from "./../../controller/web.auth.js";
 
 const nextBtn = document.querySelector("#nextBtn");
 const btnSearch = document.querySelector("#btnSearch");
@@ -13,7 +14,13 @@ let page = getNumericParam("p", 1);
 let size = getNumericParam("size", 10);
 let q = getParam("q");
 
+(async () => {
+    // @ts-ignore
+    window.me = await control(true, [users.PERMIT.CLOSE_USER_SESSIONS]);
+})();
+
 /** @type {users.Query} */
+// @ts-ignore
 const query = new users.Query()
                     .paginate(page, size)
                     .setQueryText(q);

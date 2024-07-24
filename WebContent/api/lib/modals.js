@@ -141,5 +141,12 @@ export class CommonModal {
         return this.#body;
     }
 
+    onHide(fun) {
+        return this.#modalFade.addEventListener("hide.bs.modal", fun);
+    }
+
+    removeMainButton() {
+        this.#mainButton.classList.add("d-none");
+    }
 
 }

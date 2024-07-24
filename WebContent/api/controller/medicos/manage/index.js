@@ -1,5 +1,34 @@
 /**
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
  * @deprecated usar /doctorProfile/*.js
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
  */
 
 import * as headerAdminService from "../../services/headerAdminService.js";

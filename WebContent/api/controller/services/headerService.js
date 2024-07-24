@@ -5,6 +5,7 @@ import { ElementBuilder } from "./../../controller/dom.js";
 
 
 export const load = () => {
+    return "";
     const navbar = ElementBuilder.from(document.querySelector("header"))
         .classList('navbar', 'bg-body-tertiary');
 

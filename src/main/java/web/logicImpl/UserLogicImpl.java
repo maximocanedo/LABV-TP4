@@ -56,7 +56,9 @@ public class UserLogicImpl implements IUserLogic {
 		}
 		String clearPassword = userValidator.password(user.getPassword(), user.getName(), user.getUsername());
 		user.setPassword(hash(clearPassword));
-		return usersrepository.add(user);
+		user = usersrepository.add(user);
+		permits.grantDefoPermits(user, PermitTemplate.DOCTOR);
+		return user;
 	}
 	
 	@Override
@@ -95,21 +97,20 @@ public class UserLogicImpl implements IUserLogic {
 	
 	@Override
     public Optional<User> findByUsername(String username, User requiring) {
-		requiring = permits.require(requiring, Permit.READ_USER_DATA);
-		
+		requiring = permits.inquireUser(requiring, username, Permit.READ_USER_DATA);
 		return (usersrepository.findByUsername(username));
 	}
 	
 	@Override
     public Optional<User> findByUsername(String username, boolean includeInactive, User requiring) {
-		requiring = permits.require(requiring, Permit.READ_USER_DATA);
+		requiring = permits.inquireUser(requiring, username, Permit.READ_USER_DATA);
 		includeInactive = includeInactive && requiring.can(Permit.DELETE_OR_ENABLE_USER);
 		return (usersrepository.findByUsername(username, includeInactive));
 	}
 	
 	@Override
 	public IUser getByUsername(String username, boolean includeInactive, User requiring) throws NotFoundException, NotAllowedException {
-		requiring = permits.require(requiring, Permit.READ_USER_DATA);
+		requiring = permits.inquireUser(requiring, username, Permit.READ_USER_DATA);
 		IUser opt = null;
 		includeInactive = includeInactive && requiring.can(Permit.DELETE_OR_ENABLE_USER);
 		if(requiring.can(Permit.READ_DOCTOR)) {
@@ -133,13 +134,17 @@ public class UserLogicImpl implements IUserLogic {
 
 	@Override
 	public List<UserView> search(UserQuery q, User requiring) {
-		permits.require(requiring, Permit.READ_USER_DATA);
+		permits.inquire(requiring, Permit.READ_USER_DATA);
+		return usersrepository.search(q);
+	}
+	
+	public List<UserView> searchForSelector(UserQuery q, User requiring) {
 		return usersrepository.search(q);
 	}
 	
 	@Override
     public void disable(User user, User requiring) {
-		permits.require(requiring, Permit.DELETE_OR_ENABLE_USER);
+		permits.inquireUser(requiring, user, Permit.DELETE_OR_ENABLE_USER);
 		user.setActive(false);
 		usersrepository.update(user);
 	}
@@ -187,19 +192,22 @@ public class UserLogicImpl implements IUserLogic {
 	
 	@Override
     public User update(User user, User requiring) throws NotFoundException {
-		if(requiring.getUsername() != user.getUsername())
-			permits.require(requiring, Permit.UPDATE_USER_DATA);
+		permits.inquireUser(requiring, user, Permit.UPDATE_USER_DATA);
 		Optional<User> search = usersrepository.findByUsername(user.getUsername());
 		if(search.isEmpty()) throw new NotFoundException();
 		User original = search.get();
 		if(user.getName() != null) 
 			original.setName(userValidator.name(user.getName()));
 		if(user.getDoctor() != null) {
-			Doctor d = (userValidator.doctor(user.getDoctor()));
-			Doctor updated = doctorsrepository.assignUser(d, user);
-			user.setDoctor(updated);
-			System.out.println(user);
-			System.out.println(updated);
+			if(user.getDoctor().getId() == -1 || user.getDoctor().getFile() == -1 
+				|| (user.getDoctor().getId() == 0 && user.getDoctor().getFile() == 0)) {
+				doctorsrepository.unassignUser(original.getDoctor());
+				user.setDoctor(null);
+			} else {
+				Doctor d = (userValidator.doctor(user.getDoctor()));
+				Doctor updated = doctorsrepository.assignUser(d, user);
+				user.setDoctor(updated);				
+			}
 		}
 		return usersrepository.update(original);
 	}

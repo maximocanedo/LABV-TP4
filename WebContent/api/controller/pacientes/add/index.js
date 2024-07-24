@@ -3,7 +3,13 @@ import * as page from "./dom.js";
 import * as patients from "./../../../actions/patients.js";
 import { resolveLocalUrl } from "../../../lib/commons.js";
 //import libphonenumber from "https://cdnjs.cloudflare.com/ajax/libs/google-libphonenumber/3.2.37/libphonenumber.min.js";
+import { control } from "./../../../controller/web.auth.js";
+import { PERMIT } from "./../../../actions/users.js";
 
+(async () => {
+    // @ts-ignore
+    window.me = await control(true, [PERMIT.CREATE_PATIENT]);
+})();
 const calcularDiferencia = (date) => {
     const today = new Date();
     const actualYear = today.getFullYear();
