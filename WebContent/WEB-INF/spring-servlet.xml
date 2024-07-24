@@ -3,7 +3,7 @@
 	<context:component-scan base-package="web.controller, web.daoImpl, web.entity, web.formatter, web.generator, web.logic, web.logicImpl, web.resources" />
 	<mvc:resources mapping="/api/**" location="/api/" />
 	<mvc:resources mapping="/assets/**" location="/assets/" />
-	<mvc:resources mapping="/pages/**" location="/pages/" />
+	<mvc:resources mapping="/pages/**" location="/" />
 	<mvc:annotation-driven/>
 	<bean class="org.springframework.web.servlet.view.UrlBasedViewResolver">
 		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>

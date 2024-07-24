@@ -11,7 +11,7 @@ const btnLogin = ElementBuilder.from(document.getElementById("btnLogin"));
 const formLogin = ElementBuilder.from(document.getElementById("formLogin"));
 
 export const resolveLocalUrl = (relativeUrl) => {
-    const PREFIX = "pages";
+    const PREFIX = "";
     if(window.location.port == '81')
         return resolveUrl(PREFIX + (!relativeUrl.startsWith("/") ? "/": "") + relativeUrl);
     return (!relativeUrl.startsWith("/") ? "/": "") + relativeUrl;

@@ -21,7 +21,7 @@ export const getNumericParam =
 export const resolveLocalUrl = (relativeUrl) => {
     const PREFIX = "";
     if(window.location.port == '81')
-        return resolveUrl(PREFIX + (!relativeUrl.startsWith("/") ? "/": "") + relativeUrl);
+        return resolveUrl(PREFIX + (!relativeUrl.startsWith("/") ? "": "") + relativeUrl);
     return (!relativeUrl.startsWith("/") ? "/": "") + relativeUrl;
 };
 
