@@ -14,6 +14,12 @@
 <body>
     <main class="container">
         <div class="mb-3">
+            <label for="specialtySelector" class="form-label">Doctor:</label>
+            <div class="specialtySelector"></div>
+            <div class="valid text-success d-none" id="specialtySelectorValid"></div>
+            <div class="invalid text-danger d-none" id="specialtySelectorInvalid"></div>
+        </div>
+        <div class="mb-3">
             <label for="selectorDoctor" class="form-label">Doctor:</label>
             <div class="selectorDoctor"></div>
             <div class="valid text-success d-none" id="selectorDoctorValid"></div>
@@ -26,8 +32,14 @@
             <div class="invalid text-danger d-none" id="selectorPatientInvalid"></div>
         </div>
         <div class="mb-3">
-            <label for="selectorDate" class="form-label">Fecha y Hora Turno:</label>
-            <div class="selectorDate"></div>
+            <label for="selectorDate" class="form-label">Fecha:</label>
+            <select name="" id="fecha"></select>
+            <div class="valid-feedback" id="selectorDateValid"></div>
+            <div class="invalid-feedback" id="selectorDateInvalid"></div>
+        </div>
+        <div class="mb-3">
+            <label for="selectorDate" class="form-label">Hora:</label>
+            <select name="" id="hora"></select>
             <div class="valid-feedback" id="selectorDateValid"></div>
             <div class="invalid-feedback" id="selectorDateInvalid"></div>
         </div>

@@ -47,6 +47,19 @@ specialtySelector.getTrigger().addEventListener('change', e => {
     doctorSelector.setInitialQuery(new doctors.Query().filterBySpecialty(selected.id));
 });
 
+const handlerForTime = async (e) => {
+    const date = fecha.value;
+    console.log(date);
+    const schedules = await appointments.getAvailableSchedules(doctorSelector.getSelectedFile().file, new Date(date));
+    hora.innerHTML = '';
+    console.log(schedules);
+    schedules.map(schedule => {
+        const x = document.createElement("option");
+        x.value = schedule;
+        x.text = schedule;
+        hora.append(x);
+    });
+};
 const handleDoctorChange = async () => {
     if(doctorSelector.getSelectedFile() == null) return;
     const dates = await appointments.getAvailableDates(doctorSelector.getSelectedFile().file, date);
@@ -76,18 +89,6 @@ nextMonth.addEventListener('click', async () => {
     await handleDoctorChange();
 });
 
-const handlerForTime = async (e) => {
-    const date = fecha.value;
-    const schedules = await appointments.getAvailableSchedules(doctorSelector.getSelectedFile().file, new Date(date));
-    hora.innerHTML = '';
-    console.log(schedules);
-    schedules.map(schedule => {
-        const x = document.createElement("option");
-        x.value = schedule;
-        x.text = schedule;
-        hora.append(x);
-    });
-};
 fecha.addEventListener('change', handlerForTime);
 
 const fechasNoDisponibles = () => {
