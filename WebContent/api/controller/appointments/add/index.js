@@ -4,7 +4,13 @@ import { PatientSelector } from "../../../lib/selectors/PatientSelector.js";
 import { SpecialtySelector } from "../../../lib/selectors/SpecialtySelector.js";
 import * as appointments from "../../../actions/appointments.js";
 import * as doctors from "../../../actions/doctors.js";
-import { div, button, input, select } from "./../../../actions/commons.js";
+import { div, button, select } from "./../../../actions/commons.js";
+import * as headerAdminService from "../../services/headerAdminService.js";
+
+
+(()=>{
+    const header = headerAdminService.load();
+})();
 
 const valid = {
     doctor: false,
@@ -12,8 +18,7 @@ const valid = {
     especilidad: false,
 };
 
-const btnAsignarTurno = document.getElementById("btnAsignarTurno")
-
+const btnAsignarTurno = document.getElementById("btnAsignarTurno");
 
 // Doctor
 const dSelector = div(".selectorDoctor");
@@ -47,19 +52,6 @@ specialtySelector.getTrigger().addEventListener('change', e => {
     doctorSelector.setInitialQuery(new doctors.Query().filterBySpecialty(selected.id));
 });
 
-const handlerForTime = async (e) => {
-    const date = fecha.value;
-    console.log(date);
-    const schedules = await appointments.getAvailableSchedules(doctorSelector.getSelectedFile().file, new Date(date));
-    hora.innerHTML = '';
-    console.log(schedules);
-    schedules.map(schedule => {
-        const x = document.createElement("option");
-        x.value = schedule;
-        x.text = schedule;
-        hora.append(x);
-    });
-};
 const handleDoctorChange = async () => {
     if (doctorSelector.getSelectedFile() == null) return;
     const dates = await appointments.getAvailableDates(doctorSelector.getSelectedFile().file, date);
@@ -89,6 +81,20 @@ nextMonth.addEventListener('click', async () => {
     await handleDoctorChange();
 });
 
+const handlerForTime = async (e) => {
+    const date = fecha.value;
+    console.log(date);
+    const schedules = await appointments.getAvailableSchedules(doctorSelector.getSelectedFile().file, new Date(date));
+    hora.innerHTML = '';
+    console.log(schedules);
+    schedules.map(schedule => {
+        const x = document.createElement("option");
+        x.value = schedule;
+        x.text = schedule;
+        hora.append(x);
+    });
+};
+
 fecha.addEventListener('change', handlerForTime);
 
 const fechasNoDisponibles = () => {
@@ -99,13 +105,14 @@ btnAsignarTurno.addEventListener("click", () => {
     validateDoctor();
     validatePatient();
     validateEspecialidad();
-    if (valid.doctor && valid.patient) {
+    if (valid.doctor && valid.patient && valid.especilidad) {
         // @ts-ignore
         appointments.create({ doctor: doctorSelector.getSelectedFile(), patient: patientSelector.getSelectedFile(), date: date })
     }
 });
 
 const validateDoctor = () => {
+    console.log("Working")
     if (doctorSelector.getSelectedFile() !== null) {
         selectorDoctorValid.innerText = "Valido!";
         selectorDoctorValid.classList.remove("d-none");
@@ -126,7 +133,7 @@ const validatePatient = () => {
         selectorPatientInvalid.classList.add("d-none");
         valid.patient = true;
     } else {
-        selectorDoctorValid.classList.add("d-none");
+        selectorPatientValid.classList.add("d-none");
         selectorPatientInvalid.innerText = "Invalido! Seleccione un Paciente";
         selectorPatientInvalid.classList.remove("d-none");
         valid.patient = false;

@@ -12,7 +12,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/google-libphonenumber/3.2.37/libphonenumber.min.js" integrity="sha512-MVSgRRDm2gT+ms4budOJYLBXx+mxpntMwSmx2jHAQNof74bIo0/sThKak5+CsjPYP+4WLilz31BzUHst838NYA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
+    <br>
     <main class="container">
+        <div class="mb-3">
+            <label for="specialtySelector" class="form-label">Especialidad:</label>
+            <div class="specialtySelector"></div>
+            <div class="valid text-success d-none" id="specialtySelectorValid"></div>
+            <div class="invalid text-danger d-none" id="specialtySelectorInvalid"></div>
+        </div>
         <div class="mb-3">
             <label for="selectorDoctor" class="form-label">Doctor:</label>
             <div class="selectorDoctor"></div>
@@ -26,10 +33,12 @@
             <div class="invalid text-danger d-none" id="selectorPatientInvalid"></div>
         </div>
         <div class="mb-3">
-            <label for="selectorDate" class="form-label">Fecha y Hora Turno:</label>
-            <div class="selectorDate"></div>
-            <div class="valid-feedback" id="selectorDateValid"></div>
-            <div class="invalid-feedback" id="selectorDateInvalid"></div>
+            <label for="fecha" class="form-label">Fecha:</label>
+            <select class="form-select" aria-label="Default select example" id="fecha"></select>
+        </div>
+        <div class="mb-3">
+            <label for="fecha" class="form-label">Hora:</label>
+            <select class="form-select" aria-label="Default select example" id="hora"></select>
         </div>
         <div class="mb-3">
             <button type="button" class="btn btn-success" id="btnAsignarTurno">Asignar Turno</button>
