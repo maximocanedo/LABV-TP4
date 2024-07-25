@@ -301,7 +301,7 @@ btnAsignarTurno.addEventListener("click", () => {
     d.setHours(h[0]);
     d.setMinutes(h[1]);
     const data = { 
-        doctor: doctorSelector.getSelectedFile(), 
+        assignedDoctor: doctorSelector.getSelectedFile(), 
         patient: patientSelector.getSelectedFile(), 
         date: d
     };
