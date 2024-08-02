@@ -35,9 +35,9 @@ public class SpecialtyQuery implements Searchable {
     
     @Override
     public Query toQuery(Session session) {
-        StringBuilder hql = new StringBuilder("SELECT s FROM Specialty s ");
+        StringBuilder hql = new StringBuilder("SELECT s FROM Specialty s WHERE 1 = 1 ");
         if(getStatus() != FilterStatus.BOTH) {
-            hql.append("WHERE s.active = :status ");
+            hql.append("AND s.active = :status ");
         }
         if (getQueryText() != null && !getQueryText().isEmpty()) {
             hql.append("AND (s.name LIKE :queryText OR s.description LIKE :queryText) ");

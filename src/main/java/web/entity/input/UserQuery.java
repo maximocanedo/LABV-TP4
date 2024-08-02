@@ -47,7 +47,7 @@ public class UserQuery implements Searchable {
 		StringBuilder hql = new StringBuilder("SELECT u FROM UserView u LEFT JOIN u.doctor d ");
 		hql.append("WHERE (u.username LIKE :q OR u.name LIKE :q) ");
 		if(getStatus() != FilterStatus.BOTH) {
-			hql.append("AND u.active = :status");
+			hql.append(" AND u.active = :status ");
 		}
 		if(this.checkUnassigned) {
 			hql.append(" AND d IS NULL ");
@@ -74,7 +74,7 @@ public class UserQuery implements Searchable {
 	}
 	
 	private void setQueryText(String q) {
-		this.q = q;
+		this.q = q.trim();
 	}
 	
 	public FilterStatus getStatus() {

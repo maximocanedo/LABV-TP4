@@ -75,7 +75,7 @@ public class UserController {
 			) {
 		User requiring = auth.require(req, res);
 		UserQuery query = new UserQuery(q, status).paginate(page, size).filterByUnassigned(checkUnassigned);
-		System.out.println("selector users? " + fromSelector);
+		//System.out.println("selector users? " + fromSelector);
 		if(fromSelector) users.searchForSelector(query, requiring);
 		return users.search(query, requiring);
 	}

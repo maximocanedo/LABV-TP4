@@ -164,7 +164,7 @@ public class UserLogicImpl implements IUserLogic {
 
 	@Override
 	public void enable(String username, User requiring) {
-		User user = getByUsername(username, requiring);
+		User user = usersrepository.getByUsername(username, true);
 		enable(user, requiring);
 	}
 	
