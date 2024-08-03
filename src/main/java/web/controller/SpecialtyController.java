@@ -65,13 +65,13 @@ public class SpecialtyController {
     
     // Acciones con Terceros
     
-    @GetMapping("/s/{id}")
-    public Optional<Specialty> findById(@PathVariable int id, HttpServletRequest req, HttpServletResponse res) {
-        auth.require(req, res);
-        return specialties.findById(id);
+    @GetMapping("/{id}")
+    public Specialty findById(@PathVariable int id, HttpServletRequest req, HttpServletResponse res) {
+        User requiring = auth.require(req, res);
+        return specialties.getById(id, requiring);
     }
     
-    @PatchMapping("/s/{id}")
+    @PatchMapping("/{id}")
     public Specialty update(@PathVariable int id, @RequestBody Specialty specialty, HttpServletRequest req, HttpServletResponse res) {
         User requiring = auth.require(req, res);
         specialty.setId(id);
@@ -79,10 +79,17 @@ public class SpecialtyController {
         return specialty;
     }
     
-    @DeleteMapping("/s/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> disable(@PathVariable int id, HttpServletRequest req, HttpServletResponse res) {
         User requiring = auth.require(req, res);
         specialties.disable(id, requiring);
         return ResponseEntity.status(200).build();
+    }
+    
+    @PostMapping("/{id}")
+    public ResponseEntity<?> enable(@PathVariable int id, HttpServletRequest req, HttpServletResponse res) {
+    	User requiring = auth.require(req, res);
+    	specialties.enable(id, requiring);
+    	return ResponseEntity.status(200).build();
     }
 }

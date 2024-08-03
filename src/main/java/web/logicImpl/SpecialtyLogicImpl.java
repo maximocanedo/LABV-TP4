@@ -83,5 +83,11 @@ public class SpecialtyLogicImpl implements ISpecialtyLogic {
 	public Optional<Specialty> findById(int id) {
 		return findById(id, false, null);
 	}
+	
+	public Specialty getById(int id, User requiring) throws NotFoundException {
+		Optional<Specialty> s = findById(id, requiring.can(Permit.READ_DISABLED_SPECIALTY_RECORDS) || requiring.can(Permit.DISABLE_SPECIALTY), requiring);
+		if(s.isEmpty()) throw new NotFoundException("Specialty not found. ");
+		return s.get();		
+	}
 
 }
