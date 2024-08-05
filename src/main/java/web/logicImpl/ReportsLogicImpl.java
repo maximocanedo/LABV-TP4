@@ -26,12 +26,12 @@ public class ReportsLogicImpl implements IReportsLogic {
 	private UserPermitLogicImpl permits;
 
 	@Override
-	public Map<Integer, Integer> countAppointmentsByDayBetweenDates(Date startDate, Date endDate, AppointmentStatus status) {
-		/*try {
+	public Map<Integer, Integer> countAppointmentsByDayBetweenDates(Date startDate, Date endDate, AppointmentStatus status, User requiring) {
+		try {
 			requiring = permits.inquire(requiring, Permit.READ_APPOINTMENT);
 		} catch(NotAllowedException e) {
 			throw e;
-		}*/
+		}
 		return reportsrepository.countAppointmentsByDayBetweenDates(startDate, endDate, status);
 	}
 

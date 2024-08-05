@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import web.entity.AppointmentStatus;
+import web.entity.User;
 import web.logicImpl.ReportsLogicImpl;
 
 @RestController
@@ -44,8 +45,8 @@ public class ReportsController {
 			@RequestParam(required = true) String status,
 			HttpServletRequest req, HttpServletResponse res) throws ParseException {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");  
-		//User requiring = auth.require(req, res);
-		return new ResponseEntity<>(reports.countAppointmentsByDayBetweenDates(formatter.parse(startDate), formatter.parse(endDate), AppointmentStatus.valueOf(status)), HttpStatus.OK);
+		User requiring = auth.require(req, res);
+		return new ResponseEntity<>(reports.countAppointmentsByDayBetweenDates(formatter.parse(startDate), formatter.parse(endDate), AppointmentStatus.valueOf(status), requiring), HttpStatus.OK);
 	}
 
 }
