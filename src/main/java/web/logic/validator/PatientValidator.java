@@ -103,7 +103,7 @@ public class PatientValidator {
         Phonenumber.PhoneNumber parsedNumber = phoneNumberUtil.parse(phoneNumber, defaultRegion);
 
         if (phoneNumberUtil.isValidNumber(parsedNumber)) {
-            return phoneNumberUtil.format(parsedNumber, PhoneNumberUtil.PhoneNumberFormat.E164);
+            return phoneNumberUtil.format(parsedNumber, PhoneNumberUtil.PhoneNumberFormat.INTERNATIONAL);
         } else {
         	throw new ValidationException("Invalid phone number. ", "Ingrese un número de teléfono válido. ");
         }

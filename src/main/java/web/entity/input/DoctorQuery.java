@@ -165,7 +165,6 @@ public class DoctorQuery implements Searchable {
 
 		public DoctorQuery filterByUnassigned(boolean checkUnassigned) {
 			this.checkUnassigned = checkUnassigned;
-			System.out.println("Check? " + checkUnassigned);
 			return this;
 		}
 	    

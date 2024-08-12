@@ -1,5 +1,6 @@
 package web.logic.validator;
 
+import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Set;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 import web.daoImpl.DoctorDAOImpl;
 import web.daoImpl.SpecialtyDAOImpl;
 import web.daoImpl.UserDAOImpl;
+import web.entity.Day;
 import web.entity.Optional;
 import web.entity.Permit;
 import web.entity.Schedule;
@@ -182,18 +184,38 @@ public class DoctorValidator {
 		///* 
         for (Schedule e : schedules) {
         	System.out.println(e);
-            if (newSchedule.getBeginDay() == e.getBeginDay()) {
-                if (newSchedule.getEndTimeLT().isAfter(e.getStartTimeLT()) &&
-                    newSchedule.getStartTimeLT().isBefore(e.getEndTimeLT()))
-                    throw ve;
-            } else if (newSchedule.getFinishDay() == e.getBeginDay()) {
+        	
+        	LocalTime finNuevo = newSchedule.getEndTimeLT();
+        	LocalTime comienzoNuevo = newSchedule.getStartTimeLT();
+        	LocalTime comienzoEx = e.getStartTimeLT();
+        	LocalTime finEx = e.getEndTimeLT();
+        	
+        	Day diaComienzoNuevo = newSchedule.getBeginDay();
+        	Day diaFinNuevo = newSchedule.getFinishDay();
+        	Day diaComienzoEx = e.getBeginDay();
+        	Day diaFinEx = e.getFinishDay();
+        	
+        	boolean comienzanElMismoDia = diaComienzoNuevo == diaComienzoEx;
+        	boolean elNuevoTerminaElDiaDeInicioDelExistente = diaFinNuevo == diaComienzoEx;
+        	
+        	boolean nuevoHorarioTerminaDespuesDeQueComienceHorarioExistente = (
+        					(newSchedule.getEndTimeLT().isAfter(e.getStartTimeLT()) && newSchedule.getStartTimeLT().isBefore(e.getEndTimeLT()) )
+        					|| newSchedule.getEndTimeLT().equals(e.getStartTimeLT())
+        					|| newSchedule.getStartTime().equals(e.getEndTimeLT())
+    				);
+        	
+            if (diaComienzoNuevo == diaComienzoEx) {
+                if (nuevoHorarioTerminaDespuesDeQueComienceHorarioExistente) throw ve;
+            } else if (diaFinNuevo == diaComienzoEx) {
                 if (newSchedule.getEndTimeLT().isAfter(e.getStartTimeLT()) &&
                     newSchedule.getEndTimeLT().isBefore(e.getEndTimeLT()))
                     throw ve2;
-            } else if (newSchedule.getBeginDay() == e.getFinishDay()) {
+                if(newSchedule.getEndTimeLT().equals(e.getStartTimeLT())) throw ve2;
+            } else if (diaComienzoNuevo == diaFinEx) {
                 if (newSchedule.getStartTimeLT().isBefore(e.getEndTimeLT()) &&
                     newSchedule.getStartTimeLT().isAfter(e.getStartTimeLT()))
                     throw ve3;
+                if(newSchedule.getStartTimeLT().equals(e.getEndTimeLT())) throw ve3;
             }
         } // */
         schedules.add(newSchedule);
