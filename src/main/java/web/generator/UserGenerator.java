@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.github.javafaker.Faker;
+import com.github.javafaker.Name;
 
 import web.entity.User;
 import web.logicImpl.UserLogicImpl;
@@ -24,8 +25,10 @@ public class UserGenerator implements IEntityGenerator<User> {
 	public User generate() {
         User user = new User();
         user.setName(faker.name().fullName());
-        user.setUsername(faker.name().username());
-        user.setPassword("12345678"); // Todos los usuarios generados automáticamente usarán esta contraseña.
+        String usn = "u0." + faker.name().username();
+        if(usn.length() > 15) usn = usn.substring(0, 14);
+        user.setUsername(usn);
+        user.setPassword("User$12345678"); // Todos los usuarios generados automáticamente usarán esta contraseña.
         user.setActive(true);
         return user;
 	}
@@ -35,6 +38,16 @@ public class UserGenerator implements IEntityGenerator<User> {
 		User random = generate();
         users.signup(random);
         return random;
+	}
+	
+	public User save(Name n, User requiring) {
+		User random = generate();
+		random.setName(n.fullName());
+        String usn = "u0." + n.username();
+        if(usn.length() > 15) usn = usn.substring(0, 14);
+        random.setUsername(usn);
+		users.signup(random);
+		return random;
 	}
 	
 	

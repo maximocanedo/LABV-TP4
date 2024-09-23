@@ -47,6 +47,12 @@ public class UserLogicImpl implements IUserLogic {
 		return BCrypt.hashpw(clear, BCrypt.gensalt());
 	}
 	
+	@Deprecated
+	public User getRootUser() {
+		User root = usersrepository.getByUsername("root");
+		return root;
+	}
+	
 	@Override
     public User signup(User user) {
 		user.setName(userValidator.name(user.getName()));

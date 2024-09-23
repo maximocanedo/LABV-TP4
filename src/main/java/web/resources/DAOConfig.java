@@ -15,7 +15,7 @@ public class DAOConfig {
 	public DataManager dataManager() {
 		return new DataManager();
 	}
-	/* 
+	/* * /
 	@Bean
 	public AppointmentDAOImpl appointmentsrepository() {
 		return new AppointmentDAOImpl();
@@ -45,6 +45,16 @@ public class DAOConfig {
 	@Bean
 	public PatientDAOImpl patientsrepository() {
 		return new PatientDAOImpl();
+	}
+	
+	@Bean
+	public ScheduleDAOImpl schedulesrepository() {
+		return new ScheduleDAOImpl();
+	}
+	
+	@Bean
+	public ReportsDAOImpl reportsrepository() {
+		return new ReportsDAOImpl();
 	}
 
 	@Bean

@@ -31,6 +31,6 @@ BEGIN
 END //
 DELIMITER ;
 
-CALL getSchedulesForDoctor(3739, '2024-01-12');
+-- CALL getSchedulesForDoctor(3739, '2024-01-12');
 -- SELECT @h as horaa;
 

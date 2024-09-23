@@ -6,9 +6,12 @@
     <session-factory>
     <property name="javax.persistence.validation.mode">none</property>
         <property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
-        <property name="hibernate.connection.password">T*5VqV%zpHWc43uELAHi2z%QUbOhmqD7kZqGNPp8uV$I2fdSHJ6Bmu#ECsVK83C1gQ@r9o*1AWiZmo*#qcc*Ud08VyKlLI56liDj&amp;hqY0L*p4p&amp;ypbax2kSdyAB%LD2%</property>
+        <property name="hibernate.connection.username">root</property>
+        <property name="hibernate.connection.password">root</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/bdmedicos</property>
+        <!-- <property name="hibernate.connection.password">T*5VqV%zpHWc43uELAHi2z%QUbOhmqD7kZqGNPp8uV$I2fdSHJ6Bmu#ECsVK83C1gQ@r9o*1AWiZmo*#qcc*Ud08VyKlLI56liDj&amp;hqY0L*p4p&amp;ypbax2kSdyAB%LD2%</property>
 		<property name="hibernate.connection.url">jdbc:mysql://www.canedo.com.ar:3306/bdmedicos?createDatabaseIfNotExist=true</property>
-        <property name="hibernate.connection.username">lab</property>
+        <property name="hibernate.connection.username">lab</property>-->
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
         <property name="hbm2ddl.auto">update</property>
         

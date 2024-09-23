@@ -78,5 +78,5 @@ BEGIN
 END //
 DELIMITER ;
 
-CALL getFreeTimesForDoctor(3739, '2024-01-15');
+-- CALL getFreeTimesForDoctor(3739, '2024-01-15');
 

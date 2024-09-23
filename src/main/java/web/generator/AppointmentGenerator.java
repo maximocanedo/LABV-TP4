@@ -128,7 +128,11 @@ public class AppointmentGenerator implements IEntityGenerator<Appointment> {
     	Date d = new Builder().setDate(2024, 0, 1).build().getTime();
     	Date d2 = new Builder().setDate(2024, 2, 2).build().getTime();
     	t.setDate(faker.date().between(d, d2));
-    	appointments.register(t, requiring);
+    	try {
+        	appointments.register(t, requiring);
+    	} catch(Exception e) {
+    		System.out.println("Expected: Selected date/time is not available. ");
+    	}
     	return t;
     	
     }

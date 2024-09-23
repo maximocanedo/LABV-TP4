@@ -12,6 +12,7 @@ import com.github.javafaker.Address;
 import com.github.javafaker.Faker;
 import com.github.javafaker.Name;
 
+import web.daoImpl.ScheduleDAOImpl;
 import web.entity.Day;
 import web.entity.Doctor;
 import web.entity.Schedule;
@@ -36,6 +37,9 @@ public class DoctorGenerator implements IEntityGenerator<Doctor> {
 	
 	@Autowired
 	private Faker faker;
+	
+	@Autowired
+	private ScheduleDAOImpl schedulesrepository;
 	
 	public static boolean EXISTE_LEGAJO_1234 = false;
     
@@ -70,6 +74,23 @@ public class DoctorGenerator implements IEntityGenerator<Doctor> {
 	    return medico;
 	}
 	
+	public Doctor save(Name n, User user, User requiring) {
+		boolean exists = EXISTE_LEGAJO_1234 || medicos.findByFile(1234, requiring).isPresent();
+	    Doctor medico = generate(user);
+	    if(!exists) medico.setFile(1234);
+	    else EXISTE_LEGAJO_1234 = exists;
+		Set<Schedule> sss = generateRandomSchedules();
+		for(Schedule s : sss) {
+			schedulesrepository.save(s);
+		}
+		medico.setSchedules(sss);
+	    medico.setName(n.firstName());
+	    medico.setSurname(n.lastName());
+	    System.out.println("Número de médico: " + medico.getPhone());
+	    medicos.add(medico, requiring);
+	    return medico;
+	}
+	
 	public Doctor generate(User user) {
         Specialty[] especialidades = specialtyGenerator.generate();
         Specialty ss = especialidades[random.nextInt(especialidades.length)];
@@ -86,7 +107,8 @@ public class DoctorGenerator implements IEntityGenerator<Doctor> {
         medico.setLocalty(faker.address().city());
         medico.setSex(random.nextInt(10) % 2 == 0 ? "M" : "F");
         medico.setUser(user);
-        medico.setPhone(faker.phoneNumber().phoneNumber());
+        String pn = "+54 11 " + (5000 + random.nextInt(2999)) + " " + (1000 + random.nextInt(8999));
+        medico.setPhone(pn);
         return medico;
 	}
 

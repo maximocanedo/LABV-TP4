@@ -3,6 +3,9 @@ package web.generator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.github.javafaker.Faker;
+import com.github.javafaker.Name;
+
 import web.entity.Doctor;
 import web.entity.IAppointment;
 import web.entity.Patient;
@@ -44,20 +47,22 @@ public class Generator {
 		StringBuilder doctorsLog = new StringBuilder();
 		StringBuilder appointmentsLog = new StringBuilder();
 		
+		Faker faker = new Faker();
 		
 		for(int i = 0; i < total; i++) {
 			// Generar
-			User user = userGenerator.save(requiring);
+			Name nn = faker.name();
+			User user = userGenerator.save(nn, requiring);
 			Patient paciente = patientGenerator.save(requiring);
-			Doctor medico = doctorGenerator.save(user, requiring);
-			IAppointment turno = appointmentGenerator.saveforP6(paciente, medico, requiring);
+			Doctor medico = doctorGenerator.save(nn, user, requiring);
+			//IAppointment turno = appointmentGenerator.saveforP6(paciente, medico, requiring);
 			// Appointment turnoParaPunto3 = appointments.generateForDoctor1234(paciente);
 			
 			if(logEveryRecord) {
 				usersLog.append(user);
 				patientsLog.append(paciente);
 				doctorsLog.append(medico);
-				appointmentsLog.append(turno);
+				//appointmentsLog.append(turno);
 				// appointmentsLog.append(turnoParaPunto3);
 			}
 		}
