@@ -9,6 +9,7 @@ import web.entity.input.AppointmentQuery;
 import web.entity.view.AppointmentCommunicationView;
 import web.entity.view.AppointmentMinimalView;
 import web.exceptions.NotFoundException;
+import web.main.App;
 
 public interface IAppointmentDAO {
 	
@@ -83,6 +84,8 @@ public interface IAppointmentDAO {
      * @throws NotFoundException Si el ID ingresado no corresponde a ningún turno.
      */
     void enable(int id) throws NotFoundException;
+
+	Boolean isAssigned(Appointment newAppointment) throws NotFoundException;
 	
 	/**
 	 * Cuenta la cantidad de turnos marcados como presentes dentro del rango de fechas indicado.
