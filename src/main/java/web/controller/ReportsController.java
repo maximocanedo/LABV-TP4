@@ -37,7 +37,7 @@ public class ReportsController {
     }
 	
 	@PostMapping("/countAppointmentsByDayBetweenDates")
-	public ResponseEntity<Map<Integer, Integer>> countAppointmentsByDayBetweenDates(
+	public ResponseEntity<Map<String, Integer>> countAppointmentsByDayBetweenDates(
 			@RequestParam(required = true) String startDate,
 			@RequestParam(required = true) String endDate,
 			@RequestParam(required = true) String status,
