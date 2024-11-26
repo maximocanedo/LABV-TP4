@@ -8,14 +8,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import web.daoImpl.AppointmentDAOImpl;
 import web.daoImpl.DoctorDAOImpl;
 import web.daoImpl.PatientDAOImpl;
-import web.entity.AppointmentStatus;
-import web.entity.Doctor;
-import web.entity.IDoctor;
-import web.entity.IPatient;
-import web.entity.Optional;
-import web.entity.Patient;
+import web.entity.*;
 import web.exceptions.ValidationException;
 
 @Component("appointmentValidator")
@@ -26,6 +22,9 @@ public class AppointmentValidator {
 	
 	@Autowired
 	private PatientDAOImpl patientsrepository;
+
+	@Autowired
+	private AppointmentDAOImpl appointmentsrepository;
 	
 	public Date normalizeTime(Date date) {
 		Calendar c = Calendar.getInstance();
@@ -79,6 +78,13 @@ public class AppointmentValidator {
 		if(pat.isEmpty())
 			throw new ValidationException("Patient not found. ");
 		return pat.get();
+	}
+
+	public void isAssigned(Appointment newAppointment) throws ValidationException {
+		if(appointmentsrepository.isAssigned(newAppointment)){
+			throw new ValidationException("Appointment already assigned to other patient. ");
+		}
+
 	}
 	
 }

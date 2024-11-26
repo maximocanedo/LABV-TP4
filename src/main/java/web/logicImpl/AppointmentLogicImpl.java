@@ -50,6 +50,7 @@ public class AppointmentLogicImpl implements IAppointmentLogic {
 				d = requiring.getDoctor();
 			}
 		}
+		appointmentValidator.isAssigned(t);
 		t.setDate(appointmentValidator.date(t.getDate(), t.getAssignedDoctor()));
 		t.setRemarks(appointmentValidator.remarks(t.getRemarks()));
 		t.setStatus(AppointmentStatus.PENDING);

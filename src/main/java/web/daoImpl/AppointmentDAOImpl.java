@@ -112,6 +112,19 @@ public class AppointmentDAOImpl implements IAppointmentDAO {
 	}
 
 	@Override
+	public Boolean isAssigned(Appointment newAppointment) throws NotFoundException {
+		final Optional<Appointment> turno = new Optional<>();
+		dataManager.run(session -> {
+			String queryString = "SELECT * FROM Appointment a WHERE a.doctor.id = :doctorId AND a.date = :date AND a.active = 1";
+			Query query = session.createQuery(queryString);
+			query.setParameter("doctorId", newAppointment.getAssignedDoctor().getId());
+			query.setParameter("date", newAppointment.getDate());
+			turno.set((Appointment) query.uniqueResult());
+		});
+        return turno.isPresent();
+    }
+
+	@Override
 	public int countPresencesBetween(Date date1, Date date2) {
 		final Optional<Integer> r = new Optional<Integer>(0);
 		dataManager.run(session -> {
@@ -152,5 +165,7 @@ public class AppointmentDAOImpl implements IAppointmentDAO {
 		});
 		return opt.get();
 	}
+
+
 
 }
