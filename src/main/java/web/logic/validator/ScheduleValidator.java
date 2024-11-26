@@ -9,21 +9,53 @@ import web.exceptions.ValidationException;
 @Component("scheduleValidator")
 public class ScheduleValidator {
 
-	public Day day(String day) throws ValidationException {
-		try {
-			return Day.valueOf(day.trim().toUpperCase());
-		} catch (IllegalArgumentException e) {
-			throw new ValidationException("Invalid day. ", "Ingresá un día de semana en inglés, y en mayúsculas. Por ejemplo: \"MONDAY\" en lugar de \"lunes\". ");
-		}
-	}
-	
-	public Schedule check(Schedule schedule) throws ValidationException {
-		// Validar que el día de finalización sea el siguiente
-		if(schedule.getBeginDay().next() == schedule.getFinishDay())
-			throw new ValidationException("Invalid day range. ", "El día de finalización debe ser el mismo día o como mucho el día siguiente al día de inicio. Si necesita abarcar varios días, cree varios horarios para cada día. ");
-		if(schedule.getStartTimeLT().isAfter(schedule.getEndTimeLT()) && schedule.getBeginDay().next() == schedule.getFinishDay())
-			throw new ValidationException("Invalid time range. ", "La hora de salida debe ser posterior a la hora de inicio, salvo cuando el día de salida es posterior al día de inicio. ");
-		return schedule;
-	}
-	
+    public Day day(String day) throws ValidationException {
+        try {
+            return Day.valueOf(day.trim().toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new ValidationException(
+                "Dia no valido",
+                "ingrese un dia valido"
+            );
+        }
+    }
+
+    public Schedule check(Schedule schedule) throws ValidationException {
+        Day beginDay = schedule.getBeginDay();
+        Day finishDay = schedule.getFinishDay();
+        int startTime = schedule.getStartTime();
+        int endTime = schedule.getEndTime();
+
+        if (finishDay != beginDay && finishDay != beginDay.next()) {
+            throw new ValidationException(
+                "Rango incorrecto de dia",
+                "El dia de finalizacion debe ser el mismo o el siguiente al dia de inicio"
+            );
+        }
+
+        if (startTime < 0 || startTime >= 24 || endTime < 0 || endTime >= 24) {
+            throw new ValidationException(
+                "Rango incorrecto de tiempo",
+                "Las horas deben estar en el rango de 0 a 23"
+            );
+        }
+
+        if (finishDay == beginDay) {
+            if (startTime >= endTime) {
+                throw new ValidationException(
+                    "Rango incorrecto de tiempo",
+                    "La hora de inicio debe ser anterior a la hora de fin cuando ambos son el mismo día."
+                );
+            }
+        } else if (finishDay == beginDay.next()) {
+            if (startTime <= endTime) {
+                throw new ValidationException(
+                    "Rango incorrecto de tiempo",
+                    "Para horarios que cruzan al dia siguiente, la hora de inicio debe ser mayor a la hora de fin"
+                );
+            }
+        }
+
+        return schedule;
+    }
 }

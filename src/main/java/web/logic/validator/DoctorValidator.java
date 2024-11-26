@@ -1,8 +1,8 @@
 package web.logic.validator;
 
-import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,18 +12,15 @@ import web.daoImpl.DoctorDAOImpl;
 import web.daoImpl.SpecialtyDAOImpl;
 import web.daoImpl.UserDAOImpl;
 import web.entity.Day;
-import web.entity.Optional;
 import web.entity.Permit;
 import web.entity.Schedule;
 import web.entity.Specialty;
 import web.entity.User;
-import web.exceptions.CommonException;
 import web.exceptions.ValidationException;
 import web.logicImpl.UserPermitLogicImpl;
 
 @Component("doctorValidator")
 public class DoctorValidator {
-	
 	@Autowired
 	private DoctorDAOImpl doctorsrepository;
 	
@@ -93,7 +90,7 @@ public class DoctorValidator {
 	}
 	
 	public Specialty specialty(Specialty specialty) throws ValidationException {
-		Optional<Specialty> optS = specialtiesrepository.findById(specialty.getId());
+		web.entity.Optional<Specialty> optS = specialtiesrepository.findById(specialty.getId());
 		if(optS.isEmpty() || !optS.get().isActive())
 			throw new ValidationException("Specialty not found. ", "Ingrese una especialidad válida. ");
 		return optS.get();
@@ -106,7 +103,7 @@ public class DoctorValidator {
 	}
 	
 	public User user(User requiring, User x) throws ValidationException {
-		Optional<User> optU = usersrepository.findByUsername(x.getUsername());
+		web.entity.Optional<User> optU = usersrepository.findByUsername(x.getUsername());
 		if(optU.isEmpty() || !optU.get().isActive())
 			throw new ValidationException("User not found. ", "Ingrese un usuario válido. ");
 		if(optU.get().getDoctor() != null) {
@@ -116,7 +113,7 @@ public class DoctorValidator {
 	}
 	
 	public User user(User user) throws ValidationException {
-		Optional<User> optU = usersrepository.findByUsername(user.getUsername());
+		web.entity.Optional<User> optU = usersrepository.findByUsername(user.getUsername());
 		if(optU.isEmpty() || !optU.get().isActive())
 			throw new ValidationException("User not found. ", "Ingrese un usuario válido. ");
 		return optU.get();
@@ -128,100 +125,60 @@ public class DoctorValidator {
 			throw new ValidationException("Chosen user is taken by another doctor. ", "El usuario seleccionado tiene asignado otro doctor. ");
 		return user;
 	}
+
 	
-	public Set<Schedule> nonOverlapping(Set<Schedule> newSchedules, Set<Schedule> legacy) throws ValidationException {
-		for(Schedule candidate : newSchedules) 
-			legacy.add(nonOverlapping(candidate, legacy));
-		return legacy;
-	}
-	
-	
-	private Schedule nonOverlapping(Schedule newSchedule, Set<Schedule> schedules) throws ValidationException {
-		CommonException ve = new ValidationException("E.Overlapping schedules. ", "Uno o varios de los horarios a introducir se superpone con uno existente. ");
-        for (Schedule existingSchedule : schedules) {
-            if (newSchedule.getBeginDay() == existingSchedule.getBeginDay()) {
-                if (newSchedule.getEndTimeLT().isAfter(existingSchedule.getStartTimeLT()) &&
-                    newSchedule.getStartTimeLT().isBefore(existingSchedule.getEndTimeLT()))
-                    throw ve;
-            } else if (newSchedule.getFinishDay() == existingSchedule.getBeginDay()) {
-                if (newSchedule.getEndTimeLT().isAfter(existingSchedule.getStartTimeLT()) &&
-                    newSchedule.getEndTimeLT().isBefore(existingSchedule.getEndTimeLT()))
-                    throw ve;
-            } else if (newSchedule.getBeginDay() == existingSchedule.getFinishDay()) {
-                if (newSchedule.getStartTimeLT().isBefore(existingSchedule.getEndTimeLT()) &&
-                    newSchedule.getStartTimeLT().isAfter(existingSchedule.getStartTimeLT()))
-                    throw ve;
+
+    public Set<Schedule> nonOverlapping(Set<Schedule> newSchedules, Set<Schedule> legacy) throws ValidationException {
+        for (Schedule newSchedule : newSchedules) {
+            validateNonOverlapping(newSchedule, legacy);
+            legacy.add(newSchedule);
+        }
+        return legacy;
+    }
+
+    private void validateNonOverlapping(Schedule newSchedule, Set<Schedule> existingSchedules) throws ValidationException {
+        for (Schedule existingSchedule : existingSchedules) {
+            if (schedulesOverlap(newSchedule, existingSchedule)) {
+                throw new ValidationException(
+                    "Overlapping!!!!!!.",
+                    "Uno o varios de los horarios a introducir se superpone con uno existente."
+                );
             }
         }
-        return newSchedule;
     }
-	
-	public Set<Schedule> nonOverlappingIndividual(Schedule newSchedule, Set<Schedule> schedules) throws ValidationException {
-		CommonException ve = new ValidationException("1.Overlapping schedules. ", "Uno o varios de los horarios a introducir se superpone con uno existente. ");
-		CommonException ve2 = new ValidationException("2.Overlapping schedules. ", "Uno o varios de los horarios a introducir se superpone con uno existente. ");
-		CommonException ve3 = new ValidationException("3.Overlapping schedules. ", "Uno o varios de los horarios a introducir se superpone con uno existente. ");
-        /* boolean overlaps = schedules.parallelStream()
-        		.anyMatch(e -> 
-        			( // N.day = E.day
-        				newSchedule.getBeginDay() == e.getBeginDay()
-        				// & N.end > E.start
-        				&& newSchedule.getEndTimeLT().isAfter(e.getStartTimeLT()) 
-        				// & N.start < E.end
-        				&& newSchedule.getStartTimeLT().isBefore(e.getEndTimeLT())
-					) || (
-						newSchedule.getFinishDay() == e.getBeginDay()
-						&& newSchedule.getEndTimeLT().isAfter(e.getStartTimeLT()) 
-						&& newSchedule.getEndTimeLT().isBefore(e.getEndTimeLT())
-					) || (
-						newSchedule.getBeginDay() == e.getFinishDay()
-						&& newSchedule.getStartTimeLT().isBefore(e.getEndTimeLT()) 
-						&& newSchedule.getStartTimeLT().isAfter(e.getStartTimeLT())
-					)
-        		);
-        if(overlaps) throw ve; // */
+
+    private boolean schedulesOverlap(Schedule schedule1, Schedule schedule2) {
+        int start1 = schedule1.getStartTime();
+        int end1 = schedule1.getEndTime();
         
-		// No borrar hasta probar que funcione adecuadamente. 
-		///* 
-        for (Schedule e : schedules) {
-        	System.out.println(e);
-        	
-        	LocalTime finNuevo = newSchedule.getEndTimeLT();
-        	LocalTime comienzoNuevo = newSchedule.getStartTimeLT();
-        	LocalTime comienzoEx = e.getStartTimeLT();
-        	LocalTime finEx = e.getEndTimeLT();
-        	
-        	Day diaComienzoNuevo = newSchedule.getBeginDay();
-        	Day diaFinNuevo = newSchedule.getFinishDay();
-        	Day diaComienzoEx = e.getBeginDay();
-        	Day diaFinEx = e.getFinishDay();
-        	
-        	boolean comienzanElMismoDia = diaComienzoNuevo == diaComienzoEx;
-        	boolean elNuevoTerminaElDiaDeInicioDelExistente = diaFinNuevo == diaComienzoEx;
-        	
-        	boolean nuevoHorarioTerminaDespuesDeQueComienceHorarioExistente = (
-        					(newSchedule.getEndTimeLT().isAfter(e.getStartTimeLT()) && newSchedule.getStartTimeLT().isBefore(e.getEndTimeLT()) )
-        					|| newSchedule.getEndTimeLT().equals(e.getStartTimeLT())
-        					|| newSchedule.getStartTime().equals(e.getEndTimeLT())
-    				);
-        	
-            if (diaComienzoNuevo == diaComienzoEx) {
-                if (nuevoHorarioTerminaDespuesDeQueComienceHorarioExistente) throw ve;
-            } else if (diaFinNuevo == diaComienzoEx) {
-                if (newSchedule.getEndTimeLT().isAfter(e.getStartTimeLT()) &&
-                    newSchedule.getEndTimeLT().isBefore(e.getEndTimeLT()))
-                    throw ve2;
-                if(newSchedule.getEndTimeLT().equals(e.getStartTimeLT())) throw ve2;
-            } else if (diaComienzoNuevo == diaFinEx) {
-                if (newSchedule.getStartTimeLT().isBefore(e.getEndTimeLT()) &&
-                    newSchedule.getStartTimeLT().isAfter(e.getStartTimeLT()))
-                    throw ve3;
-                if(newSchedule.getStartTimeLT().equals(e.getEndTimeLT())) throw ve3;
-            }
-        } // */
-        schedules.add(newSchedule);
+        int start2 = schedule2.getStartTime();
+        int end2 = schedule2.getEndTime();
+        Day beginDay1 = schedule1.getBeginDay();
+        Day finishDay1 = schedule1.getFinishDay();
         
-        return schedules;
+        
+        Day beginDay2 = schedule2.getBeginDay();
+        Day finishDay2 = schedule2.getFinishDay();
+        if (beginDay1 == beginDay2 && timeRangesOverlap(start1, end1, start2, end2)) {
+            return true;
+        
+        }
+        if (finishDay1 == beginDay2 && timeRangesOverlap(start1, end1, start2, end2)) {
+            return true;
+        }
+        
+        if (beginDay1 == finishDay2 && timeRangesOverlap(start1, end1, start2, end2)) {
+            return true;
+        }
+
+        return false;
     }
-	
-	
+
+    private boolean timeRangesOverlap(int start1, int end1, int start2, int end2) {
+        if (end1 < start1) end1 += 24;
+        if (end2 < start2) end2 += 24;
+
+        
+        return (start1 < end2 && end1 > start2);
+    }
 }

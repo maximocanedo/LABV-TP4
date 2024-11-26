@@ -117,60 +117,44 @@ public class DoctorGenerator implements IEntityGenerator<Doctor> {
 		return mins[random.nextInt(mins.length)];
 	}
 
+
     public Set<Schedule> generateRandomSchedules() {
         Set<Schedule> schedules = new HashSet<>();
-        
+
         // Número de horarios a generar
-        int numberOfSchedules = random.nextInt(5) + 1; // 1-5 horarios
-        
+        int numberOfSchedules = random.nextInt(5) + 1;
+
         while (schedules.size() < numberOfSchedules) {
             Day beginDay = Day.values()[random.nextInt(Day.values().length)];
-            LocalTime startTime = LocalTime.of(random.nextInt(24), randomMinutes());
-            int duration = random.nextInt(12) + 1; // Máximo 12 h
-            LocalTime endTime = startTime.plusHours(duration);
+            int startTime = random.nextInt(24);
+            int duration = random.nextInt(12) + 1;
 
+            int endTime = startTime + duration;
             Day finishDay = beginDay;
-            if (endTime.isBefore(startTime)) {
+
+            if (endTime >= 24) {
+                endTime = endTime % 24;
                 finishDay = Day.values()[(beginDay.ordinal() + 1) % Day.values().length];
             }
-
             Schedule newSchedule = new Schedule();
             newSchedule.setBeginDay(beginDay);
             newSchedule.setFinishDay(finishDay);
             newSchedule.setStartTime(startTime);
             newSchedule.setEndTime(endTime);
-            newSchedule.setActive(true); 
-
+            newSchedule.setActive(true);
             if (isNonOverlapping(newSchedule, schedules)) {
                 schedules.add(newSchedule);
             }
         }
 
         return schedules;
-    	
-    }
-    
+    }    
     private boolean isNonOverlapping(Schedule newSchedule, Set<Schedule> schedules) {
         for (Schedule existingSchedule : schedules) {
             if (newSchedule.getBeginDay() == existingSchedule.getBeginDay()) {
-                // Horarios en el mismo día
-                if (newSchedule.getEndTimeLT().isAfter(existingSchedule.getStartTimeLT()) &&
-                    newSchedule.getStartTimeLT().isBefore(existingSchedule.getEndTimeLT())) {
                     return false;
                 }
-            } else if (newSchedule.getFinishDay() == existingSchedule.getBeginDay()) {
-                // Horario termina al otro día
-                if (newSchedule.getEndTimeLT().isAfter(existingSchedule.getStartTimeLT()) &&
-                    newSchedule.getEndTimeLT().isBefore(existingSchedule.getEndTimeLT())) {
-                    return false;
-                }
-            } else if (newSchedule.getBeginDay() == existingSchedule.getFinishDay()) {
-                // Horario comienza al final del día anterior
-                if (newSchedule.getStartTimeLT().isBefore(existingSchedule.getEndTimeLT()) &&
-                    newSchedule.getStartTimeLT().isAfter(existingSchedule.getStartTimeLT())) {
-                    return false;
-                }
-            }
+            
         }
         return true;
     }

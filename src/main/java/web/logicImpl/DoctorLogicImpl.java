@@ -63,23 +63,25 @@ public class DoctorLogicImpl implements IDoctorLogic {
     }
     
     // TODO Pendiente probar
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public Set<Schedule> addSchedule(int file, Schedule schedule, User requiring) {
-    	requiring = permits.inquireDoctorByFile(requiring, file, Permit.UPDATE_DOCTOR_SCHEDULES);
-    	Optional<Doctor> optdoctor = doctorsrepository.findByFile(file);
-    	if(optdoctor.isEmpty()) throw new NotFoundException("Doctor not found. ");
-    	Doctor doctor = optdoctor.get();
 
-    	Set<Schedule> originalSchedules = doctor.getSchedules();
-    	HashSet<Schedule> clonedOriginal = new HashSet<Schedule>(originalSchedules);
-    	doctorValidator.nonOverlappingIndividual(schedule, clonedOriginal);
-    	
-    	Schedule saved = schedulesrepository.save(schedule);
-    	Set<Schedule> n2wSchedules = doctorValidator.nonOverlappingIndividual(schedule, originalSchedules);
-    	//originalSchedules.add(saved);
-    	schedulesrepository.link(saved, doctor);
-    	doctor.setSchedules(n2wSchedules);
-    	return n2wSchedules;
+        requiring = permits.inquireDoctorByFile(requiring, file, Permit.UPDATE_DOCTOR_SCHEDULES);
+        Optional<Doctor> optDoctor = doctorsrepository.findByFile(file);
+        if (optDoctor.isEmpty()) {
+            throw new NotFoundException("Doctor not found.");
+        }
+        Doctor doctor = optDoctor.get();
+        Set<Schedule> existingSchedules = doctor.getSchedules();
+        Set<Schedule> clonedSchedules = new HashSet<>(existingSchedules);
+        doctorValidator.nonOverlapping((Set<Schedule>) schedule, clonedSchedules);
+        Schedule savedSchedule = schedulesrepository.save(schedule);
+        schedulesrepository.link(savedSchedule, doctor);
+        existingSchedules.add(savedSchedule);
+        doctor.setSchedules(existingSchedules);
+
+        return existingSchedules;
     }
 	//newSchedules = doctorValidator.nonOverlappingIndividual(schedule, originalSchedules);
     
