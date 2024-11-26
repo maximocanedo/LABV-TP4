@@ -113,15 +113,15 @@ public class AppointmentDAOImpl implements IAppointmentDAO {
 
 	@Override
 	public Boolean isAssigned(Appointment newAppointment) throws NotFoundException {
-		final Optional<Appointment> turno = new Optional<>();
+        final Optional<Appointment> turno = new Optional<>();
 		dataManager.run(session -> {
-			String queryString = "SELECT * FROM Appointment a WHERE a.doctor.id = :doctorId AND a.date = :date AND a.active = 1";
-			Query query = session.createQuery(queryString);
+			String hql = "FROM Appointment a WHERE a.assignedDoctor.id = :doctorId AND a.date = :date AND a.active = 1";
+			Query query = session.createQuery(hql);
 			query.setParameter("doctorId", newAppointment.getAssignedDoctor().getId());
 			query.setParameter("date", newAppointment.getDate());
 			turno.set((Appointment) query.uniqueResult());
 		});
-        return turno.isPresent();
+		return turno.isPresent();
     }
 
 	@Override
