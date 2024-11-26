@@ -48,16 +48,16 @@ public class ScheduleQuery implements Searchable {
 
     @Override
     public Query toQuery(Session session) {
-        StringBuilder hql = new StringBuilder("SELECT s FROM Schedule s WHERE 1 = 1 "); 
+        StringBuilder hql = new StringBuilder("SELECT s FROM Schedule s "); 
         if (getStatus() != FilterStatus.BOTH) {
             hql.append("AND s.active = :status ");
         }
         if (getQueryText() != null && !getQueryText().isEmpty()) {
-            hql.append("AND (s.beginDay LIKE :queryText OR s.finishDay LIKE :queryText) ");
+            hql.append("AND (s.day LIKE :queryText ) ");
         }
 
         if (getDay() != null) {
-            hql.append("AND (s.beginDay = :day OR s.finishDay = :day) ");
+            hql.append("AND (s.day = :day) ");
         }
 
         Query query = session.createQuery(hql.toString());

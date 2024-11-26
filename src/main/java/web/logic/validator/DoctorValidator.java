@@ -139,20 +139,11 @@ public class DoctorValidator {
 	private Schedule nonOverlapping(Schedule newSchedule, Set<Schedule> schedules) throws ValidationException {
 		CommonException ve = new ValidationException("E.Overlapping schedules. ", "Uno o varios de los horarios a introducir se superpone con uno existente. ");
         for (Schedule existingSchedule : schedules) {
-            if (newSchedule.getBeginDay() == existingSchedule.getBeginDay()) {
-                if (newSchedule.getEndTimeLT().isAfter(existingSchedule.getStartTimeLT()) &&
-                    newSchedule.getStartTimeLT().isBefore(existingSchedule.getEndTimeLT()))
+            if (newSchedule.getDay() == existingSchedule.getDay()) {
                     throw ve;
-            } else if (newSchedule.getFinishDay() == existingSchedule.getBeginDay()) {
-                if (newSchedule.getEndTimeLT().isAfter(existingSchedule.getStartTimeLT()) &&
-                    newSchedule.getEndTimeLT().isBefore(existingSchedule.getEndTimeLT()))
-                    throw ve;
-            } else if (newSchedule.getBeginDay() == existingSchedule.getFinishDay()) {
-                if (newSchedule.getStartTimeLT().isBefore(existingSchedule.getEndTimeLT()) &&
-                    newSchedule.getStartTimeLT().isAfter(existingSchedule.getStartTimeLT()))
-                    throw ve;
-            }
         }
+        }
+        
         return newSchedule;
     }
 	
@@ -184,39 +175,7 @@ public class DoctorValidator {
 		///* 
         for (Schedule e : schedules) {
         	System.out.println(e);
-        	
-        	LocalTime finNuevo = newSchedule.getEndTimeLT();
-        	LocalTime comienzoNuevo = newSchedule.getStartTimeLT();
-        	LocalTime comienzoEx = e.getStartTimeLT();
-        	LocalTime finEx = e.getEndTimeLT();
-        	
-        	Day diaComienzoNuevo = newSchedule.getBeginDay();
-        	Day diaFinNuevo = newSchedule.getFinishDay();
-        	Day diaComienzoEx = e.getBeginDay();
-        	Day diaFinEx = e.getFinishDay();
-        	
-        	boolean comienzanElMismoDia = diaComienzoNuevo == diaComienzoEx;
-        	boolean elNuevoTerminaElDiaDeInicioDelExistente = diaFinNuevo == diaComienzoEx;
-        	
-        	boolean nuevoHorarioTerminaDespuesDeQueComienceHorarioExistente = (
-        					(newSchedule.getEndTimeLT().isAfter(e.getStartTimeLT()) && newSchedule.getStartTimeLT().isBefore(e.getEndTimeLT()) )
-        					|| newSchedule.getEndTimeLT().equals(e.getStartTimeLT())
-        					|| newSchedule.getStartTime().equals(e.getEndTimeLT())
-    				);
-        	
-            if (diaComienzoNuevo == diaComienzoEx) {
-                if (nuevoHorarioTerminaDespuesDeQueComienceHorarioExistente) throw ve;
-            } else if (diaFinNuevo == diaComienzoEx) {
-                if (newSchedule.getEndTimeLT().isAfter(e.getStartTimeLT()) &&
-                    newSchedule.getEndTimeLT().isBefore(e.getEndTimeLT()))
-                    throw ve2;
-                if(newSchedule.getEndTimeLT().equals(e.getStartTimeLT())) throw ve2;
-            } else if (diaComienzoNuevo == diaFinEx) {
-                if (newSchedule.getStartTimeLT().isBefore(e.getEndTimeLT()) &&
-                    newSchedule.getStartTimeLT().isAfter(e.getStartTimeLT()))
-                    throw ve3;
-                if(newSchedule.getStartTimeLT().equals(e.getEndTimeLT())) throw ve3;
-            }
+        	            
         } // */
         schedules.add(newSchedule);
         
