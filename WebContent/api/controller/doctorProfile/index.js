@@ -86,8 +86,8 @@ const resetScheduleAddingErrors = () => {
 };
 
 addScheduleBtn.addEventListener('click', async (e) => {
-    const start = startInput.value;
-    const end = endInput.value;
+    const start = startInput.value.split(":")[0];
+    const end = endInput.value.split(":")[0];
     if(start == '' || end == '' || day == '') {
         addScheduleBtn.disabled = true;
         return;
@@ -98,9 +98,9 @@ addScheduleBtn.addEventListener('click', async (e) => {
         beginDay: day,
         finishDay: endDay,
         // @ts-ignore
-        startTime: start + ":00",
+        startTime: start,
         // @ts-ignore
-        endTime: end + ":00",
+        endTime: end,
         active: true
     };
     console.log(schedule);

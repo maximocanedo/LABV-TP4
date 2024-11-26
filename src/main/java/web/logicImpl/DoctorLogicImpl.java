@@ -75,7 +75,7 @@ public class DoctorLogicImpl implements IDoctorLogic {
         Doctor doctor = optDoctor.get();
         Set<Schedule> existingSchedules = doctor.getSchedules();
         Set<Schedule> clonedSchedules = new HashSet<>(existingSchedules);
-        doctorValidator.nonOverlapping((Set<Schedule>) schedule, clonedSchedules);
+        doctorValidator.nonOverlapping(existingSchedules, clonedSchedules);
         Schedule savedSchedule = schedulesrepository.save(schedule);
         schedulesrepository.link(savedSchedule, doctor);
         existingSchedules.add(savedSchedule);
