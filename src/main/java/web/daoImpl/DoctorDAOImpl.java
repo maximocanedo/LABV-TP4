@@ -175,7 +175,7 @@ public class DoctorDAOImpl implements IDoctorDAO {
 			q.setParameter("date", date);
 			List<Object> result = q.list();
 			for(Object x : result) {
-				times.add(((Time) x).toLocalTime());
+				times.add(LocalTime.of((int) x, 0, 0));
 			}
 		});
 		return times;
