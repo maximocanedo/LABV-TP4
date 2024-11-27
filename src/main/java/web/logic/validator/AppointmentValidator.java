@@ -49,6 +49,8 @@ public class AppointmentValidator {
 		List<LocalTime> freeTimes = doctorsrepository.getFreeTimeForDoctor(doctor.getFile(), normalized);
 		boolean scheduleIsAvailable = freeTimes.parallelStream()
 				.anyMatch(time -> extract.equals(time));
+		if(date.before(new Date()))
+			throw new ValidationException("Selected date/time is in the past. ", "Intente eligiendo otro horario para ser atendido. ");
 		if(!scheduleIsAvailable)
 			throw new ValidationException("Selected date/time is not available. ", "Intente eligiendo otro horario para ser atendido. ");		
 		return date;

@@ -162,7 +162,10 @@ export const enable = async (id) => {
  * @returns {Promise<string[] | Date[]>}
  */
 export const getAvailableDates = async (doctorFile, begin) => {
-    return u.get(`doctors/file/${doctorFile}/datesAvailable`, { from: new Date(begin).toISOString().split("T")[0] })
+    let newDate = new Date(begin)
+    const offset = newDate.getTimezoneOffset()
+    newDate = new Date(newDate.getTime() - (offset*60*1000))
+    return u.get(`doctors/file/${doctorFile}/datesAvailable`, { from: newDate.toISOString().split("T")[0] })
         .then(response => response.json())
         .then(x => x.map(d => (new Date(d).toLocaleDateString())))
         .catch(console.error);
@@ -175,7 +178,10 @@ export const getAvailableDates = async (doctorFile, begin) => {
  * @returns {Promise<string[]>}
  */
 export const getAvailableSchedules = async (doctorFile, date) => {
-    return u.get(`doctors/file/${doctorFile}/schedules`, {"for": new Date(date).toISOString().split("T")[0]})
+    let newDate = new Date(date)
+    const offset = newDate.getTimezoneOffset()
+    newDate = new Date(newDate.getTime() - (offset*60*1000))
+    return u.get(`doctors/file/${doctorFile}/schedules`, {"for": newDate.toISOString().split("T")[0]})
         .then(response => response.json())
         .then(schedule => schedule.map(z => z.map(zz => ('0' + zz).slice(-2)).join(":")))
         .catch(console.error);

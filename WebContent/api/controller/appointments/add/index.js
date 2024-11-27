@@ -99,12 +99,14 @@ specialtySelector.getTrigger().addEventListener('change', e => {
 });
 
 const handlerForTime = async (e) => {
-    const date = fecha.value;
+    const date = fecha.value; // Format is dd/mm/yyyy i want mm/dd/yyyy
     if(!date || date.trim() == "") {
         writeValidityOfDate(false, "Fecha inválida. ");
         return;
     } writeValidityOfDate(true, "");
-    const schedules = await appointments.getAvailableSchedules(doctorSelector.getSelectedFile().file, new Date(date));
+    const dateParts = fecha.value.split('/');
+    const newDate = `${dateParts[1]}/${dateParts[0]}/${dateParts[2]}`;
+    const schedules = await appointments.getAvailableSchedules(doctorSelector.getSelectedFile().file, new Date(newDate));
     hora.innerHTML = '';
     if(schedules.length == 0) {
         writeValidityOfTime(false, "No hay horarios disponibles este día. ");
