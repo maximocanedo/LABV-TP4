@@ -33,6 +33,7 @@ import web.entity.User;
 import web.entity.input.DoctorQuery;
 import web.entity.input.FilterStatus;
 import web.entity.view.DoctorMinimalView;
+import web.exceptions.ValidationException;
 import web.logicImpl.DoctorLogicImpl;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*", exposedHeaders = { "Authorization", "Content-Length" })
@@ -178,6 +179,9 @@ public class DoctorController {
                 startDate = new Date();
             }
         }
+		if (startDate.before(new Date())) {
+			throw new ValidationException("Selected date is in the past. ", "Intente eligiendo otro día para ver los horarios disponibles. ");
+		}
 		return doctors.getSchedulesForDoctor(file, startDate, requiring);
 	}
 	
@@ -194,6 +198,9 @@ public class DoctorController {
 			} catch (ParseException e) {
 				date = new Date();
 			}
+		}
+		if (date.before(new Date())) {
+			throw new ValidationException("Selected date is in the past. ", "Intente eligiendo otro día para ver los horarios disponibles. ");
 		}
 		return doctors.getFreeTimeForDoctor(file, date, requiring);
 	}
