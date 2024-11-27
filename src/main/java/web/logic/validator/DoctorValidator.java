@@ -2,7 +2,6 @@ package web.logic.validator;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -128,13 +127,10 @@ public class DoctorValidator {
 
 	
 
-    public Set<Schedule> nonOverlapping(Set<Schedule> newSchedules, Set<Schedule> legacy) throws ValidationException {
-        for (Schedule newSchedule : newSchedules) {
-            validateNonOverlapping(newSchedule, legacy);
-            legacy.add(newSchedule);
-        }
-        return legacy;
-    }
+    public void nonOverlapping(Schedule newSchedule, Set<Schedule> legacy) throws ValidationException {
+    	validateNonOverlapping(newSchedule, legacy);
+        legacy.add(newSchedule);
+	}
 
     private void validateNonOverlapping(Schedule newSchedule, Set<Schedule> existingSchedules) throws ValidationException {
         for (Schedule existingSchedule : existingSchedules) {
@@ -147,38 +143,41 @@ public class DoctorValidator {
         }
     }
 
-    private boolean schedulesOverlap(Schedule schedule1, Schedule schedule2) {
-        int start1 = schedule1.getStartTime();
-        int end1 = schedule1.getEndTime();
+    private boolean schedulesOverlap(Schedule newSchedule, Schedule existingSchedule) {
+        int startNew = newSchedule.getStartTime();
+        int endNew = newSchedule.getEndTime();
         
-        int start2 = schedule2.getStartTime();
-        int end2 = schedule2.getEndTime();
-        Day beginDay1 = schedule1.getBeginDay();
-        Day finishDay1 = schedule1.getFinishDay();
-        
-        
-        Day beginDay2 = schedule2.getBeginDay();
-        Day finishDay2 = schedule2.getFinishDay();
-        if (beginDay1 == beginDay2 && timeRangesOverlap(start1, end1, start2, end2)) {
-            return true;
-        
-        }
-        if (finishDay1 == beginDay2 && timeRangesOverlap(start1, end1, start2, end2)) {
-            return true;
-        }
-        
-        if (beginDay1 == finishDay2 && timeRangesOverlap(start1, end1, start2, end2)) {
-            return true;
-        }
+        int startExisting = existingSchedule.getStartTime();
+        int endExisting = existingSchedule.getEndTime();
+
+        Day beginDayNew = newSchedule.getBeginDay();
+        Day finishDayNew = newSchedule.getFinishDay();
+
+        Day beginDayExisting = existingSchedule.getBeginDay();
+        Day finishDayExisting = existingSchedule.getFinishDay();
+
+		if (beginDayNew == beginDayExisting && timeRangesOverlap(startNew, endNew, startExisting, endExisting)) {
+			return true;
+		}
+
+		if (finishDayNew == beginDayExisting && timeRangesOverlap(startNew, endNew, startExisting, endExisting)) {
+			return true;
+		}
+
+		if (beginDayNew == finishDayExisting && timeRangesOverlap(startNew, endNew, startExisting, endExisting)) {
+			return true;
+		}
+
+		if (finishDayNew == finishDayExisting && timeRangesOverlap(startNew, endNew, startExisting, endExisting)) {
+			return true;
+		}
 
         return false;
     }
 
-    private boolean timeRangesOverlap(int start1, int end1, int start2, int end2) {
-        if (end1 < start1) end1 += 24;
-        if (end2 < start2) end2 += 24;
-
-        
-        return (start1 < end2 && end1 > start2);
+    private boolean timeRangesOverlap(int startTime, int endTime, int startTimeExisting, int endTimeExisting) {
+		if (endTime < startTime) endTime += 24;
+		if (endTimeExisting < startTimeExisting) endTimeExisting += 24;
+		return startTime < endTimeExisting && endTime > startTimeExisting;
     }
 }
