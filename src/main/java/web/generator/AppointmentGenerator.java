@@ -42,7 +42,55 @@ public class AppointmentGenerator implements IEntityGenerator<Appointment> {
 	@Autowired
     private Faker faker;
     
-    public AppointmentGenerator() {}
+    public AppointmentLogicImpl getAppointments() {
+		return appointments;
+	}
+
+	public void setAppointments(AppointmentLogicImpl appointments) {
+		this.appointments = appointments;
+	}
+
+	public DoctorLogicImpl getDoctors() {
+		return doctors;
+	}
+
+	public void setDoctors(DoctorLogicImpl doctors) {
+		this.doctors = doctors;
+	}
+
+	public UserGenerator getUserGenerator() {
+		return userGenerator;
+	}
+
+	public void setUserGenerator(UserGenerator userGenerator) {
+		this.userGenerator = userGenerator;
+	}
+
+	public DoctorGenerator getDoctorGenerator() {
+		return doctorGenerator;
+	}
+
+	public void setDoctorGenerator(DoctorGenerator doctorGenerator) {
+		this.doctorGenerator = doctorGenerator;
+	}
+
+	public PatientGenerator getPatientGenerator() {
+		return patientGenerator;
+	}
+
+	public void setPatientGenerator(PatientGenerator patientGenerator) {
+		this.patientGenerator = patientGenerator;
+	}
+
+	public Faker getFaker() {
+		return faker;
+	}
+
+	public void setFaker(Faker faker) {
+		this.faker = faker;
+	}
+
+	public AppointmentGenerator() {}
     
 	@Override
 	public Appointment generate() {
