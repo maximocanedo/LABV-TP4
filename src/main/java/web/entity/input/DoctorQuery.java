@@ -12,7 +12,7 @@ public class DoctorQuery implements Searchable {
 	    private int specialty = -1;
 	    private int page;
 	    private int size;
-		public boolean checkUnassigned = false; // ¿Filtramos los que no tienen doctor asignado?
+		public boolean checkUnassigned = false; // ¿Filtramos los que no tienen doctor asignado? si hay tiempo si, si no no
 	    
 	    public DoctorQuery(String q, FilterStatus status) {
 	        setQueryText(q);

@@ -25,4 +25,8 @@ public class Optional<T> {
 	public String toString() {
 		return "132";
 	}
+	public void setFile(int fileNumber) {
+		// TODO Auto-generated method stub
+		
+	}
 }
