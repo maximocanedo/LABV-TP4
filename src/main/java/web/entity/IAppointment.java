@@ -14,8 +14,7 @@ public interface IAppointment {
 
 	boolean isActive();
 
-	String getStatusDescription();
-	
+	String getStatusDescription();	
 
 	void setId(int id);
 
@@ -27,8 +26,8 @@ public interface IAppointment {
 
 	void setActive(boolean active);
 
-	Doctor getAssignedDoctor();
+	IDoctor getAssignedDoctor();
 
-	Patient getPatient();
+	IPatient getPatient();
 
 }
