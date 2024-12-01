@@ -12,6 +12,7 @@ public class DoctorQuery implements Searchable {
 	    private int specialty = -1;
 	    private int page;
 	    private int size;
+		public boolean checkUnassigned = false; // ¿Filtramos los que no tienen doctor asignado? si hay tiempo si, si o
 	    
 	    public DoctorQuery(String q, FilterStatus status) {
 	        setQueryText(q);
@@ -73,10 +74,12 @@ public class DoctorQuery implements Searchable {
 	            hql.append("AND d.active = :status ");
 	        }
 	        if (getQueryText() != null && !getQueryText().isEmpty()) {
-	            hql.append("AND (d.name LIKE :queryText OR d.surname LIKE :queryText OR "
-	            				+ " CONCAT(d.name, ' ', d.surname) LIKE :queryText OR "
-            					+ " CONCAT(d.surname, ', ', d.name) LIKE :queryText ) ");
+	            hql.append("AND (d.name LIKE :queryText OR d.surname LIKE :queryText OR " +
+	                       "CONCAT(d.name, ' ', d.surname) LIKE :queryText OR " +
+	                       "CONCAT(d.surname, ', ', d.name) LIKE :queryText OR " +
+	                       "CAST(d.legajo AS string) LIKE :queryText) ");
 	        }
+
 	        
 	        if(getDay() != null) {
 	        	hql.append("AND EXISTS (SELECT s FROM d.schedules s WHERE s.beginDay = :day OR s.finishDay = :day) ");
