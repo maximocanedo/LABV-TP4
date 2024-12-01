@@ -37,7 +37,8 @@ public class PatientQuery implements Searchable {
 	@Override
 	public Query toQuery(Session session) {
 		StringBuilder hql = new StringBuilder("SELECT p FROM PatientCommunicationView p ");
-		hql.append(" WHERE (p.name LIKE :q OR p.surname LIKE :q OR p.dni LIKE :q) ");
+		hql.append(" WHERE (p.name LIKE :q OR p.surname LIKE :q OR CAST(p.dni AS string) LIKE :q) ");
+
 		if(getStatus() != FilterStatus.BOTH) {
 			hql.append(" AND p.active = :status ");
 		}
