@@ -1,6 +1,11 @@
 package web.daoImpl;
 
+import java.sql.Time;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -10,9 +15,11 @@ import org.springframework.stereotype.Component;
 import web.dao.IDoctorDAO;
 import web.entity.Doctor;
 import web.entity.Optional;
+import web.entity.User;
 import web.entity.input.DoctorQuery;
 import web.entity.view.DoctorMinimalView;
 import web.exceptions.NotFoundException;
+
 @Component("doctorsrepository")
 public class DoctorDAOImpl implements IDoctorDAO {
     
@@ -29,7 +36,83 @@ public class DoctorDAOImpl implements IDoctorDAO {
     	return medico;
     }
     
+    public Doctor assignUser(Doctor medico, User user) {    	
+    	dataManager.transact(session -> {
+    		Query q = session.createQuery("UPDATE Doctor d SET d.user = null WHERE d.user.username = :username");
+    		q.setParameter("username", user.getUsername());
+    		q.executeUpdate();
+    		medico.setUser(user);
+    		session.saveOrUpdate(medico);
+    	});
+    	return medico;
+    }
+    
+    public void unassignUser(Doctor medico) {    	
+    	dataManager.transact(session -> {
+    		Query q = session.createQuery("UPDATE Doctor d SET d.user = null WHERE d.id = :id");
+    		q.setParameter("id", medico.getId());
+    		q.executeUpdate();
+    		medico.setUser(null);
+    		session.saveOrUpdate(medico);
+    	});
+    }
+    
     @Override
+	public boolean existsByFile(int file) {
+		final Optional<Boolean> cfUser = new Optional<Boolean>();
+		dataManager.run(session -> {
+			String hql = "SELECT COUNT(p) FROM DoctorMinimalView p WHERE p.file = :file";
+	        Query query = session.createQuery(hql);
+	        query.setParameter("file", file);
+	        Long d = (Long) query.uniqueResult();
+	        cfUser.set(d > 0);
+		});
+		return cfUser.get().booleanValue();
+	}
+    
+    @Override
+	public boolean existsById(int id) {
+		final Optional<Boolean> cfUser = new Optional<Boolean>();
+		dataManager.run(session -> {
+			String hql = "SELECT COUNT(p) FROM DoctorMinimalView p WHERE p.id = :id";
+	        Query query = session.createQuery(hql);
+	        query.setParameter("id", id);
+	        Long d = (Long) query.uniqueResult();
+	        cfUser.set(d > 0);
+		});
+		return cfUser.get().booleanValue();
+	}
+
+	@Override
+	public Optional<Doctor> findByFile(int file) {
+		final Optional<Doctor> optional = new Optional<>();
+		dataManager.run(session -> {
+			String hql = "SELECT m FROM Doctor m WHERE m.file = :legajo";
+			Query query = session.createQuery(hql);
+			query.setParameter("legajo", file);
+			optional.set((Doctor) query.uniqueResult()); 
+		});
+		return optional;
+	}
+
+	@Override
+	public Optional<Doctor> findByFile(int file, boolean includeInactives) {
+		final Optional<Doctor> optional = new Optional<>();
+		dataManager.run(session -> {
+			String hql = "SELECT m FROM Doctor m WHERE m.file = :legajo"  + (includeInactives ? "" : " AND active = 1");
+			Query query = session.createQuery(hql);
+			query.setParameter("legajo", file);
+			optional.set((Doctor) query.uniqueResult()); 
+		});
+		return optional;
+	}
+
+	@Override
+	public Optional<Doctor> findById(int id) {
+		return findById(id, false);
+	}
+
+	@Override
     public Optional<Doctor> findById(int id, boolean searchDisabled) {
         final Optional<Doctor> cfMedico = new Optional<>(null);
         dataManager.run(session -> {
@@ -41,6 +124,12 @@ public class DoctorDAOImpl implements IDoctorDAO {
         return cfMedico;
     }
 
+    @Override
+	public Optional<DoctorMinimalView> findMinById(int id) {
+		return findMinById(id, false);
+	}
+
+	@Override
     public Optional<DoctorMinimalView> findMinById(int id, boolean searchDisabled) {
         final Optional<DoctorMinimalView> cfMedico = new Optional<>(null);
         dataManager.run(session -> {
@@ -53,23 +142,66 @@ public class DoctorDAOImpl implements IDoctorDAO {
     }
     
     @Override
-    public Doctor update(Doctor medico) {
-    	dataManager.transact(session -> {
-            session.update(medico);
-        });
-    	return medico;
-    }
+	public Optional<DoctorMinimalView> findMinByFile(int file) {
+		final Optional<DoctorMinimalView> optional = new Optional<>();
+		dataManager.run(session -> {
+			String hql = "SELECT m FROM DoctorMinimalView m WHERE m.file = :legajo";
+			Query query = session.createQuery(hql);
+			query.setParameter("legajo", file);
+			optional.set((DoctorMinimalView) query.uniqueResult()); 
+		});
+		return optional;
+	}
+
+	@Override
+	public Optional<DoctorMinimalView> findMinByFile(int file, boolean includeInactives) {
+		final Optional<DoctorMinimalView> optional = new Optional<>();
+		dataManager.run(session -> {
+			String hql = "SELECT m FROM DoctorMinimalView m WHERE m.file = :legajo"  + (includeInactives ? "" : " AND active = 1");
+			Query query = session.createQuery(hql);
+			query.setParameter("legajo", file);
+			optional.set((DoctorMinimalView) query.uniqueResult()); 
+		});
+		return optional;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<LocalTime> getFreeTimeForDoctor(int file, Date date) {
+		final List<LocalTime> times = new ArrayList<LocalTime>();
+		dataManager.run(session -> {
+			Query q = session.createSQLQuery("CALL getFreeTimesForDoctor(:file, :date)");
+			q.setParameter("file", file);
+			q.setParameter("date", date);
+			List<Object> result = q.list();
+			for(Object x : result) {
+				times.add(LocalTime.of((int) x, 0, 0));
+			}
+		});
+		return times;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<DoctorMinimalView> search(DoctorQuery query) {
+		final Optional<List<DoctorMinimalView>> doctors = new Optional<List<DoctorMinimalView>>();
+		dataManager.run(session -> {
+			Query q = query.toQuery(session);
+			doctors.set(q.list());
+		});
+		return doctors.get();
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Object[]> listOnlyFileNumbersAndNames() {
 		final Optional<List<Object[]>> optionalList = new Optional<>();
 		dataManager.run(session -> {
-            String hql = "SELECT m.file, m.name, m.surname FROM Doctor m ORDER BY m.file ASC";
-            Query query = session.createQuery(hql);
-            optionalList.set(query.list());
-        });
-        return optionalList.get();
+	        String hql = "SELECT m.file, m.name, m.surname FROM Doctor m ORDER BY m.file ASC";
+	        Query query = session.createQuery(hql);
+	        optionalList.set(query.list());
+	    });
+	    return optionalList.get();
 	}
 
 	@Override
@@ -77,8 +209,16 @@ public class DoctorDAOImpl implements IDoctorDAO {
 		List<Doctor> list = this.listOrderByFileDescending(1, 1);
 		return list.get(0);
 	}
-	
-	@SuppressWarnings("unchecked")
+
+	@Override
+    public Doctor update(Doctor medico) {
+    	dataManager.transact(session -> {
+            session.update(medico);
+        });
+    	return medico;
+    }
+
+    @SuppressWarnings("unchecked")
 	@Override
 	public List<Integer> listOnlyFileNumbers(){
 		final Optional<List<Integer>> optionalMedicos = new Optional<>();
@@ -142,58 +282,6 @@ public class DoctorDAOImpl implements IDoctorDAO {
 	    return cfList.get();
 	}
 
-	@Override
-	public Optional<Doctor> findByFile(int file) {
-		final Optional<Doctor> optional = new Optional<>();
-		dataManager.run(session -> {
-			String hql = "SELECT m FROM Doctor m WHERE m.file = :legajo";
-			Query query = session.createQuery(hql);
-			query.setParameter("legajo", file);
-			optional.set((Doctor) query.uniqueResult()); 
-		});
-		return optional;
-	}
-	
-	public Optional<DoctorMinimalView> findMinByFile(int file) {
-		final Optional<DoctorMinimalView> optional = new Optional<>();
-		dataManager.run(session -> {
-			String hql = "SELECT m FROM DoctorMinimalView m WHERE m.file = :legajo";
-			Query query = session.createQuery(hql);
-			query.setParameter("legajo", file);
-			optional.set((DoctorMinimalView) query.uniqueResult()); 
-		});
-		return optional;
-	}
-
-
-	@Override
-	public Optional<Doctor> findByFile(int file, boolean includeInactives) {
-		final Optional<Doctor> optional = new Optional<>();
-		dataManager.run(session -> {
-			String hql = "SELECT m FROM Doctor m WHERE m.file = :legajo"  + (includeInactives ? "" : " AND active = 1");
-			Query query = session.createQuery(hql);
-			query.setParameter("legajo", file);
-			optional.set((Doctor) query.uniqueResult()); 
-		});
-		return optional;
-	}
-	
-	public Optional<DoctorMinimalView> findMinByFile(int file, boolean includeInactives) {
-		final Optional<DoctorMinimalView> optional = new Optional<>();
-		dataManager.run(session -> {
-			String hql = "SELECT m FROM DoctorMinimalView m WHERE m.file = :legajo"  + (includeInactives ? "" : " AND active = 1");
-			Query query = session.createQuery(hql);
-			query.setParameter("legajo", file);
-			optional.set((DoctorMinimalView) query.uniqueResult()); 
-		});
-		return optional;
-	}
-
-	@Override
-	public Optional<Doctor> findById(int id) {
-		return findById(id, false);
-	}
-	
 	private void updateStatus(int id, boolean newStatus) throws NotFoundException {
 		Optional<Doctor> search = findById(id, newStatus);
     	if(search.isEmpty()) throw new NotFoundException();
@@ -216,12 +304,22 @@ public class DoctorDAOImpl implements IDoctorDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<DoctorMinimalView> search(DoctorQuery query) {
-		final Optional<List<DoctorMinimalView>> doctors = new Optional<List<DoctorMinimalView>>();
+	public List<Date> getScheduleForDoctor(int file, Date startDate) {
+		final List<Date> schedules = new ArrayList<Date>();
 		dataManager.run(session -> {
-			Query q = query.toQuery(session);
-			doctors.set(q.list());
+			Query q = session.createSQLQuery("CALL getSchedulesForDoctor(:file, :startDate)");
+			q.setParameter("file", file);
+			q.setDate("startDate", startDate);
+			List<Object> result = q.list();
+			for(Object x : result)
+				schedules.add(((Date) x));
 		});
-		return doctors.get();
+		return schedules;
+	}
+	
+	@Override
+	public List<Date> getScheduleForDoctor(int file, Calendar startDate) {
+		Date start = startDate.getTime();
+		return getScheduleForDoctor(file, start);
 	}
 }

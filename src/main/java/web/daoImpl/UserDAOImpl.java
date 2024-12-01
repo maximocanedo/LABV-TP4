@@ -53,6 +53,7 @@ public class UserDAOImpl implements IUserDAO {
 		});
 		return cfUser;
 	}
+
 	
 	@Override
     public Optional<User> findByUsername(String username) {
@@ -84,7 +85,11 @@ public class UserDAOImpl implements IUserDAO {
 	        Query query = session.createQuery(hql);
 	        query.setParameter("username", username);
 	        UserView x = (UserView) query.uniqueResult();
+	        if(x != null) {
+	        	Hibernate.initialize(x.getAllowedPermits());
+	        }
 	        cfUser.set(x);
+        	session.evict(x);
 		});
 		return cfUser;
 	}
@@ -101,6 +106,20 @@ public class UserDAOImpl implements IUserDAO {
 		});
 		return cfUser.get().booleanValue();
 	}
+	
+	public boolean exists(String username) {
+		final Optional<Boolean> cfUser = new Optional<Boolean>(false);
+		dataManager.run(session -> {
+			String hql = "SELECT COUNT(u) FROM User u WHERE u.username = :username";
+	        Query query = session.createQuery(hql);
+	        query.setParameter("username", username);
+	        Long c = (Long) query.uniqueResult();
+	        cfUser.set(c > 0);
+		});
+		return cfUser.get().booleanValue();
+	}
+	
+	
 	
 
 	@Override

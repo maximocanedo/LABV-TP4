@@ -6,7 +6,9 @@ import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import web.daoImpl.DoctorDAOImpl;
 import web.daoImpl.UserDAOImpl;
+import web.entity.Doctor;
 import web.entity.IUser;
 import web.entity.Optional;
 import web.entity.Permit;
@@ -19,12 +21,19 @@ import web.exceptions.NotFoundException;
 import web.generator.PermitTemplate;
 import web.logic.ITicketLogic;
 import web.logic.IUserLogic;
+import web.logic.validator.UserValidator;
 
 @Component("users")
 public class UserLogicImpl implements IUserLogic {
 	
 	@Autowired
 	private UserDAOImpl usersrepository;
+	
+	@Autowired
+	private DoctorDAOImpl doctorsrepository;
+	
+	@Autowired
+	private UserValidator userValidator;
 	
 	@Autowired
 	private UserPermitLogicImpl permits;
@@ -38,11 +47,24 @@ public class UserLogicImpl implements IUserLogic {
 		return BCrypt.hashpw(clear, BCrypt.gensalt());
 	}
 	
+	@Deprecated
+	public User getRootUser() {
+		User root = usersrepository.getByUsername("root");
+		return root;
+	}
+	
 	@Override
     public User signup(User user) {
-		String clearPassword = user.getPassword();
+		user.setName(userValidator.name(user.getName()));
+		user.setUsername(userValidator.username(user.getUsername()));
+		if(user.getDoctor() != null) {
+			user.setDoctor(userValidator.doctor(user.getDoctor()));
+		}
+		String clearPassword = userValidator.password(user.getPassword(), user.getName(), user.getUsername());
 		user.setPassword(hash(clearPassword));
-		return usersrepository.add(user);
+		user = usersrepository.add(user);
+		permits.grantDefoPermits(user, PermitTemplate.DOCTOR);
+		return user;
 	}
 	
 	@Override
@@ -75,23 +97,26 @@ public class UserLogicImpl implements IUserLogic {
 		return usersrepository.checkUsernameAvailability(username);
 	}
 	
+	public boolean exists(String username) {
+		return usersrepository.exists(username);
+	}
+	
 	@Override
     public Optional<User> findByUsername(String username, User requiring) {
-		requiring = permits.require(requiring, Permit.READ_USER_DATA);
-		
+		requiring = permits.inquireUser(requiring, username, Permit.READ_USER_DATA);
 		return (usersrepository.findByUsername(username));
 	}
 	
 	@Override
     public Optional<User> findByUsername(String username, boolean includeInactive, User requiring) {
-		requiring = permits.require(requiring, Permit.READ_USER_DATA);
+		requiring = permits.inquireUser(requiring, username, Permit.READ_USER_DATA);
 		includeInactive = includeInactive && requiring.can(Permit.DELETE_OR_ENABLE_USER);
 		return (usersrepository.findByUsername(username, includeInactive));
 	}
 	
 	@Override
 	public IUser getByUsername(String username, boolean includeInactive, User requiring) throws NotFoundException, NotAllowedException {
-		requiring = permits.require(requiring, Permit.READ_USER_DATA);
+		requiring = permits.inquireUser(requiring, username, Permit.READ_USER_DATA);
 		IUser opt = null;
 		includeInactive = includeInactive && requiring.can(Permit.DELETE_OR_ENABLE_USER);
 		if(requiring.can(Permit.READ_DOCTOR)) {
@@ -107,16 +132,25 @@ public class UserLogicImpl implements IUserLogic {
 		if(opt.isEmpty()) throw new NotFoundException("User not found. ");
 		else return opt.get();
 	}
+	
+	@Override
+	public boolean checkUsernameAvailability(String username, User requiring) {
+		return usersrepository.checkUsernameAvailability(username);
+	}
 
 	@Override
 	public List<UserView> search(UserQuery q, User requiring) {
-		permits.require(requiring, Permit.READ_USER_DATA);
+		permits.inquire(requiring, Permit.READ_USER_DATA);
+		return usersrepository.search(q);
+	}
+	
+	public List<UserView> searchForSelector(UserQuery q, User requiring) {
 		return usersrepository.search(q);
 	}
 	
 	@Override
     public void disable(User user, User requiring) {
-		permits.require(requiring, Permit.DELETE_OR_ENABLE_USER);
+		permits.inquireUser(requiring, user, Permit.DELETE_OR_ENABLE_USER);
 		user.setActive(false);
 		usersrepository.update(user);
 	}
@@ -136,7 +170,7 @@ public class UserLogicImpl implements IUserLogic {
 
 	@Override
 	public void enable(String username, User requiring) {
-		User user = getByUsername(username, requiring);
+		User user = usersrepository.getByUsername(username, true);
 		enable(user, requiring);
 	}
 	
@@ -145,6 +179,7 @@ public class UserLogicImpl implements IUserLogic {
 		Optional<User> search = check(username, currentPassword);
 		if(search.isEmpty()) throw new NotFoundException();
 		User original = search.get();
+		newPassword = userValidator.password(newPassword, original.getName(), original.getUsername());
 		original.setPassword(hash(newPassword));
 		usersrepository.update(original);
 	}
@@ -156,19 +191,30 @@ public class UserLogicImpl implements IUserLogic {
 		Optional<User> search = findByUsername(username, requiring);
 		if(search.isEmpty()) throw new NotFoundException();
 		User original = search.get();
+		newPassword = userValidator.password(newPassword, original.getName(), original.getUsername());
 		original.setPassword(hash(newPassword));
 		usersrepository.update(original);
 	}
 	
 	@Override
     public User update(User user, User requiring) throws NotFoundException {
-		if(requiring.getUsername() != user.getUsername())
-			permits.require(requiring, Permit.UPDATE_USER_DATA);
+		permits.inquireUser(requiring, user, Permit.UPDATE_USER_DATA);
 		Optional<User> search = usersrepository.findByUsername(user.getUsername());
 		if(search.isEmpty()) throw new NotFoundException();
 		User original = search.get();
-		if(user.getName() != null) original.setName(user.getName());
-		if(user.getDoctor() != null) original.setDoctor(user.getDoctor());
+		if(user.getName() != null) 
+			original.setName(userValidator.name(user.getName()));
+		if(user.getDoctor() != null) {
+			if(user.getDoctor().getId() == -1 || user.getDoctor().getFile() == -1 
+				|| (user.getDoctor().getId() == 0 && user.getDoctor().getFile() == 0)) {
+				doctorsrepository.unassignUser(original.getDoctor());
+				user.setDoctor(null);
+			} else {
+				Doctor d = (userValidator.doctor(user.getDoctor()));
+				Doctor updated = doctorsrepository.assignUser(d, user);
+				user.setDoctor(updated);				
+			}
+		}
 		return usersrepository.update(original);
 	}
 
@@ -177,11 +223,15 @@ public class UserLogicImpl implements IUserLogic {
 	 */
 	@Override
 	public String login(String username, String password) throws InvalidCredentialsException, NotFoundException {
+		return login(username, password, "Testing device", "Device #001");
+	}
+	
+	@Override
+	public String login(String username, String password, String deviceName, String deviceId) throws InvalidCredentialsException, NotFoundException {
 		Optional<User> user = check(username, password);
 		if(user.isEmpty()) {
-			System.out.println("No hay usuario");
 			throw new InvalidCredentialsException();
 		} 
-		return tickets.startToken(user.get().getUsername(), "Testing device", "Device #001");
+		return tickets.startToken(user.get().getUsername(), deviceName, deviceId);
 	}
 }

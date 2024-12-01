@@ -58,6 +58,45 @@ public class PatientDAOImpl implements IPatientDAO {
 		});
 		return cfUser;
 	}
+
+	
+	@Override
+	public Optional<Patient> findByDni(String dni, boolean includeInactives) {
+		final Optional<Patient> cfUser = new Optional<Patient>();
+		dataManager.run(session -> {
+			String hql = "FROM Patient WHERE dni = :dni" + (includeInactives ? "" : " AND active = 1");
+	        Query query = session.createQuery(hql);
+	        query.setParameter("dni", dni);
+	        cfUser.set((Patient) query.uniqueResult());
+		});
+		return cfUser;
+	}
+	
+
+	@Override
+	public Optional<PatientCommunicationView> findComViewByDni(String dni, boolean includeInactives) {
+		final Optional<PatientCommunicationView> cfUser = new Optional<PatientCommunicationView>();
+		dataManager.run(session -> {
+			String hql = "FROM PatientCommunicationView WHERE dni = :dni" + (includeInactives ? "" : " AND active = 1");
+	        Query query = session.createQuery(hql);
+	        query.setParameter("dni", dni);
+	        cfUser.set((PatientCommunicationView) query.uniqueResult());
+		});
+		return cfUser;
+	}
+
+	@Override
+	public boolean existsByDNI(String dni) {
+		final Optional<Boolean> cfUser = new Optional<Boolean>();
+		dataManager.run(session -> {
+			String hql = "SELECT COUNT(p) FROM Patient p WHERE p.dni = :dni";
+	        Query query = session.createQuery(hql);
+	        query.setParameter("dni", dni);
+	        Long d = (Long) query.uniqueResult();
+	        cfUser.set(d > 0);
+		});
+		return cfUser.get().booleanValue();
+	}
 	
 	@Override
 	public Patient update(Patient paciente) {

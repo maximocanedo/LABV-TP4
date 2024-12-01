@@ -23,6 +23,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import web.entity.Doctor;
 import web.entity.IDoctor;
 import web.entity.Schedule;
 import web.entity.Specialty;
@@ -35,6 +36,29 @@ import web.formatter.Formatter;
 @Card(name = "Médico", size = 48)
 @Table(name = "doctors")
 public class DoctorMinimalView implements IDoctor {
+	
+	public static DoctorMinimalView from(IDoctor data) {
+		if(data == null) return null;
+		DoctorMinimalView view = new DoctorMinimalView();
+		view.setId(data.getId());
+		view.setFile(data.getFile());
+		view.setName(data.getName());
+		view.setSurname(data.getSurname());
+		view.setSpecialty(data.getSpecialty());
+		
+		return view;
+	}
+	
+	public static DoctorMinimalView from(Doctor data) {
+		DoctorMinimalView view = new DoctorMinimalView();
+		view.setId(data.getId());
+		view.setFile(data.getFile());
+		view.setName(data.getName());
+		view.setSurname(data.getSurname());
+		view.setSpecialty(data.getSpecialty());
+		view.setUser(UserView.from(data.getUser()));
+		return view;
+	}
     
     private int id;
     private int file;
@@ -96,6 +120,15 @@ public class DoctorMinimalView implements IDoctor {
     public UserView getUser() {
 		return user;
 	}
+	
+	@Transient
+	@JsonProperty("assignedUser")
+	public UserView getAssignedUser() {
+		if(getUser() == null) return null;
+		UserView view = getUser();
+		view.setDoctor(null);
+		return view;
+	}
 
 	@Override
 	@Transient
@@ -105,13 +138,13 @@ public class DoctorMinimalView implements IDoctor {
 		return this.getSurname() + ", " + this.getName();
 	}
 
-	@Override
+	/*@Override
 	@Transient
 	@JsonIgnore
 	@Format(omitLabel = true, prefix = "@", order = 9)
 	public String getUsername() {
 		return getUser().getUsername();
-	}
+	} */
 
 	@Override
 	@Transient
@@ -145,6 +178,7 @@ public class DoctorMinimalView implements IDoctor {
 	@Format(label = "Horarios")
 	public String listSchedules() {
 		String schedules = "";
+		if(getSchedules() == null) return "";
 		for(Schedule schedule : this.getSchedules()) {
 			schedules += "\n · " + schedule;
 		}

@@ -42,7 +42,55 @@ public class AppointmentGenerator implements IEntityGenerator<Appointment> {
 	@Autowired
     private Faker faker;
     
-    public AppointmentGenerator() {}
+    public AppointmentLogicImpl getAppointments() {
+		return appointments;
+	}
+
+	public void setAppointments(AppointmentLogicImpl appointments) {
+		this.appointments = appointments;
+	}
+
+	public DoctorLogicImpl getDoctors() {
+		return doctors;
+	}
+
+	public void setDoctors(DoctorLogicImpl doctors) {
+		this.doctors = doctors;
+	}
+
+	public UserGenerator getUserGenerator() {
+		return userGenerator;
+	}
+
+	public void setUserGenerator(UserGenerator userGenerator) {
+		this.userGenerator = userGenerator;
+	}
+
+	public DoctorGenerator getDoctorGenerator() {
+		return doctorGenerator;
+	}
+
+	public void setDoctorGenerator(DoctorGenerator doctorGenerator) {
+		this.doctorGenerator = doctorGenerator;
+	}
+
+	public PatientGenerator getPatientGenerator() {
+		return patientGenerator;
+	}
+
+	public void setPatientGenerator(PatientGenerator patientGenerator) {
+		this.patientGenerator = patientGenerator;
+	}
+
+	public Faker getFaker() {
+		return faker;
+	}
+
+	public void setFaker(Faker faker) {
+		this.faker = faker;
+	}
+
+	public AppointmentGenerator() {}
     
 	@Override
 	public Appointment generate() {
@@ -128,7 +176,11 @@ public class AppointmentGenerator implements IEntityGenerator<Appointment> {
     	Date d = new Builder().setDate(2024, 0, 1).build().getTime();
     	Date d2 = new Builder().setDate(2024, 2, 2).build().getTime();
     	t.setDate(faker.date().between(d, d2));
-    	appointments.register(t, requiring);
+    	try {
+        	appointments.register(t, requiring);
+    	} catch(Exception e) {
+    		System.out.println("Expected: Selected date/time is not available. ");
+    	}
     	return t;
     	
     }

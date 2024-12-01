@@ -32,7 +32,7 @@ const resolveBody = (body) => {
     return JSON.stringify(body);
 };
 
-const resolveURLParams = (url, params) => {
+export const resolveURLParams = (url, params) => {
     const urlObj = new URL(url, BASE_URL); 
     const searchParams = new URLSearchParams(params);
     urlObj.search = searchParams.toString();
@@ -66,10 +66,10 @@ const req = async (url, method, body) => {
     };
 
     try {
-        console.log("Autenticando solicitud con token de ACCESO.");
+        //console.log("Autenticando solicitud con token de ACCESO.");
         const firstTry = await makeRequest(getAccessToken());
         if (firstTry.status === 498) {
-            console.warn("Token de ACCESO expirado: Se autenticará con el token de REFRESCO disponible.");
+            console.warn("Autenticando con token de refresco.");
             return await makeRequest(getRefreshToken());
         }
         if (!firstTry.ok) throw (await firstTry.json());
@@ -90,6 +90,14 @@ const req = async (url, method, body) => {
  * @returns {Promise<Response>} Respuesta del servidor.
  */
 export const get = async (relativeUrl, params) => await req(resolveURLParams(relativeUrl, params), HTTP_METHOD.GET, "");
+
+/**
+ * Realiza una petición de tipo HEAD a la API.
+ * @param {String} relativeUrl URL relativa a la {@link BASE_URL URL Base}
+ * @param {Object} params Objeto con los parámetros en línea, de ser necesarios.
+ * @returns {Promise<Response>} Respuesta del servidor.
+ */
+export const head = async (relativeUrl, params) => await req(resolveURLParams(relativeUrl, params), HTTP_METHOD.HEAD, "");
 
 /**
  * Realiza una petición de tipo POST a la API.

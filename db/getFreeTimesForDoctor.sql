@@ -21,7 +21,7 @@ BEGIN
         SELECT s.beginDay, s.startTime, s.endTime, s.finishDay FROM schedules s
         INNER JOIN bdmedicos.doctor_schedules ds ON s.id = ds.schedule
         INNER JOIN bdmedicos.doctors d ON ds.doctor = d.id
-        WHERE d.id = doctor_file AND s.active = 1
+        WHERE d.file = doctor_file AND s.active = 1
           AND (s.beginDay = UPPER(DAYNAME(date_required)) OR s.finishDay = UPPER(DAYNAME(date_required)));
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
     SET i = 0;
@@ -31,33 +31,34 @@ BEGIN
     SET lmm = 60;
     SET schds = 0;
     SET hayTurno = 0;
-    DROP TEMPORARY TABLE IF EXISTS horarios;
-    CREATE TEMPORARY TABLE horarios (hora TIME);
-
+    DROP TEMPORARY  TABLE IF EXISTS horarios;
+    CREATE TEMPORARY TABLE IF NOT EXISTS horarios (hora TIME);
+    DELETE FROM horarios WHERE i = 0;
     OPEN horarios_doctor;
     por_c_horario: WHILE done = FALSE DO
-        -- SELECT 'Before fetch';
         FETCH horarios_doctor INTO beginDay, startTime, endTime, finishDay;
-        -- SELECT 'After fetch';
+        IF done = 1 THEN
+            LEAVE por_c_horario;
+        END IF;
         IF beginDay = UPPER(DAYNAME(date_required)) THEN
             SET hh = HOUR(startTime);
         ELSE SET hh = 0;
         END IF;
-
         IF finishDay = UPPER(DAYNAME(date_required)) THEN
             SET lhh = HOUR(endTime);
         ELSE SET lhh = 24;
         END IF;
-
         hw: WHILE hh <= lhh DO
             IF hh = lhh THEN
                 SET lmm = MINUTE(endTime);
             ELSE SET lmm = 60;
             END IF;
             mw: WHILE mm < lmm DO
-                -- ¿El doctor trabaja a la hora hh:mm?
                     SELECT COUNT(*) INTO hayTurno FROM appointments
-                        WHERE doctor = doctor_file
+                        INNER JOIN doctors d ON d.id = appointments.doctor
+                        WHERE d.file = doctor_file
+                            AND appointments.active = 1
+                            AND appointments.status = 'PENDING'
                             AND DATE(date) = DATE(date_required)
                             AND TIME(date)
                                 BETWEEN SEC_TO_TIME((hh * 60 * 60) + (mm * 60) - (mm * 14))
@@ -65,24 +66,17 @@ BEGIN
                     IF hayTurno = 0 THEN
                         INSERT INTO horarios (hora) SELECT SEC_TO_TIME((hh * 60 * 60) + (mm * 60)) as hora;
                     END IF;
-                -- ¿Está libre esa hora?
-                SET mm = mm + 15;
+                SET mm = mm + 60;
             END WHILE;
             SET mm = 0;
             SET hh = hh + 1;
         END WHILE hw;
-
-
-
+        SET hh = 0;
     END WHILE por_c_horario;
     CLOSE horarios_doctor;
-
-
-
     SELECT * FROM horarios;
-
 END //
 DELIMITER ;
 
-CALL getFreeTimesForDoctor(200, '2024-01-15');
+CALL getFreeTimesForDoctor(3739, '2024-01-15');
 

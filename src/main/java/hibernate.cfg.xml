@@ -5,10 +5,13 @@
 <hibernate-configuration>
     <session-factory>
     <property name="javax.persistence.validation.mode">none</property>
-        <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-        <property name="hibernate.connection.password">T*5VqV%zpHWc43uELAHi2z%QUbOhmqD7kZqGNPp8uV$I2fdSHJ6Bmu#ECsVK83C1gQ@r9o*1AWiZmo*#qcc*Ud08VyKlLI56liDj&amp;hqY0L*p4p&amp;ypbax2kSdyAB%LD2%</property>
+        <property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+        <property name="hibernate.connection.username">tp4client</property>
+        <property name="hibernate.connection.password">UTN.TUSI.2024</property>
+        <property name="hibernate.connection.url">jdbc:mysql://canedo.com.ar:3306/tp4?characterEncoding=utf8</property>
+        <!-- <property name="hibernate.connection.password">T*5VqV%zpHWc43uELAHi2z%QUbOhmqD7kZqGNPp8uV$I2fdSHJ6Bmu#ECsVK83C1gQ@r9o*1AWiZmo*#qcc*Ud08VyKlLI56liDj&amp;hqY0L*p4p&amp;ypbax2kSdyAB%LD2%</property>
 		<property name="hibernate.connection.url">jdbc:mysql://www.canedo.com.ar:3306/bdmedicos?createDatabaseIfNotExist=true</property>
-        <property name="hibernate.connection.username">lab</property>
+        <property name="hibernate.connection.username">lab</property>-->
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
         <property name="hbm2ddl.auto">update</property>
         
@@ -20,8 +23,13 @@
         <mapping class="web.entity.Specialty" />
         <mapping class="web.entity.Appointment" />
         <mapping class="web.entity.Ticket" />
+        
         <mapping class="web.entity.view.DoctorMinimalView" />
         <mapping class="web.entity.view.UserView" />
+        <mapping class="web.entity.view.AppointmentMinimalView" />
+        <mapping class="web.entity.view.AppointmentCommunicationView" />
+        <mapping class="web.entity.view.PatientCommunicationView" />
+        <mapping class="web.entity.view.PatientMinimalView" />
         
     </session-factory>
 </hibernate-configuration>

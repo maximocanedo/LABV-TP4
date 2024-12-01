@@ -37,7 +37,7 @@ public class SpecialtyDAOImpl implements ISpecialtyDAO {
     public Optional<Specialty> findById(int id, boolean includeInactives) {
         final Optional<Specialty> optional = new Optional<>();
         dataManager.run(session -> {
-            String hql = "FROM Especialidad WHERE id = :id" + (includeInactives ? "" : " AND active");
+            String hql = "FROM Specialty s WHERE s.id = :id";
             Query query = session.createQuery(hql);
             query.setParameter("id", id);
             optional.set((Specialty) query.uniqueResult());

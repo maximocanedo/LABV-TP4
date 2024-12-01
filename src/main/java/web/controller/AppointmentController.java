@@ -7,30 +7,43 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import web.entity.Appointment;
 import web.entity.IAppointment;
 import web.entity.User;
 import web.entity.input.AppointmentQuery;
 import web.entity.input.FilterStatus;
+import web.entity.view.AppointmentCommunicationView;
 import web.entity.view.AppointmentMinimalView;
 import web.logicImpl.AppointmentLogicImpl;
 
-
+@RestController
+@RequestMapping("/appointments")
+@CrossOrigin(origins = "*", allowedHeaders = "*", exposedHeaders = { "Authorization", "Content-Length" })
 public class AppointmentController {
 	@Autowired
 	private AppointmentLogicImpl appointments;
 	
 	@Autowired 
 	private AuthUtils auth;
+
+	@InitBinder
+    public void initBinder(HttpServletRequest req, HttpServletResponse res) {
+        auth.preHandle(req, res);
+    }
 	
+	@GetMapping
 	public List<AppointmentMinimalView> search(
 			@RequestParam(required = false, defaultValue = "") String q, 
 			@RequestParam(required = false, defaultValue = "") FilterStatus status,
@@ -57,9 +70,9 @@ public class AppointmentController {
 	}
 	
 	@PostMapping
-	public Appointment create(@RequestBody Appointment Appointment, HttpServletRequest req, HttpServletResponse res) {
+	public AppointmentCommunicationView create(@RequestBody Appointment data, HttpServletRequest req, HttpServletResponse res) {
 		User requiring = auth.require(req, res);
-		return appointments.register(Appointment, requiring);
+		return appointments.registerComm(data, requiring);
 	}
 	
 	// Acciones con Terceros
@@ -70,10 +83,10 @@ public class AppointmentController {
 	}
 
 	@PatchMapping("/id/{id}")
-	public Appointment update(@PathVariable int id, @RequestBody Appointment Appointment, HttpServletRequest req, HttpServletResponse res) {
+	public AppointmentCommunicationView update(@PathVariable int id, @RequestBody Appointment data, HttpServletRequest req, HttpServletResponse res) {
 		User requiring = auth.require(req, res);
-		Appointment.setId(id);
-		return appointments.update(Appointment, requiring);
+		data.setId(id);
+		return appointments.updateComm(data, requiring);
 	}	
 	
 	@DeleteMapping("/id/{id}")
@@ -82,6 +95,12 @@ public class AppointmentController {
 		appointments.disable(id, requiring);
 		return ResponseEntity.status(200).build();
 	}
-
+	
+	@PostMapping("/id/{id}")
+	public ResponseEntity<?> enable(@PathVariable int id, HttpServletRequest req, HttpServletResponse res) {
+		User requiring = auth.require(req, res);
+		appointments.enable(id, requiring);
+		return ResponseEntity.status(200).build();
+	}
 	
 }

@@ -50,7 +50,7 @@ public class AppointmentDAOImpl implements IAppointmentDAO {
     public Optional<Appointment> findById(int id, boolean includeInactives) {
 		final Optional<Appointment> turno = new Optional<>();
 		dataManager.run(session -> {
-			String hql = "FROM Appointment WHERE id = :id" + (includeInactives ? "" : " AND active");
+			String hql = "FROM Appointment WHERE id = :id" + (includeInactives ? "" : " AND active = 1");
 			Query query = session.createQuery(hql);
 			query.setParameter("id", id);
 			turno.set((Appointment) query.uniqueResult());
@@ -62,7 +62,7 @@ public class AppointmentDAOImpl implements IAppointmentDAO {
     public Optional<AppointmentCommunicationView> findComById(int id, boolean includeInactives) {
 		final Optional<AppointmentCommunicationView> turno = new Optional<>();
 		dataManager.run(session -> {
-			String hql = "FROM AppointmentCommunicationView WHERE id = :id" + (includeInactives ? "" : " AND active");
+			String hql = "FROM AppointmentCommunicationView WHERE id = :id" + (includeInactives ? "" : " AND active = 1");
 			Query query = session.createQuery(hql);
 			query.setParameter("id", id);
 			turno.set((AppointmentCommunicationView) query.uniqueResult());
@@ -74,7 +74,7 @@ public class AppointmentDAOImpl implements IAppointmentDAO {
     public Optional<AppointmentMinimalView> findMinById(int id, boolean includeInactives) {
 		final Optional<AppointmentMinimalView> turno = new Optional<>();
 		dataManager.run(session -> {
-			String hql = "FROM AppointmentMinimalView WHERE id = :id" + (includeInactives ? "" : " AND active");
+			String hql = "FROM AppointmentMinimalView WHERE id = :id" + (includeInactives ? "" : " AND active = 1");
 			Query query = session.createQuery(hql);
 			query.setParameter("id", id);
 			turno.set((AppointmentMinimalView) query.uniqueResult());
@@ -110,6 +110,19 @@ public class AppointmentDAOImpl implements IAppointmentDAO {
 	public void enable(int id) throws NotFoundException {
 		updateStatus(id, true);
 	}
+
+	@Override
+	public Boolean isAssigned(Appointment newAppointment) throws NotFoundException {
+        final Optional<Appointment> turno = new Optional<>();
+		dataManager.run(session -> {
+			String hql = "FROM Appointment a WHERE a.assignedDoctor.id = :doctorId AND a.date = :date AND a.active = 1";
+			Query query = session.createQuery(hql);
+			query.setParameter("doctorId", newAppointment.getAssignedDoctor().getId());
+			query.setParameter("date", newAppointment.getDate());
+			turno.set((Appointment) query.uniqueResult());
+		});
+		return turno.isPresent();
+    }
 
 	@Override
 	public int countPresencesBetween(Date date1, Date date2) {
@@ -148,8 +161,11 @@ public class AppointmentDAOImpl implements IAppointmentDAO {
 		dataManager.run(session -> {
 			Query query = q.toQuery(session);
 			opt.set((List<AppointmentMinimalView>) query.list()); 
+			
 		});
 		return opt.get();
 	}
+
+
 
 }

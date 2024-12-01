@@ -25,7 +25,7 @@ public interface IDoctor {
 	String getSurname();
 	Specialty getSpecialty();
 	String getFullName();
-	String getUsername();
+	//String getUsername();
 	String getSpecialtyName();
 	Set<Schedule> getSchedules();
 	boolean isActive();

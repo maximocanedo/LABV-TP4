@@ -12,9 +12,9 @@ import com.github.javafaker.Address;
 import com.github.javafaker.Faker;
 import com.github.javafaker.Name;
 
+import web.daoImpl.ScheduleDAOImpl;
 import web.entity.Day;
 import web.entity.Doctor;
-import web.entity.Permit;
 import web.entity.Schedule;
 import web.entity.Specialty;
 import web.entity.User;
@@ -37,6 +37,9 @@ public class DoctorGenerator implements IEntityGenerator<Doctor> {
 	
 	@Autowired
 	private Faker faker;
+	
+	@Autowired
+	private ScheduleDAOImpl schedulesrepository;
 	
 	public static boolean EXISTE_LEGAJO_1234 = false;
     
@@ -71,6 +74,23 @@ public class DoctorGenerator implements IEntityGenerator<Doctor> {
 	    return medico;
 	}
 	
+	public Doctor save(Name n, User user, User requiring) {
+		boolean exists = EXISTE_LEGAJO_1234 || medicos.findByFile(1234, requiring).isPresent();
+	    Doctor medico = generate(user);
+	    if(!exists) medico.setFile(1234);
+	    else EXISTE_LEGAJO_1234 = exists;
+		Set<Schedule> sss = generateRandomSchedules();
+		for(Schedule s : sss) {
+			schedulesrepository.save(s);
+		}
+		medico.setSchedules(sss);
+	    medico.setName(n.firstName());
+	    medico.setSurname(n.lastName());
+	    System.out.println("Número de médico: " + medico.getPhone());
+	    medicos.add(medico, requiring);
+	    return medico;
+	}
+	
 	public Doctor generate(User user) {
         Specialty[] especialidades = specialtyGenerator.generate();
         Specialty ss = especialidades[random.nextInt(especialidades.length)];
@@ -87,7 +107,8 @@ public class DoctorGenerator implements IEntityGenerator<Doctor> {
         medico.setLocalty(faker.address().city());
         medico.setSex(random.nextInt(10) % 2 == 0 ? "M" : "F");
         medico.setUser(user);
-        medico.setPhone(faker.phoneNumber().phoneNumber());
+        String pn = "+54 11 " + (5000 + random.nextInt(2999)) + " " + (1000 + random.nextInt(8999));
+        medico.setPhone(pn);
         return medico;
 	}
 
@@ -96,60 +117,44 @@ public class DoctorGenerator implements IEntityGenerator<Doctor> {
 		return mins[random.nextInt(mins.length)];
 	}
 
+
     public Set<Schedule> generateRandomSchedules() {
         Set<Schedule> schedules = new HashSet<>();
-        
+
         // Número de horarios a generar
-        int numberOfSchedules = random.nextInt(5) + 1; // 1-5 horarios
-        
+        int numberOfSchedules = random.nextInt(5) + 1;
+
         while (schedules.size() < numberOfSchedules) {
             Day beginDay = Day.values()[random.nextInt(Day.values().length)];
-            LocalTime startTime = LocalTime.of(random.nextInt(24), randomMinutes());
-            int duration = random.nextInt(12) + 1; // Máximo 12 h
-            LocalTime endTime = startTime.plusHours(duration);
+            int startTime = random.nextInt(24);
+            int duration = random.nextInt(12) + 1;
 
+            int endTime = startTime + duration;
             Day finishDay = beginDay;
-            if (endTime.isBefore(startTime)) {
+
+            if (endTime >= 24) {
+                endTime = endTime % 24;
                 finishDay = Day.values()[(beginDay.ordinal() + 1) % Day.values().length];
             }
-
             Schedule newSchedule = new Schedule();
             newSchedule.setBeginDay(beginDay);
             newSchedule.setFinishDay(finishDay);
             newSchedule.setStartTime(startTime);
             newSchedule.setEndTime(endTime);
-            newSchedule.setActive(true); 
-
+            newSchedule.setActive(true);
             if (isNonOverlapping(newSchedule, schedules)) {
                 schedules.add(newSchedule);
             }
         }
 
         return schedules;
-    	
-    }
-    
+    }    
     private boolean isNonOverlapping(Schedule newSchedule, Set<Schedule> schedules) {
         for (Schedule existingSchedule : schedules) {
             if (newSchedule.getBeginDay() == existingSchedule.getBeginDay()) {
-                // Horarios en el mismo día
-                if (newSchedule.getEndTimeLT().isAfter(existingSchedule.getStartTimeLT()) &&
-                    newSchedule.getStartTimeLT().isBefore(existingSchedule.getEndTimeLT())) {
                     return false;
                 }
-            } else if (newSchedule.getFinishDay() == existingSchedule.getBeginDay()) {
-                // Horario termina al otro día
-                if (newSchedule.getEndTimeLT().isAfter(existingSchedule.getStartTimeLT()) &&
-                    newSchedule.getEndTimeLT().isBefore(existingSchedule.getEndTimeLT())) {
-                    return false;
-                }
-            } else if (newSchedule.getBeginDay() == existingSchedule.getFinishDay()) {
-                // Horario comienza al final del día anterior
-                if (newSchedule.getStartTimeLT().isBefore(existingSchedule.getEndTimeLT()) &&
-                    newSchedule.getStartTimeLT().isAfter(existingSchedule.getStartTimeLT())) {
-                    return false;
-                }
-            }
+            
         }
         return true;
     }

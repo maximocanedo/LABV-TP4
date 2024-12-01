@@ -11,7 +11,10 @@
     <file url="file://$USER_HOME$/Downloads/userpermit.sql" dialect="MySQL" />
     <file url="file://$USER_HOME$/Downloads/users.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/console.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/getFreeDaysForDoctor.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/getFreeTimesForDoctor.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/legacy/getFreeDaysForDoctor.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/legacy/getFreeTimesForDoctor.sql" dialect="MySQL" />
     <file url="PROJECT" dialect="MySQL" />
   </component>
 </project>

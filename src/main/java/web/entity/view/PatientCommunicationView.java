@@ -14,6 +14,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import web.entity.IPatient;
+import web.entity.Patient;
 import web.formatter.Card;
 import web.formatter.Format;
 import web.formatter.Formatter;
@@ -24,10 +25,23 @@ import web.formatter.Formatter;
 @Table(name="patients")
 public class PatientCommunicationView implements IPatient {
 	
+	public static PatientCommunicationView from(Patient data) {
+		if(data == null) return null;
+		PatientCommunicationView view = new PatientCommunicationView();
+		view.setId(data.getId());
+		view.setName(data.getName());
+		view.setSurname(data.getSurname());
+		view.setDni(data.getDni());
+		view.setPhone(data.getPhone());
+		view.setEmail(data.getEmail());
+		view.setActive(data.isActive());
+		return view;
+	}
+	
 	private int id;
 	private String name;
 	private String surname;
-	private String dni; // TODO: Comprobar si se puede cambiar a String.
+	private String dni; 
 	private String phone;
 	private String email;
     private boolean active = true;

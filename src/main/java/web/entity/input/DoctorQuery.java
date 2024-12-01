@@ -12,7 +12,7 @@ public class DoctorQuery implements Searchable {
 	    private int specialty = -1;
 	    private int page;
 	    private int size;
-		public boolean checkUnassigned = false; // ¿Filtramos los que no tienen doctor asignado? si hay tiempo si, si o
+		public boolean checkUnassigned = false; // ¿Filtramos los que no tienen doctor asignado? si hay tiempo si, si no no
 	    
 	    public DoctorQuery(String q, FilterStatus status) {
 	        setQueryText(q);
@@ -69,10 +69,12 @@ public class DoctorQuery implements Searchable {
 	    @Override
 	    public Query toQuery(Session session) {
 	        StringBuilder hql = new StringBuilder("SELECT d FROM DoctorMinimalView d ");
+	        if(checkUnassigned) hql.append(" LEFT JOIN d.user u ");
 	        hql.append("WHERE 1 = 1 "); // Condición fallback si se da el caso que ningún filtro se aplique.
 	        if(getStatus() != FilterStatus.BOTH) {
 	            hql.append("AND d.active = :status ");
 	        }
+	        if(checkUnassigned) hql.append(" AND u IS NULL ");
 	        if (getQueryText() != null && !getQueryText().isEmpty()) {
 	            hql.append("AND (d.name LIKE :queryText OR d.surname LIKE :queryText OR " +
 	                       "CONCAT(d.name, ' ', d.surname) LIKE :queryText OR " +
@@ -161,6 +163,11 @@ public class DoctorQuery implements Searchable {
 
 		public void setSpecialty(int specialty) {
 			this.specialty = specialty;
+		}
+
+		public DoctorQuery filterByUnassigned(boolean checkUnassigned) {
+			this.checkUnassigned = checkUnassigned;
+			return this;
 		}
 	    
 	    

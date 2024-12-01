@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Doctores</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Gestión de Doctores</h1>
+    </header>
+    <main>
+        <section id="doctor-form">
+            <h2>Registrar Doctor</h2>
+            <form id="register-form">
+                <label for="name">Nombre:</label>
+                <input type="text" id="name" name="name" required>
+                
+                <label for="surname">Apellido:</label>
+                <input type="text" id="surname" name="surname" required>
+                
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+                
+                <label for="phone">Teléfono:</label>
+                <input type="text" id="phone" name="phone" required>
+                
+                <label for="specialty">Especialidad (ID):</label>
+                <input type="number" id="specialty" name="specialty" required>
+                
+                <label for="file">Número de Legajo:</label>
+                <input type="number" id="file" name="file" required>
+                
+                <label for="address">Dirección:</label>
+                <input type="text" id="address" name="address" required>
+                
+                <label for="localty">Localidad:</label>
+                <input type="text" id="localty" name="localty" required>
+                
+                <label for="sex">Sexo:</label>
+                <select id="sex" name="sex" required>
+                    <option value="M">Masculino</option>
+                    <option value="F">Femenino</option>
+                </select>
+                
+                <label for="birth">Fecha de Nacimiento:</label>
+                <input type="date" id="birth" name="birth" required>
+                
+                <button type="submit">Registrar</button>
+            </form>
+        </section>
+        <section id="doctor-list">
+            <h2>Listado de Doctores</h2>
+            <div id="doctors-container"></div>
+        </section>
+    </main>
+    <script src="../assets/js/app.js" type="module"></script>
+</body>
+</html>

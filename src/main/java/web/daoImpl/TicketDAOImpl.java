@@ -11,6 +11,7 @@ import web.dao.ITicketDAO;
 import web.entity.Optional;
 import web.entity.Ticket;
 import web.entity.User;
+import web.entity.input.TicketQuery;
 import web.exceptions.NotFoundException;
 
 @Component("ticketsrepository")
@@ -27,6 +28,31 @@ public class TicketDAOImpl implements ITicketDAO {
 			session.save(ticket);
 		});
 		return ticket;
+	}
+
+    public Optional<Ticket> findById(int id) {
+        return findById(id, false);
+    }
+    
+    public Optional<Ticket> findById(int id, boolean includeInactives) {
+        final Optional<Ticket> optional = new Optional<>();
+        dataManager.run(session -> {
+            String hql = "FROM Ticket WHERE id = :id" + (includeInactives ? "" : " AND active");
+            Query query = session.createQuery(hql);
+            query.setParameter("id", id);
+            optional.set((Ticket) query.uniqueResult());
+        });
+        return optional;
+    }
+
+	@SuppressWarnings("unchecked")
+	public List<Ticket> search(TicketQuery query) {
+		final Optional<List<Ticket>> optional = new Optional<>();
+		dataManager.run(session -> {
+			Query q = query.toQuery(session);
+			optional.set(q.list());
+		});
+		return optional.get();
 	}
 
 	@Override

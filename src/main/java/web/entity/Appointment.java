@@ -15,6 +15,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import web.entity.AppointmentStatus;
 import web.formatter.Card;
 import web.formatter.Format;
@@ -82,6 +84,7 @@ public class Appointment implements IAppointment {
 	@ManyToOne(cascade= {CascadeType.ALL})
 	@JoinColumn(name="doctor") // Old: id_medico
 	@Format(label = "Médico asignado", prefix = "\n", order = 3)
+	@JsonProperty("doctor")
 	public Doctor getAssignedDoctor() {
 		return assignedDoctor;
 	}

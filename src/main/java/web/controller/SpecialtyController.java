@@ -7,8 +7,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import web.entity.Optional;
 import web.entity.Specialty;
 import web.entity.User;
 import web.entity.input.FilterStatus;
@@ -26,6 +27,7 @@ import web.logicImpl.SpecialtyLogicImpl;
 
 @RestController
 @RequestMapping("/specialties")
+@CrossOrigin(origins = "*", allowedHeaders = "*", exposedHeaders = { "Authorization", "Content-Length" })
 public class SpecialtyController {
     
     @Autowired
@@ -35,7 +37,12 @@ public class SpecialtyController {
     private AuthUtils auth;
     
     // Acciones Generales
-    
+
+	@InitBinder
+    public void initBinder(HttpServletRequest req, HttpServletResponse res) {
+        auth.preHandle(req, res);
+    }
+	
     @GetMapping
     public List<Specialty> search(
             @RequestParam(required = false, defaultValue = "") String q, 
@@ -57,13 +64,13 @@ public class SpecialtyController {
     
     // Acciones con Terceros
     
-    @GetMapping("/s/{id}")
-    public Optional<Specialty> findById(@PathVariable int id, HttpServletRequest req, HttpServletResponse res) {
-        auth.require(req, res);
-        return specialties.findById(id);
+    @GetMapping("/{id}")
+    public Specialty findById(@PathVariable int id, HttpServletRequest req, HttpServletResponse res) {
+        User requiring = auth.require(req, res);
+        return specialties.getById(id, requiring);
     }
     
-    @PatchMapping("/s/{id}")
+    @PatchMapping("/{id}")
     public Specialty update(@PathVariable int id, @RequestBody Specialty specialty, HttpServletRequest req, HttpServletResponse res) {
         User requiring = auth.require(req, res);
         specialty.setId(id);
@@ -71,10 +78,17 @@ public class SpecialtyController {
         return specialty;
     }
     
-    @DeleteMapping("/s/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> disable(@PathVariable int id, HttpServletRequest req, HttpServletResponse res) {
         User requiring = auth.require(req, res);
         specialties.disable(id, requiring);
         return ResponseEntity.status(200).build();
+    }
+    
+    @PostMapping("/{id}")
+    public ResponseEntity<?> enable(@PathVariable int id, HttpServletRequest req, HttpServletResponse res) {
+    	User requiring = auth.require(req, res);
+    	specialties.enable(id, requiring);
+    	return ResponseEntity.status(200).build();
     }
 }

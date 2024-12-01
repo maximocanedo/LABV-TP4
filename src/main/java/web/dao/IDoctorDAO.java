@@ -1,6 +1,9 @@
 package web.dao;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import web.entity.Doctor;
@@ -16,26 +19,84 @@ public interface IDoctorDAO {
      * @param medico datos del medico a agregar.
      */
     Doctor add(Doctor medico);
+    
+    /**
+     * Revisa si un médico existe según su número de legajo.
+     * @param file Legajo del médico.
+     */
+    boolean existsByFile(int file);
+    
+    /**
+     * Revisa si un médico existe según su ID.
+     * @param id ID del médico.
+     */
+    boolean existsById(int id);
+
+
+    /**
+     * Busca un médico por su legajo.
+     * @param file Legajo del médico.
+     * @param includeInactives ¿Se deben tomar en cuenta registros deshabilitados? Por defecto, no.
+     */
+    Optional<Doctor> findByFile(int file);
+
+    /**
+     * Busca un médico por su legajo.
+     * @param file Legajo del médico.
+     * @param includeInactives ¿Se deben tomar en cuenta registros deshabilitados? Por defecto, no.
+     */
+    Optional<Doctor> findByFile(int file, boolean includeInactives);
+
 
     /**
      * Busca un médico por su ID.
-     * @param id ID del medico.
+     * @param id ID del médico.
+     * @param includeInactives ¿Se deben tomar en cuenta registros deshabilitados? Por defecto, no.
      */
     Optional<Doctor> findById(int id);
-    
-    /**
-     * Busca un médico por su legajo.
-     * @param file Legajo
-     */
-    Optional<Doctor> findByFile(int file);
-    Optional<Doctor> findByFile(int file, boolean includeInactives);
-    
+
     /**
      * Busca un médico por su ID.
-     * @param id ID del medico.
-     * @param searchDisabled Si se buscan registros deshabilitados.
+     * @param id ID del médico.
+     * @param includeInactives ¿Se deben tomar en cuenta registros deshabilitados? Por defecto, no.
      */
-    Optional<Doctor> findById(int id, boolean searchDisabled);
+    Optional<Doctor> findById(int id, boolean includeInactives);
+
+    /**
+     * Busca un médico por su ID.
+     * @param id ID del médico.
+     * @param includeInactives ¿Se deben tomar en cuenta registros deshabilitados? Por defecto, no.
+     */
+    Optional<DoctorMinimalView> findMinById(int id);
+
+    /**
+     * Busca un médico por su ID.
+     * @param id ID del médico.
+     * @param includeInactives ¿Se deben tomar en cuenta registros deshabilitados? Por defecto, no.
+     */
+    Optional<DoctorMinimalView> findMinById(int id, boolean searchDisabled);
+
+    /**
+     * Busca un médico por su legajo.
+     * @param file Legajo del médico.
+     * @param includeInactives ¿Se deben tomar en cuenta registros deshabilitados? Por defecto, no.
+     */
+    Optional<DoctorMinimalView> findMinByFile(int file);    
+
+    /**
+     * Busca un médico por su legajo.
+     * @param file Legajo del médico.
+     * @param includeInactives ¿Se deben tomar en cuenta registros deshabilitados? Por defecto, no.
+     */
+    Optional<DoctorMinimalView> findMinByFile(int file, boolean includeInactives);
+    
+    /**
+     * Devuelve una lista con los espacios libres del horario de un doctor en un día especificado.
+     * @param file Legajo del doctor.
+     * @param date Fecha de consulta.
+     */
+    List<LocalTime> getFreeTimeForDoctor(int file, Date date);
+    
     
     /**
      * Busca médicos en la base de datos.
@@ -106,4 +167,20 @@ public interface IDoctorDAO {
      * @param endDate Segunda fecha límite.
      */
     List<Object[]> getAppointmentsByDoctorAndDateRange(int fileNumber, LocalDate startDate, LocalDate endDate);
+
+    /**
+     * Devuelve una lista con los días laborables de un doctor, a partir del día indicado hasta el final del mes.
+     * @param file Legajo del doctor.
+     * @param startDate Fecha inicio de rango. El final de rango es el último día del mes indicado.
+     * @return Lista de fechas.
+     */
+	List<Date> getScheduleForDoctor(int file, Date startDate);
+
+	/**
+     * Devuelve una lista con los días laborables de un doctor, a partir del día indicado hasta el final del mes.
+     * @param file Legajo del doctor.
+     * @param startDate Fecha inicio de rango. El final de rango es el último día del mes indicado.
+     * @return Lista de fechas.
+     */
+	List<Date> getScheduleForDoctor(int file, Calendar startDate);
 }

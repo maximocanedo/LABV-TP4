@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import web.entity.view.UserView;
 import web.formatter.Card;
 import web.formatter.Format;
 import web.formatter.Formatter;
@@ -138,12 +139,23 @@ public class Doctor implements IDoctor {
 		return this.getSurname() + ", " + this.getName();
 	}
 
-	@Override
+	/**@Override
 	@Transient
 	@JsonIgnore
 	@Format(omitLabel = true, prefix = "@", order = 9)
 	public String getUsername() {
-		return getUser().getUsername();
+		if(getUser() != null)
+			return getUser().getUsername();
+		else return null;
+	} // */
+	
+	@Transient
+	@JsonProperty("assignedUser")
+	public UserView getAssignedUser() {
+		if(getUser() == null) return null;
+		UserView view = UserView.from(getUser());
+		view.setDoctor(null);
+		return view;
 	}
 
 	@Override
@@ -155,7 +167,7 @@ public class Doctor implements IDoctor {
 	}
 
 	@Override
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(
         name = "doctor_schedules",
         joinColumns = @JoinColumn(name = "doctor"),
@@ -178,6 +190,7 @@ public class Doctor implements IDoctor {
 	@Format(label = "Horarios")
 	public String listSchedules() {
 		String schedules = "";
+		if(this.getSchedules() == null) return schedules;
 		for(Schedule schedule : this.getSchedules()) {
 			schedules += "\n · " + schedule;
 		}

@@ -6,8 +6,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import web.daoImpl.AppointmentDAOImpl;
 import web.daoImpl.UserDAOImpl;
 import web.daoImpl.UserPermitDAOImpl;
+import web.entity.Appointment;
+import web.entity.IDoctor;
 import web.entity.Optional;
 import web.entity.Permit;
 import web.entity.User;
@@ -23,6 +26,9 @@ public class UserPermitLogicImpl implements IUserPermitLogic {
 
 	@Autowired
 	private UserPermitDAOImpl userpermitsrepository;
+	
+	@Autowired
+	private AppointmentDAOImpl appointmentsrepository;
 	
 	@Autowired
 	private UserDAOImpl usersrepository;
@@ -41,6 +47,111 @@ public class UserPermitLogicImpl implements IUserPermitLogic {
 			if(requiring.can(action)) return requiring;		
 		}
 		throw new NotAllowedException(permits);
+	}
+	
+	public User inquire(User requiring, Permit... permits) throws ServerException, NotFoundException {
+		try {
+			requiring = require(requiring, permits);
+		} catch(NotAllowedException expected) {
+			return requiring;
+		} catch(ServerException e) {
+			throw e;
+		} catch(NotFoundException e) {
+			throw e;
+		}
+		return requiring;
+	}
+	
+	public User inquireDoctor(User requiring, IDoctor doctor, Permit... permits) throws ServerException, NotFoundException {
+		try {
+			requiring = require(requiring, permits);
+		} catch(NotAllowedException expected) {
+			if(requiring.getDoctor() == null || !requiring.getDoctor().isActive()) throw expected;
+			if(requiring.getDoctor().getFile() == doctor.getFile() || requiring.getDoctor().getId() == doctor.getId()) {
+				return requiring;
+			} throw expected;
+		} catch(ServerException e) {
+			throw e;
+		} catch(NotFoundException e) {
+			throw e;
+		}
+		return requiring;
+	}
+	
+	public boolean ap(User u, int id, NotAllowedException notAllowedException) {
+		Optional<Appointment> a = appointmentsrepository.findById(id);
+		if(a.isEmpty()) throw new NotFoundException("Appointment not found. ");
+		Appointment appointment = a.get();
+		if(u.getDoctor() != null && (u.getDoctor().getFile() == appointment.getAssignedDoctor().getFile() || u.getDoctor().getId() == appointment.getAssignedDoctor().getId())) {
+			return true;
+		} else throw notAllowedException;
+	}
+	
+	public User inquireAppointment(User requiring, int id, Permit... permits) throws ServerException, NotFoundException {
+		try {
+			requiring = require(requiring, permits);
+		} catch(NotAllowedException expected) {
+			if(ap(requiring, id, expected))
+				return requiring;
+			else throw expected;
+		} catch(ServerException e) {
+			throw e;
+		} catch(NotFoundException e) {
+			throw e;
+		}
+		return requiring;
+	}
+	
+	public User inquireDoctorById(User requiring, int id, Permit... permits) throws ServerException, NotFoundException {
+		try {
+			requiring = require(requiring, permits);
+		} catch(NotAllowedException expected) {
+			if(requiring.getDoctor() == null || !requiring.getDoctor().isActive()) throw expected;
+			if(requiring.getDoctor().getId() == id) {
+				return requiring;
+			} throw expected;
+		} catch(ServerException e) {
+			throw e;
+		} catch(NotFoundException e) {
+			throw e;
+		}
+		return requiring;
+	}
+	
+	public User inquireUser(User requiring, String username, Permit... permits) throws ServerException, NotFoundException {
+		try {
+			requiring = require(requiring, permits);
+		} catch(NotAllowedException expected) {
+			if(requiring == null || !requiring.isActive()) throw expected;
+			if(requiring.getUsername().equals(username)) {
+				return requiring;
+			} throw expected;
+		} catch(ServerException e) {
+			throw e;
+		} catch(NotFoundException e) {
+			throw e;
+		}
+		return requiring;
+	}
+	
+	public User inquireUser(User requiring, User requested, Permit... permits) throws ServerException, NotFoundException {
+		return inquireUser(requiring, requested.getUsername(), permits);
+	}
+	
+	public User inquireDoctorByFile(User requiring, int file, Permit... permits) throws ServerException, NotFoundException {
+		try {
+			requiring = require(requiring, permits);
+		} catch(NotAllowedException expected) {
+			if(requiring.getDoctor() == null || !requiring.getDoctor().isActive()) throw expected;
+			if(requiring.getDoctor().getFile() == file) {
+				return requiring;
+			} throw expected;
+		} catch(ServerException e) {
+			throw e;
+		} catch(NotFoundException e) {
+			throw e;
+		}
+		return requiring;
 	}
 
 	@Override
@@ -66,6 +177,26 @@ public class UserPermitLogicImpl implements IUserPermitLogic {
 	public UserPermit allow(String username, Permit permit, User requiring) throws NotFoundException {
 		if(requiring.getUsername() != "root")
 			require(requiring, Permit.GRANT_PERMISSIONS);
+		Optional<UserPermit> perm = userpermitsrepository.getPermit(username, permit);
+		Optional<User> us = usersrepository.findByUsername(username);
+		if(us.isEmpty()) throw new NotFoundException("User not found. ");
+		User user = us.get();
+		//System.out.println(perm.get());
+		if(perm.isEmpty()) {
+			UserPermit p = new UserPermit();
+			p.setUser(user);
+			p.setAction(permit);
+			p.setAllowed(true);
+			return userpermitsrepository.save(p);
+		} else {
+			UserPermit p = perm.get();
+			p.setAllowed(true);
+			return userpermitsrepository.update(p);
+		}
+	}
+	
+	@Override
+	public UserPermit allowWithoutAsking(String username, Permit permit) throws NotFoundException {
 		Optional<UserPermit> perm = userpermitsrepository.getPermit(username, permit);
 		Optional<User> us = usersrepository.findByUsername(username);
 		if(us.isEmpty()) throw new NotFoundException("User not found. ");
@@ -159,6 +290,12 @@ public class UserPermitLogicImpl implements IUserPermitLogic {
 	public void grant(String username, PermitTemplate template, User requiring) {
 		for(Permit permit : template.getPermits()) {
 			allow(username, permit, requiring);
+		}
+	}
+	
+	public void grantDefoPermits(User user, PermitTemplate template) {
+		for(Permit permit : template.getPermits()) {
+			allowWithoutAsking(user.getUsername(), permit);
 		}
 	}
 	

@@ -36,6 +36,16 @@ public class PermitTemplate {
 	});
 	
 	/**
+	 * *Usuario MÉDICO*
+	 * Rol por defecto. 
+	 */
+	public static PermitTemplate DOCTOR = new PermitTemplate(new Permit[] {
+			Permit.CREATE_PATIENT, Permit.READ_PATIENT_PERSONAL_DATA,
+			Permit.CREATE_DOCTOR,
+			Permit.ASSIGN_DOCTOR
+	});
+	
+	/**
 	 * *Usuario por defecto*
 	 * No tiene ningún permiso especial.
 	 */

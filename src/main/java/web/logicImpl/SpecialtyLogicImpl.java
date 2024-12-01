@@ -13,12 +13,16 @@ import web.entity.User;
 import web.entity.input.SpecialtyQuery;
 import web.exceptions.NotFoundException;
 import web.logic.ISpecialtyLogic;
+import web.logic.validator.SpecialtyValidator;
 
 @Component("specialties")
 public class SpecialtyLogicImpl implements ISpecialtyLogic {
 	
 	@Autowired
 	private ISpecialtyDAO specialtiesRepository;
+	
+	@Autowired
+	private SpecialtyValidator specialtyValidator;
 	
 	@Autowired
 	private UserPermitLogicImpl permits;
@@ -28,6 +32,8 @@ public class SpecialtyLogicImpl implements ISpecialtyLogic {
 	@Override
     public Specialty add(Specialty e, User requiring) {
 		permits.require(requiring, Permit.CREATE_SPECIALTY);
+		e.setName(specialtyValidator.name(e.getName()));
+		e.setDescription(specialtyValidator.description(e.getDescription()));
 		return specialtiesRepository.add(e);
 	}
 
@@ -45,9 +51,9 @@ public class SpecialtyLogicImpl implements ISpecialtyLogic {
     	if(file.isEmpty()) throw new NotFoundException("Specialty not found");
         Specialty original = file.get();
         if(record.getName() != null)
-        	original.setName(record.getName());
+        	original.setName(specialtyValidator.name(record.getName()));
         if(record.getDescription() != null)
-        	original.setDescription(record.getDescription());
+        	original.setDescription(specialtyValidator.description(record.getDescription()));
 		return specialtiesRepository.update(original);
 	}
 	
@@ -76,6 +82,12 @@ public class SpecialtyLogicImpl implements ISpecialtyLogic {
 	@Override
 	public Optional<Specialty> findById(int id) {
 		return findById(id, false, null);
+	}
+	
+	public Specialty getById(int id, User requiring) throws NotFoundException {
+		Optional<Specialty> s = findById(id, requiring.can(Permit.READ_DISABLED_SPECIALTY_RECORDS) || requiring.can(Permit.DISABLE_SPECIALTY), requiring);
+		if(s.isEmpty()) throw new NotFoundException("Specialty not found. ");
+		return s.get();		
 	}
 
 }

@@ -2,9 +2,11 @@ package web.logic;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 import web.entity.Doctor;
 import web.entity.Optional;
+import web.entity.Schedule;
 import web.entity.User;
 import web.entity.input.DoctorQuery;
 import web.entity.view.DoctorMinimalView;
@@ -18,10 +20,18 @@ public interface IDoctorLogic {
 
     /**
      * Agrega un nuevo médico a la base de datos.
+     * <br />
+     * No toma en cuenta los horarios, porque al ser un objeto de registro, sin ningún tipo de ID, no se puede validar las superposiciones con el resto de horarios.
+     * Es mejor agregar los horarios luego del registro del médico, mediante el uso de otros métodos especializados.
      *
      * @param medico Los datos del médico a agregar.
      * @param requiring El usuario que realiza la solicitud.
      * @return El médico agregado.
+     * 
+     * @see {@link #addSchedule(int, Schedule, User)}
+	 *
+     * @see {@link #removeSchedule(int, Schedule, User)}
+     * 
      */
     Doctor add(Doctor medico, User requiring);
 
@@ -153,5 +163,23 @@ public interface IDoctorLogic {
      * @throws NotFoundException Si el médico no se encuentra en la base de datos.
      */
     void enable(int id, User requiring) throws NotFoundException;
+
+    /**
+     * Agrega un horario al registro de un médico.
+     * @param file Legajo del médico.
+     * @param schedule Horario a agregar.
+     * @param requiring Usuario que realiza la solicitud.
+     * @return Lista de horarios del médico, actualizada.
+     */
+	Set<Schedule> addSchedule(int file, Schedule schedule, User requiring);
+
+	/**
+	 * Elimina un horario del registro de un médico.
+	 * @param file Legajo del médico.
+	 * @param schedule Horario a remover. Debe contener el ID del horario.
+	 * @param requiring Usuario que realiza la solicitud.
+	 * @return Lista de horarios del médico, actualizada.
+	 */
+	Set<Schedule> removeSchedule(int file, Schedule schedule, User requiring);
 
 }

@@ -1,14 +1,41 @@
 'use strict';
 import { getAccessToken, getRefreshToken } from "./security.js";
-import { login, getUsers, getUser, update, signup, resetPassword, disable, myself, updateMe, resetMyPassword, disableMe } from "./actions/users.js";
+import { login, getUser, update, signup, resetPassword, disable, myself, updateMe, resetMyPassword, disableMe, FilterStatus, Query } from "./actions/users.js";
 import * as doctors from './actions/doctors.js';
+import * as patients from "./actions/patients.js";
 import { domTesterElement, domSection } from "./test.js";
+import { createStore } from "./lib/redux.js";
+import { ElementBuilder } from "./controller/dom.js";
+import { load } from "./controller/services/headerService.js";
 
 const usersSection = domSection("Usuarios");
 const doctorsSection = domSection("Médicos");
 const patientsSection = domSection("Pacientes");
 
+const changeValueReducer = (state = { input: "" }, action) => {
+    if(action.type == "UPDATE_VALUE") return { ...state, input: action.payload };
+    return { ...state };
+};
+
+const store = createStore(changeValueReducer, { input: "" });
+console.log(store);
+
+const main = document.querySelector("main");
+
 (async (section) => {
+
+    // load();
+
+    const builder = new ElementBuilder("input")
+                        .type("text")
+                        .linkValue(store, "UPDATE_VALUE", "input")
+                        .appendTo(main)
+                        .build();
+    const p = new ElementBuilder("p")
+                        .linkReadableText(store, "input")
+                        .appendTo(main)
+                        .build();
+                    
 
     const PRINCIPAL_USER = "alicia.schimmel";
     const SECONDARY_USER = "alicia.schimmel";
@@ -31,9 +58,12 @@ const patientsSection = domSection("Pacientes");
 
     let listUsers__page = 1;
     const listUsers = domTesterElement("Buscar usuarios", "Cargar de a diez usuarios e imprimir en consola. ", async (e) => {
-        const xe = await getUsers("", listUsers__page, 10);
+        const query = new Query("Silva")
+                        .paginate(listUsers__page, 10)
+                        .filterByStatus(FilterStatus.BOTH);
+        const results = await query.search();
         listUsers__page++;
-        console.log(xe);
+        console.log(results, { listUsers__page });
     }, section);
 
     const updateTest = domTesterElement("Actualizar un usuario", `Busca el usuario @${SECONDARY_USER}, y luego se intenta cambiar su nombre. `, async (e) => {
@@ -90,12 +120,14 @@ const patientsSection = domSection("Pacientes");
             console.log(`${bool?"T":"No t"}e deshabilitaste ${bool&&"exitosamente"}. `);
         }, section);
 
+    // @ts-ignore
     document.addEventListener('onConnectionFailure', (event) => {
         // @ts-ignore
         console.error('Problema de conexión:', event.detail);
         // Mostrar notificación, manejar acá el error de conexión a internet.!
     }, section);
 
+    // @ts-ignore
     document.addEventListener('onAPIException', (event) => {
         // @ts-ignore
         console.warn('Excepción de API:', event.detail);
@@ -130,9 +162,19 @@ const patientsSection = domSection("Pacientes");
         console.log(doctor);
     }, section);
 
+
     const findIdDoctor = domTesterElement("Buscar un doctor (Por ID)", `Busca el doctor con ID ${SAMPLE_ID}. `, async (e) => {
         const doctor = await doctors.findById(SAMPLE_ID);
         console.log(doctor);
+    }, section);
+
+    let page = 1;
+
+    const searchDoctor = domTesterElement("Buscar", `Busca doctores. `, async (e) => {
+        const query = new doctors.Query("").paginate(page, 15);
+        const list = await query.search();
+        console.log(list);
+        page++;
     }, section);
 
     const updateDoctor = domTesterElement("Actualizar datos de un doctor. ", "Ahora vive en Tierra del Fuego. ", async (e) => {
@@ -155,3 +197,35 @@ const patientsSection = domSection("Pacientes");
     }, section);
 
 })(doctorsSection);
+
+(async (section) => {
+    const ID = 171;
+    const createPatient = domTesterElement("Crear un nuevo paciente", "En la base de datos. ", async (e) => {
+        const patient = await patients.create({
+            name: "Alejandro",
+            surname: "Vera",
+            dni: "45678099",
+            phone: "+541109988789",
+            address: "Martín Coronado 1778",
+            localty: "Gerli",
+            province: "Buenos Aires",
+            birth: "1978-11-11",
+            email: "vera.alejandro@fake.org"
+        });
+        console.log(patient);
+    }, patientsSection);
+    const search = domTesterElement("Buscar pacientes", "En la base de datos. ", async (e) => {
+        const query = new patients.Query("Ale");
+        const results = await query.search();
+        console.log(results);
+    }, patientsSection);
+    const id = domTesterElement("Buscar paciente con id N.º " + ID, "", async (e) => {
+        const patient = await patients.findById(ID);
+        console.log(patient);
+    }, patientsSection);
+    const update = domTesterElement("Actualizar paciente con id N.º " + ID, "", async (e) => {
+        // @ts-ignore
+        const updated = await patients.update(ID, { surname: "Escudero" });
+        console.log(updated);
+    }, patientsSection);
+})(patientsSection);

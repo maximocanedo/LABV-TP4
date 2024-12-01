@@ -1,0 +1,16 @@
+
+
+.custom-selector .modal-body {
+    padding: 0px;
+    padding-top: 15px;
+    .list-group {
+        padding: 0px;
+    }
+}
+.custom-selector .modal-footer {
+    display: none;
+}
+
+.fullWidth {
+    width: 100%;
+}

@@ -52,7 +52,8 @@ public interface IPatientLogic {
 	void disable(int id, User requirinig) throws NotFoundException;
 	
 	/**
-	 * Deshabilita un paciente de la base de datos.
+	 * Habilita un paciente de la base de datos.
 	 */
-
+	
+	void enable(int id, User requiring) throws NotFoundException;
 }

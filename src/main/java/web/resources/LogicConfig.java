@@ -7,7 +7,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+import web.logicImpl.SpecialtyLogicImpl;
+
 import web.logicImpl.*;
+import web.logic.validator.*;
 
 @Configuration
 public class LogicConfig {
@@ -15,15 +18,42 @@ public class LogicConfig {
 	@Bean
     public ObjectMapper objectMapper() {
         ObjectMapper mapper = new ObjectMapper();
-        // Registrar el módulo de JavaTime
         mapper.registerModule(new JavaTimeModule());
-        // Configurar para que Jackson no intente serializar con el nuevo formato
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         return mapper;
     }
 	
+	/*@Bean
+	public AppointmentValidator appointmentValidator() {
+		return new AppointmentValidator();
+	}
 	
-/*
+	@Bean 
+	public DoctorValidator doctorValidator() {
+		return new DoctorValidator();
+	}
+	
+	@Bean
+	public PatientValidator patientValidator() {
+		return new PatientValidator();
+	}
+	
+	@Bean
+	public ScheduleValidator scheduleValidator() {
+		return new ScheduleValidator();
+	}
+	
+	@Bean
+	public SpecialtyValidator specialtyValidator() {
+		return new SpecialtyValidator();
+	}
+	
+	@Bean
+	public UserValidator userValidator() {
+		return new UserValidator();
+	}
+	
+///*
 	@Bean
 	public AppointmentLogicImpl appointments() {
 		return new AppointmentLogicImpl();

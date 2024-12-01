@@ -9,34 +9,54 @@ import web.entity.input.AppointmentQuery;
 import web.entity.view.AppointmentCommunicationView;
 import web.entity.view.AppointmentMinimalView;
 import web.exceptions.NotFoundException;
+import web.main.App;
 
 public interface IAppointmentDAO {
 	
 	/**
-	 * Registra un turno
-	 * @param turno Datos del turno.
-	 * @return 
+	 * Registra un turno en la base de datos.
+	 * @param turno Datos del turno a registrar.
+	 * @return Turno registrado con el ID generado.
 	 */
 	Appointment add(Appointment turno);
 
 	/**
-	 * Busca un Turno en la base de datos.
+	 * Busca un turno en la base de datos por su ID.
 	 * @param id ID del turno.
 	 */
 	Optional<Appointment> findById(int id);
-
+	
+	/**
+	 * Busca un turno en la base de datos por su ID.
+	 * @param id ID del turno.
+	 */
 	Optional<AppointmentMinimalView> findMinById(int id);
 
+	/**
+	 * Busca un turno en la base de datos por su ID.
+	 * @param id ID del turno.
+	 */
 	Optional<AppointmentCommunicationView> findComById(int id);
 	
 	/**
-	 * Busca un Turno en la base de datos.
+	 * Busca un turno en la base de datos por su ID.
 	 * @param id ID del turno.
+	 * @param includeInactives ¿Se deben incluir registros deshabilitados? Por defecto, false.
 	 */
 	Optional<Appointment> findById(int id, boolean includeInactives);
 
+	/**
+	 * Busca un turno en la base de datos por su ID.
+	 * @param id ID del turno.
+	 * @param includeInactives ¿Se deben incluir registros deshabilitados? Por defecto, false.
+	 */
 	Optional<AppointmentMinimalView> findMinById(int id, boolean includeInactives);
 
+	/**
+	 * Busca un turno en la base de datos por su ID.
+	 * @param id ID del turno.
+	 * @param includeInactives ¿Se deben incluir registros deshabilitados? Por defecto, false.
+	 */
 	Optional<AppointmentCommunicationView> findComById(int id, boolean includeInactives);
 
 	/**
@@ -64,6 +84,8 @@ public interface IAppointmentDAO {
      * @throws NotFoundException Si el ID ingresado no corresponde a ningún turno.
      */
     void enable(int id) throws NotFoundException;
+
+	Boolean isAssigned(Appointment newAppointment) throws NotFoundException;
 	
 	/**
 	 * Cuenta la cantidad de turnos marcados como presentes dentro del rango de fechas indicado.

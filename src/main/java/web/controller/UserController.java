@@ -6,33 +6,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.*;
+import org.springframework.web.bind.annotation.*;
 
 import web.entity.IUser;
 import web.entity.Permit;
 import web.entity.User;
 import web.entity.UserPermit;
-import web.entity.input.FilterStatus;
-import web.entity.input.SignUpRequest;
-import web.entity.input.UserCredentials;
-import web.entity.input.UserQuery;
+import web.entity.input.*;
 import web.entity.view.UserView;
 import web.generator.PermitTemplate;
-import web.logicImpl.UserLogicImpl;
-import web.logicImpl.UserPermitLogicImpl;
+import web.logicImpl.*;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*", exposedHeaders = { "Authorization", "Content-Length" })
 @RestController
@@ -54,6 +38,7 @@ public class UserController {
     public void initBinder(HttpServletRequest req, HttpServletResponse res) {
         auth.preHandle(req, res);
     }
+	
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody UserCredentials credentials) {
 		String refreshToken = users.login(credentials.getUsername(), credentials.getPassword());
@@ -82,12 +67,17 @@ public class UserController {
 	public List<UserView> search(
 			@RequestParam(required = false, defaultValue = "") String q, 
 			@RequestParam(required = false, defaultValue = "") FilterStatus status,
+			@RequestParam(required = false, defaultValue = "false") boolean checkUnassigned,
+			@RequestParam(required = false, defaultValue = "false") boolean fromSelector,
 			@RequestParam(required = false, defaultValue = "1") int page,
 			@RequestParam(required = false, defaultValue = "15") int size,
 			HttpServletRequest req, HttpServletResponse res
 			) {
 		User requiring = auth.require(req, res);
-		return users.search(new UserQuery(q, status).paginate(page, size), requiring);
+		UserQuery query = new UserQuery(q, status).paginate(page, size).filterByUnassigned(checkUnassigned);
+		//System.out.println("selector users? " + fromSelector);
+		if(fromSelector) users.searchForSelector(query, requiring);
+		return users.search(query, requiring);
 	}
 	
 	/** # Acciones con terceros **/
@@ -95,7 +85,14 @@ public class UserController {
 	@GetMapping("/u/{username:.+}")
     public IUser findUser(@PathVariable String username, HttpServletRequest req, HttpServletResponse res) {
 		User requiring = auth.require(req, res);
-        return users.getByUsername(username, false, requiring);
+        return users.getByUsername(username, true, requiring);
+    }
+
+	@RequestMapping(value = "/u/{username:.+}", method = RequestMethod.HEAD)
+    public void existsByUsername(@PathVariable String username, HttpServletRequest req, HttpServletResponse res) {
+		boolean ok = users.exists(username);
+		if(ok) res.setStatus(200);
+		else res.setStatus(404);
     }
 	
 	@PutMapping("/u/{username:.+}")
@@ -116,6 +113,13 @@ public class UserController {
 	public ResponseEntity<?> disable(@PathVariable String username, HttpServletRequest req, HttpServletResponse res) {
 		User requiring = auth.require(req, res);
 		users.disable(username, requiring);
+		return ResponseEntity.status(200).build();
+	}
+	
+	@PostMapping("/u/{username:.+}")
+	public ResponseEntity<?> enable(@PathVariable String username, HttpServletRequest req, HttpServletResponse res) {
+		User requiring = auth.require(req, res);
+		users.enable(username, requiring);
 		return ResponseEntity.status(200).build();
 	}
 	
@@ -153,21 +157,25 @@ public class UserController {
 		User requiring = auth.require(req, res);
 		return (userpermits.allow(username, permit, requiring));
 	}
+	
 	@PostMapping("/u/{username:.+}/deny/p/{permit}")
 	public UserPermit denyOne(@PathVariable String username, @PathVariable Permit permit, HttpServletRequest req, HttpServletResponse res) {
 		User requiring = auth.require(req, res);
 		return (userpermits.reject(username, permit, requiring));		
 	}
+	
 	@PostMapping("/u/{username:.+}/grant/all")
 	public void grantAll(@PathVariable String username, HttpServletRequest req, HttpServletResponse res) {
 		User requiring = auth.require(req, res);
 		userpermits.grant(username, PermitTemplate.ROOT, requiring);
 	}
+	
 	@PostMapping("/u/{username:.+}/deny/all")
 	public void denyAll(@PathVariable String username, HttpServletRequest req, HttpServletResponse res) {
 		User requiring = auth.require(req, res);
 		userpermits.revokeAll(username, requiring);
 	}
+	
 	@PostMapping("/u/{username:.+}/grant/t/{template}")
 	public void grantTemplate(@PathVariable String username, @PathVariable String template, HttpServletRequest req, HttpServletResponse res) {
 		User requiring = auth.require(req, res);

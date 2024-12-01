@@ -24,9 +24,21 @@ import web.formatter.Formatter;
 @Table(name="patients")
 public class PatientMinimalView implements IPatient {
 	
+	public static PatientMinimalView from(IPatient data) {
+		if(data == null) return null;
+		PatientMinimalView view = new PatientMinimalView();
+		view.setId(data.getId());
+		view.setName(data.getName());
+		view.setSurname(data.getSurname());
+		view.setDni(data.getDni());
+		view.setActive(data.isActive());
+		return view;
+	}
+	
 	private int id;
 	private String name;
 	private String surname;
+	private String dni;
     private boolean active = true;
 	
 	public PatientMinimalView() {}
@@ -54,7 +66,15 @@ public class PatientMinimalView implements IPatient {
 	public String getSurname() {
 		return surname;
 	}
+	
+	@Column(name = "dni")
+	@JsonProperty("dni")
+	@Override
+	public String getDni() {
+		return dni;
+	}
 
+	@Override
 	@Column(name = "active")
 	@Format(omitLabel = true, whenTrue = "", whenFalse = "(!) Paciente deshabilitado. ")
 	@JsonProperty("active")
@@ -86,6 +106,12 @@ public class PatientMinimalView implements IPatient {
 		this.surname = apellido;
 	}
 	
+	@Override
+	public void setDni(String dni) {
+		this.dni = dni;
+	}
+
+	@Override
 	public void setActive(boolean active) {
 		this.active = active;
 	}
