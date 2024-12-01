@@ -12,7 +12,7 @@ public class DoctorQuery implements Searchable {
 	    private int specialty = -1;
 	    private int page;
 	    private int size;
-		public boolean checkUnassigned = false; // ¿Filtramos los que no tienen doctor asignado? si hay tiempo si, si no no
+		public boolean checkUnassigned = false; // ¿Filtrar doctores que no están asociados a un usuario?
 	    
 	    public DoctorQuery(String q, FilterStatus status) {
 	        setQueryText(q);
@@ -79,7 +79,7 @@ public class DoctorQuery implements Searchable {
 	            hql.append("AND (d.name LIKE :queryText OR d.surname LIKE :queryText OR " +
 	                       "CONCAT(d.name, ' ', d.surname) LIKE :queryText OR " +
 	                       "CONCAT(d.surname, ', ', d.name) LIKE :queryText OR " +
-	                       "CAST(d.legajo AS string) LIKE :queryText) ");
+	                       "CAST(d.file AS string) LIKE :queryText) ");
 	        }
 
 	        
