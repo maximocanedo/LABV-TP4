@@ -56,12 +56,14 @@ public class AppointmentLogicImpl implements IAppointmentLogic {
 		t.setStatus(AppointmentStatus.PENDING);
 		t.setAssignedDoctor(appointmentValidator.doctor(d));
 		t.setPatient(appointmentValidator.patient(t.getPatient()));
-		return this.appointmentsrepository.add(t);
+		Appointment x = this.appointmentsrepository.add(t);
+		return x;
 	}
 	
 	public AppointmentCommunicationView registerComm(Appointment t, User requiring) {
 		Appointment data = register(t, requiring);
-		return AppointmentCommunicationView.from(data);
+		AppointmentCommunicationView x = AppointmentCommunicationView.from(data);
+		return x;
 	}
 	
 	@Override

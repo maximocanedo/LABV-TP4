@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SqlDialectMappings">
+    <file url="file://$APPLICATION_CONFIG_DIR$/consoles/db/2c087bf7-9fe7-4d13-a3c2-24c4b7135d08/console_4.sql" dialect="MySQL" />
     <file url="file://$APPLICATION_CONFIG_DIR$/consoles/db/f18c9548-e925-4acb-95a6-e3b73f96e8a8/console_3.sql" dialect="MySQL" />
     <file url="file://$USER_HOME$/Downloads/appointments.sql" dialect="MySQL" />
     <file url="file://$USER_HOME$/Downloads/doctor_schedules.sql" dialect="MySQL" />

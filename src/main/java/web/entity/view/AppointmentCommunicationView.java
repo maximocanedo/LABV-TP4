@@ -47,6 +47,7 @@ public class AppointmentCommunicationView implements IAppointment {
 		view.setRemarks(data.getRemarks());
 		view.setStatus(data.getStatus());
 		view.setActive(data.isActive());
+		view.setDate(data.getDate());
 		view.setAssignedDoctor(DoctorMinimalView.from(data.getAssignedDoctor()));
 		view.setPatient(PatientCommunicationView.from(data.getPatient()));
 		return view;

@@ -9,7 +9,6 @@ import web.entity.input.AppointmentQuery;
 import web.entity.view.AppointmentCommunicationView;
 import web.entity.view.AppointmentMinimalView;
 import web.exceptions.NotFoundException;
-import web.main.App;
 
 public interface IAppointmentDAO {
 	

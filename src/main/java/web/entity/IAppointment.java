@@ -27,8 +27,8 @@ public interface IAppointment {
 
 	void setActive(boolean active);
 
-	Doctor getAssignedDoctor();
+	IDoctor getAssignedDoctor();
 
-	Patient getPatient();
+	IPatient getPatient();
 
 }
