@@ -138,7 +138,7 @@ public class AppointmentCommunicationView implements IAppointment {
 	@Transient
 	@Format(label = "Estado", order = 2)
 	public String getStatusDescription() {
-		return status == AppointmentStatus.ABSENT ? "AUSENTE" : (status == AppointmentStatus.PRESENT ? "PRESENTE" : (status == AppointmentStatus.PENDING ? "PENDIENTE" : "¿?"));
+		return status == AppointmentStatus.ABSENT ? "AUSENTE" : (status == AppointmentStatus.PRESENT ? "PRESENTE" : (status == AppointmentStatus.PENDING ? "PENDIENTE" : (status == AppointmentStatus.CANCELLED ? "CANCELADO":"¿?")));
 	}
 	
 	/* # Setters */

@@ -35,7 +35,7 @@ public class AppointmentQuery implements Searchable {
 	}
 	
 	public boolean shouldFilterByAStatus() {
-		return appointmentStatus != null && (appointmentStatus == AppointmentStatus.ABSENT || appointmentStatus == AppointmentStatus.PRESENT || appointmentStatus == AppointmentStatus.PENDING);
+		return appointmentStatus != null && (appointmentStatus == AppointmentStatus.ABSENT || appointmentStatus == AppointmentStatus.PRESENT || appointmentStatus == AppointmentStatus.PENDING || appointmentStatus == AppointmentStatus.CANCELLED);
 	}
 	
 	public AppointmentQuery(String q) {
@@ -92,6 +92,7 @@ public class AppointmentQuery implements Searchable {
 		} else if(filter.trim().toUpperCase().equals("PENDING")) setAppointmentStatus(AppointmentStatus.PENDING);
 		else if(filter.trim().toUpperCase().equals("ABSENT")) setAppointmentStatus(AppointmentStatus.ABSENT);
 		else if(filter.trim().toUpperCase().equals("PRESENT")) setAppointmentStatus(AppointmentStatus.PRESENT);
+		else if(filter.trim().toUpperCase().equals("CANCELLED")) setAppointmentStatus(AppointmentStatus.CANCELLED);
 		else setAppointmentStatus(null);
 		return this;
 	}
