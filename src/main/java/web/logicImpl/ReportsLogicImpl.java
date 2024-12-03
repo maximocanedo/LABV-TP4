@@ -1,6 +1,5 @@
 package web.logicImpl;
 
-import java.math.BigInteger;
 import java.util.*;
 
 import javax.json.JsonObject;
@@ -58,5 +57,15 @@ public class ReportsLogicImpl implements IReportsLogic {
 			default:
 				return "?";
 		}
+	}
+
+	@Override
+	public String countCancelledByYear(String year, User requiring) {
+		try {
+			requiring = permits.inquire(requiring, Permit.READ_APPOINTMENT);
+		} catch(NotAllowedException e) {
+			throw e;
+		}
+		return reportsrepository.countCancelledByYear(year);
 	}
 }

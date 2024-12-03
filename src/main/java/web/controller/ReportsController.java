@@ -46,5 +46,13 @@ public class ReportsController {
 		User requiring = auth.require(req, res);
 		return new ResponseEntity<>(reports.countAppointmentsByDayBetweenDates(formatter.parse(startDate), formatter.parse(endDate), AppointmentStatus.valueOf(status), requiring), HttpStatus.OK);
 	}
+	
+	@PostMapping("/CancelledByYear")
+	public ResponseEntity<?> CancelledByYear(
+			@RequestParam(required = true) String year,
+			HttpServletRequest req, HttpServletResponse res) throws ParseException {
+		User requiring = auth.require(req, res);
+		return new ResponseEntity<>(reports.countCancelledByYear(year, requiring), HttpStatus.OK);
+	}
 
 }

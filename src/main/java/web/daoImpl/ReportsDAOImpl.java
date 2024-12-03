@@ -39,5 +39,17 @@ public class ReportsDAOImpl implements IReportsDAO {
 		});
 		return result;
 	}
+
+	@Override
+	public String countCancelledByYear(String year) {
+		final String[] result = {"0"}; 
+		dataManager.run(session -> {
+			String hql = "SELECT COUNT(*) FROM appointments a WHERE a.status = 'CANCELLED' AND YEAR(a.date) = :year";
+	        Query query = session.createSQLQuery(hql);
+	        query.setParameter("year", year);
+	        result[0] = ((BigInteger)query.uniqueResult()).toString();
+		});
+		return result[0];
+	}
 	
 }

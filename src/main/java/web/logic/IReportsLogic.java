@@ -8,4 +8,5 @@ import web.entity.User;
 
 public interface IReportsLogic {
 	Map<String, Integer> countAppointmentsByDayBetweenDates(Date startDate, Date endDate, AppointmentStatus status, User requiring);
+	String countCancelledByYear(String year, User requiring);
 }
