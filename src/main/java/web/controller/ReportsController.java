@@ -50,9 +50,16 @@ public class ReportsController {
 	@PostMapping("/CancelledByYear")
 	public ResponseEntity<?> CancelledByYear(
 			@RequestParam(required = true) String year,
-			HttpServletRequest req, HttpServletResponse res) throws ParseException {
+			HttpServletRequest req, HttpServletResponse res) {
 		User requiring = auth.require(req, res);
 		return new ResponseEntity<>(reports.countCancelledByYear(year, requiring), HttpStatus.OK);
 	}
-
+	
+	@PostMapping("/countAppointmentsBySpecialtyMonthByMonth")
+	public ResponseEntity<Map<String, Integer>> countAppointmentsBySpecialtyMonthByMonth(
+			@RequestParam(required = true) String specialty,
+			HttpServletRequest req, HttpServletResponse res) {
+		User requiring = auth.require(req, res);
+		return new ResponseEntity<>(reports.countAppointmentsBySpecialtyMonthByMonth(specialty, requiring), HttpStatus.OK);
+	}
 }

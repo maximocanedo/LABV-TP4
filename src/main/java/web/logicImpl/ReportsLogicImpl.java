@@ -38,27 +38,6 @@ public class ReportsLogicImpl implements IReportsLogic {
 		return result;
 	}
 
-	public String getWeekDaySpanishName(int day) {
-		switch (day) {
-			case 1:
-				return "Domingo";
-			case 2:
-				return "Lunes";
-			case 3:
-				return "Martes";
-			case 4:
-				return "Miércoles";
-			case 5:
-				return "Jueves";
-			case 6:
-				return "Viernes";
-			case 7:
-				return "Sábado";
-			default:
-				return "?";
-		}
-	}
-
 	@Override
 	public String countCancelledByYear(String year, User requiring) {
 		try {
@@ -68,4 +47,47 @@ public class ReportsLogicImpl implements IReportsLogic {
 		}
 		return reportsrepository.countCancelledByYear(year);
 	}
+
+	@Override
+	public Map<String, Integer> countAppointmentsBySpecialtyMonthByMonth(String specialty, User requiring) {
+		try {
+			requiring = permits.inquire(requiring, Permit.READ_APPOINTMENT);
+		} catch(NotAllowedException e) {
+			throw e;
+		}
+		Map<Integer, Integer> queryResult = reportsrepository.countAppointmentsBySpecialtyMonthByMonth(specialty);
+		Map<String, Integer> result = new LinkedHashMap<>();
+		queryResult.forEach((k, v) -> {
+			result.put(getMonthSpanishName(k), v);
+		});
+		return result;
+	}
+	
+	public String getWeekDaySpanishName(int day) {
+	    String[] days = {
+	        "Domingo", "Lunes", "Martes", "Miércoles", 
+	        "Jueves", "Viernes", "Sábado"
+	    };
+
+	    if (day >= 1 && day <= 7) {
+	        return days[day - 1];
+	    } else {
+	        return "?";
+	    }
+	}
+
+	
+	public String getMonthSpanishName(int month) {
+	    String[] months = {
+	        "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", 
+	        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+	    };
+	    
+	    if (month >= 1 && month <= 12) {
+	        return months[month - 1];
+	    } else {
+	        return "?";
+	    }
+	}
+	
 }
