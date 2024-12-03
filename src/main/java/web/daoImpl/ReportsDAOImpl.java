@@ -58,14 +58,15 @@ public class ReportsDAOImpl implements IReportsDAO {
 		for (int i = 1; i <= 12; i++) {
 			result.put(i, 0);
 		}
+		int miId = Integer.parseInt(specialty);
 		dataManager.run(session -> {
-			String hql = "SELECT MONTH(a.date) as Mes, COUNT(*) as CantidadTurnos FROM appointments a\r\n" + 
-					"LEFT JOIN doctors d ON d.id = a.doctor\r\n" + 
-					"LEFT JOIN specialties s ON s.id = d.specialty\r\n" + 
-					"WHERE s.name = :specialty AND a.date BETWEEN DATE_SUB(CURDATE(), INTERVAL 1 YEAR) AND CURDATE()\r\n" + 
+			String hql = "SELECT MONTH(a.date) as Mes, COUNT(*) as CantidadTurnos FROM appointments a " + 
+					"LEFT JOIN doctors d ON d.id = a.doctor " + 
+					"LEFT JOIN specialties s ON s.id = d.specialty " + 
+					"WHERE s.id = :specialty AND a.date BETWEEN DATE_SUB(CURDATE(), INTERVAL 1 YEAR) AND CURDATE() " + 
 					"GROUP BY Mes";
 	        Query query = session.createSQLQuery(hql);
-	        query.setParameter("specialty", specialty);
+	        query.setParameter("specialty", miId);
 	        List<Object[]> rows = query.list();
 	        for(Object[] row : rows){
 	        	result.put(Integer.parseInt(row[0].toString()), Integer.parseInt(row[1].toString()));

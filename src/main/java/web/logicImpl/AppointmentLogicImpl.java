@@ -51,18 +51,24 @@ public class AppointmentLogicImpl implements IAppointmentLogic {
 			}
 		}
 		appointmentValidator.isAssigned(t);
-		t.setDate(appointmentValidator.date(t.getDate(), t.getAssignedDoctor()));
+		t.setDate((t.getDate()));
 		t.setRemarks(appointmentValidator.remarks(t.getRemarks()));
 		t.setStatus(AppointmentStatus.PENDING);
 		t.setAssignedDoctor(appointmentValidator.doctor(d));
 		t.setPatient(appointmentValidator.patient(t.getPatient()));
 		Appointment x = this.appointmentsrepository.add(t);
+		System.out.println("register Returns : ");
+		System.out.println(x);
 		return x;
 	}
 	
 	public AppointmentCommunicationView registerComm(Appointment t, User requiring) {
 		Appointment data = register(t, requiring);
+		System.out.println("register preconv Returns : ");
+		System.out.println(data);
 		AppointmentCommunicationView x = AppointmentCommunicationView.from(data);
+		System.out.println("register postconv Returns : ");
+		System.out.println(x);
 		return x;
 	}
 	
